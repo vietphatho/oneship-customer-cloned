@@ -1,0 +1,67 @@
+{
+    "data": [
+        {
+            "title": "general",
+            "id": "01",
+            "sub_modules": [
+                {
+                    "title": "personal_info",
+                    "id": "01_01",
+                    "is_completed": true
+                },
+                {
+                    "title": "notification_setting",
+                    "id": "01_02",
+                    "is_completed": true
+                },
+                {
+                    "title": "security",
+                    "id": "01_03",
+                    "is_completed": true
+                }
+            ]
+        },
+        {
+            "title": "feedback",
+            "id": "02",
+            "sub_modules": [
+                {
+                    "title": "customer_feedback",
+                    "id": "02_01",
+                    "is_completed": false
+                },
+                {
+                    "title": "point",
+                    "id": "02_02",
+                    "is_completed": false
+                },
+                {
+                    "title": "reward",
+                    "id": "02_03",
+                    "is_completed": false
+                }
+            ]
+        },
+        {
+            "title": "help",
+            "id": "03",
+            "sub_modules": [
+                {
+                    "title": "help_desk",
+                    "id": "03_01",
+                    "is_completed": true
+                },
+                {
+                    "title": "questions",
+                    "id": "03_02",
+                    "is_completed": true
+                },
+                {
+                    "title": "terms_and_policies",
+                    "id": "03_03",
+                    "is_completed": false
+                }
+            ]
+        }
+    ]
+}

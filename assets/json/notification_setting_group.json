@@ -1,0 +1,39 @@
+{
+    "data": [
+        {
+            "type": "important_notification",
+            "data":  [
+                {
+                    "type": "transaction",
+                    "title_key": "transaction",
+                    "description_key": "notification_transaction_description"
+                },
+                {
+                    "type": "warning",
+                    "title_key": "warning",
+                    "description_key": "notification_warning_description"
+                },
+                {
+                    "type": "service",
+                    "title_key": "service",
+                    "description_key": "notification_service_description"
+                }
+            ]
+        },     
+        {
+           "type": "promotion_notification",
+            "data":  [
+                {
+                    "type": "advertisement",
+                    "title_key": "advertisement",
+                    "description_key": "notification_advertisement_description"
+                },
+                {
+                    "type": "promotion",
+                    "title_key": "promotion",
+                    "description_key": "notification_promotion_description"
+                }
+            ]
+        }
+    ]
+}

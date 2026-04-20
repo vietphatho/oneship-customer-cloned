@@ -1,0 +1,36 @@
+{
+    "data": [
+        {
+            "type": "security",
+            "title_key": "security",
+            "data":  [
+                {
+                    "id": "profile_security_01",
+                    "title_key": "change_password",
+                    "description_key": "profile_security_description"
+                },
+                {
+                    "id": "profile_security_02",
+                    "title_key": "create_second_password",
+                    "description_key": "create_second_password_description"
+                },
+                {
+                    "id": "profile_security_03",
+                    "title_key": "change_second_password",
+                    "description_key": "change_second_password_description"
+                }
+            ]
+        },     
+        {
+           "type": "account",
+           "title_key": "account",
+            "data":  [
+                {
+                    "id": "profile_account_01",
+                    "title_key": "account_restoration",
+                    "description_key": "account_restoration_description"
+                }
+            ]
+        }
+    ]
+}

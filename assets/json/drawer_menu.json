@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "id": "drawer_menu_01",
+            "name": "wallet"
+        },
+        {
+            "id": "drawer_menu_02",
+            "name": "services"
+        },
+        {
+            "id": "drawer_menu_03",
+            "name": "income"
+        },
+        {
+            "id": "drawer_menu_04",
+            "name": "active_percentage"
+        },
+        {
+            "id": "drawer_menu_05",
+            "name": "history"
+        },
+        {
+            "id": "drawer_menu_06",
+            "name": "message"
+        }
+    ]
+}

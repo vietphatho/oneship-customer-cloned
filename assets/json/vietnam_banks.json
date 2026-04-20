@@ -1,0 +1,149 @@
+{
+    "data": [
+        {
+            "shortName": "Vietcombank",
+            "bankCode": "VCB",
+            "logoUrl": "https://hienlaptop.com/wp-content/uploads/2024/12/logo-vietcombank-vector-13.png"
+        },
+        {
+            "shortName": "BIDV",
+            "bankCode": "BIDV",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Logo_BIDV.svg/1280px-Logo_BIDV.svg.png"
+        },
+        {
+            "shortName": "Techcombank",
+            "bankCode": "TCB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Techcombank_logo.png"
+        },
+        {
+            "shortName": "ACB",
+            "bankCode": "ACB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Asia_Commercial_Bank_logo.svg/1200px-Asia_Commercial_Bank_logo.svg.png"
+        },
+        {
+            "shortName": "Sacombank",
+            "bankCode": "STB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo-Sacombank-new.png"
+        },
+        {
+            "shortName": "VPBank",
+            "bankCode": "VPB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/VPBank_logo.svg/2560px-VPBank_logo.svg.png"
+        },
+        {
+            "shortName": "MB Bank",
+            "bankCode": "MBB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_MB_new.png"
+        },
+        {
+            "shortName": "HDBank",
+            "bankCode": "HDB",
+            "logoUrl": "https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-HDBank.png"
+        },
+        {
+            "shortName": "OCB",
+            "bankCode": "OCB",
+            "logoUrl": "https://cdn.haitrieu.com/wp-content/uploads/2022/02/Logo-OCB.png"
+        },
+        {
+            "shortName": "SeABank",
+            "bankCode": "SEAB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Logo_SeABank.svg/2560px-Logo_SeABank.svg.png"
+        },
+        {
+            "shortName": "LienVietPostBank",
+            "bankCode": "LPB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Logo_Ng%C3%A2n_h%C3%A0ng_Th%C6%B0%C6%A1ng_m%E1%BA%A1i_C%E1%BB%95_ph%E1%BA%A7n_B%C6%B0u_%C4%91i%E1%BB%87n_ch%C3%ADnh_th%E1%BB%A9c_v%C3%A0_m%E1%BB%9Bi_nh%E1%BA%A5t.png"
+        },
+        {
+            "shortName": "Bac A Bank",
+            "bankCode": "BAB",
+            "logoUrl": "https://wikiland.vn/wp-content/uploads/ngan-hang/bac-a-bank/logo-bac-a-bank.png"
+        },
+        {
+            "shortName": "Nam A Bank",
+            "bankCode": "NAB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/4/45/Nam_A_Bank_Logo.jpg"
+        },
+        {
+            "shortName": "PVcomBank",
+            "bankCode": "PVC",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/7/75/Logo_PVcombank.png"
+        },
+        {
+            "shortName": "NCB",
+            "bankCode": "NCB",
+            "logoUrl": "https://datax-talent.basecdn.net/ncbbank/logo.png"
+        },
+        {
+            "shortName": "BaoVietBank",
+            "bankCode": "BVB",
+            "logoUrl": "https://s-vnba-cdn.aicms.vn/vnba-media/23/8/14/baoviet-bank-logo_64d9ad96e858c.jpg"
+        },
+        {
+            "shortName": "VietBank",
+            "bankCode": "VB",
+            "logoUrl": "https://inkythuatso.com/uploads/images/2021/12/vietbank-logo-inkythuatso-14-11-50-27.jpg"
+        },
+        {
+            "shortName": "PGBank",
+            "bankCode": "PGB",
+            "logoUrl": "https://www.pgbank.com.vn/uploads/5122023/d3202615-60b7-4422-9207-9b8775bffcb4.jpg"
+        },
+        {
+            "shortName": "KienlongBank",
+            "bankCode": "KLB",
+            "logoUrl": "https://kienlongbank.com/Data/Sites/1/media/logo-klb/kienlongbank-2-1.jpg"
+        },
+        {
+            "shortName": "DongA Bank",
+            "bankCode": "DAB",
+            "logoUrl": "https://thietkelogo.vn/wp-content/uploads/2015/12/y-nghia-lo-go-dong-bank1.jpg"
+        },
+        {
+            "shortName": "Saigonbank",
+            "bankCode": "SGB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_SaigonBank.png"
+        },
+        {
+            "shortName": "ABBANK",
+            "bankCode": "ABB",
+            "logoUrl": "https://inkythuatso.com/uploads/images/2021/12/logo-abbank-inkythuatso-07-15-01-34.jpg"
+        },
+        {
+            "shortName": "MSB",
+            "bankCode": "MSB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Logo_MSB.svg/2560px-Logo_MSB.svg.png"
+        },
+        {
+            "shortName": "Co-op Bank",
+            "bankCode": "COOP",
+            "logoUrl": "https://s-vnba-cdn.aicms.vn/vnba-media/23/8/2/coopbank_64ca2895d8a4f.png"
+        },
+        {
+            "shortName": "Public Bank Vietnam",
+            "bankCode": "PBB",
+            "logoUrl": "https://wikiland.vn/wp-content/uploads/ngan-hang/public-bank/logo-public-bank.png"
+        },
+        {
+            "shortName": "Hong Leong Bank Vietnam",
+            "bankCode": "HLBVN",
+            "logoUrl": "https://wikiland.vn/wp-content/uploads/ngan-hang/hong-leong-bank/hongleong-bank-logo.jpg"
+        },
+        {
+            "shortName": "Shinhan Bank",
+            "bankCode": "SHB",
+            "logoUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTp13ezWuBfU2V59RcA81cYx3_4XmchMmdfRA&s"
+        },
+        {
+            "shortName": "Standard Chartered",
+            "bankCode": "SCB",
+            "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Standard_Chartered_%282021%29.svg/2560px-Standard_Chartered_%282021%29.svg.png"
+        },
+        {
+            "shortName": "CIMB",
+            "bankCode": "CIMB",
+            "logoUrl": "https://1000logos.net/wp-content/uploads/2020/10/CIMB-Logo.png"
+        }
+    ]
+}

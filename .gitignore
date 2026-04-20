@@ -1,0 +1,51 @@
+# Flutter build files
+/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.melos_tool/
+devtools_options.yaml
+
+# IDE files
+.idea/
+.vscode/
+
+# env file
+.env.dev
+.env.prod
+.env.*
+
+# Android
+android/.gradle/
+android/app/build/
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/flutter_export_environment.sh
+ios/Runner.xcworkspace/contents.xcworkspacedata
+ios/build/
+ios/Flutter/Generated-env.xcconfig
+
+# macOS
+macos/Flutter/ephemeral/
+
+# Web
+web/.dart_tool/
+
+windows/
+linux/
+macos/
+
+# Misc
+*.log
+*.tmp
+*.lock
+*.g.dart
+*.freezed.dart
+*.config.dart
+
+# FVM Version Cache
+.fvm/
+.fvmrc

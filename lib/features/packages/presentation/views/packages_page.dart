@@ -1,0 +1,131 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
+
+class PackagesPage extends StatefulWidget {
+  const PackagesPage({super.key});
+
+  @override
+  State<PackagesPage> createState() => _PackagesPageState();
+}
+
+class _PackagesPageState extends State<PackagesPage> {
+  final PackagesBloc _packagesBloc = getIt.get();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<PackagesBloc, PackagesState>(
+      bloc: _packagesBloc,
+      listener: _handleListener,
+      builder: (context, state) {
+        if (_packagesBloc.packages.isEmpty) {
+          return const PrimaryEmptyData();
+        }
+
+        return ListView.separated(
+          itemCount: _packagesBloc.packages.length,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppDimensions.mediumSpacing,
+          ),
+          itemBuilder:
+              (context, index) => PackageItem(
+                index: index,
+                package: _packagesBloc.packages[index],
+                onViewDetail: onViewDetail,
+              ),
+          separatorBuilder:
+              (context, index) =>
+                  const SizedBox(height: AppDimensions.smallSpacing),
+        );
+      },
+    );
+  }
+
+  void onViewDetail(Package pkg) {
+    _packagesBloc.viewPkg(pkg.id);
+  }
+
+  void _handleListener(BuildContext context, PackagesState state) {
+    if (state is PackagesViewDetailState) {
+      switch (state.currentPkg.state) {
+        case Result.loading:
+          PrimaryDialog.showLoadingDialog(context);
+          break;
+        case Result.success:
+          PrimaryDialog.hideLoadingDialog(context);
+          context.push(RouteName.packageDetailPage);
+          break;
+        case Result.error:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.currentPkg.message,
+          );
+          break;
+      }
+    }
+  }
+}
+
+class PackageItem extends StatelessWidget {
+  const PackageItem({
+    super.key,
+    required this.package,
+    required this.index,
+    this.onViewDetail,
+  });
+
+  final int index;
+  final Package package;
+  final void Function(Package pkg)? onViewDetail;
+
+  @override
+  Widget build(BuildContext context) {
+    return PrimaryAnimatedPressableWidget(
+      onTap: () => onViewDetail?.call(package),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.surfaceVariant,
+          borderRadius: AppDimensions.largeBorderRadius,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppDimensions.smallSpacing,
+          vertical: AppDimensions.smallSpacing,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      PrimaryText("#${index + 1}. "),
+                      PrimaryText(
+                        package.packageNumber,
+                        style: AppTextStyles.titleMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                PrimaryText(package.status),
+              ],
+            ),
+            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+            PrimaryText("Total orders: ${package.totalOrders}"),
+          ],
+        ),
+      ),
+    );
+  }
+}

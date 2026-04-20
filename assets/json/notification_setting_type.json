@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "title": "transaction",
+            "description": "notification_transaction_description",
+            "icon": "assets/icons/ic_colorful_transaction.svg"
+        },
+        {
+            "title": "reminder",
+            "description": "notification_reminder_description",
+            "icon": "assets/icons/ic_colorful_notification.svg"
+        },
+        {
+            "title": "warning",
+            "description": "notification_warning_description",
+            "icon": "assets/icons/ic_colorful_security.svg"
+        },
+        {
+            "title": "service",
+            "description": "notification_service_description",
+            "icon": "assets/icons/ic_colorful_like.svg"
+        }
+    ]
+}
