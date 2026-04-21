@@ -12,9 +12,11 @@ import 'package:oneship_customer/features/packages/presentation/bloc/packages_st
 class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
   PackagesBloc(this._repository)
     : super(
-        PackagesFetchedState(
+        PackagesState(
           pkgsData: Resource.loading(),
           currentPkg: Resource.loading(),
+          findingShipperResult: Resource.loading(),
+          cancelFindingShipperResult: Resource.loading(),
         ),
       ) {
     on<PackagesFetchingEvent>(_onFetchedPackages);
@@ -34,81 +36,40 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     PackagesFetchingEvent event,
     Emitter<PackagesState> emit,
   ) async {
-    emit(
-      PackagesFetchedState(
-        pkgsData: Resource.loading(),
-        currentPkg: state.currentPkg,
-      ),
-    );
+    emit(state.copyWith(pkgsData: Resource.loading()));
     final response = await _repository.fetchPackages(shopId: _shopId);
     _packages = response.data?.data ?? [];
-    emit(
-      PackagesFetchedState(
-        pkgsData: response.parse((e) => e.data ?? []),
-        currentPkg: state.currentPkg,
-      ),
-    );
+    emit(state.copyWith(pkgsData: response.parse((e) => e.data ?? [])));
   }
 
   FutureOr<void> _onViewDetailEvent(
     PackagesViewDetailEvent event,
     Emitter<PackagesState> emit,
   ) async {
-    emit(
-      PackagesViewDetailState(
-        pkgsData: state.pkgsData,
-        currentPkg: Resource.loading(),
-      ),
-    );
+    emit(state.copyWith(currentPkg: Resource.loading()));
     final response = await _repository.fetchPackageDetail(
       shopId: _shopId,
       pkgId: event.pkgId,
     );
-    emit(
-      PackagesViewDetailState(pkgsData: state.pkgsData, currentPkg: response),
-    );
+    emit(state.copyWith(currentPkg: response));
   }
 
   FutureOr<void> _onFindShipperEvent(
     PackagesFindShipperEvent event,
     Emitter<PackagesState> emit,
   ) async {
-    emit(
-      PackagesFindShipperState(
-        pkgsData: state.pkgsData,
-        currentPkg: state.currentPkg,
-        resource: Resource.loading(),
-      ),
-    );
+    emit(state.copyWith(findingShipperResult: Resource.loading()));
     final response = await _repository.findShipper(_shopId);
-    emit(
-      PackagesFindShipperState(
-        pkgsData: state.pkgsData,
-        currentPkg: state.currentPkg,
-        resource: response,
-      ),
-    );
+    emit(state.copyWith(findingShipperResult: response));
   }
 
   FutureOr<void> _onCancelFindingShipperEvent(
     PackagesCancelFindingShipperEvent event,
     Emitter<PackagesState> emit,
   ) async {
-    emit(
-      PackagesCancelFindingShipperState(
-        pkgsData: state.pkgsData,
-        currentPkg: state.currentPkg,
-        resource: Resource.loading(),
-      ),
-    );
+    emit(state.copyWith(cancelFindingShipperResult: Resource.loading()));
     final response = await _repository.cancelFindingShipper(_shopId);
-    emit(
-      PackagesCancelFindingShipperState(
-        pkgsData: state.pkgsData,
-        currentPkg: state.currentPkg,
-        resource: response,
-      ),
-    );
+    emit(state.copyWith(cancelFindingShipperResult: response));
   }
 
   void init(String shopId) {
