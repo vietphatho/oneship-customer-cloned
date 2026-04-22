@@ -7,8 +7,8 @@ import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/management/presentation/bloc/management_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_state.dart';
 
@@ -21,8 +21,8 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final SplashBloc _splashBloc = getIt<SplashBloc>();
+  final ShopBloc _shopBloc = getIt.get();
   final AuthBloc _authBloc = getIt.get();
-  final ManagementBloc _managementBloc = getIt.get();
   final OrdersBloc _ordersBloc = getIt.get();
 
   @override
@@ -70,9 +70,7 @@ class _SplashPageState extends State<SplashPage> {
         case Result.loading:
           break;
         case Result.success:
-          _managementBloc
-            ..setUserId(state.resource.data?.id ?? "")
-            ..getShops();
+          _shopBloc.init(state.resource.data?.id ?? "");
           // _ordersBloc.init(_managementBloc.currentShop?.shopId ?? "");
           context.pushReplacement(RouteName.shopMasterPage);
           break;

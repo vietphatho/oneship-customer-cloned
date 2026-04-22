@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/liquid_glass_view.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_spacing.dart';
-import 'package:oneship_customer/core/themes/primary_box_shadows.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
@@ -33,61 +28,35 @@ class _PrimaryBottomNavigationBarState
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppDimensions.mediumSpacing,
-              vertical: AppDimensions.mediumSpacing,
+              vertical: AppDimensions.smallSpacing,
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: AppDimensions.xSmallSpacing,
-                      horizontal: AppDimensions.mediumSpacing,
-                    ),
-
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: PrimaryBoxShadows.bottomNavShadow,
-                      borderRadius: AppDimensions.xLargeBorderRadius,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children:
-                          BottomNavigationItem.values
-                              .map(
-                                (item) => _NavigationItem(
-                                  item: item,
-                                  isSelected:
-                                      _shopMasterBloc.currentTab == item,
-                                  onTap: _onItemTapped,
-                                ),
-                              )
-                              .toList(),
-                    ),
-                  ),
+            child: LiquidGlassView(
+              borderRadius: AppDimensions.xLargeBorderRadius,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: AppDimensions.xxxSmallSpacing,
+                  horizontal: AppDimensions.mediumSpacing,
                 ),
-                AppSpacing.horizontal(AppDimensions.largeSpacing),
-                PrimaryAnimatedPressableWidget(
-                  onTap: () {
-                    context.push(RouteName.createOrderPage);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: AppDimensions.mediumSpacing,
-                      horizontal: AppDimensions.mediumSpacing,
-                    ),
 
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: PrimaryBoxShadows.bottomNavShadow,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      CupertinoIcons.add,
-                      size: AppDimensions.largeIconSize,
-                    ),
-                  ),
+                // decoration: BoxDecoration(
+                //   color: Colors.white,
+                //   boxShadow: PrimaryBoxShadows.bottomNavShadow,
+                //   borderRadius: AppDimensions.xLargeBorderRadius,
+                // ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children:
+                      BottomNavigationItem.values
+                          .map(
+                            (item) => _NavigationItem(
+                              item: item,
+                              isSelected: _shopMasterBloc.currentTab == item,
+                              onTap: _onItemTapped,
+                            ),
+                          )
+                          .toList(),
                 ),
-              ],
+              ),
             ),
           ),
         );
@@ -114,10 +83,24 @@ class _NavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => onTap?.call(item),
-      icon: Container(
-        child: Icon(item.icon, size: AppDimensions.largeIconSize),
+    return PrimaryAnimatedPressableWidget(
+      onTap: () => onTap?.call(item),
+      child: LiquidGlassView(
+        isEnable: isSelected,
+        backgroundColor: AppColors.primary,
+        opacity: 0.9,
+        borderRadius: AppDimensions.xLargeBorderRadius,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.mediumSpacing,
+            vertical: AppDimensions.smallSpacing,
+          ),
+          child: Icon(
+            item.icon,
+            size: AppDimensions.mediumIconSize,
+            color: isSelected ? Colors.white : AppColors.neutral3,
+          ),
+        ),
       ),
     );
   }

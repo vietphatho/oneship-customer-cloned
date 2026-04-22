@@ -6,7 +6,6 @@ import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/management/data/models/response/get_shops_response.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
@@ -14,6 +13,7 @@ import 'package:oneship_customer/features/orders/domain/entities/create_order_en
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
@@ -22,7 +22,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         CreateOrderRequestChangedState(
           request: CreateOrderEntity.empty(),
           draftRequest: CreateOrderEntity.empty(),
-          shopInfo: const ShopInfo(),
+          shopInfo: const ShopEntity(),
           routingToShopResource: Resource.loading(),
         ),
       ) {
@@ -218,7 +218,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     );
   }
 
-  void setShop(ShopInfo shop) {
+  void setShop(ShopEntity shop) {
     add(CreateOrderInitShopEvent(shop));
   }
 

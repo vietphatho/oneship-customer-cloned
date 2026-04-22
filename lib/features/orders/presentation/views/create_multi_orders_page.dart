@@ -1,6 +1,6 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/management/presentation/bloc/management_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class CreateMultiOrdersPage extends StatefulWidget {
   const CreateMultiOrdersPage({super.key});
@@ -10,7 +10,7 @@ class CreateMultiOrdersPage extends StatefulWidget {
 }
 
 class _CreateMultiOrdersPageState extends State<CreateMultiOrdersPage> {
-  final ManagementBloc _managementBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,7 @@ class _CreateMultiOrdersPageState extends State<CreateMultiOrdersPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PrimaryText(
-              "${"shop".tr()}: ${_managementBloc.currentShop?.shopName}",
-            ),
+            PrimaryText("${"shop".tr()}: "),
             AppSpacing.vertical(AppDimensions.largeSpacing),
             Center(child: _AddDataFileWidget()),
           ],

@@ -10,7 +10,10 @@ class LiquidGlassView extends StatelessWidget {
     this.isEnable = true,
     this.opacity = 0.65,
     this.blurness = 8.0,
+    this.backgroundColor = Colors.white,
   });
+
+  final Color backgroundColor;
 
   final Widget child;
   final BorderRadius? borderRadius;
@@ -125,7 +128,7 @@ class LiquidGlassView extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(opacity),
+            color: backgroundColor.withOpacity(opacity),
             borderRadius: borderRadius,
             border: Border.all(
               color: Colors.white.withOpacity(clampDouble(opacity * 2, 0, 1)),

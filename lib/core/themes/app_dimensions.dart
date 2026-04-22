@@ -95,6 +95,8 @@ class AppDimensions {
   static const double xxLargeSpacing = 28;
   static const double xxxLargeSpacing = 32;
 
+  static const double smallBorderStroke = 0.6;
+
   // Border Radius
   static const double xSmallRadius = 4.0;
   static const double smallRadius = 8.0;

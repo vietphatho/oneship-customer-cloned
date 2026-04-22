@@ -5,10 +5,10 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/shop_selection_button.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_selection_button.dart';
 
-class ShopMasterAppBar extends StatelessWidget {
-  const ShopMasterAppBar({super.key});
+class ShopAppBar extends StatelessWidget {
+  const ShopAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,8 @@ class ShopMasterAppBar extends StatelessWidget {
                         child: PrimaryText(
                           userProfile.displayName,
                           overflow: TextOverflow.ellipsis,
+                          color: Colors.white,
+                          style: AppTextStyles.labelMedium,
                         ),
                       ),
                     ],

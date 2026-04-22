@@ -17,7 +17,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/widgets/search_orders_info_widget.dart';
-import 'package:oneship_customer/features/management/presentation/bloc/management_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,7 +28,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final AuthBloc _authBloc = getIt<AuthBloc>();
-  final ManagementBloc _managementBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   TextEditingController phoneController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
@@ -226,9 +226,7 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          _managementBloc
-            ..setUserId(state.resource.data?.id ?? "")
-            ..getShops();
+          _shopBloc.init(state.resource.data?.id ?? "");
           context.pushReplacement(RouteName.shopMasterPage);
           break;
         case Result.error:

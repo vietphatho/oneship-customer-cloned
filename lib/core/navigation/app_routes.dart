@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/navigation/app_navigator.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
@@ -12,7 +13,8 @@ import 'package:oneship_customer/features/shop_master/presentation/views/shop_ma
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: RouteName.shopMasterPage,
+  navigatorKey: AppNavigator.globalKey,
+  initialLocation: RouteName.splashPage,
   observers: [RouteObserverPage()],
   routes: [
     GoRoute(
