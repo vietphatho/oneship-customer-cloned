@@ -28,9 +28,12 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  PrimaryTextButton(label: "log_in".tr(), onPressed: () {
-                    context.pushReplacement(RouteName.loginPage);
-                  }),
+                  PrimaryTextButton(
+                    label: "log_in".tr(),
+                    onPressed: () {
+                      context.push(RouteName.loginPage);
+                    },
+                  ),
                   AppSpacing.horizontal(AppDimensions.smallSpacing),
                   PrimaryTextButton(label: "sign_up".tr(), onPressed: () {
                     context.pushReplacement(RouteName.registerPage);

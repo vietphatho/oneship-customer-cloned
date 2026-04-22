@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
           _managementBloc
             ..setUserId(state.resource.data?.id ?? "")
             ..getShops();
-          context.pushReplacement(RouteName.homePage);
+          context.pushReplacement(RouteName.shopMasterPage);
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);

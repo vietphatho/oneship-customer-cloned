@@ -23,30 +23,38 @@ class _PackagesPageState extends State<PackagesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PackagesBloc, PackagesState>(
-      bloc: _packagesBloc,
-      listener: _handleListener,
-      builder: (context, state) {
-        if (_packagesBloc.packages.isEmpty) {
-          return const PrimaryEmptyData();
-        }
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<PackagesBloc, PackagesState>(
+          bloc: _packagesBloc,
+          listenWhen: (pre, cur) => pre.currentPkg != cur.currentPkg,
+          listener: _handleCurrentPkgChanged,
+        ),
+      ],
+      child: BlocBuilder<PackagesBloc, PackagesState>(
+        bloc: _packagesBloc,
+        builder: (context, state) {
+          if (_packagesBloc.packages.isEmpty) {
+            return const PrimaryEmptyData();
+          }
 
-        return ListView.separated(
-          itemCount: _packagesBloc.packages.length,
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.mediumSpacing,
-          ),
-          itemBuilder:
-              (context, index) => PackageItem(
-                index: index,
-                package: _packagesBloc.packages[index],
-                onViewDetail: onViewDetail,
-              ),
-          separatorBuilder:
-              (context, index) =>
-                  const SizedBox(height: AppDimensions.smallSpacing),
-        );
-      },
+          return ListView.separated(
+            itemCount: _packagesBloc.packages.length,
+            padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.mediumSpacing,
+            ),
+            itemBuilder:
+                (context, index) => PackageItem(
+                  index: index,
+                  package: _packagesBloc.packages[index],
+                  onViewDetail: onViewDetail,
+                ),
+            separatorBuilder:
+                (context, index) =>
+                    const SizedBox(height: AppDimensions.smallSpacing),
+          );
+        },
+      ),
     );
   }
 
@@ -54,24 +62,22 @@ class _PackagesPageState extends State<PackagesPage> {
     _packagesBloc.viewPkg(pkg.id);
   }
 
-  void _handleListener(BuildContext context, PackagesState state) {
-    if (state is PackagesViewDetailState) {
-      switch (state.currentPkg.state) {
-        case Result.loading:
-          PrimaryDialog.showLoadingDialog(context);
-          break;
-        case Result.success:
-          PrimaryDialog.hideLoadingDialog(context);
-          context.push(RouteName.packageDetailPage);
-          break;
-        case Result.error:
-          PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(
-            context,
-            message: state.currentPkg.message,
-          );
-          break;
-      }
+  void _handleCurrentPkgChanged(BuildContext context, PackagesState state) {
+    switch (state.currentPkg.state) {
+      case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
+        break;
+      case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
+        context.push(RouteName.packageDetailPage);
+        break;
+      case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.currentPkg.message,
+        );
+        break;
     }
   }
 }
