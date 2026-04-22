@@ -2,6 +2,7 @@ import 'package:oneship_customer/core/base/base_repository.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 
@@ -13,6 +14,8 @@ abstract class AuthRepository extends BaseRepository {
   // Future<Resource> logout();
 
   Future<Resource> registerAccount(RegisterRequest body);
+
+  Future<Resource> verifyEmail(VerifyEmailRequest body);
 
   // Future<Resource<OtpResult>> genOtpCode(String phoneNumber);
 

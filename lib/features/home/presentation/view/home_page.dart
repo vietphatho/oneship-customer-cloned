@@ -1,6 +1,8 @@
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_text_button.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,9 +28,13 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  PrimaryTextButton(label: "log_in".tr(), onPressed: () {}),
+                  PrimaryTextButton(label: "log_in".tr(), onPressed: () {
+                    context.pushReplacement(RouteName.loginPage);
+                  }),
                   AppSpacing.horizontal(AppDimensions.smallSpacing),
-                  PrimaryTextButton(label: "sign_up".tr(), onPressed: () {}),
+                  PrimaryTextButton(label: "sign_up".tr(), onPressed: () {
+                    context.pushReplacement(RouteName.registerPage);
+                  }),
                 ],
               ),
               SizedBox(height: 300),

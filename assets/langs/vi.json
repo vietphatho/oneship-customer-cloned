@@ -366,7 +366,20 @@
             "pending_withdraw_exists": "Đã có yêu cầu rút tiền đang chờ xử lý"
         },
         "validate": {
-            "invalid_vn_phone_number": "Số điện thoại không đúng định dạng Việt Nam"
+            "invalid_vn_phone_number": "Số điện thoại không đúng định dạng Việt Nam",
+            "username_required": "Tên đăng nhập không được để trống",
+            "username_min_length": "Tên đăng nhập phải có ít nhất 3 ký tự",
+            "full_name_required": "Họ tên không được để trống",
+            "full_name_min_length": "Họ tên phải có ít nhất 2 ký tự",
+            "email_required": "Email không được để trống",
+            "invalid_email_format": "Email không đúng định dạng",
+            "phone_required": "Số điện thoại không được để trống",
+            "invalid_phone_format": "Số điện thoại không đúng định dạng",
+            "password_required": "Mật khẩu không được để trống",
+            "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự",
+            "confirm_password_required": "Xác nhận mật khẩu không được để trống",
+            "confirm_password_mismatch": "Xác nhận mật khẩu không khớp"
+
         }
     },
     "cancel": "Huỷ",
