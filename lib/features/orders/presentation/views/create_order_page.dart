@@ -30,8 +30,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     var shop = _managementBloc.currentShop;
     if (shop != null) {
       _createOrderBloc.setShop(shop);
-    } else {
-      Navigator.pop(context);
     }
   }
 

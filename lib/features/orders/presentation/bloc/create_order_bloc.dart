@@ -105,6 +105,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           wardName: event.ward?.name,
           wardCode: event.ward?.code,
           fullAddress: event.address,
+          isNewAddress: event.isNewAddress,
         ),
       ),
     );
@@ -256,6 +257,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       wardName: draftReq.wardName,
       wardCode: draftReq.wardCode,
       fullAddress: address,
+      isNewAddress: draftReq.isNewAddress,
       detail: currentReq.detail?.copyWith(),
     );
     add(CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.orderInfo));
@@ -310,6 +312,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     String? name,
     String? phoneNumber,
     String? address,
+    bool? isNewAddress,
     String? destinationRefId,
     Province? province,
     Ward? ward,
@@ -320,15 +323,17 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         customerName: name ?? draftRequest.recipientName,
         phoneNumber: phoneNumber ?? draftRequest.recipientPhone,
         address: address ?? draftRequest.fullAddress,
+        isNewAddress: isNewAddress ?? draftRequest.isNewAddress,
         province: province ?? draftRequest.province,
         ward: province != null ? null : (ward ?? draftRequest.ward),
       ),
     );
 
-    if (destinationRefId != null) {
+    final shopCoordinates = state.shopInfo.shopCoordinates?.latLong;
+    if (destinationRefId != null && shopCoordinates != null) {
       add(
         CreateOrderGetRoutingToShopEvent(
-          shopCoor: state.shopInfo.shopCoordinates!.latLong,
+          shopCoor: shopCoordinates,
           destinationRefId: destinationRefId,
         ),
       );

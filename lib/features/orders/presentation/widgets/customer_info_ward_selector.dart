@@ -14,6 +14,8 @@ class CustomerInfoWardSelector extends StatefulWidget {
 }
 
 class _CustomerInfoWardSelectorState extends State<CustomerInfoWardSelector> {
+  static const String _hcmProvinceCode = '79';
+
   final CreateOrderBloc _createOrderBloc = getIt.get();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
 
@@ -21,13 +23,18 @@ class _CustomerInfoWardSelectorState extends State<CustomerInfoWardSelector> {
   Widget build(BuildContext context) {
     return BlocBuilder<LocationServiceBloc, LocationServiceState>(
       bloc: _locationServiceBloc,
-      buildWhen: (pre, cur) => cur is LocationServiceWardsChangedState,
+      buildWhen:
+          (pre, cur) =>
+              cur is LocationServiceProvincesChangedState ||
+              cur is LocationServiceWardsChangedState,
       builder: (context, state) {
-        if (state is! LocationServiceWardsChangedState) return SizedBox();
+        final wards = state.wardsByProvince[_hcmProvinceCode] ?? [];
+        if (wards.isEmpty) return const SizedBox();
 
         return PrimaryDropdown(
           label: "ward".tr(),
-          menu: state.filteredWards,
+          initialValue: _createOrderBloc.state.draftRequest.ward,
+          menu: wards,
           toLabel: (item) => item.name,
           onSelected: (value) {
             _createOrderBloc.changeCustomerInfo(ward: value);

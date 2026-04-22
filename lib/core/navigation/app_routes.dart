@@ -11,7 +11,7 @@ import 'package:oneship_customer/features/shop_master/presentation/views/shop_ma
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: RouteName.splashPage,
+  initialLocation: RouteName.shopMasterPage,
   observers: [RouteObserverPage()],
   routes: [
     GoRoute(

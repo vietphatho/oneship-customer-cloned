@@ -63,6 +63,7 @@ class CreateOrderEntity {
     shopId: '',
     payer: CreateOrderPayer.recipient,
     agreeTerms: true,
+    isNewAddress: true,
     recipientPhone: '',
     recipientName: '',
     serviceCode: DeliveryServiceType.standard,

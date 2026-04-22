@@ -31,7 +31,16 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
       //         pre.request.detail?.pickupDate != cur.request.detail?.pickupDate,
       listener: _handleListener,
       builder: (context, state) {
-        var request = state.request;
+        final request = state.request;
+        final isStepValid =
+            request.detail?.pickupDate != null &&
+            request.detail?.pickUpSession != null &&
+            request.recipientName.trim().isNotEmpty &&
+            request.recipientPhone.trim().isNotEmpty &&
+            (request.fullAddress?.trim().isNotEmpty ?? false) &&
+            request.provinceCode != null &&
+            request.wardCode != null &&
+            (request.detail?.weight ?? 0) > 0;
 
         return Padding(
           padding: EdgeInsets.symmetric(
@@ -78,6 +87,21 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             _InfoField(
                               label: "phone_number".tr(),
                               value: request.recipientPhone,
+                            ),
+                            _InfoField(
+                              label: "address_type".tr(),
+                              value:
+                                  (request.isNewAddress ?? true)
+                                      ? "new_address".tr()
+                                      : "old_address".tr(),
+                            ),
+                            _InfoField(
+                              label: "province".tr(),
+                              value: request.provinceName,
+                            ),
+                            _InfoField(
+                              label: "ward".tr(),
+                              value: request.wardName,
                             ),
                             _InfoField(
                               label: "address".tr(),
@@ -162,9 +186,12 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                     Expanded(
                       child: PrimaryButton.primaryButton(
                         label: "confirm".tr(),
-                        onPressed: () {
-                          _createOrderBloc.createOrder();
-                        },
+                        onPressed:
+                            isStepValid
+                                ? () {
+                                  _createOrderBloc.createOrder();
+                                }
+                                : null,
                       ),
                     ),
                   ],
@@ -204,7 +231,7 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
 }
 
 class _InfoField extends StatelessWidget {
-  const _InfoField({super.key, required this.label, required this.value});
+  const _InfoField({required this.label, required this.value});
 
   final String label;
   final String? value;
@@ -239,14 +266,14 @@ class _InfoField extends StatelessWidget {
 }
 
 class _FeeSession extends StatelessWidget {
-  const _FeeSession({super.key});
+  const _FeeSession();
 
   @override
   Widget build(BuildContext context) {
-    final CreateOrderBloc _createOrderBloc = getIt.get();
+    final CreateOrderBloc createOrderBloc = getIt.get();
 
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
-      bloc: _createOrderBloc,
+      bloc: createOrderBloc,
       buildWhen: (_, state) => state is CreateOrderCalculatedFeeState,
       builder: (context, state) {
         var request = state.request;

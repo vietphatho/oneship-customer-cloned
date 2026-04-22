@@ -37,6 +37,7 @@ class CreateOrderChangeCustomerInfoEvent extends CreateOrderEvent {
   final String? customerName;
   final String? phoneNumber;
   final String? address;
+  final bool? isNewAddress;
   final Province? province;
   final Ward? ward;
 
@@ -44,6 +45,7 @@ class CreateOrderChangeCustomerInfoEvent extends CreateOrderEvent {
     this.customerName,
     this.phoneNumber,
     this.address,
+    this.isNewAddress,
     this.province,
     this.ward,
   });
