@@ -25,6 +25,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
 
   @override
   Widget build(BuildContext context) {
+    final isStepValid = (int.tryParse(_weightCtrl.text) ?? 0) > 0;
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.mediumSpacing,
@@ -48,6 +50,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "cod".tr(),
                           controller: _codCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
                         ),
                       ),
                       // AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -60,6 +63,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                     isRequired: true,
                     controller: _weightCtrl,
                     keyboardType: TextInputType.number,
+                    onChanged: (_) => setState(() {}),
                   ),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   Row(
@@ -69,6 +73,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "length".tr(),
                           controller: _lengthCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
                         ),
                       ),
                       AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -77,6 +82,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "width".tr(),
                           controller: _widthCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
                         ),
                       ),
                       AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -85,6 +91,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "height".tr(),
                           controller: _heightCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
                         ),
                       ),
                     ],
@@ -98,6 +105,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                     label: "note".tr(),
                     maxLine: 5,
                     controller: _noteCtrl,
+                    onChanged: (_) => setState(() {}),
                   ),
                 ],
               ),
@@ -119,7 +127,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                 Expanded(
                   child: PrimaryButton.primaryButton(
                     label: "done".tr(),
-                    onPressed: _onNext,
+                    onPressed: isStepValid ? _onNext : null,
                   ),
                 ),
               ],

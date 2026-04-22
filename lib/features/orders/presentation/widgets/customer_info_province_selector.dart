@@ -15,6 +15,8 @@ class CustomerInfoProvinceSelector extends StatefulWidget {
 
 class _CustomerInfoProvinceSelectorState
     extends State<CustomerInfoProvinceSelector> {
+  static const int _hcmProvinceCode = 79;
+
   final CreateOrderBloc _createOrderBloc = getIt.get();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
 
@@ -22,17 +24,32 @@ class _CustomerInfoProvinceSelectorState
   Widget build(BuildContext context) {
     return BlocBuilder<LocationServiceBloc, LocationServiceState>(
       bloc: _locationServiceBloc,
-      buildWhen: (pre, cur) => cur is LocationServiceProvincesChangedState,
+      buildWhen:
+          (pre, cur) =>
+              cur is LocationServiceProvincesChangedState ||
+              cur is LocationServiceWardsChangedState,
       builder: (context, state) {
-        if (state is! LocationServiceProvincesChangedState) return SizedBox();
+        final hcmProvince = state.provinces.firstWhereOrNull(
+          (province) => province.code == _hcmProvinceCode,
+        );
+        if (hcmProvince == null) return const SizedBox();
+
+        final selectedProvince = _createOrderBloc.state.draftRequest.province;
+        if (selectedProvince?.code != _hcmProvinceCode) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _createOrderBloc.changeCustomerInfo(province: hcmProvince);
+          });
+        }
 
         return PrimaryDropdown(
           label: "province".tr(),
-          menu: state.filteredProvinces,
+          initialValue: hcmProvince,
+          menu: [hcmProvince],
           toLabel: (item) => item.name,
+          requestFocusOnTap: false,
           onSelected: (value) {
+            if (value == null) return;
             _createOrderBloc.changeCustomerInfo(province: value);
-            _locationServiceBloc.searchWard("", province: value!);
           },
         );
       },

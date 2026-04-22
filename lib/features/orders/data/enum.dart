@@ -101,7 +101,14 @@ extension OrderPickUpSessionExt on OrderPickUpSession {
     OrderPickUpSession.afternoon: "AFTERNOON",
   };
 
+  static final _mapLabel = {
+    OrderPickUpSession.morning: "Sáng (8:00-12:00)",
+    OrderPickUpSession.afternoon: "Chiều (14:00-18:00)",
+  };
+
   String get requestValue => _mapValue[this]!;
+
+  String get label => _mapLabel[this]!;
 }
 
 enum CreateOrderPayer { sender, recipient }

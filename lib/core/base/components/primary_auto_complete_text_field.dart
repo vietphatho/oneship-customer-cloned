@@ -336,7 +336,6 @@ class _PrimaryAutoCompleteTextFieldState<T>
   }
 
   OutlineInputBorder get _outlineField {
-    var colorScheme = AppTheme.getColorScheme(context);
     return OutlineInputBorder(
       borderSide: BorderSide(
         color: errorText == null ? Colors.transparent : AppColors.primary,

@@ -16,8 +16,13 @@ class PickUpTimePageView extends StatefulWidget {
 
 class _PickUpTimePageViewState extends State<PickUpTimePageView> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final TextEditingController _shopNameController = TextEditingController();
 
-  final TextEditingController _pickUpDateController = TextEditingController();
+  @override
+  void dispose() {
+    _shopNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,11 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
       //         pre.request.detail?.pickupDate != cur.request.detail?.pickupDate,
       listener: _handleListener,
       builder: (context, state) {
-        CreateOrderEntity request = state.request;
+        final CreateOrderEntity request = state.draftRequest;
+        final isStepValid =
+            request.detail?.pickupDate != null &&
+            request.detail?.pickUpSession != null;
+        _shopNameController.text = state.shopInfo.shopName ?? "--";
 
         return Container(
           padding: EdgeInsets.symmetric(
@@ -38,13 +47,23 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PrimaryText("pick_up_info".tr()),
+              PrimaryText(
+                "Thông tin người gửi",
+                style: AppTextStyles.headlineSmall,
+              ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-
+              PrimaryText("Tên cửa hàng", style: AppTextStyles.labelMedium),
+              const SizedBox(height: 8),
+              PrimaryTextField(controller: _shopNameController, enabled: false),
+              AppSpacing.vertical(AppDimensions.mediumSpacing),
               PrimaryDateTimePicker(
                 label: "pick_up_date".tr(),
                 initialDateTime: request.detail?.pickupDate,
-                // textEditingController: _pickUpDateController,
+                firstDate: DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                ),
                 onChanged:
                     (date) => _createOrderBloc.changePickUpDate(date: date),
               ),
@@ -53,7 +72,8 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
                 label: "pick_up_time".tr(),
                 initialValue: request.detail?.pickUpSession,
                 menu: OrderPickUpSession.values,
-                toLabel: (item) => item.name,
+                hintText: "Chọn thời gian",
+                toLabel: (item) => item.label,
                 onSelected:
                     (value) =>
                         _createOrderBloc.changePickUpDate(session: value),
@@ -62,7 +82,8 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
               SafeArea(
                 child: PrimaryButton.primaryButton(
                   label: "next".tr(),
-                  onPressed: _createOrderBloc.completeDateStep,
+                  onPressed:
+                      isStepValid ? _createOrderBloc.completeDateStep : null,
                 ),
               ),
             ],
