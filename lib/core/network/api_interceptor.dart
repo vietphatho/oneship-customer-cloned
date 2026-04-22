@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/error_code.dart';
 import 'package:oneship_customer/core/navigation/app_navigator.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
@@ -42,6 +42,7 @@ class ApiInterceptor extends Interceptor {
         try {
           if (_refreshFuture != null) {
             await _refreshFuture;
+            _refreshFuture = null;
           } else {
             _refreshFuture = _refreshToken(refreshToken);
             await _refreshFuture;
@@ -62,7 +63,9 @@ class ApiInterceptor extends Interceptor {
             await SecureStorage.deleteSecureData(SecureStorageKey.userId);
             await tokenManager.clearTokens();
             // FunctionUtils.handleAfterLogOut();
-            AppNavigator.globalKey.currentState!.pushReplacementNamed(
+
+            await Future.delayed(Durations.medium4);
+            AppNavigator.globalKey.currentState?.pushReplacementNamed(
               RouteName.loginPage,
             );
           } else {

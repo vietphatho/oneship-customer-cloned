@@ -5,6 +5,7 @@ import 'package:oneship_customer/features/auth/presentation/views/login_page.dar
 import 'package:oneship_customer/features/auth/presentation/views/register_page.dart';
 import 'package:oneship_customer/features/home/presentation/view/home_page.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/create_multi_orders_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_order_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
@@ -45,6 +46,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.orderTrackingPage,
       builder: (context, state) => const OrderTrackingPage(),
+    ),
+    GoRoute(
+      path: RouteName.createMultiOrdersPage,
+      builder: (context, state) => const CreateMultiOrdersPage(),
     ),
   ],
 );

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:oneship_customer/features/management/presentation/views/management_page.dart';
-import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
 
 enum BottomNavigationItem { orders, packages, management }
 
@@ -13,7 +13,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
   };
 
   static const _mapPage = {
-    BottomNavigationItem.orders: OrdersPage(),
+    BottomNavigationItem.orders: ShopHome(),
     BottomNavigationItem.packages: PackagesPage(),
     BottomNavigationItem.management: ManagementPage(),
   };

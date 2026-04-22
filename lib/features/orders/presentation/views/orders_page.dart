@@ -44,63 +44,65 @@ class _OrdersPageState extends State<OrdersPage>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<PackagesBloc, PackagesState>(
-          bloc: _packagesBloc,
-          listenWhen:
-              (pre, cur) =>
-                  pre.findingShipperResult != cur.findingShipperResult,
-          listener: _handleFindingShipperChanged,
-        ),
-        BlocListener<PackagesBloc, PackagesState>(
-          bloc: _packagesBloc,
-          listenWhen:
-              (pre, cur) =>
-                  pre.cancelFindingShipperResult !=
-                  cur.cancelFindingShipperResult,
-          listener: _handleCancelFindingShipperChanged,
-        ),
-        BlocListener<ManagementBloc, ManagementState>(
-          bloc: _managementBloc,
-          listener: _handleListener,
-        ),
-      ],
-      child: Column(
-        children: [
-          // Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Padding(
-          //     padding: EdgeInsets.fromLTRB(
-          //       AppDimensions.mediumSpacing,
-          //       0,
-          //       0,
-          //       AppDimensions.xSmallSpacing,
-          //     ),
-          //     child: const ShopSelectionButton(),
-          //   ),
-          // ),
-          Expanded(
-            child: DefaultTabController(
-              length: _tabList.length,
-              child: Column(
-                children: [
-                  OrderStatusTabBar(
-                    controller: _tabCtrl,
-                    items: _tabList,
-                    onTap: _onTabChanged,
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabCtrl,
-                      children: _tabList.map((e) => e.view).toList(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    return Scaffold(
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<PackagesBloc, PackagesState>(
+            bloc: _packagesBloc,
+            listenWhen:
+                (pre, cur) =>
+                    pre.findingShipperResult != cur.findingShipperResult,
+            listener: _handleFindingShipperChanged,
+          ),
+          BlocListener<PackagesBloc, PackagesState>(
+            bloc: _packagesBloc,
+            listenWhen:
+                (pre, cur) =>
+                    pre.cancelFindingShipperResult !=
+                    cur.cancelFindingShipperResult,
+            listener: _handleCancelFindingShipperChanged,
+          ),
+          BlocListener<ManagementBloc, ManagementState>(
+            bloc: _managementBloc,
+            listener: _handleListener,
           ),
         ],
+        child: Column(
+          children: [
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Padding(
+            //     padding: EdgeInsets.fromLTRB(
+            //       AppDimensions.mediumSpacing,
+            //       0,
+            //       0,
+            //       AppDimensions.xSmallSpacing,
+            //     ),
+            //     child: const ShopSelectionButton(),
+            //   ),
+            // ),
+            Expanded(
+              child: DefaultTabController(
+                length: _tabList.length,
+                child: Column(
+                  children: [
+                    OrderStatusTabBar(
+                      controller: _tabCtrl,
+                      items: _tabList,
+                      onTap: _onTabChanged,
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabCtrl,
+                        children: _tabList.map((e) => e.view).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

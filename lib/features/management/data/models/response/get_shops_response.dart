@@ -25,6 +25,7 @@ abstract class ShopInfo with _$ShopInfo {
     @JsonKey(name: "shopName") String? shopName,
     @JsonKey(name: "shopStatus") String? shopStatus,
     @JsonKey(name: "shopCoordinates") BaseCoordinates? shopCoordinates,
+    @JsonKey(name: "shopLogo") String? shopLogo,
     @JsonKey(name: "staffRole") String? staffRole,
     @JsonKey(name: "permissions") Map<String, ShopPermission>? permissions,
     @JsonKey(name: "isHub") bool? isHub,

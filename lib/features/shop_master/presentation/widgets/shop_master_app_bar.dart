@@ -27,43 +27,39 @@ class ShopMasterAppBar extends StatelessWidget {
               horizontal: AppDimensions.mediumSpacing,
               vertical: AppDimensions.smallSpacing,
             ),
-            child: Column(
+            child: Row(
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: AppDimensions.homeAvatarRadius,
-                      foregroundImage: CachedNetworkImageProvider(
-                        userProfile.avatarUrl ?? "",
+                Expanded(
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: AppDimensions.homeAvatarRadius,
+                        foregroundImage: CachedNetworkImageProvider(
+                          userProfile.avatarUrl ?? "",
+                        ),
+                        backgroundColor: AppColors.neutral7,
                       ),
-                      backgroundColor: AppColors.neutral7,
-                    ),
-                    AppSpacing.horizontal(AppDimensions.smallSpacing),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PrimaryText(userProfile.displayName),
-                          PrimaryText(userProfile.userEmail),
-                        ],
+                      AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                      Expanded(
+                        child: PrimaryText(
+                          userProfile.displayName,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    // AppSpacing.horizontal(AppDimensions.smallSpacing),
-                    // IconButton(
-                    //   onPressed: () {},
-                    //   icon: Icon(
-                    //     Icons.post_add_rounded,
-                    //     size: AppDimensions.mediumIconSize,
-                    //   ),
-                    // ),
-                    EndDrawerButton(),
-                  ],
+                    ],
+                  ),
                 ),
-                AppSpacing.vertical(AppDimensions.smallSpacing),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: const ShopSelectionButton(),
-                ),
+
+                // AppSpacing.horizontal(AppDimensions.smallSpacing),
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: Icon(
+                //     Icons.post_add_rounded,
+                //     size: AppDimensions.mediumIconSize,
+                //   ),
+                // ),
+                // EndDrawerButton(),
+                Expanded(child: const ShopSelectionButton()),
               ],
             ),
           ),

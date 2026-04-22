@@ -8,7 +8,7 @@ class Constants {
   static const String versionNameKey = "VERSION_NAME";
   static const String versionCodeKey = "VERSION_CODE";
   static const String envKey = "ENV";
-  static const String refreshTokenEndpoint = "/api/v1/shipper/refresh-token";
+  static const String refreshTokenEndpoint = "/api/v1/auth/refresh";
   static const vietmapAccessToken = "VIETMAP_ACCESS_TOKEN";
   static const String vehicleDefault = "motorcycle";
   static const String endpoint = "https://one-ship-api.de.onexway.io";
