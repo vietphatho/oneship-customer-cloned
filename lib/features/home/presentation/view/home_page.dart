@@ -35,7 +35,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   AppSpacing.horizontal(AppDimensions.smallSpacing),
-                  PrimaryTextButton(label: "sign_up".tr(), onPressed: () {}),
+                  PrimaryTextButton(label: "sign_up".tr(), onPressed: () {
+                    context.pushReplacement(RouteName.registerPage);
+                  }),
                 ],
               ),
               SizedBox(height: 300),

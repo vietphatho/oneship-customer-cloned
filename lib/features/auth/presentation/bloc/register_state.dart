@@ -1,11 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 
-abstract class RegisterState {
-  const RegisterState({required this.request});
+part 'register_state.freezed.dart';
 
-  final RegisterRequest request;
-}
-
-class RegisterChangeRequestState extends RegisterState {
-  RegisterChangeRequestState({required super.request});
+@freezed
+abstract class RegisterState with _$RegisterState {
+  factory RegisterState({
+    String? email,
+    Resource? registerResult,
+    Resource? verifyEmailResult,
+  }) = _RegisterState;
 }
