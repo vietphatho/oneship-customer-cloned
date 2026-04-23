@@ -38,8 +38,8 @@ class AppTheme {
     primaryTextTheme: const TextTheme(bodyMedium: AppTextStyles.bodyMedium),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.background,
-      foregroundColor: AppColors.neutral2,
-      iconTheme: IconThemeData(color: Colors.white),
+      foregroundColor: AppColors.primary,
+      iconTheme: IconThemeData(color: AppColors.primary),
     ),
     dividerColor: AppColors.grey200,
     dividerTheme: const DividerThemeData(color: AppColors.grey200),

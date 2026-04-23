@@ -33,6 +33,7 @@ class _CustomerInfoWardSelectorState extends State<CustomerInfoWardSelector> {
 
         return PrimaryDropdown(
           label: "ward".tr(),
+          isRequired: true,
           initialValue: _createOrderBloc.state.draftRequest.ward,
           menu: wards,
           toLabel: (item) => item.name,

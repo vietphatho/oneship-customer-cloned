@@ -281,8 +281,7 @@ class _PrimaryAutoCompleteTextFieldState<T>
                   ),
                   helper: widget.helper,
                   filled: true,
-                  fillColor:
-                      widget.fillColor ?? colorScheme.surfaceContainerHigh,
+                  fillColor: widget.fillColor ?? colorScheme.background,
                   border: _outlineField,
                   enabledBorder: _outlineField,
                   focusedBorder: _outlineField,
@@ -338,7 +337,7 @@ class _PrimaryAutoCompleteTextFieldState<T>
   OutlineInputBorder get _outlineField {
     return OutlineInputBorder(
       borderSide: BorderSide(
-        color: errorText == null ? Colors.transparent : AppColors.primary,
+        color: errorText == null ? AppColors.neutral7 : AppColors.red500,
       ),
       borderRadius: AppDimensions.largeBorderRadius,
     );

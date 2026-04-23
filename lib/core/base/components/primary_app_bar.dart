@@ -9,10 +9,12 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: PrimaryText(title, style: AppTextStyles.appBarTitle),
+      title: PrimaryText(
+        title,
+        style: AppTextStyles.appBarTitle,
+        color: AppColors.primary,
+      ),
       centerTitle: true,
-      backgroundColor: AppColors.primary,
-      foregroundColor: Colors.white,
       actions: actions,
     );
   }

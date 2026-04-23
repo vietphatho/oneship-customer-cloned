@@ -58,6 +58,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _codCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
+                          suffixText: Constants.currencyUnit,
                         ),
                       ),
                       // AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -71,6 +72,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                     controller: _weightCtrl,
                     keyboardType: TextInputType.number,
                     onChanged: (_) => setState(() {}),
+                    suffixText: Constants.weightUnit,
                   ),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   Row(
@@ -81,6 +83,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _lengthCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
+                          suffixText: Constants.pkgDimensionsUnit,
                         ),
                       ),
                       AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -90,6 +93,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _widthCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
+                          suffixText: Constants.pkgDimensionsUnit,
                         ),
                       ),
                       AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -99,6 +103,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _heightCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
+                          suffixText: Constants.pkgDimensionsUnit,
                         ),
                       ),
                     ],
@@ -143,14 +148,14 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
             child: Row(
               children: [
                 Expanded(
-                  child: PrimaryButton.secondaryButton(
+                  child: PrimaryButton.secondary(
                     label: "previous".tr(),
                     onPressed: _onPrevious,
                   ),
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
-                  child: PrimaryButton.primaryButton(
+                  child: PrimaryButton.supportingPrimary(
                     label: "done".tr(),
                     onPressed: isStepValid ? _onNext : null,
                   ),

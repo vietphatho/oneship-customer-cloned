@@ -44,150 +44,162 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
             request.ward != null &&
             (request.detail?.weight ?? 0) > 0;
 
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.mediumSpacing,
-            vertical: AppDimensions.mediumSpacing,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PrimaryText("info_confirmation".tr()),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          children: [
-                            _InfoField(
-                              label: "shop_name".tr(),
-                              value: state.shopInfo.shopName,
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.mediumSpacing,
+                  vertical: AppDimensions.mediumSpacing,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PrimaryText("info_confirmation".tr()),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        children: [
+                          _InfoField(
+                            label: "shop_name".tr(),
+                            value: state.shopInfo.shopName,
+                          ),
+                          _InfoField(
+                            label: "pick_up_time".tr(),
+                            value: DateTimeUtils.formatDateFromDT(
+                              request.detail?.pickupDate,
                             ),
-                            _InfoField(
-                              label: "pick_up_time".tr(),
-                              value: DateTimeUtils.formatDateFromDT(
-                                request.detail?.pickupDate,
-                              ),
-                            ),
-                            _InfoField(
-                              label: "service_type".tr(),
-                              value: request.serviceCode?.name,
-                            ),
-                          ],
-                        ),
+                          ),
+                          _InfoField(
+                            label: "service_type".tr(),
+                            value: request.serviceCode?.name,
+                          ),
+                        ],
                       ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          children: [
-                            _InfoField(
-                              label: "customer_name".tr(),
-                              value: request.customerName,
-                            ),
-                            _InfoField(
-                              label: "phone_number".tr(),
-                              value: request.phone,
-                            ),
-                            _InfoField(
-                              label: "address_type".tr(),
-                              value:
-                                  (request.isNewAddress ?? true)
-                                      ? "new_address".tr()
-                                      : "old_address".tr(),
-                            ),
-                            _InfoField(
-                              label: "province".tr(),
-                              value: request.province?.name,
-                            ),
-                            _InfoField(
-                              label: "ward".tr(),
-                              value: request.ward?.name,
-                            ),
-                            _InfoField(
-                              label: "address".tr(),
-                              value: request.fullAddress,
-                            ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        children: [
+                          _InfoField(
+                            label: "customer_name".tr(),
+                            value: request.customerName,
+                          ),
+                          _InfoField(
+                            label: "phone_number".tr(),
+                            value: request.phone,
+                          ),
+                          _InfoField(
+                            label: "address_type".tr(),
+                            value:
+                                (request.isNewAddress ?? true)
+                                    ? "new_address".tr()
+                                    : "old_address".tr(),
+                          ),
+                          _InfoField(
+                            label: "province".tr(),
+                            value: request.province?.name,
+                          ),
+                          _InfoField(
+                            label: "ward".tr(),
+                            value: request.ward?.name,
+                          ),
+                          _InfoField(
+                            label: "address".tr(),
+                            value: request.fullAddress,
+                          ),
 
-                            // _InfoField(label: "shop_name".tr(), value: ""),
-                            // _InfoField(label: "shop_name".tr(), value: ""),
-                          ],
-                        ),
+                          // _InfoField(label: "shop_name".tr(), value: ""),
+                          // _InfoField(label: "shop_name".tr(), value: ""),
+                        ],
                       ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          children: [
-                            _InfoField(
-                              label: "weight".tr(),
-                              value: Utils.formatWeightWithUnit(
-                                request.detail?.weight,
-                              ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        children: [
+                          _InfoField(
+                            label: "weight".tr(),
+                            value: Utils.formatWeightWithUnit(
+                              request.detail?.weight,
                             ),
-                            _InfoField(
-                              label: "dimensions".tr(),
-                              value: Utils.formatDimensionWithUnit(
-                                length: request.detail?.length,
-                                width: request.detail?.width,
-                                height: request.detail?.height,
-                              ),
+                          ),
+                          _InfoField(
+                            label: "dimensions".tr(),
+                            value: Utils.formatDimensionWithUnit(
+                              length: request.detail?.length,
+                              width: request.detail?.width,
+                              height: request.detail?.height,
                             ),
+                          ),
 
-                            // _InfoField(
-                            //   label: "cod".tr(),
-                            //   value: Utils.formatCurrencyWithUnit(
-                            //     request.codAmount,
-                            //   ),
-                            // ),
-                            _InfoField(
-                              label: "note".tr(),
-                              value: request.detail?.note,
-                            ),
-                          ],
-                        ),
+                          // _InfoField(
+                          //   label: "cod".tr(),
+                          //   value: Utils.formatCurrencyWithUnit(
+                          //     request.codAmount,
+                          //   ),
+                          // ),
+                          _InfoField(
+                            label: "note".tr(),
+                            value: request.detail?.note,
+                          ),
+                        ],
                       ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      const _FeeSession(),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PrimaryText(
-                              "payer".tr(),
-                              style: AppTextStyles.labelMedium,
-                            ),
-                            PrimaryRadioGroup<Payer>(
-                              direction: Axis.horizontal,
-                              options: Payer.values,
-                              value: Payer.recipient,
-                              displayLabel: (item) => item.name,
-                              onChanged: (item) {},
-                            ),
-                          ],
-                        ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    const _FeeSession(),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PrimaryText(
+                            "payer".tr(),
+                            style: AppTextStyles.labelMedium,
+                          ),
+                          PrimaryRadioGroup<Payer>(
+                            direction: Axis.horizontal,
+                            options: Payer.values,
+                            value: request.payer,
+                            displayLabel: (item) => item.name,
+                            onChanged: _createOrderBloc.changePayer,
+                          ),
+                        ],
                       ),
-                      AppSpacing.vertical(AppDimensions.largeSpacing),
-                      // const Spacer(),
-                    ],
-                  ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.largeSpacing),
+                    Checkbox(
+                      value: state.acceptTerms,
+                      onChanged: (value) {
+                        if (value != null) {
+                          _createOrderBloc.changeAcceptTerms(value);
+                        }
+                      },
+                    ),
+                    // const Spacer(),
+                  ],
                 ),
               ),
+            ),
 
-              SafeArea(
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.mediumSpacing,
+                  vertical: AppDimensions.mediumSpacing,
+                ),
                 child: Row(
                   children: [
                     Expanded(
-                      child: PrimaryButton.secondaryButton(
+                      child: PrimaryButton.secondary(
                         label: "previous".tr(),
                         onPressed: _onPrevious,
                       ),
                     ),
                     AppSpacing.horizontal(AppDimensions.smallSpacing),
                     Expanded(
-                      child: PrimaryButton.primaryButton(
-                        label: "confirm".tr(),
+                      child: PrimaryButton.supportingPrimary(
+                        label: "create_order".tr(),
                         onPressed:
                             isStepValid
                                 ? () {
@@ -199,8 +211,8 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

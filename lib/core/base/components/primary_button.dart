@@ -30,7 +30,7 @@ class PrimaryButton extends StatelessWidget {
 
   static final double _defaultHeightButton = AppDimensions.mediumHeightButton;
 
-  factory PrimaryButton.primaryButton({
+  factory PrimaryButton.primary({
     required String label,
     Function()? onPressed,
     final double? height,
@@ -41,7 +41,19 @@ class PrimaryButton extends StatelessWidget {
     textColor: Colors.white,
   );
 
-  factory PrimaryButton.secondaryButton({
+  factory PrimaryButton.supportingPrimary({
+    required String label,
+    Function()? onPressed,
+    final double? height,
+  }) => PrimaryButton(
+    label: label,
+    onPressed: onPressed,
+    height: height ?? _defaultHeightButton,
+    textColor: Colors.white,
+    backgroundColor: AppColors.secondary,
+  );
+
+  factory PrimaryButton.secondary({
     required String label,
     Function()? onPressed,
     final double? height,

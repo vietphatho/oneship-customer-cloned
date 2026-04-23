@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                           ValueListenableBuilder(
                             valueListenable: isFormValid,
                             builder: (context, bool value, _) {
-                              return PrimaryButton.primaryButton(
+                              return PrimaryButton.primary(
                                 onPressed: _onLoginPressed,
                                 label: "login".tr(),
                               );

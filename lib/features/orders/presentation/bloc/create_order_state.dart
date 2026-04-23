@@ -12,6 +12,7 @@ abstract class CreateOrderState {
     required this.draftRequest,
     required this.shopInfo,
     required this.routingToShopResource,
+    this.acceptTerms = true,
   });
 
   final CreateOrderStep step;
@@ -19,6 +20,7 @@ abstract class CreateOrderState {
   final CreateOrderRequestEntity draftRequest;
   final ShopEntity shopInfo;
   final Resource<GetRoutingToShopResponse> routingToShopResource;
+  final bool acceptTerms;
 
   bool get isEnableAddressField =>
       draftRequest.province != null && draftRequest.ward != null;
@@ -30,6 +32,7 @@ class CreateOrderRequestChangedState extends CreateOrderState {
     required super.draftRequest,
     required super.shopInfo,
     required super.routingToShopResource,
+    super.acceptTerms,
     super.step,
   });
 }

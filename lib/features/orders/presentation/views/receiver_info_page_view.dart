@@ -71,6 +71,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.mediumSpacing),
                       PrimaryTextField(
                         label: "recipient_name".tr(),
+                        isRequired: true,
                         controller: _nameCtrl,
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
@@ -82,6 +83,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       PrimaryTextField(
                         label: "phone_number".tr(),
+                        isRequired: true,
                         controller: _phoneCtrl,
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
@@ -96,6 +98,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       PrimaryRadioGroup<ReceiverAddressOption>(
                         title: "address_type".tr(),
+                        isRequired: true,
                         direction: Axis.horizontal,
                         options: ReceiverAddressOption.values,
                         value:
@@ -122,6 +125,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       PrimaryAutoCompleteTextField(
                         label: "address".tr(),
+                        isRequired: true,
                         enabled: state.isEnableAddressField,
                         controller: _addressCtrl,
                         displayStringForOption: (item) => item.display ?? "--",
@@ -137,29 +141,31 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                               destinationRefId: value.refId,
                             ),
                       ),
+                      AppSpacing.vertical(AppDimensions.smallSpacing),
+                      Container(height: 200, color: Colors.green),
                     ],
                   ),
                 ),
               ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              //map view
-              Expanded(
-                flex: 2,
-                child: Container(height: 200, color: Colors.green),
-              ),
+              // //map view
+              // Expanded(
+              //   flex: 2,
+              //   child: Container(height: 200, color: Colors.green),
+              // ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               SafeArea(
                 child: Row(
                   children: [
                     Expanded(
-                      child: PrimaryButton.secondaryButton(
+                      child: PrimaryButton.secondary(
                         label: "previous".tr(),
                         onPressed: _onPrevious,
                       ),
                     ),
                     AppSpacing.horizontal(AppDimensions.smallSpacing),
                     Expanded(
-                      child: PrimaryButton.primaryButton(
+                      child: PrimaryButton.supportingPrimary(
                         label: "next".tr(),
                         onPressed: isStepValid ? _onNext : null,
                       ),

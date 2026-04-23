@@ -208,7 +208,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
                 ),
                 helper: widget.helper,
                 filled: true,
-                fillColor: widget.fillColor ?? colorScheme.surfaceContainerHigh,
+                fillColor: widget.fillColor ?? Colors.white,
 
                 /// 🎨 Border
                 border: _outlineField,
@@ -277,8 +277,8 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
             errorText == null
                 // ? isDarkMode
                 //     ? AppColors.neutral2
-                ? Colors.transparent
-                : AppColors.primary,
+                ? AppColors.neutral7
+                : AppColors.red500,
       ),
       borderRadius: AppDimensions.largeBorderRadius,
     );

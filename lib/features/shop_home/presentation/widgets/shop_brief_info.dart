@@ -73,12 +73,16 @@ class _InfoField extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.ac_unit_rounded),
+            Icon(Icons.ac_unit_rounded, color: AppColors.secondary),
             AppSpacing.horizontal(AppDimensions.smallSpacing),
-            PrimaryText(label),
+            PrimaryText(label, style: AppTextStyles.bodyMedium),
           ],
         ),
-        PrimaryText(value),
+        PrimaryText(
+          value,
+          style: AppTextStyles.labelMedium,
+          color: AppColors.secondary,
+        ),
       ],
     );
   }

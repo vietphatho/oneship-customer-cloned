@@ -71,6 +71,12 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
   });
 }
 
+class CreateOrderChangeAcceptTermsEvent extends CreateOrderEvent {
+  final bool accept;
+
+  CreateOrderChangeAcceptTermsEvent(this.accept);
+}
+
 class CreateOrderCreateEvent extends CreateOrderEvent {
   const CreateOrderCreateEvent();
 }

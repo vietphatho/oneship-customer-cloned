@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'create_order_request.freezed.dart';
@@ -52,9 +50,9 @@ abstract class Detail with _$Detail {
     @JsonKey(name: "isOnePiece") bool? isOnePiece,
     @JsonKey(name: "isLiquid") bool? isLiquid,
     @JsonKey(name: "hasBattery") bool? hasBattery,
-    @JsonKey(name: "length") int? length,
-    @JsonKey(name: "width") int? width,
-    @JsonKey(name: "height") int? height,
+    @JsonKey(name: "length") @Default(0) int length,
+    @JsonKey(name: "width") @Default(0) int width,
+    @JsonKey(name: "height") @Default(0) int height,
     @JsonKey(name: "orderSource") String? orderSource,
     @JsonKey(name: "note") String? note,
   }) = _Detail;

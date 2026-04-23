@@ -62,7 +62,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                   AppDimensions.mediumSpacing,
                   AppDimensions.mediumSpacing,
                 ),
-                child: PrimaryButton.primaryButton(
+                child: PrimaryButton.primary(
                   label: "find_shipper".tr(),
                   onPressed: () {
                     _pkgsBloc.findShipper();

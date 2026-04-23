@@ -58,6 +58,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               PrimaryDateTimePicker(
                 label: "pick_up_date".tr(),
+                isRequired: true,
                 initialDateTime: request.detail?.pickupDate,
                 firstDate: DateTime.now(),
                 onChanged:
@@ -66,6 +67,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
               AppSpacing.vertical(AppDimensions.smallSpacing),
               PrimaryDropdown(
                 label: "pick_up_time".tr(),
+                isRequired: true,
                 initialValue: request.detail?.pickupSession,
                 menu: OrderPickUpSession.values,
                 hintText: "Chọn thời gian",
@@ -76,7 +78,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
               ),
               const Spacer(),
               SafeArea(
-                child: PrimaryButton.primaryButton(
+                child: PrimaryButton.supportingPrimary(
                   label: "next".tr(),
                   onPressed:
                       isStepValid ? _createOrderBloc.completeDateStep : null,

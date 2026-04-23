@@ -79,12 +79,18 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 ),
                 // contentPadding: AppDimensions.mediumPaddingAll,
                 filled: true,
-                fillColor: colorScheme.surfaceContainerHigh,
+                fillColor: Colors.white,
                 // border: _getBorder(colorScheme),
                 enabledBorder: _outlineField,
                 focusedBorder: _outlineField,
                 errorBorder: _outlineField,
                 focusedErrorBorder: _outlineField,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: AppDimensions.smallSpacing,
+                  horizontal: AppDimensions.mediumSpacing,
+                ),
+                isDense: true,
+                isCollapsed: true,
               ),
               // width: AppDimensions.getScreenWidth() - paddingMenu,
               onSelected: (value) {
@@ -104,6 +110,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
                   ),
                 ),
               ),
+              initialSelection: initialValue,
               dropdownMenuEntries:
                   menu
                       .map(
@@ -135,7 +142,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
     // bool isDarkMode = AppTheme.isDarkMode(context);
 
     return OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.transparent),
+      borderSide: BorderSide(color: AppColors.neutral7),
       borderRadius: AppDimensions.largeBorderRadius,
     );
   }

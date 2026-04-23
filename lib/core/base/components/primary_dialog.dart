@@ -52,7 +52,7 @@ class PrimaryDialog {
               ],
             ],
           ),
-          bottomActions: PrimaryButton.primaryButton(
+          bottomActions: PrimaryButton.primary(
             label: "close".tr(),
             onPressed: () {
               Navigator.pop(context, true);
@@ -135,7 +135,7 @@ class PrimaryDialog {
                 ],
               ],
             ),
-            bottomActions: PrimaryButton.primaryButton(
+            bottomActions: PrimaryButton.primary(
               label: closeText?.tr() ?? "close".tr(),
               onPressed: () {
                 Navigator.pop(context, true);
@@ -186,7 +186,7 @@ class PrimaryDialog {
                 ),
               ],
             ),
-            bottomActions: PrimaryButton.primaryButton(
+            bottomActions: PrimaryButton.primary(
               label: buttonText ?? "close".tr(),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop(true);
@@ -244,7 +244,7 @@ class PrimaryDialog {
             bottomActions: Row(
               children: [
                 Expanded(
-                  child: PrimaryButton.secondaryButton(
+                  child: PrimaryButton.secondary(
                     label: negativeButtonText.tr(),
                     onPressed: () {
                       Navigator.pop(context, true);
@@ -254,7 +254,7 @@ class PrimaryDialog {
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
-                  child: PrimaryButton.primaryButton(
+                  child: PrimaryButton.primary(
                     label: positiveButtonText.tr(),
                     onPressed: () {
                       Navigator.pop(context, true);

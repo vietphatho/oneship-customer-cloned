@@ -155,10 +155,7 @@ extension PayerExt on Payer {
     Payer.recipient: "recipient",
   };
 
-  static final _mapName = {
-    Payer.sender: "sender",
-    Payer.recipient: "recipient",
-  };
+  static final _mapName = {Payer.sender: "sender", Payer.recipient: "receiver"};
 
   String get requestValue => _mapValue[this]!;
 

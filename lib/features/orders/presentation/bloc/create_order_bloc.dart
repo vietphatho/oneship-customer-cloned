@@ -33,6 +33,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     on<CreateOrderChangePickUpTimeEvent>(_onPickUpDateChangedEvent);
     on<CreateOrderChangeCustomerInfoEvent>(_onCustomerInfoChangedEvent);
     on<CreateOrderChangeOrderInfoEvent>(_onOrderInfoChangedEvent);
+    on<CreateOrderChangeAcceptTermsEvent>(_onChangedAcceptTerms);
     on<CreateOrderCalculateFeeEvent>(_onCalculateDeliveryFeeEvent);
     on<CreateOrderGetRoutingToShopEvent>(_onGetRoutingEvent);
     on<CreateOrderCreateEvent>(_onCreateOrderEvent);
@@ -138,6 +139,22 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           ),
           serviceCode: event.deliveryServiceType,
         ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangedAcceptTerms(
+    CreateOrderChangeAcceptTermsEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      CreateOrderRequestChangedState(
+        request: state.request,
+        draftRequest: state.draftRequest,
+        shopInfo: state.shopInfo,
+        routingToShopResource: state.routingToShopResource,
+        step: state.step,
+        acceptTerms: event.accept,
       ),
     );
   }
@@ -376,6 +393,20 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         deliveryServiceType: deliveryServiceType ?? draftRequest.serviceCode,
       ),
     );
+  }
+
+  void changePayer(Payer payer) {
+    final changed = state.request.copyWith(payer: payer);
+    add(
+      CreateOrderChangeRequestEvent(
+        changed,
+        step: CreateOrderStep.confirmation,
+      ),
+    );
+  }
+
+  void changeAcceptTerms(bool accept) {
+    add(CreateOrderChangeAcceptTermsEvent(accept));
   }
 
   void createOrder() {

@@ -43,6 +43,7 @@ class _CustomerInfoProvinceSelectorState
 
         return PrimaryDropdown(
           label: "province".tr(),
+          isRequired: true,
           initialValue: hcmProvince,
           menu: [hcmProvince],
           toLabel: (item) => item.name,
