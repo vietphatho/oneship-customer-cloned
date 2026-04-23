@@ -152,10 +152,13 @@ enum Payer { sender, recipient }
 extension PayerExt on Payer {
   static final _mapValue = {
     Payer.sender: "sender",
-    Payer.recipient: "recipient",
+    Payer.recipient: "receiver",
   };
 
-  static final _mapName = {Payer.sender: "sender", Payer.recipient: "receiver"};
+  static final _mapName = {
+    Payer.sender: "sender",
+    Payer.recipient: "recipient",
+  };
 
   String get requestValue => _mapValue[this]!;
 
