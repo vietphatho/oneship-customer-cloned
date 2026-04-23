@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 
@@ -34,12 +36,12 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
         final request = state.request;
         final isStepValid =
             request.detail?.pickupDate != null &&
-            request.detail?.pickUpSession != null &&
-            request.recipientName.trim().isNotEmpty &&
-            request.recipientPhone.trim().isNotEmpty &&
+            request.detail?.pickupSession != null &&
+            (request.customerName?.trim().isNotEmpty ?? false) &&
+            (request.phone?.trim().isNotEmpty ?? false) &&
             (request.fullAddress?.trim().isNotEmpty ?? false) &&
-            request.provinceCode != null &&
-            request.wardCode != null &&
+            request.province != null &&
+            request.ward != null &&
             (request.detail?.weight ?? 0) > 0;
 
         return Padding(
@@ -71,7 +73,7 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             ),
                             _InfoField(
                               label: "service_type".tr(),
-                              value: request.serviceCode.name,
+                              value: request.serviceCode?.name,
                             ),
                           ],
                         ),
@@ -82,11 +84,11 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                           children: [
                             _InfoField(
                               label: "customer_name".tr(),
-                              value: request.recipientName,
+                              value: request.customerName,
                             ),
                             _InfoField(
                               label: "phone_number".tr(),
-                              value: request.recipientPhone,
+                              value: request.phone,
                             ),
                             _InfoField(
                               label: "address_type".tr(),
@@ -97,11 +99,11 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             ),
                             _InfoField(
                               label: "province".tr(),
-                              value: request.provinceName,
+                              value: request.province?.name,
                             ),
                             _InfoField(
                               label: "ward".tr(),
-                              value: request.wardName,
+                              value: request.ward?.name,
                             ),
                             _InfoField(
                               label: "address".tr(),
@@ -217,7 +219,13 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showSuccessDialog(context);
+          PrimaryDialog.showSuccessDialog(
+            context,
+            message: "create_order_successfully".tr(),
+            onClosed: () {
+              context.pop();
+            },
+          );
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
@@ -279,6 +287,7 @@ class _FeeSession extends StatelessWidget {
         var request = state.request;
         if (state is! CreateOrderCalculatedFeeState) return SizedBox();
 
+        CalculatedDeliveryFeeEntity? fee = state.resource.data;
         return PrimaryCard(
           child: Column(
             children: [
@@ -295,26 +304,24 @@ class _FeeSession extends StatelessWidget {
               _InfoField(
                 label: "gross_fee".tr(),
                 value: Utils.formatCurrencyWithUnit(
-                  state.resource.data?.grossFee,
+                  fee?.baseFee?.originalAmount,
                 ),
               ),
               _InfoField(
-                label: "VAT (${state.resource.data?.vatRate})".tr(),
-                value: Utils.formatCurrencyWithUnit(state.resource.data?.vat),
-              ),
-              _InfoField(
-                label: "total_fee".tr(),
-                value: Utils.formatCurrencyWithUnit(
-                  state.resource.data?.deliveryFee,
-                ),
+                label: "VAT (${fee?.baseFee?.vatRate})".tr(),
+                value: Utils.formatCurrencyWithUnit(fee?.baseFee?.vatAmount),
               ),
               _InfoField(
                 label: "total".tr(),
-                value: Utils.formatCurrencyWithUnit(
-                  (state.resource.data?.deliveryFee ?? 0) +
-                      (state.resource.data?.vat ?? 0),
-                ),
+                value: Utils.formatCurrencyWithUnit(fee?.deliveryFee),
               ),
+              // _InfoField(
+              //   label: "total".tr(),
+              //   value: Utils.formatCurrencyWithUnit(
+              //     ( ?? 0) +
+              //         (state.resource.data?.vat ?? 0),
+              //   ),
+              // ),
             ],
           ),
         );

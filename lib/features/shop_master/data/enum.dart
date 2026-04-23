@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/finance/presentation/views/finance_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
 
 enum BottomNavigationItem { home, finance, management, menu }
@@ -14,9 +14,9 @@ extension BottomNavigationItemExt on BottomNavigationItem {
 
   static const _mapPage = {
     BottomNavigationItem.home: ShopHome(),
-    BottomNavigationItem.finance: PackagesPage(),
-    BottomNavigationItem.management: ShopHome(),
-    BottomNavigationItem.menu: ShopHome(),
+    BottomNavigationItem.finance: FinancePage(),
+    BottomNavigationItem.management: FinancePage(),
+    BottomNavigationItem.menu: FinancePage(),
   };
 
   IconData get icon => _mapIcon[this]!;

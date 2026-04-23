@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -47,6 +47,7 @@ class _OrdersPageState extends State<OrdersPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PrimaryAppBar(title: "orders".tr()),
       body: MultiBlocListener(
         listeners: [
           BlocListener<PackagesBloc, PackagesState>(

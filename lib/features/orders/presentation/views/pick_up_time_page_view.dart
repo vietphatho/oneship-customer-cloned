@@ -3,7 +3,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_date_time_picker.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 
@@ -33,11 +33,11 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
       //         pre.request.detail?.pickupDate != cur.request.detail?.pickupDate,
       listener: _handleListener,
       builder: (context, state) {
-        final CreateOrderEntity request = state.draftRequest;
+        final CreateOrderRequestEntity request = state.draftRequest;
         final isStepValid =
             request.detail?.pickupDate != null &&
-            request.detail?.pickUpSession != null;
-        _shopNameController.text = state.shopInfo.shopName ?? "--";
+            request.detail?.pickupSession != null;
+        _shopNameController.text = state.shopInfo.shopName;
 
         return Container(
           padding: EdgeInsets.symmetric(
@@ -59,18 +59,14 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
               PrimaryDateTimePicker(
                 label: "pick_up_date".tr(),
                 initialDateTime: request.detail?.pickupDate,
-                firstDate: DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                ),
+                firstDate: DateTime.now(),
                 onChanged:
                     (date) => _createOrderBloc.changePickUpDate(date: date),
               ),
               AppSpacing.vertical(AppDimensions.smallSpacing),
               PrimaryDropdown(
                 label: "pick_up_time".tr(),
-                initialValue: request.detail?.pickUpSession,
+                initialValue: request.detail?.pickupSession,
                 menu: OrderPickUpSession.values,
                 hintText: "Chọn thời gian",
                 toLabel: (item) => item.label,

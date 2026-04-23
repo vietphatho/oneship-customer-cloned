@@ -97,8 +97,8 @@ enum OrderPickUpSession { morning, afternoon }
 
 extension OrderPickUpSessionExt on OrderPickUpSession {
   static final _mapValue = {
-    OrderPickUpSession.morning: "MORNING",
-    OrderPickUpSession.afternoon: "AFTERNOON",
+    OrderPickUpSession.morning: "08:00 - 12:00",
+    OrderPickUpSession.afternoon: "14:00 - 18:00",
   };
 
   static final _mapLabel = {

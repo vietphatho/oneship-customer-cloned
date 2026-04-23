@@ -23,37 +23,40 @@ class _PackagesPageState extends State<PackagesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<PackagesBloc, PackagesState>(
+    return Scaffold(
+      appBar: PrimaryAppBar(title: "packages".tr()),
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<PackagesBloc, PackagesState>(
+            bloc: _packagesBloc,
+            listenWhen: (pre, cur) => pre.currentPkg != cur.currentPkg,
+            listener: _handleCurrentPkgChanged,
+          ),
+        ],
+        child: BlocBuilder<PackagesBloc, PackagesState>(
           bloc: _packagesBloc,
-          listenWhen: (pre, cur) => pre.currentPkg != cur.currentPkg,
-          listener: _handleCurrentPkgChanged,
-        ),
-      ],
-      child: BlocBuilder<PackagesBloc, PackagesState>(
-        bloc: _packagesBloc,
-        builder: (context, state) {
-          if (_packagesBloc.packages.isEmpty) {
-            return const PrimaryEmptyData();
-          }
+          builder: (context, state) {
+            if (_packagesBloc.packages.isEmpty) {
+              return const PrimaryEmptyData();
+            }
 
-          return ListView.separated(
-            itemCount: _packagesBloc.packages.length,
-            padding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.mediumSpacing,
-            ),
-            itemBuilder:
-                (context, index) => PackageItem(
-                  index: index,
-                  package: _packagesBloc.packages[index],
-                  onViewDetail: onViewDetail,
-                ),
-            separatorBuilder:
-                (context, index) =>
-                    const SizedBox(height: AppDimensions.smallSpacing),
-          );
-        },
+            return ListView.separated(
+              itemCount: _packagesBloc.packages.length,
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.mediumSpacing,
+              ),
+              itemBuilder:
+                  (context, index) => PackageItem(
+                    index: index,
+                    package: _packagesBloc.packages[index],
+                    onViewDetail: onViewDetail,
+                  ),
+              separatorBuilder:
+                  (context, index) =>
+                      const SizedBox(height: AppDimensions.smallSpacing),
+            );
+          },
+        ),
       ),
     );
   }

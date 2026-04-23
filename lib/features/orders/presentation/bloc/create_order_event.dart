@@ -3,7 +3,7 @@ import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 abstract class CreateOrderEvent {
@@ -18,7 +18,7 @@ class CreateOrderInitShopEvent extends CreateOrderEvent {
 
 class CreateOrderChangeRequestEvent extends CreateOrderEvent {
   final CreateOrderStep step;
-  final CreateOrderEntity request;
+  final CreateOrderRequestEntity request;
 
   const CreateOrderChangeRequestEvent(
     this.request, {

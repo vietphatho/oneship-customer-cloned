@@ -34,8 +34,8 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
     super.initState();
 
     var request = _createOrderBloc.state.request;
-    _nameCtrl.text = request.recipientName;
-    _phoneCtrl.text = request.recipientPhone;
+    _nameCtrl.text = request.customerName ?? "";
+    _phoneCtrl.text = request.phone ?? "";
     _addressCtrl.text = request.fullAddress ?? "";
   }
 

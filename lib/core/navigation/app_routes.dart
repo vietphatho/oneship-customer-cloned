@@ -8,7 +8,9 @@ import 'package:oneship_customer/features/home/presentation/view/home_page.dart'
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_multi_orders_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_order_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
+import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
 
@@ -40,6 +42,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.createOrderPage,
       builder: (context, state) => const CreateOrderPage(),
+    ),
+    GoRoute(
+      path: RouteName.ordersPage,
+      builder: (context, state) => const OrdersPage(),
+    ),
+    GoRoute(
+      path: RouteName.packagesPage,
+      builder: (context, state) => const PackagesPage(),
     ),
     GoRoute(
       path: RouteName.packageDetailPage,
