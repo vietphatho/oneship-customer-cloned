@@ -66,12 +66,11 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
                   AppDimensions.mediumSpacing,
                   100,
                 ),
-                child: PrimaryButton.secondary(
+                child: PrimaryButton.outlined(
                   label: "cancel_finding_shipper",
                   onPressed: () {
                     _pkgsBloc.cancelfindingShipper();
                   },
-                  isHighlightAction: true,
                 ),
               ),
             ),

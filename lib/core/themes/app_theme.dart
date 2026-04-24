@@ -58,6 +58,7 @@ class AppTheme {
       indicatorSize: TabBarIndicatorSize.tab,
       labelColor: AppColors.primary,
       labelStyle: AppTextStyles.titleSmall,
+      unselectedLabelStyle: AppTextStyles.bodySmall,
       unselectedLabelColor: AppColors.neutral5,
       dividerColor: Colors.transparent,
       indicatorAnimation: TabIndicatorAnimation.elastic,

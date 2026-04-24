@@ -50,7 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             SafeArea(
-              child: PrimaryButton.primary(
+              child: PrimaryButton.filled(
                 label: "register".tr(),
                 onPressed: () {},
               ),

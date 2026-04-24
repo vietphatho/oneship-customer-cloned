@@ -29,11 +29,13 @@ class ShopBriefInfo extends StatelessWidget {
               children: [
                 _InfoField(
                   label: "today_total_orders".tr(),
+                  icon: Icons.description_outlined,
                   value: "${data?.totalOrdersPickedUpToday} ${"order".tr()}",
                 ),
                 const Divider(),
                 _InfoField(
                   label: "today_total_cod".tr(),
+                  icon: Icons.money_rounded,
                   value: Utils.formatCurrencyWithUnit(
                     data?.totalCodAmountToday,
                   ),
@@ -41,6 +43,7 @@ class ShopBriefInfo extends StatelessWidget {
                 const Divider(),
                 _InfoField(
                   label: "today_total_expense".tr(),
+                  icon: Icons.attach_money_rounded,
                   value: Utils.formatCurrencyWithUnit(
                     data?.totalDeliveryFeeToday,
                   ),
@@ -58,11 +61,13 @@ class _InfoField extends StatelessWidget {
   const _InfoField({
     super.key,
     // required this.icon,
+    required this.icon,
     required this.label,
     required this.value,
   });
 
   // final String icon;
+  final IconData icon;
   final String label;
   final String value;
 
@@ -73,9 +78,23 @@ class _InfoField extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.ac_unit_rounded, color: AppColors.secondary),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColors.secondary,
+                  width: AppDimensions.smallBorderStroke,
+                ),
+                shape: BoxShape.circle,
+              ),
+              padding: EdgeInsets.all(AppDimensions.xxSmallSpacing),
+              child: Icon(
+                icon,
+                color: AppColors.secondary,
+                size: AppDimensions.xSmallIconSize,
+              ),
+            ),
             AppSpacing.horizontal(AppDimensions.smallSpacing),
-            PrimaryText(label, style: AppTextStyles.bodyMedium),
+            PrimaryText(label, style: AppTextStyles.bodySmall),
           ],
         ),
         PrimaryText(

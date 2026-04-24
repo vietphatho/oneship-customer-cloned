@@ -15,26 +15,27 @@ class ShopHomeFeatureButton extends StatelessWidget {
       onTap: () {
         context.push(feature.routeName);
       },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: AppDimensions.largeBorderRadius,
-          gradient: LinearGradient(
-            colors: [Colors.white, AppColors.primaryLight],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PrimaryText(
-              feature.name,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.labelMedium,
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.white, AppColors.primaryLight],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
             ),
-            Icon(Icons.add_box_rounded, size: 32),
-          ],
-        ),
+            padding: AppDimensions.mediumPaddingAll,
+            child: Icon(feature.icon, size: 32, color: AppColors.primary),
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          PrimaryText(
+            feature.name,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.labelSmall,
+          ),
+        ],
       ),
     );
   }

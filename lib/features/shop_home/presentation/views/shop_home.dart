@@ -38,11 +38,12 @@ class _ShopHomeState extends State<ShopHome> {
               const ShopAppBar(),
               AppSpacing.vertical(AppDimensions.smallSpacing),
               const ShopBriefInfo(),
+              AppSpacing.vertical(AppDimensions.mediumSpacing),
               GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2 / 1,
+                  crossAxisCount: 3,
+                  // childAspectRatio: 2 / 1,
                   mainAxisSpacing: AppDimensions.smallSpacing,
                   crossAxisSpacing: AppDimensions.smallSpacing,
                 ),

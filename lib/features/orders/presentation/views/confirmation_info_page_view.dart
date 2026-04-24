@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
@@ -191,14 +192,14 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: PrimaryButton.secondary(
+                      child: PrimaryButton.outlined(
                         label: "previous".tr(),
                         onPressed: _onPrevious,
                       ),
                     ),
                     AppSpacing.horizontal(AppDimensions.smallSpacing),
                     Expanded(
-                      child: PrimaryButton.supportingPrimary(
+                      child: SecondaryButton.filled(
                         label: "create_order".tr(),
                         onPressed:
                             isStepValid

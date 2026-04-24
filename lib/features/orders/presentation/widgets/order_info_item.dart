@@ -1,4 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 
 class OrderInfoItem extends StatelessWidget {
@@ -9,7 +10,7 @@ class OrderInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return PrimaryFrame(
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.smallSpacing,
         vertical: AppDimensions.xSmallSpacing,
@@ -22,12 +23,12 @@ class OrderInfoItem extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    PrimaryText("#$index.", style: AppTextStyles.bodyMedium),
+                    PrimaryText("#$index.", style: AppTextStyles.bodySmall),
                     AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
                     Expanded(
                       child: PrimaryText(
                         order.orderNumber,
-                        style: AppTextStyles.labelMedium,
+                        style: AppTextStyles.labelSmall,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -45,7 +46,7 @@ class OrderInfoItem extends StatelessWidget {
                 ),
                 child: PrimaryText(
                   order.status,
-                  style: AppTextStyles.labelSmall,
+                  style: AppTextStyles.labelXSmall,
                   color: Colors.white,
                 ),
               ),
@@ -54,19 +55,19 @@ class OrderInfoItem extends StatelessWidget {
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           PrimaryText(
             "${order.customerName} - ${order.phone}",
-            style: AppTextStyles.bodyMedium,
+            style: AppTextStyles.bodySmall,
             color: AppColors.neutral4,
           ),
           AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
           PrimaryText(
             "${"cod".tr()}: ${order.codAmount}",
-            style: AppTextStyles.bodyMedium,
+            style: AppTextStyles.bodySmall,
             color: AppColors.neutral4,
           ),
           AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
           PrimaryText(
             "${"created_at".tr()}: ${order.createdAt}",
-            style: AppTextStyles.bodyMedium,
+            style: AppTextStyles.bodySmall,
             color: AppColors.neutral4,
           ),
         ],

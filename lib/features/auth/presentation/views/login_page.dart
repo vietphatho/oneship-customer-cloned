@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                           ValueListenableBuilder(
                             valueListenable: isFormValid,
                             builder: (context, bool value, _) {
-                              return PrimaryButton.primary(
+                              return PrimaryButton.filled(
                                 onPressed: _onLoginPressed,
                                 label: "login".tr(),
                               );
@@ -175,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                                 "dont_have_an_account".tr(),
                                 color: AppColors.grey600,
                               ),
-                              PrimaryButton(
+                              TextButton(
                                 onPressed: () {
                                   context.push(RouteName.registerPage);
                                 },
