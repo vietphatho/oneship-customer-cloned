@@ -55,6 +55,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
 
   timelines_plus: ^2.0.0
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
+
 abstract class ShopEvent {
   const ShopEvent();
 }
@@ -17,5 +19,15 @@ class ShopFetchListEvent extends ShopEvent {
 class ShopInitDataEvent extends ShopEvent {
   final String userId;
 
-  ShopInitDataEvent(this.userId);
+  const ShopInitDataEvent(this.userId);
+}
+
+class ShopCreateEvent extends ShopEvent {
+  const ShopCreateEvent(this.params);
+
+  final CreateShopParams params;
+}
+
+class ShopResetCreateResourceEvent extends ShopEvent {
+  const ShopResetCreateResourceEvent();
 }

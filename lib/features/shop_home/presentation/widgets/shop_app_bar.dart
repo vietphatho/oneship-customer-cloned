@@ -12,13 +12,14 @@ class ShopAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _authBloc = getIt.get<AuthBloc>();
+    final authBloc = getIt.get<AuthBloc>();
 
     return BlocBuilder<AuthBloc, AuthState>(
-      bloc: _authBloc,
+      bloc: authBloc,
       buildWhen: (_, state) => state is AuthFetchedUserProfileState,
       builder: (context, state) {
-        UserProfileResponse userProfile = _authBloc.userProfile;
+        UserProfileResponse userProfile = authBloc.userProfile;
+        final avatarUrl = userProfile.avatarUrl;
 
         return SafeArea(
           bottom: false,
@@ -34,9 +35,10 @@ class ShopAppBar extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: AppDimensions.homeAvatarRadius,
-                        foregroundImage: CachedNetworkImageProvider(
-                          userProfile.avatarUrl ?? "",
-                        ),
+                        foregroundImage:
+                            avatarUrl != null && avatarUrl.isNotEmpty
+                                ? CachedNetworkImageProvider(avatarUrl)
+                                : null,
                         backgroundColor: AppColors.neutral7,
                       ),
                       AppSpacing.horizontal(AppDimensions.xSmallSpacing),
@@ -51,17 +53,8 @@ class ShopAppBar extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // AppSpacing.horizontal(AppDimensions.smallSpacing),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(
-                //     Icons.post_add_rounded,
-                //     size: AppDimensions.mediumIconSize,
-                //   ),
-                // ),
-                // EndDrawerButton(),
-                Expanded(child: const ShopSelectionButton()),
+                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                const Flexible(child: ShopSelectionButton()),
               ],
             ),
           ),

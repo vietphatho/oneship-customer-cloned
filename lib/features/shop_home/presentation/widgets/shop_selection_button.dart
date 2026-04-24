@@ -1,8 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/utils/string_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -11,12 +10,22 @@ class ShopSelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopBloc _shopBloc = getIt.get();
+    final shopBloc = getIt.get<ShopBloc>();
 
     return BlocBuilder<ShopBloc, ShopState>(
-      bloc: _shopBloc,
+      bloc: shopBloc,
+      buildWhen:
+          (previous, current) =>
+              previous.shopsResource != current.shopsResource ||
+              previous.currentShop != current.currentShop,
       builder: (context, state) {
-        final _shopLogoUrl = state.currentShop?.shopLogo;
+        final shops = state.shops;
+        if (shops.isEmpty || state.currentShop == null) {
+          return const SizedBox.shrink();
+        }
+
+        final selectedShop =
+            shops.contains(state.currentShop) ? state.currentShop : null;
 
         return Container(
           decoration: BoxDecoration(
@@ -27,11 +36,12 @@ class ShopSelectionButton extends StatelessWidget {
             ),
             borderRadius: AppDimensions.largeBorderRadius,
           ),
-          child: DropdownButton(
+          child: DropdownButton<ShopEntity>(
+            isExpanded: true,
             items:
-                state.shopsResource.data?.data
+                shops
                     .map(
-                      (e) => DropdownMenuItem(
+                      (e) => DropdownMenuItem<ShopEntity>(
                         value: e,
                         child: PrimaryText(
                           e.shopName,
@@ -40,104 +50,12 @@ class ShopSelectionButton extends StatelessWidget {
                       ),
                     )
                     .toList(),
-            value: state.currentShop,
-            underline: SizedBox(),
+            value: selectedShop,
+            underline: const SizedBox(),
             onChanged: (_) {},
           ),
         );
-
-        return DropdownMenu(
-          trailingIcon: const Icon(
-            Icons.keyboard_arrow_down,
-            color: AppColors.neutral6,
-          ),
-          selectedTrailingIcon: const Icon(
-            Icons.keyboard_arrow_up,
-            color: AppColors.neutral6,
-          ),
-          enableSearch: false,
-          initialSelection: state.currentShop,
-          dropdownMenuEntries:
-              state.shopsResource.data?.data
-                  .map((e) => DropdownMenuEntry(label: e.shopName, value: e))
-                  .toList() ??
-              [],
-          menuStyle: MenuStyle(
-            padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8)),
-            elevation: WidgetStateProperty.all(4),
-            // backgroundColor: WidgetStateProperty.all(
-            //   colorScheme.surfaceContainerHigh,
-            // ),
-            visualDensity: VisualDensity.compact,
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-          textStyle: AppTextStyles.labelSmall.copyWith(
-            overflow: TextOverflow.ellipsis,
-          ),
-          expandedInsets: EdgeInsets.zero,
-          // onChanged: (value) {},
-        );
-
-        return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.xSmallSpacing,
-            vertical: AppDimensions.xxSmallSpacing,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.neutral6),
-            borderRadius: AppDimensions.mediumBorderRadius,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Icon(
-              //   CupertinoIcons.house,
-              //   color: AppColors.primary,
-              //   size: AppDimensions.xSmallIconSize,
-              // ),
-              if (_shopLogoUrl != null)
-                _ShopAvatar(url: StringUtils.getImgUrl(_shopLogoUrl)!),
-              AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-              Expanded(
-                child: PrimaryText(
-                  state.currentShop?.shopName,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.labelMedium,
-                ),
-              ),
-              AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-              Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: AppColors.neutral6,
-                size: AppDimensions.xSmallIconSize,
-              ),
-            ],
-          ),
-        );
       },
-    );
-  }
-}
-
-class _ShopAvatar extends StatelessWidget {
-  const _ShopAvatar({super.key, required this.url});
-
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: AppDimensions.smallIconSize,
-      height: AppDimensions.smallIconSize,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(url),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: AppDimensions.xSmallBorderRadius,
-      ),
     );
   }
 }

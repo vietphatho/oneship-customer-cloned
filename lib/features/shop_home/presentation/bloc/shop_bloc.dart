@@ -1,29 +1,45 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/models/create_shop_form_value.dart';
 
 @lazySingleton
 class ShopBloc extends Bloc<ShopEvent, ShopState> {
-  ShopBloc(this._fetchShopDailySummaryUseCase, this._fetchShopsUseCase)
-    : super(
+  ShopBloc(
+    this._fetchShopDailySummaryUseCase,
+    this._fetchShopsUseCase,
+    this._createShopUseCase,
+  ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
           shopsResource: Resource.loading(),
+          createShopResource: _emptyCreateShopResource(),
         ),
       ) {
     on<ShopFetchListEvent>(_onFetchShops);
     on<ShopFetchDailySummaryEvent>(_onFetchDailySummary);
     on<ShopInitDataEvent>(_onInit);
+    on<ShopCreateEvent>(_onCreateShop);
+    on<ShopResetCreateResourceEvent>(_onResetCreateShopResource);
   }
 
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
   final FetchShopsUseCase _fetchShopsUseCase;
+  final CreateShopUseCase _createShopUseCase;
+
+  static Resource<CreateShopEntity?> _emptyCreateShopResource() {
+    return Resource.success<CreateShopEntity?>(null);
+  }
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -39,7 +55,11 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     Emitter<ShopState> emit,
   ) async {
     emit(
-      state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
+      state.copyWith(
+        userId: event.userId,
+        shopsResource: Resource.loading(),
+        createShopResource: _emptyCreateShopResource(),
+      ),
     );
     final response = await _fetchShopsUseCase.call(event.userId);
     emit(state.copyWith(shopsResource: response));
@@ -50,25 +70,88 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     Emitter<ShopState> emit,
   ) async {
     emit(
-      state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
-    );
-    final getShopsResponse = await _fetchShopsUseCase.call(event.userId);
-    emit(
       state.copyWith(
-        shopsResource: getShopsResponse,
-        currentShop: getShopsResponse.data?.data.firstOrNull,
+        userId: event.userId,
+        shopsResource: Resource.loading(),
+        createShopResource: _emptyCreateShopResource(),
       ),
     );
 
-    String? shopId = state.currentShop?.shopId;
+    final getShopsResponse = await _fetchShopsUseCase.call(event.userId);
+    final currentShop = getShopsResponse.data?.data.firstOrNull;
+
+    emit(
+      state.copyWith(
+        shopsResource: getShopsResponse,
+        currentShop: currentShop,
+      ),
+    );
+
+    final shopId = currentShop?.shopId;
     if (shopId == null) return;
 
-    emit(state.copyWith(dailySummaryResource: Resource.loading()));
-    final dailySumResponse = await _fetchShopDailySummaryUseCase.call(shopId);
-    emit(state.copyWith(dailySummaryResource: dailySumResponse));
+    emit(
+      state.copyWith(
+        shopsResource: getShopsResponse,
+        currentShop: currentShop,
+        dailySummaryResource: Resource.loading(),
+      ),
+    );
+
+    final dailySummaryResponse = await _fetchShopDailySummaryUseCase.call(
+      shopId,
+    );
+    emit(
+      state.copyWith(
+        shopsResource: getShopsResponse,
+        currentShop: currentShop,
+        dailySummaryResource: dailySummaryResponse,
+      ),
+    );
+  }
+
+  FutureOr<void> _onCreateShop(
+    ShopCreateEvent event,
+    Emitter<ShopState> emit,
+  ) async {
+    emit(state.copyWith(createShopResource: Resource.loading()));
+    final response = await _createShopUseCase.call(event.params);
+    emit(state.copyWith(createShopResource: response));
+  }
+
+  FutureOr<void> _onResetCreateShopResource(
+    ShopResetCreateResourceEvent event,
+    Emitter<ShopState> emit,
+  ) {
+    emit(state.copyWith(createShopResource: _emptyCreateShopResource()));
   }
 
   void init(String userId) {
     add(ShopInitDataEvent(userId));
+  }
+
+  void createShop(CreateShopParams params) {
+    add(ShopCreateEvent(params));
+  }
+
+  void submitCreateShopForm(CreateShopFormValue formValue) {
+    createShop(
+      CreateShopParams(
+        userId: state.userId,
+        shopName: formValue.shopName,
+        phone: formValue.phoneNumber,
+        email: formValue.contactEmail,
+        fullAddress: formValue.fullAddress,
+        provinceCode: formValue.provinceCode,
+        provinceName: formValue.provinceName,
+        wardCode: formValue.wardCode,
+        wardName: formValue.wardName,
+        vietMapRefId: formValue.vietMapRefId,
+      ),
+    );
+  }
+
+  void resetCreateShopResource() {
+    add(const ShopResetCreateResourceEvent());
   }
 }
