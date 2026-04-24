@@ -1,3 +1,5 @@
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+
 abstract class ShopEvent {
   const ShopEvent();
 }
@@ -18,4 +20,10 @@ class ShopInitDataEvent extends ShopEvent {
   final String userId;
 
   ShopInitDataEvent(this.userId);
+}
+
+class ShopChangeEvent extends ShopEvent {
+  final ShopEntity shop;
+
+  ShopChangeEvent(this.shop);
 }

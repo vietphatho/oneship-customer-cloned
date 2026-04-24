@@ -164,3 +164,5 @@ extension PayerExt on Payer {
 
   String get nameValue => _mapName[this]!;
 }
+
+enum OrderDetailTab { info, products, transHistory }

@@ -42,7 +42,11 @@ class ShopSelectionButton extends StatelessWidget {
                     .toList(),
             value: state.currentShop,
             underline: SizedBox(),
-            onChanged: (_) {},
+            onChanged: (value) {
+              if (value != null) {
+                _shopBloc.changeShop(value);
+              }
+            },
           ),
         );
 

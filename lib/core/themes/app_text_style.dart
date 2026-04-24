@@ -136,24 +136,24 @@ class AppTextStyles {
   static const TextStyle bodyLarge = TextStyle(
     fontFamily: fontFamily,
     fontSize: 16,
-    fontWeight: FontWeight.w300,
-    letterSpacing: 0.15,
+    fontWeight: FontWeight.w400,
+    // letterSpacing: 0.15,
     color: AppColors.onBackground,
   );
 
   static const TextStyle bodyMedium = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
-    fontWeight: FontWeight.w300,
-    letterSpacing: 0.25,
+    fontWeight: FontWeight.w400,
+    // letterSpacing: 0.25,
     color: AppColors.onBackground,
   );
 
   static const TextStyle bodySmall = TextStyle(
     fontFamily: fontFamily,
     fontSize: 12,
-    fontWeight: FontWeight.w300,
-    letterSpacing: 0.4,
+    fontWeight: FontWeight.w400,
+    // letterSpacing: 0.4,
     color: AppColors.onBackground,
   );
 

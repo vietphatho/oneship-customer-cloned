@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
@@ -20,6 +21,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     on<ShopFetchListEvent>(_onFetchShops);
     on<ShopFetchDailySummaryEvent>(_onFetchDailySummary);
     on<ShopInitDataEvent>(_onInit);
+    on<ShopChangeEvent>(_onChangeShopEvent);
   }
 
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
@@ -68,7 +70,18 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     emit(state.copyWith(dailySummaryResource: dailySumResponse));
   }
 
+  FutureOr<void> _onChangeShopEvent(
+    ShopChangeEvent event,
+    Emitter<ShopState> emit,
+  ) {
+    emit(state.copyWith(currentShop: event.shop));
+  }
+
   void init(String userId) {
     add(ShopInitDataEvent(userId));
+  }
+
+  void changeShop(ShopEntity shop) {
+    add(ShopChangeEvent(shop));
   }
 }

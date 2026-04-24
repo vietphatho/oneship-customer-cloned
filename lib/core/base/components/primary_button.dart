@@ -86,6 +86,33 @@ class PrimaryButton extends StatelessWidget {
     );
   }
 
+  factory PrimaryButton.warningFilled({
+    required String label,
+    Function()? onPressed,
+    double height = AppDimensions.mediumHeightButton,
+  }) => PrimaryButton._(
+    label: label,
+    onPressed: onPressed,
+    height: height,
+    textColor: Colors.white,
+    backgroundColor: AppColors.red500,
+  );
+
+  factory PrimaryButton.warningOutlined({
+    required String label,
+    Function()? onPressed,
+    double height = AppDimensions.mediumHeightButton,
+  }) {
+    return PrimaryButton._(
+      label: label,
+      onPressed: onPressed,
+      height: height,
+      backgroundColor: Colors.white,
+      textColor: AppColors.red500,
+      borderColor: AppColors.red500,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // bool isDarkMode = AppTheme.isDarkMode(context);

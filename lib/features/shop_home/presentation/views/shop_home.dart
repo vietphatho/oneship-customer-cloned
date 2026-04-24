@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
@@ -17,6 +18,7 @@ class ShopHome extends StatefulWidget {
 
 class _ShopHomeState extends State<ShopHome> {
   final ShopBloc _shopBloc = getIt.get();
+  final PackagesBloc _packagesBloc = getIt.get();
 
   @override
   void initState() {
@@ -27,7 +29,13 @@ class _ShopHomeState extends State<ShopHome> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
-      listeners: [BlocListener(bloc: _shopBloc, listener: _handleListener)],
+      listeners: [
+        BlocListener<ShopBloc, ShopState>(
+          bloc: _shopBloc,
+          listenWhen: (pre, cur) => cur.currentShop != pre.currentShop,
+          listener: _listenCurrentShopChanged,
+        ),
+      ],
       child: Stack(
         children: [
           Container(
@@ -65,5 +73,9 @@ class _ShopHomeState extends State<ShopHome> {
     );
   }
 
-  void _handleListener(BuildContext context, ShopState state) {}
+  void _listenCurrentShopChanged(BuildContext context, ShopState state) {
+    if (state.currentShop != null) {
+      _packagesBloc.init(state.currentShop!);
+    }
+  }
 }
