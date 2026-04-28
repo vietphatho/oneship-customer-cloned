@@ -615,5 +615,20 @@
     "service_type": "Loại dịch vụ",
     "dimensions": "Kích cỡ",
     "log_in": "Đăng nhập",
-    "sign_up": "Đăng ký"
+  "sign_up": "Đăng ký",
+  "product": "Sản phẩm",
+  "create_new": "Tạo mới",
+  "list": "Danh sách",
+  "product_selected": "Sản phẩm được chọn",
+  "create_new_product": "Tạo sản phẩm mới",
+  "product_name": "Tên sản phẩm",
+  "sku_code": "Mã SKU",
+  "create_and_add_to_order": "Tạo và thêm vào đơn",
+  "select_product": "Chọn sản phẩm",
+  "select": "Chọn",
+  "price": "Đơn giá",
+  "quantity": "Số lượng",
+  "total_amount": "Thành tiền",
+  "dont_have_product": "Chưa có sản phẩm nào",
+  "delete_this_product": "Xoá sản phẩm này?"
 }

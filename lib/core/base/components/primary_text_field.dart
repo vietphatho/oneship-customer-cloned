@@ -170,7 +170,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
               validator: (value) {
                 if (widget.validator == null) return null;
                 final result = widget.validator!(value!);
-                if (mounted) {
+                if (mounted && result != null) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     setState(() => errorText = result);
                   });

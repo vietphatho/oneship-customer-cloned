@@ -29,4 +29,23 @@ class Utils {
     if (value == null) return null;
     return value / 1000;
   }
+
+  static String formatCurrency(num? value) {
+    if (value == null) return "--";
+    String strValue = value.toStringAsFixed(0);
+    // Remove any existing dots or commas
+    String cleanValue = strValue.replaceAll(RegExp(r'[.,]'), '');
+    // Reverse the string
+    String reversed = cleanValue.split('').reversed.join('');
+    // Add dots every 3 characters
+    String formatted = '';
+    for (int i = 0; i < reversed.length; i++) {
+      if (i > 0 && i % 3 == 0) {
+        formatted += '.';
+      }
+      formatted += reversed[i];
+    }
+    // Reverse back
+    return formatted.split('').reversed.join('');
+  }
 }
