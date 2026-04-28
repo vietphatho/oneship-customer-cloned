@@ -4,12 +4,36 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+
+extension CreateOrderStateX on CreateOrderState {
+  int getCalculatedTotalQuantity() {
+    int totalQuantity = 0;
+
+    for (var pro in productEntitySelected) {
+      totalQuantity += pro.quantity;
+    }
+
+    return totalQuantity;
+  }
+
+  int getCalculatedTotalAmount() {
+    int totalAmount = 0;
+
+    for (var pro in productEntitySelected) {
+      totalAmount += pro.calculatedTotalAmount;
+    }
+
+    return totalAmount;
+  }
+}
 
 abstract class CreateOrderState {
   const CreateOrderState({
     this.step = CreateOrderStep.timeInfo,
     required this.request,
     required this.draftRequest,
+    required this.productEntitySelected,
     required this.shopInfo,
     required this.routingToShopResource,
   });
@@ -17,11 +41,23 @@ abstract class CreateOrderState {
   final CreateOrderStep step;
   final CreateOrderEntity request;
   final CreateOrderEntity draftRequest;
+  final List<ProductEntitySelected> productEntitySelected;
   final ShopInfo shopInfo;
   final Resource<GetRoutingToShopResponse> routingToShopResource;
 
   bool get isEnableAddressField =>
       draftRequest.province != null && draftRequest.ward != null;
+}
+
+class CreateOrderProductChangedState extends CreateOrderState {
+  CreateOrderProductChangedState({
+    required super.request,
+    required super.draftRequest,
+    required super.shopInfo,
+    required super.routingToShopResource,
+    super.step,
+    required super.productEntitySelected,
+  });
 }
 
 class CreateOrderRequestChangedState extends CreateOrderState {
@@ -31,6 +67,7 @@ class CreateOrderRequestChangedState extends CreateOrderState {
     required super.shopInfo,
     required super.routingToShopResource,
     super.step,
+    required super.productEntitySelected,
   });
 }
 
@@ -45,6 +82,7 @@ class CreateOrderPickUpTimeChangedState extends CreateOrderState {
     required super.routingToShopResource,
     this.pickUpDate,
     this.pickUpSession,
+    required super.productEntitySelected,
   });
 }
 
@@ -55,6 +93,7 @@ class CreateOrderCustomerInfoChangedState extends CreateOrderState {
     required super.shopInfo,
     required super.routingToShopResource,
     super.step = CreateOrderStep.receiverInfo,
+    required super.productEntitySelected,
   });
 }
 
@@ -65,6 +104,7 @@ class CreateOrderInfoChangedState extends CreateOrderState {
     required super.shopInfo,
     required super.routingToShopResource,
     super.step = CreateOrderStep.orderInfo,
+    required super.productEntitySelected,
   });
 }
 
@@ -77,6 +117,7 @@ class CreateOrderCalculatedFeeState extends CreateOrderState {
     required super.draftRequest,
     required super.shopInfo,
     required super.routingToShopResource,
+    required super.productEntitySelected,
   });
 }
 
@@ -89,6 +130,7 @@ class CreateOrderCreatedState extends CreateOrderState {
     required super.draftRequest,
     required super.shopInfo,
     required super.routingToShopResource,
+    required super.productEntitySelected,
   });
 }
 
@@ -98,5 +140,6 @@ class CreateOrderGetRoutingToShopState extends CreateOrderState {
     required super.draftRequest,
     required super.shopInfo,
     required super.routingToShopResource,
+    required super.productEntitySelected,
   });
 }

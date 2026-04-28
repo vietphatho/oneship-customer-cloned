@@ -3,6 +3,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/product_selected_container.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/product_selection_button.dart';
 
 class OrderInfoPageView extends StatefulWidget {
   const OrderInfoPageView({super.key});
@@ -38,7 +40,12 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PrimaryText("order_info".tr()),
+                  ProductSelectionButton(),
+
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+
+                  ProductSelectedContainer(),
+
                   AppSpacing.vertical(AppDimensions.mediumSpacing),
                   const DeliveryServiceTypeRadioGroup(),
                   Row(

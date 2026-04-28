@@ -5,9 +5,16 @@ import 'package:oneship_customer/features/management/data/models/response/get_sh
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 
 abstract class CreateOrderEvent {
   const CreateOrderEvent();
+}
+
+class CreateOrderChangeProductEvent extends CreateOrderEvent {
+  final List<ProductEntitySelected> products;
+
+  const CreateOrderChangeProductEvent(this.products);
 }
 
 class CreateOrderInitShopEvent extends CreateOrderEvent {

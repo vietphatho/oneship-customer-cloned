@@ -4,3 +4,7 @@ enum Result {
   error,
 }
 
+enum ActionType {
+  increment,
+  decrement,
+}
