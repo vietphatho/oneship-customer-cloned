@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
@@ -53,10 +52,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     Emitter<ShopState> emit,
   ) async {
     emit(
-      state.copyWith(
-        userId: event.userId,
-        shopsResource: Resource.loading(),
-      ),
+      state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
     );
     final response = await _fetchShopsUseCase.call(event.userId);
     emit(state.copyWith(shopsResource: response));
@@ -67,20 +63,14 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     Emitter<ShopState> emit,
   ) async {
     emit(
-      state.copyWith(
-        userId: event.userId,
-        shopsResource: Resource.loading(),
-      ),
+      state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
     );
 
     final getShopsResponse = await _fetchShopsUseCase.call(event.userId);
-    final currentShop = getShopsResponse.data?.data.firstOrNull;
+    final currentShop = _getInitialShop(getShopsResponse.data?.data ?? []);
 
     emit(
-      state.copyWith(
-        shopsResource: getShopsResponse,
-        currentShop: currentShop,
-      ),
+      state.copyWith(shopsResource: getShopsResponse, currentShop: currentShop),
     );
 
     final shopId = currentShop?.shopId;
@@ -148,5 +138,24 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   void changeShop(ShopEntity shop) {
     add(ShopChangeEvent(shop));
     add(ShopFetchDailySummaryEvent(shop.shopId!));
+  }
+
+  ShopEntity? _getInitialShop(List<ShopEntity> shops) {
+    return shops.firstWhereOrNull(_isApprovedShop) ?? shops.firstOrNull;
+  }
+
+  bool _isApprovedShop(ShopEntity shop) {
+    final status = shop.shopStatus?.trim().toLowerCase();
+    if (status == null || status.isEmpty) return false;
+
+    const approvedStatuses = {
+      'active',
+      'approved',
+      'approve',
+      'accepted',
+      'enabled',
+    };
+
+    return approvedStatuses.contains(status);
   }
 }

@@ -9,6 +9,8 @@ class RouteName {
   static const String registerPage = '/register';
 
   static const String shopMasterPage = '/shop_master';
+  static const String shopEmptyPage = '/shop_master/shop_empty';
+  static const String createShopPage = '/shop_master/create_shop';
   static const String shopPendingApprovalPage =
       '/shop_master/shop_pending_approval';
   static const String createOrderPage = '/shop_master/create_order';
