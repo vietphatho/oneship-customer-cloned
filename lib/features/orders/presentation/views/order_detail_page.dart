@@ -8,6 +8,9 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/views/order_detail_info_tab_view.dart';
+import 'package:oneship_customer/features/orders/presentation/views/order_detail_products_list_tab_view.dart';
+import 'package:oneship_customer/features/orders/presentation/views/order_detail_transportation_history_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_tab_bar.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 
@@ -54,7 +57,12 @@ class _OrderDetailPageState extends State<OrderDetailPage>
             length: _tabList.length,
             child: Column(
               children: [
-                _Header(ordDtl: ordDtl),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.smallSpacing,
+                  ),
+                  child: _Header(ordDtl: ordDtl),
+                ),
                 AppSpacing.vertical(AppDimensions.mediumSpacing),
                 OrderDetailTabBar(
                   controller: _tabCtrl,
@@ -64,7 +72,11 @@ class _OrderDetailPageState extends State<OrderDetailPage>
                 Expanded(
                   child: TabBarView(
                     controller: _tabCtrl,
-                    children: _tabList.map((e) => Container()).toList(),
+                    children: const [
+                      OrderDetailInfoTabView(),
+                      OrderDetailProductsListTabView(),
+                      OrderDetailTransportationHistoryTabView(),
+                    ],
                   ),
                 ),
               ],

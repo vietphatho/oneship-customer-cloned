@@ -4,10 +4,17 @@ import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 abstract class CreateOrderEvent {
   const CreateOrderEvent();
+}
+
+class CreateOrderChangeProductEvent extends CreateOrderEvent {
+  final List<ProductEntitySelected> products;
+
+  const CreateOrderChangeProductEvent(this.products);
 }
 
 class CreateOrderInitShopEvent extends CreateOrderEvent {
@@ -95,4 +102,10 @@ class CreateOrderGetRoutingToShopEvent extends CreateOrderEvent {
     required this.shopCoor,
     required this.destinationRefId,
   });
+}
+
+class CreateOrderErrorEvent extends CreateOrderEvent {
+  final String message;
+
+  CreateOrderErrorEvent(this.message);
 }

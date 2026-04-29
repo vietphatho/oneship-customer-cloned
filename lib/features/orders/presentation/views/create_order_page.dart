@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
@@ -44,10 +45,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     return BlocListener<CreateOrderBloc, CreateOrderState>(
       bloc: _createOrderBloc,
       listenWhen:
-          (pre, cur) => pre.step != cur.step || pre.request != cur.request,
+          (pre, cur) =>
+              pre.step != cur.step ||
+              pre.request != cur.request ||
+              cur is CreateOrderErrorState,
       listener: _handleListener,
       child: Scaffold(
-        appBar: PrimaryAppBar(title: "Create order"),
+        appBar: PrimaryAppBar(title: "Create order", confirmPop: true),
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
@@ -69,6 +73,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
         duration: Constants.pageViewTransitionDur,
         curve: Curves.easeInOut,
       );
+    } else if (state is CreateOrderErrorState && state.errorMessage != null) {
+      PrimaryDialog.showErrorDialog(context, message: state.errorMessage);
     }
   }
 }

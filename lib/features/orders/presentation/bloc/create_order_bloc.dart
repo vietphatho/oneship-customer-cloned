@@ -11,21 +11,34 @@ import 'package:oneship_customer/features/orders/data/models/request/calculate_d
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/add_product_to_order_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/update_product_quantity_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
-  CreateOrderBloc(this._repository)
-    : super(
+  final AddProductToOrderUseCase _addProductToOrderUseCase;
+  final UpdateProductQuantityUseCase _updateProductQuantityUseCase;
+  final ValidateCreateOrderInfoUseCase _validateCreateOrderInfoUseCase;
+
+  CreateOrderBloc(
+    this._repository,
+    this._addProductToOrderUseCase,
+    this._updateProductQuantityUseCase,
+    this._validateCreateOrderInfoUseCase,
+  ) : super(
         CreateOrderRequestChangedState(
           request: CreateOrderRequestEntity.empty(),
           draftRequest: CreateOrderRequestEntity.empty(),
           shopInfo: const ShopEntity(),
           routingToShopResource: Resource.loading(),
+          productEntitySelected: [],
         ),
       ) {
     on<CreateOrderInitShopEvent>(_onInitEvent);
@@ -37,6 +50,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     on<CreateOrderCalculateFeeEvent>(_onCalculateDeliveryFeeEvent);
     on<CreateOrderGetRoutingToShopEvent>(_onGetRoutingEvent);
     on<CreateOrderCreateEvent>(_onCreateOrderEvent);
+    on<CreateOrderChangeProductEvent>(_onProductChangedEvent);
+    on<CreateOrderErrorEvent>(_onErrorEvent);
   }
 
   final OrdersRepository _repository;
@@ -52,6 +67,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         draftRequest: state.draftRequest.copyWith(shopId: event.shop.shopId),
         step: state.step,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
   }
@@ -67,6 +83,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         draftRequest: event.request,
         step: event.step,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
+        acceptTerms: state.acceptTerms,
       ),
     );
   }
@@ -87,6 +105,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
             pickupSession: event.pickUpSession,
           ),
         ),
+        productEntitySelected: state.productEntitySelected,
       ),
     );
   }
@@ -115,6 +134,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           fullAddress: event.address,
           isNewAddress: event.isNewAddress ?? false,
         ),
+        productEntitySelected: state.productEntitySelected,
       ),
     );
   }
@@ -139,22 +159,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           ),
           serviceCode: event.deliveryServiceType,
         ),
-      ),
-    );
-  }
-
-  FutureOr<void> _onChangedAcceptTerms(
-    CreateOrderChangeAcceptTermsEvent event,
-    Emitter<CreateOrderState> emit,
-  ) {
-    emit(
-      CreateOrderRequestChangedState(
-        request: state.request,
-        draftRequest: state.draftRequest,
-        shopInfo: state.shopInfo,
-        routingToShopResource: state.routingToShopResource,
-        step: state.step,
-        acceptTerms: event.accept,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
   }
@@ -170,6 +175,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         request: state.request,
         draftRequest: state.draftRequest,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
     final response = await _repository.calculateDeliveryFee(event.request);
@@ -187,6 +193,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         request: newReq,
         draftRequest: newReq,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
   }
@@ -201,6 +208,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         draftRequest: state.draftRequest,
         shopInfo: state.shopInfo,
         routingToShopResource: Resource.loading(),
+        productEntitySelected: state.productEntitySelected,
       ),
     );
     final response = await _repository.getRoutingToShop(
@@ -219,6 +227,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         ),
         shopInfo: state.shopInfo,
         routingToShopResource: response,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
   }
@@ -234,6 +243,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         request: state.request,
         draftRequest: state.draftRequest,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
     final response = await _repository.createOrder(state.request.toDto());
@@ -244,8 +254,85 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         request: state.request,
         draftRequest: state.draftRequest,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
+  }
+
+  FutureOr<void> _onProductChangedEvent(
+    CreateOrderChangeProductEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      CreateOrderProductChangedState(
+        request: state.request,
+        draftRequest: state.draftRequest,
+        shopInfo: state.shopInfo,
+        routingToShopResource: state.routingToShopResource,
+        productEntitySelected: event.products,
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangedAcceptTerms(
+    CreateOrderChangeAcceptTermsEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      CreateOrderRequestChangedState(
+        request: state.request,
+        draftRequest: state.draftRequest,
+        shopInfo: state.shopInfo,
+        routingToShopResource: state.routingToShopResource,
+        step: state.step,
+        acceptTerms: event.accept,
+        productEntitySelected: state.productEntitySelected,
+      ),
+    );
+  }
+
+  FutureOr<void> _onErrorEvent(
+    CreateOrderErrorEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      CreateOrderErrorState(
+        errorMessage: event.message,
+        request: state.request,
+        draftRequest: state.draftRequest,
+        shopInfo: state.shopInfo,
+        routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
+        acceptTerms: state.acceptTerms,
+        step: state.step,
+      ),
+    );
+  }
+
+  void _error(String message) {
+    add(CreateOrderErrorEvent(message));
+  }
+
+  void addProductToOrder(Map<String, ProductEntity> selectedMap) async {
+    final newProduct = await _addProductToOrderUseCase.call(
+      currentProduct: state.productEntitySelected,
+      selectedMap: selectedMap,
+    );
+
+    add(CreateOrderChangeProductEvent(newProduct));
+  }
+
+  void updateProductQuantity(
+    String sku,
+    CreateOrderProductAction actionType,
+  ) async {
+    final newProduct = await _updateProductQuantityUseCase.call(
+      currentProduct: state.productEntitySelected,
+      sku: sku,
+      actionType: actionType,
+    );
+
+    add(CreateOrderChangeProductEvent(newProduct));
   }
 
   void setShop(ShopEntity shop) {
@@ -410,6 +497,13 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   }
 
   void createOrder() {
+    final validatedResult = _validateCreateOrderInfoUseCase
+        .validateConfirmInfoStep(state.acceptTerms);
+
+    if (validatedResult != null) {
+      _error(validatedResult);
+      return;
+    }
     add(CreateOrderCreateEvent());
   }
 }

@@ -42,7 +42,7 @@ abstract class OrderDetailResponse with _$OrderDetailResponse {
     @JsonKey(name: "createdByUserId") String? createdByUserId,
     @JsonKey(name: "shipperCodes") List<dynamic>? shipperCodes,
     @JsonKey(name: "detail") Detail? detail,
-    @JsonKey(name: "items") List<dynamic>? items,
+    @JsonKey(name: "items") List<OrderDetailProductResponse>? items,
     @JsonKey(name: "shop") Shop? shop,
     @JsonKey(name: "orderFees") List<OrderFee>? orderFees,
     @JsonKey(name: "totalProductAmount") int? totalProductAmount,
@@ -68,7 +68,7 @@ abstract class Detail with _$Detail {
     @JsonKey(name: "isFragile") bool? isFragile,
     @JsonKey(name: "isLiquid") bool? isLiquid,
     @JsonKey(name: "hasBattery") bool? hasBattery,
-    @JsonKey(name: "note") dynamic note,
+    @JsonKey(name: "note") String? note,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
   }) = _Detail;
@@ -116,4 +116,25 @@ abstract class Profile with _$Profile {
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);
+}
+
+@freezed
+abstract class OrderDetailProductResponse with _$OrderDetailProductResponse {
+  const factory OrderDetailProductResponse({
+    @JsonKey(name: "id") String? id,
+    @JsonKey(name: "orderId") String? orderId,
+    @JsonKey(name: "productId") String? productId,
+    @JsonKey(name: "productName") String? productName,
+    @JsonKey(name: "productSku") String? productSku,
+    @JsonKey(name: "variantId") dynamic variantId,
+    @JsonKey(name: "variantName") dynamic variantName,
+    @JsonKey(name: "variantAttributes") dynamic variantAttributes,
+    @JsonKey(name: "quantity") int? quantity,
+    @JsonKey(name: "unitPrice") int? unitPrice,
+    @JsonKey(name: "discountAmount") int? discountAmount,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+  }) = _OrderDetailProductResponse;
+
+  factory OrderDetailProductResponse.fromJson(Map<String, dynamic> json) =>
+      _$OrderDetailProductResponseFromJson(json);
 }

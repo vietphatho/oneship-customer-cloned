@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
+import 'package:oneship_customer/core/base/components/primary_check_box.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
@@ -169,7 +170,16 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                       ),
                     ),
                     AppSpacing.vertical(AppDimensions.largeSpacing),
-                    Checkbox(
+                    // Checkbox(
+                    //   value: state.acceptTerms,
+                    //   onChanged: (value) {
+                    //     if (value != null) {
+                    //       _createOrderBloc.changeAcceptTerms(value);
+                    //     }
+                    //   },
+                    // ),
+                    PrimaryCheckBox(
+                      label: "accept_terms".tr(),
                       value: state.acceptTerms,
                       onChanged: (value) {
                         if (value != null) {
@@ -183,45 +193,11 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
               ),
             ),
 
-            SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.mediumSpacing,
-                  vertical: AppDimensions.mediumSpacing,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: PrimaryButton.outlined(
-                        label: "previous".tr(),
-                        onPressed: _onPrevious,
-                      ),
-                    ),
-                    AppSpacing.horizontal(AppDimensions.smallSpacing),
-                    Expanded(
-                      child: SecondaryButton.filled(
-                        label: "create_order".tr(),
-                        onPressed:
-                            isStepValid
-                                ? () {
-                                  _createOrderBloc.createOrder();
-                                }
-                                : null,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            SafeArea(child: _BottomActionButtons()),
           ],
         );
       },
     );
-  }
-
-  void _onPrevious() {
-    // _createOrderBloc.changeStep(CreateOrderStep.receiverInfo);
-    _createOrderBloc.backToStep(CreateOrderStep.orderInfo);
   }
 
   void _handleListener(BuildContext context, CreateOrderState state) {
@@ -248,6 +224,41 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           );
       }
     }
+  }
+}
+
+class _BottomActionButtons extends StatelessWidget {
+  const _BottomActionButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final CreateOrderBloc _createOrderBloc = getIt.get();
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppDimensions.mediumSpacing,
+        vertical: AppDimensions.mediumSpacing,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: PrimaryButton.outlined(
+              label: "previous".tr(),
+              onPressed: () {
+                _createOrderBloc.backToStep(CreateOrderStep.orderInfo);
+              },
+            ),
+          ),
+          AppSpacing.horizontal(AppDimensions.smallSpacing),
+          Expanded(
+            child: SecondaryButton.filled(
+              label: "create_order".tr(),
+              onPressed: _createOrderBloc.createOrder,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

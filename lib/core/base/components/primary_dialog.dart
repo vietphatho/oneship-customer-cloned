@@ -197,7 +197,7 @@ class PrimaryDialog {
     );
   }
 
-  static Future<dynamic> showQuestionDialog(
+  static Future<T?> showQuestionDialog<T>(
     BuildContext context, {
     String title = "confirm",
     String? message,
@@ -206,7 +206,7 @@ class PrimaryDialog {
     String positiveButtonText = "yes",
     String negativeButtonText = "cancel",
   }) {
-    return showGeneralDialog<dynamic>(
+    return showGeneralDialog<T?>(
       context: context,
       pageBuilder:
           (_, n, m) => _CustomDialogView(

@@ -147,5 +147,6 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
 
   void changeShop(ShopEntity shop) {
     add(ShopChangeEvent(shop));
+    add(ShopFetchDailySummaryEvent(shop.shopId!));
   }
 }

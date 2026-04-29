@@ -44,7 +44,7 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
     String? createdByUserId,
     @Default([]) List<String> shipperCodes,
     DetailEntity? detail,
-    @Default([]) List<dynamic> items,
+    @Default([]) List<OrderDetailProductEntity> items,
     OrderDetailShopEntity? shop,
     @Default([]) List<OrderFeeEntity> orderFees,
     @Default(0) int totalProductAmount,
@@ -88,7 +88,11 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       createdByUserId: dto.createdByUserId,
       shipperCodes: dto.shipperCodes?.map((e) => e.toString()).toList() ?? [],
       detail: dto.detail != null ? DetailEntity.from(dto.detail!) : null,
-      items: dto.items ?? [],
+      items:
+          dto.items
+              ?.map((dto) => OrderDetailProductEntity.from(dto))
+              .toList() ??
+          [],
       shop: dto.shop != null ? OrderDetailShopEntity.from(dto.shop!) : null,
       orderFees:
           dto.orderFees?.map((e) => OrderFeeEntity.from(e)).toList() ?? [],
@@ -96,6 +100,15 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       totalDeliveryFee: dto.totalDeliveryFee ?? 0,
     );
   }
+}
+
+extension OrderDetailEntityExt on OrderDetailEntity {
+  int get totalProductQty => items.fold(0, (sum, item) => sum + item.quantity);
+
+  int get totalProductPrice => items.fold(
+    0,
+    (sum, item) => sum + (item.unitPrice * item.quantity) - item.discountAmount,
+  );
 }
 
 @freezed
@@ -204,5 +217,59 @@ abstract class ProfileEntity with _$ProfileEntity {
 
   factory ProfileEntity.from(Profile dto) {
     return ProfileEntity(phone: dto.phone, fullAddress: dto.fullAddress);
+  }
+}
+
+@freezed
+abstract class OrderDetailProductEntity with _$OrderDetailProductEntity {
+  const OrderDetailProductEntity._();
+
+  const factory OrderDetailProductEntity({
+    String? id,
+    String? orderId,
+    String? productId,
+    String? productName,
+    String? productSku,
+    String? variantId,
+    String? variantName,
+    String? variantAttributes,
+    @Default(0) int quantity,
+    @Default(0) int unitPrice,
+    @Default(0) int discountAmount,
+    DateTime? createdAt,
+  }) = _OrderDetailProductEntity;
+
+  factory OrderDetailProductEntity.from(OrderDetailProductResponse dto) {
+    return OrderDetailProductEntity(
+      id: dto.id,
+      orderId: dto.orderId,
+      productId: dto.productId,
+      productName: dto.productName,
+      productSku: dto.productSku,
+      variantId: dto.variantId?.toString(),
+      variantName: dto.variantName?.toString(),
+      variantAttributes: dto.variantAttributes?.toString(),
+      quantity: dto.quantity ?? 0,
+      unitPrice: dto.unitPrice ?? 0,
+      discountAmount: dto.discountAmount ?? 0,
+      createdAt: dto.createdAt,
+    );
+  }
+
+  OrderDetailProductResponse toDto() {
+    return OrderDetailProductResponse(
+      id: id,
+      orderId: orderId,
+      productId: productId,
+      productName: productName,
+      productSku: productSku,
+      variantId: variantId,
+      variantName: variantName,
+      variantAttributes: variantAttributes,
+      quantity: quantity,
+      unitPrice: unitPrice,
+      discountAmount: discountAmount,
+      createdAt: createdAt,
+    );
   }
 }
