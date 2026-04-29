@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/datasources/auth_api.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/domain/repositories/auth_repository.dart';
@@ -29,5 +30,18 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Resource> registerAccount(RegisterRequest body) {
     return request(() => _authApi.registerAccount(body));
+  }
+
+  @override
+  Future<Resource<UserProfileResponse>> updateUserProfile({
+    required String id,
+    required UpdateUserProfileRequest body,
+  }) {
+    return request(() => _authApi.updateUserProfile(id, body));
+  }
+  
+  @override
+  Future<Resource> logout() {
+    return request(() => _authApi.logout());
   }
 }
