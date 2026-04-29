@@ -1,4 +1,9 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_card.dart';
+import 'package:oneship_customer/core/base/components/primary_date_time_picker.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
 
 class FinancePage extends StatefulWidget {
   const FinancePage({super.key});
@@ -7,9 +12,322 @@ class FinancePage extends StatefulWidget {
   State<FinancePage> createState() => _FinancePageState();
 }
 
-class _FinancePageState extends State<FinancePage> {
+class _FinancePageState extends State<FinancePage>
+    with SingleTickerProviderStateMixin {
+  late DateTime fromDate;
+  late DateTime toDate;
+
+  late List<String> _tabList;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    fromDate = DateTime.now();
+    toDate = DateTime.now();
+    _tabList = const ['24 gio', '7 ngay', '30 ngay'];
+    _tabController = TabController(length: _tabList.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: PrimaryAppBar(title: "finance".tr()));
+    return Scaffold(
+      appBar: PrimaryAppBar(title: "finance".tr()),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            width: AppDimensions.getSize(context).width,
+            padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.mediumSpacing,
+            ),
+            child: Column(
+              children: [
+                PrimaryText(
+                  'financial_overview'.tr(),
+                  style: AppTextStyles.displaySmall,
+                ),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                PrimaryText(
+                  '22/04/2026 - 23/04/2026',
+                  style: AppTextStyles.titleXLarge,
+                ),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: DefaultTabController(
+                        length: _tabList.length,
+                        child: PrimaryTabBar(
+                          height: AppDimensions.mediumHeightButton,
+                          items: _tabList,
+                          controller: _tabController,
+                          borderRadius: AppDimensions.mediumBorderRadius,
+                          onTap: (index) {
+                          },
+                        ),
+                      ),
+                    ),
+                    AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                    Expanded(
+                      flex: 1,
+                      child: PrimaryButton.iconFilled(
+                        icon: Icon(
+                          Icons.date_range,
+                          color: AppColors.backgroundColor,
+                        ),
+                        label: 'select_date'.tr(),
+                        onPressed: () {
+                          PrimaryDialog.showCustomDialog(
+                            context,
+                            child: _selectedDateDialog(),
+                            actionButtons: PrimaryButton.filled(
+                              label: 'done'.tr(),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _financeSummary(),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _feeOrderSuccess(),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _feeOrderReturned(),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _discountsAndCashback(),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _detailByDay(),
+                // AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                // SizedBox(height: 100),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _selectedDateDialog() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PrimaryText('from_date'.tr(), style: AppTextStyles.titleLarge),
+        AppSpacing.vertical(AppDimensions.xSmallSpacing),
+        PrimaryDateTimePicker(
+          onChanged: (value) {
+            setState(() {
+              fromDate = value;
+            });
+          },
+        ),
+        AppSpacing.vertical(AppDimensions.xSmallSpacing),
+        PrimaryText('to_date'.tr(), style: AppTextStyles.titleLarge),
+        AppSpacing.vertical(AppDimensions.xSmallSpacing),
+        PrimaryDateTimePicker(
+          onChanged: (value) {
+            setState(() {
+              toDate = value;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _financeSummary() {
+    return Column(
+      children: [
+        PrimaryCard(
+          child: _financeRowItem(
+            label: 'balance_after'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: Utils.formatCurrencyWithUnit(12222100000),
+            valueStyle: AppTextStyles.titleXLarge,
+          ),
+        ),
+        AppSpacing.vertical(AppDimensions.mediumSpacing),
+        PrimaryCard(
+          child: _financeRowItem(
+            label: 'cod'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '-100.000',
+            valueStyle: AppTextStyles.titleXLarge,
+          ),
+        ),
+        AppSpacing.vertical(AppDimensions.mediumSpacing),
+        PrimaryCard(
+          child: _financeRowItem(
+            label: 'total'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '-100.000',
+            valueStyle: AppTextStyles.titleXLarge,
+          ),
+        ),
+        AppSpacing.vertical(AppDimensions.mediumSpacing),
+        PrimaryCard(
+          child: _financeRowItem(
+            label: 'discount_1'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '0',
+            valueStyle: AppTextStyles.titleXLarge,
+          ),
+        ),
+        AppSpacing.vertical(AppDimensions.mediumSpacing),
+        PrimaryCard(
+          child: _financeRowItem(
+            label: 'successful_orders'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '1',
+            valueStyle: AppTextStyles.titleXLarge,
+          ),
+        ),
+        AppSpacing.vertical(AppDimensions.mediumSpacing),
+        PrimaryCard(
+          child: _financeRowItem(
+            label: 'returned_orders'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '1',
+            valueStyle: AppTextStyles.titleXLarge,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _feeOrderSuccess() {
+    return PrimaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText(
+            'successful_order_fee'.tr(),
+            style: AppTextStyles.titleLarge,
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'shipping_fee'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'shipping_fee_VAT'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'surcharge'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'surcharge_vat'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(
+            label: 'total'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '-100.000',
+            valueStyle: AppTextStyles.titleLarge,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _feeOrderReturned() {
+    return PrimaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText('return_order_fee'.tr(), style: AppTextStyles.titleLarge),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(
+            label: 'forward_shipping_fee'.tr(),
+            value: '-100.000',
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(
+            label: 'forward_shipping_vat'.tr(),
+            value: '-100.000',
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'return_shipping_fee'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'return_shipping_vat'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'surcharge'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'surcharge_vat'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(
+            label: 'total'.tr(),
+            labelStyle: AppTextStyles.titleLarge,
+            value: '-100.000',
+            valueStyle: AppTextStyles.titleLarge,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _discountsAndCashback() {
+    return PrimaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText('discount_refund'.tr(), style: AppTextStyles.titleLarge),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'discount_1'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'refund'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'adjustment'.tr(), value: '-100.000'),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailByDay() {
+    return PrimaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText('detail_by_day'.tr(), style: AppTextStyles.titleLarge),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'date'.tr(), value: '23/04/2026'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'cod'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'shipping_fee'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'surcharge'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'return_order_fee'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'balance_after'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'successful_orders'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _financeRowItem(label: 'returned_orders'.tr(), value: '-100.000'),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+        ],
+      ),
+    );
+  }
+
+  Widget _financeRowItem({
+    required String label,
+    TextStyle? labelStyle,
+    required String value,
+    TextStyle? valueStyle,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        PrimaryText(label, style: labelStyle ?? AppTextStyles.bodyMedium),
+        PrimaryText(value, style: valueStyle ?? AppTextStyles.titleMedium),
+      ],
+    );
   }
 }
