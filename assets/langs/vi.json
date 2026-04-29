@@ -630,5 +630,8 @@
   "quantity": "Số lượng",
   "total_amount": "Thành tiền",
   "dont_have_product": "Chưa có sản phẩm nào",
-  "delete_this_product": "Xoá sản phẩm này?"
+  "delete_this_product": "Xoá sản phẩm này?",
+  "validate" : {
+    "text_required": "Không được để trống"
+  }
 }

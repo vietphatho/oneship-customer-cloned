@@ -25,7 +25,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     Emitter<ProductState> emit,
   ) async {
     emit(
-      state.copyWith(products: state.products!.copyWith(state: Result.loading)),
+      state.copyWith(products: Resource.loading()),
     );
 
     final response = await _createNewProductUseCase(
