@@ -1,10 +1,10 @@
 import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/management/data/models/response/get_shops_response.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 abstract class CreateOrderState {
   const CreateOrderState({
@@ -18,10 +18,10 @@ abstract class CreateOrderState {
   });
 
   final CreateOrderStep step;
-  final CreateOrderEntity request;
-  final CreateOrderEntity draftRequest;
+  final CreateOrderRequestEntity request;
+  final CreateOrderRequestEntity draftRequest;
   final List<ProductEntitySelected> productEntitySelected;
-  final ShopInfo shopInfo;
+  final ShopEntity shopInfo;
   final Resource<GetRoutingToShopResponse> routingToShopResource;
   final bool acceptTerms;
 
@@ -124,7 +124,6 @@ class CreateOrderGetRoutingToShopState extends CreateOrderState {
     required super.productEntitySelected,
   });
 }
-
 
 extension CreateOrderStateX on CreateOrderState {
   int getCalculatedTotalQuantity() {

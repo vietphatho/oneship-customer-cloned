@@ -15,7 +15,7 @@ class Utils {
       symbol: Constants.currencyUnit,
     );
 
-    return formatter.format(num);
+    return formatter.format(value);
   }
 
   static String formatDimensionWithUnit({

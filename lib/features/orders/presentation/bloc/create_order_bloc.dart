@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
@@ -13,6 +12,7 @@ import 'package:oneship_customer/features/orders/data/models/response/get_routin
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/add_product_to_order_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/update_product_quantity_use_case.dart';
@@ -170,6 +170,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         request: state.request,
         draftRequest: state.draftRequest,
         routingToShopResource: state.routingToShopResource,
+        productEntitySelected: state.productEntitySelected,
       ),
     );
     final response = await _repository.calculateDeliveryFee(event.request);
@@ -268,6 +269,23 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     );
   }
 
+  FutureOr<void> _onChangedAcceptTerms(
+    CreateOrderChangeAcceptTermsEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      CreateOrderRequestChangedState(
+        request: state.request,
+        draftRequest: state.draftRequest,
+        shopInfo: state.shopInfo,
+        routingToShopResource: state.routingToShopResource,
+        step: state.step,
+        acceptTerms: event.accept,
+        productEntitySelected: state.productEntitySelected,
+      ),
+    );
+  }
+
   void addProductToOrder(Map<String, ProductEntity> selectedMap) async {
     final newProduct = await _addProductToOrderUseCase.call(
       currentProduct: state.productEntitySelected,
@@ -277,7 +295,10 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderChangeProductEvent(newProduct));
   }
 
-  void updateProductQuantity(String sku, CreateOrderProductAction actionType) async {
+  void updateProductQuantity(
+    String sku,
+    CreateOrderProductAction actionType,
+  ) async {
     final newProduct = await _updateProductQuantityUseCase.call(
       currentProduct: state.productEntitySelected,
       sku: sku,
@@ -287,7 +308,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderChangeProductEvent(newProduct));
   }
 
-  void setShop(ShopInfo shop) {
+  void setShop(ShopEntity shop) {
     add(CreateOrderInitShopEvent(shop));
   }
 

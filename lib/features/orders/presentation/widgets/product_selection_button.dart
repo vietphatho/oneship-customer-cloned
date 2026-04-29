@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_check_box.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_text_field.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
@@ -281,7 +280,7 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
               ),
               SizedBox(
                 width: 72,
-                child: PrimaryButton(
+                child: SecondaryButton.filled(
                   onPressed: () {
                     _createOrderBloc.addProductToOrder(
                       _productBloc.state.getSelectedProducts(),
@@ -433,7 +432,7 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                 ],
               ),
               AppSpacing.vertical(AppDimensions.smallSpacing),
-              PrimaryButton(
+              PrimaryButton.filled(
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     _productBloc.createNewProduct(
