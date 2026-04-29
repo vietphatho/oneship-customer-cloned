@@ -103,3 +103,9 @@ class CreateOrderGetRoutingToShopEvent extends CreateOrderEvent {
     required this.destinationRefId,
   });
 }
+
+class CreateOrderErrorEvent extends CreateOrderEvent {
+  final String message;
+
+  CreateOrderErrorEvent(this.message);
+}
