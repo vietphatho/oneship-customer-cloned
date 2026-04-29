@@ -54,8 +54,10 @@ dependencies:
   connectivity_plus: ^7.0.0
   flutter_secure_storage: ^9.2.4
 
+  # widgets
   timelines_plus: ^2.0.0
   collection: ^1.19.1
+  pull_to_refresh_flutter3: ^2.0.2
 
 dev_dependencies:
   flutter_test:

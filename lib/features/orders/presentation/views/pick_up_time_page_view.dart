@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_date_time_picker.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
@@ -78,7 +79,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
               ),
               const Spacer(),
               SafeArea(
-                child: PrimaryButton.supportingPrimary(
+                child: SecondaryButton.filled(
                   label: "next".tr(),
                   onPressed:
                       isStepValid ? _createOrderBloc.completeDateStep : null,

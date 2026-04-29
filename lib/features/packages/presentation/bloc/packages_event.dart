@@ -1,5 +1,13 @@
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+
 abstract class PackagesEvent {
   const PackagesEvent();
+}
+
+class PackageInitEvent extends PackagesEvent {
+  final ShopEntity shop;
+
+  PackageInitEvent(this.shop);
 }
 
 class PackagesFetchingEvent extends PackagesEvent {

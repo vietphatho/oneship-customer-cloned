@@ -68,7 +68,7 @@ class AppTextStyles {
   );
 
   // Title Styles (Small headers)
-  static const TextStyle titleLarge = TextStyle(
+  static const TextStyle titleXLarge = TextStyle(
     fontFamily: fontFamily,
     fontSize: 18,
     fontWeight: FontWeight.bold,
@@ -76,9 +76,17 @@ class AppTextStyles {
     color: AppColors.onBackground,
   );
 
-  static const TextStyle titleMedium = TextStyle(
+  static const TextStyle titleLarge = TextStyle(
     fontFamily: fontFamily,
     fontSize: 16,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0,
+    color: AppColors.onBackground,
+  );
+
+  static const TextStyle titleMedium = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 14,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.15,
     color: AppColors.onBackground,
@@ -86,7 +94,7 @@ class AppTextStyles {
 
   static const TextStyle titleSmall = TextStyle(
     fontFamily: fontFamily,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.1,
     color: AppColors.onBackground,
@@ -117,28 +125,35 @@ class AppTextStyles {
     color: AppColors.onBackground,
   );
 
+  static const TextStyle labelXSmall = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+    color: AppColors.onBackground,
+  );
+
   // Body Styles (Regular text)
   static const TextStyle bodyLarge = TextStyle(
     fontFamily: fontFamily,
     fontSize: 16,
-    fontWeight: FontWeight.w300,
-    letterSpacing: 0.15,
+    fontWeight: FontWeight.w400,
+    // letterSpacing: 0.15,
     color: AppColors.onBackground,
   );
 
   static const TextStyle bodyMedium = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
-    fontWeight: FontWeight.w300,
-    letterSpacing: 0.25,
+    fontWeight: FontWeight.w400,
+    // letterSpacing: 0.25,
     color: AppColors.onBackground,
   );
 
   static const TextStyle bodySmall = TextStyle(
     fontFamily: fontFamily,
     fontSize: 12,
-    fontWeight: FontWeight.w300,
-    letterSpacing: 0.4,
+    fontWeight: FontWeight.w400,
+    // letterSpacing: 0.4,
     color: AppColors.onBackground,
   );
 

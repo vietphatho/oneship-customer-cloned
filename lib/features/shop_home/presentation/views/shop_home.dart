@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -24,6 +25,7 @@ class _ShopHomeState extends State<ShopHome> {
   static const double _bottomSpacing = 96;
 
   final ShopBloc _shopBloc = getIt.get();
+  final PackagesBloc _packagesBloc = getIt.get();
 
   @override
   void initState() {
@@ -33,75 +35,90 @@ class _ShopHomeState extends State<ShopHome> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShopBloc, ShopState>(
-      bloc: _shopBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.shopsResource != current.shopsResource ||
-              previous.userId != current.userId,
-      builder: (context, state) {
-        final useWhiteBackground = _useWhiteBackground(state);
+    //   return BlocBuilder<ShopBloc, ShopState>(
+    //     bloc: _shopBloc,
+    //     buildWhen:
+    //         (previous, current) =>
+    //             previous.shopsResource != current.shopsResource ||
+    //             previous.userId != current.userId,
+    //     builder: (context, state) {
+    //       final useWhiteBackground = _useWhiteBackground(state);
 
-        return Stack(
-          children: [
-            Container(
-              color: useWhiteBackground ? Colors.white : null,
-              decoration:
-                  useWhiteBackground
-                      ? null
-                      : BoxDecoration(gradient: AppColors.shopHomeGradBg),
-            ),
-            Column(
-              children: [
-                ShopAppBar(useDarkContent: useWhiteBackground),
-                Expanded(child: _buildBody(context, state)),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
+    //       return Stack(
+    //         children: [
+    //           Container(
+    //             color: useWhiteBackground ? Colors.white : null,
+    //             decoration:
+    //                 useWhiteBackground
+    //                     ? null
+    //                     : BoxDecoration(gradient: AppColors.shopHomeGradBg),
+    //           ),
+    //           Column(
+    //             children: [
+    //               ShopAppBar(useDarkContent: useWhiteBackground),
+    //               Expanded(child: _buildBody(context, state)),
+    //             ],
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
 
-  Widget _buildBody(BuildContext context, ShopState state) {
-    switch (state.shopsResource.state) {
-      case Result.idle:
-      case Result.loading:
-        return const Center(
-          child: CircularProgressIndicator(color: AppColors.primary),
-        );
-      case Result.error:
-        return _ShopHomeErrorState(
-          message:
-              state.shopsResource.message.isEmpty
-                  ? 'Không thể tải danh sách cửa hàng.'
-                  : state.shopsResource.message,
-          onRetry: () => _shopBloc.init(state.userId),
-        );
-      case Result.success:
-        if (state.shops.isEmpty) {
-          return ShopEmptyState(
-            onCreateShopPressed: () => _openCreateShopPage(context),
-          );
-        }
+    // Widget _buildBody(BuildContext context, ShopState state) {
+    //   switch (state.shopsResource.state) {
+    //     case Result.idle:
+    //     case Result.loading:
+    //       return const Center(
+    //         child: CircularProgressIndicator(color: AppColors.primary),
+    //       );
+    //     case Result.error:
+    //       return _ShopHomeErrorState(
+    //         message:
+    //             state.shopsResource.message.isEmpty
+    //                 ? 'Không thể tải danh sách cửa hàng.'
+    //                 : state.shopsResource.message,
+    //         onRetry: () => _shopBloc.init(state.userId),
+    //       );
+    //     case Result.success:
+    //       if (state.shops.isEmpty) {
+    //         return ShopEmptyState(
+    //           onCreateShopPressed: () => _openCreateShopPage(context),
+    //         );
+    //       }
 
-        if (_isPendingApproval(state.currentShop)) {
-          return ShopPendingApprovalView(
-            shopName: state.currentShop?.shopName ?? '',
-          );
-        }
+    //       if (_isPendingApproval(state.currentShop)) {
+    //         return ShopPendingApprovalView(
+    //           shopName: state.currentShop?.shopName ?? '',
+    //         );
+    //       }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: _bottomSpacing),
-          child: Column(
+    //       return SingleChildScrollView(
+    //         padding: const EdgeInsets.only(bottom: _bottomSpacing),
+    //         child: Column(
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ShopBloc, ShopState>(
+          bloc: _shopBloc,
+          listenWhen: (pre, cur) => cur.currentShop != pre.currentShop,
+          listener: _listenCurrentShopChanged,
+        ),
+      ],
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(gradient: AppColors.shopHomeGradBg),
+          ),
+          Column(
             children: [
               AppSpacing.vertical(AppDimensions.smallSpacing),
               const ShopBriefInfo(),
+              AppSpacing.vertical(AppDimensions.mediumSpacing),
               GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2 / 1,
+                  crossAxisCount: 3,
+                  // childAspectRatio: 2 / 1,
                   mainAxisSpacing: AppDimensions.smallSpacing,
                   crossAxisSpacing: AppDimensions.smallSpacing,
                 ),
@@ -112,12 +129,21 @@ class _ShopHomeState extends State<ShopHome> {
                 ),
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder:
-                    (context, index) =>
-                        ShopHomeFeatureButton(feature: ShopHomeFeature.values[index]),
+                    (context, index) => ShopHomeFeatureButton(
+                      feature: ShopHomeFeature.values[index],
+                    ),
               ),
             ],
           ),
-        );
+        ],
+      ),
+    );
+  }
+  // }
+
+  void _listenCurrentShopChanged(BuildContext context, ShopState state) {
+    if (state.currentShop != null) {
+      _packagesBloc.init(state.currentShop!);
     }
   }
 
@@ -174,7 +200,7 @@ class _ShopHomeErrorState extends StatelessWidget {
               color: AppColors.neutral3,
             ),
             AppSpacing.vertical(AppDimensions.mediumSpacing),
-            PrimaryButton.primary(label: 'Tải lại', onPressed: onRetry),
+            PrimaryButton.filled(label: 'Tải lại', onPressed: onRetry),
           ],
         ),
       ),

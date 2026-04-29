@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
+import 'package:oneship_customer/core/base/components/tertiary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
@@ -200,28 +202,25 @@ class _CreateShopPageState extends State<CreateShopPage> {
                         children: [
                           Expanded(
                             flex: 2,
-                            child: PrimaryButton(
+                            child: TertiaryButton.filled(
                               label: 'Hủy',
                               onPressed:
                                   isSubmitting
                                       ? null
                                       : () => Navigator.of(context).pop(),
-                              backgroundColor: Colors.white,
-                              borderColor: AppColors.neutral7,
-                              textColor: AppColors.neutral6,
+                            
                             ),
                           ),
                           AppSpacing.horizontal(AppDimensions.xxxLargeSpacing),
                           Expanded(
                             flex: 3,
-                            child: PrimaryButton(
+                            child: SecondaryButton.filled(
                               label:
                                   isSubmitting
                                       ? 'Đang xử lý...'
                                       : 'Tạo cửa hàng',
                               onPressed: isSubmitting ? null : _handleSubmit,
-                              backgroundColor: AppColors.secondary,
-                              textColor: Colors.white,
+                           
                             ),
                           ),
                         ],

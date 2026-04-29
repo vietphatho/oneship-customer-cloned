@@ -1,4 +1,5 @@
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 abstract class ShopEvent {
   const ShopEvent();
@@ -30,4 +31,10 @@ class ShopCreateEvent extends ShopEvent {
 
 class ShopResetCreateResourceEvent extends ShopEvent {
   const ShopResetCreateResourceEvent();
+}
+
+class ShopChangeEvent extends ShopEvent {
+  final ShopEntity shop;
+
+  ShopChangeEvent(this.shop);
 }

@@ -13,6 +13,7 @@ class RouteName {
   static const String createMultiOrdersPage =
       '/shop_master/create_multi_orders';
   static const String ordersPage = '/shop_master/orders';
+  static const String orderDetailPage = '/shop_master/orders/order_detail';
   static const String packagesPage = '/shop_master/packages';
   static const String packageDetailPage =
       '/shop_master/packages/package_detail';

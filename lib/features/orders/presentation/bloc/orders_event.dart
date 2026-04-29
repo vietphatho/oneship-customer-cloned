@@ -15,3 +15,10 @@ class OrdersLoadMoreByStatusEvent extends OrdersEvent {
 
   OrdersLoadMoreByStatusEvent(this.status);
 }
+
+class OrderFetchDetailEvent extends OrdersEvent {
+  final String shopId;
+  final String orderId;
+
+  OrderFetchDetailEvent({required this.shopId, required this.orderId});
+}

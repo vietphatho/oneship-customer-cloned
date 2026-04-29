@@ -1,9 +1,16 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:flutter/material.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/base/components/primary_text.dart';
+import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_customer/core/themes/app_dimensions.dart';
+import 'package:oneship_customer/core/themes/app_spacing.dart';
+import 'package:oneship_customer/core/themes/app_text_style.dart';
 
-class PrimaryButton extends StatelessWidget {
+class SecondaryButton extends StatelessWidget {
   final Function()? onPressed;
   final String label;
+
+  final Widget? icon;
 
   final Color? backgroundColor;
   final Color? borderColor;
@@ -13,12 +20,10 @@ class PrimaryButton extends StatelessWidget {
   // final Widget? child;
   final double height;
 
-  final Widget? icon;
-
-  const PrimaryButton._({
+  const SecondaryButton._({
     super.key,
-    required this.onPressed,
-    this.label = "",
+    this.onPressed,
+    required this.label,
     this.backgroundColor,
     this.isDisable = false,
     // this.child,
@@ -28,88 +33,61 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
   });
 
-  factory PrimaryButton.filled({
+  factory SecondaryButton.filled({
     required String label,
     Function()? onPressed,
     double height = AppDimensions.mediumHeightButton,
-  }) => PrimaryButton._(
+  }) => SecondaryButton._(
     label: label,
     onPressed: onPressed,
     height: height,
     textColor: Colors.white,
-    backgroundColor: AppColors.primary,
+    backgroundColor: AppColors.secondary,
   );
 
-  factory PrimaryButton.outlined({
+  factory SecondaryButton.outlined({
     required String label,
     Function()? onPressed,
     double height = AppDimensions.mediumHeightButton,
-  }) {
-    return PrimaryButton._(
-      label: label,
-      onPressed: onPressed,
-      height: height,
-      backgroundColor: Colors.white,
-      textColor: AppColors.primary,
-      borderColor: AppColors.primary,
-    );
-  }
-
-  factory PrimaryButton.iconFilled({
-    required String label,
-    Function()? onPressed,
-    double height = AppDimensions.mediumHeightButton,
-    required Widget icon,
-  }) => PrimaryButton._(
+  }) => SecondaryButton._(
     label: label,
     onPressed: onPressed,
     height: height,
-    textColor: Colors.white,
-    backgroundColor: AppColors.primary,
-    icon: icon,
+    textColor: AppColors.secondary,
+    backgroundColor: Colors.white,
+    borderColor: AppColors.secondary,
   );
 
-  factory PrimaryButton.iconOutlined({
+  factory SecondaryButton.iconFilled({
     required String label,
     Function()? onPressed,
     double height = AppDimensions.mediumHeightButton,
     required Widget icon,
   }) {
-    return PrimaryButton._(
+    return SecondaryButton._(
       label: label,
       onPressed: onPressed,
       height: height,
-      backgroundColor: Colors.white,
-      textColor: AppColors.primary,
-      borderColor: AppColors.primary,
+      textColor: Colors.white,
+      backgroundColor: AppColors.secondary,
       icon: icon,
     );
   }
 
-  factory PrimaryButton.warningFilled({
+  factory SecondaryButton.iconOutlined({
     required String label,
     Function()? onPressed,
     double height = AppDimensions.mediumHeightButton,
-  }) => PrimaryButton._(
-    label: label,
-    onPressed: onPressed,
-    height: height,
-    textColor: Colors.white,
-    backgroundColor: AppColors.red500,
-  );
-
-  factory PrimaryButton.warningOutlined({
-    required String label,
-    Function()? onPressed,
-    double height = AppDimensions.mediumHeightButton,
+    required Widget icon,
   }) {
-    return PrimaryButton._(
+    return SecondaryButton._(
       label: label,
       onPressed: onPressed,
       height: height,
+      textColor: AppColors.secondary,
       backgroundColor: Colors.white,
-      textColor: AppColors.red500,
-      borderColor: AppColors.red500,
+      borderColor: AppColors.secondary,
+      icon: icon,
     );
   }
 
@@ -138,7 +116,10 @@ class PrimaryButton extends StatelessWidget {
               height < AppDimensions.mediumHeightButton
                   ? AppDimensions.smallBorderRadius
                   : AppDimensions.largeBorderRadius,
-          border: borderColor != null ? Border.all(color: borderColor!) : null,
+          border:
+              borderColor != null
+                  ? Border.all(color: borderColor!, width: 0.8)
+                  : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -45,6 +45,12 @@ class _OrdersPageState extends State<OrdersPage>
   }
 
   @override
+  void dispose() {
+    _tabCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PrimaryAppBar(title: "orders".tr()),

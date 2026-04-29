@@ -1,4 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
@@ -148,14 +149,14 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
             child: Row(
               children: [
                 Expanded(
-                  child: PrimaryButton.secondary(
+                  child: PrimaryButton.outlined(
                     label: "previous".tr(),
                     onPressed: _onPrevious,
                   ),
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
-                  child: PrimaryButton.supportingPrimary(
+                  child: SecondaryButton.filled(
                     label: "done".tr(),
                     onPressed: isStepValid ? _onNext : null,
                   ),

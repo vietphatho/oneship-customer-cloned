@@ -9,6 +9,7 @@ import 'package:oneship_customer/features/orders/data/models/request/create_orde
 import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
 
 @LazySingleton(as: OrdersRepository)
@@ -52,5 +53,16 @@ class OrdersRepositoryImpl extends OrdersRepository {
         vehicle: Constants.vehicleDefault,
       ),
     );
+  }
+
+  @override
+  Future<Resource<OrderDetailEntity>> fetchOrderDetail({
+    required String shopId,
+    required String orderId,
+  }) async {
+    final response = await request(
+      () => _ordersApi.fetchOrderDetail(shopId: shopId, orderId: orderId),
+    );
+    return response.parse((dto) => OrderDetailEntity.from(dto));
   }
 }
