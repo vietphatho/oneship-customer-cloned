@@ -63,33 +63,11 @@ class ShopEmptyState extends StatelessWidget {
                   ),
                 ),
                 AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                PrimaryButton(
+                PrimaryButton.iconFilled(
                   label: 'Tạo cửa hàng mới',
-                  backgroundColor: AppColors.primary,
-                  textColor: Colors.white,
                   onPressed: onCreateShopPressed,
-                  child: Container(
-                    height: AppDimensions.largeHeightButton,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: AppDimensions.smallBorderRadius,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.add, color: Colors.white, size: 34),
-                        AppSpacing.horizontal(AppDimensions.smallSpacing),
-                        PrimaryText(
-                          'Tạo cửa hàng mới',
-                          style: AppTextStyles.titleMedium,
-                          color: Colors.white,
-                          bold: true,
-                        ),
-                      ],
-                    ),
-                  ),
+                  height: AppDimensions.largeHeightButton,
+                  icon: const Icon(Icons.add, color: Colors.white, size: 34),
                 ),
                 AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                 Wrap(

@@ -227,8 +227,6 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
   void _handleListener(BuildContext context, CreateOrderState state) {
     if (state is CreateOrderCreatedState) {
       switch (state.resource.state) {
-        case Result.idle:
-          break;
         case Result.loading:
           PrimaryDialog.showLoadingDialog(context);
           break;

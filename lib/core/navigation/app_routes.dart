@@ -13,6 +13,7 @@ import 'package:oneship_customer/features/orders/presentation/views/orders_page.
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -39,6 +40,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopMasterPage,
       builder: (context, state) => const ShopMasterPage(),
+    ),
+    GoRoute(
+      path: RouteName.shopPendingApprovalPage,
+      builder:
+          (context, state) =>
+              ShopPendingApprovalPage(shopName: state.extra as String? ?? ''),
     ),
     GoRoute(
       path: RouteName.createOrderPage,

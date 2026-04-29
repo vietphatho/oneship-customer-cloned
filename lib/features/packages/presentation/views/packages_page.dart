@@ -67,8 +67,6 @@ class _PackagesPageState extends State<PackagesPage> {
 
   void _handleCurrentPkgChanged(BuildContext context, PackagesState state) {
     switch (state.currentPkg.state) {
-      case Result.idle:
-        break;
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;

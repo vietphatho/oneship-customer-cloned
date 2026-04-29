@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
@@ -9,14 +10,13 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/create_shop_form_value.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_province_selector.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_ward_selector.dart';
 
@@ -28,8 +28,6 @@ class CreateShopPage extends StatefulWidget {
 }
 
 class _CreateShopPageState extends State<CreateShopPage> {
-  static const int _defaultProvinceCode = 79;
-
   final _formKey = GlobalKey<FormState>();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
@@ -42,12 +40,6 @@ class _CreateShopPageState extends State<CreateShopPage> {
   Province? _selectedProvince;
   Ward? _selectedWard;
   SuggestedAddressResponse? _selectedAddress;
-
-  @override
-  void initState() {
-    super.initState();
-    _ensureDefaultProvince();
-  }
 
   @override
   void dispose() {
@@ -205,10 +197,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
                             child: TertiaryButton.filled(
                               label: 'Hủy',
                               onPressed:
-                                  isSubmitting
-                                      ? null
-                                      : () => Navigator.of(context).pop(),
-                            
+                                  isSubmitting ? null : () => context.pop(),
                             ),
                           ),
                           AppSpacing.horizontal(AppDimensions.xxxLargeSpacing),
@@ -220,7 +209,6 @@ class _CreateShopPageState extends State<CreateShopPage> {
                                       ? 'Đang xử lý...'
                                       : 'Tạo cửa hàng',
                               onPressed: isSubmitting ? null : _handleSubmit,
-                           
                             ),
                           ),
                         ],
@@ -236,13 +224,11 @@ class _CreateShopPageState extends State<CreateShopPage> {
     );
   }
 
-  Future<void> _handleCreateShopChanged(
+  void _handleCreateShopChanged(
     BuildContext context,
     ShopState state,
-  ) async {
+  ) {
     switch (state.createShopResource.state) {
-      case Result.idle:
-        break;
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;
@@ -252,14 +238,10 @@ class _CreateShopPageState extends State<CreateShopPage> {
         }
         final createdShop = state.createShopResource.data;
         if (createdShop != null) {
-          _shopBloc.resetCreateShopResource();
           _shopBloc.init(state.userId);
-          await Navigator.of(context).pushReplacement<void, void>(
-            MaterialPageRoute(
-              builder:
-                  (_) =>
-                      ShopPendingApprovalPage(shopName: createdShop.shopName),
-            ),
+          context.pushReplacement(
+            RouteName.shopPendingApprovalPage,
+            extra: createdShop.shopName,
           );
         }
         break;
@@ -267,7 +249,6 @@ class _CreateShopPageState extends State<CreateShopPage> {
         if (PrimaryDialog.isShowLoading) {
           PrimaryDialog.hideLoadingDialog(context);
         }
-        _shopBloc.resetCreateShopResource();
         PrimaryDialog.showErrorDialog(
           context,
           message:
@@ -277,17 +258,6 @@ class _CreateShopPageState extends State<CreateShopPage> {
         );
         break;
     }
-  }
-
-  void _ensureDefaultProvince() {
-    final state = _locationServiceBloc.state;
-    if (_selectedProvince != null || state.provinces.isEmpty) return;
-
-    final fallbackProvince = state.provinces.firstWhereOrNull(
-      (province) => province.code == _defaultProvinceCode,
-    );
-
-    _selectedProvince = fallbackProvince ?? state.provinces.first;
   }
 
   void _handleSubmit() {

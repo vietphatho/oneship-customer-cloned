@@ -67,7 +67,6 @@ class _SplashPageState extends State<SplashPage> {
   void _handleAuthBlocListener(BuildContext context, AuthState state) {
     if (state is AuthFetchedUserProfileState) {
       switch (state.resource.state) {
-        case Result.idle:
         case Result.loading:
           break;
         case Result.success:

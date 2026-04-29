@@ -29,10 +29,6 @@ class ShopCreateEvent extends ShopEvent {
   final CreateShopParams params;
 }
 
-class ShopResetCreateResourceEvent extends ShopEvent {
-  const ShopResetCreateResourceEvent();
-}
-
 class ShopChangeEvent extends ShopEvent {
   final ShopEntity shop;
 

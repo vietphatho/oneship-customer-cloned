@@ -25,21 +25,19 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         ShopState(
           dailySummaryResource: Resource.loading(),
           shopsResource: Resource.loading(),
-          createShopResource: Resource<CreateShopEntity?>(state: Result.idle),
+          createShopResource: Resource.success<CreateShopEntity?>(null),
         ),
       ) {
     on<ShopFetchListEvent>(_onFetchShops);
     on<ShopFetchDailySummaryEvent>(_onFetchDailySummary);
     on<ShopInitDataEvent>(_onInit);
     on<ShopCreateEvent>(_onCreateShop);
-    on<ShopResetCreateResourceEvent>(_onResetCreateShopResource);
     on<ShopChangeEvent>(_onChangeShopEvent);
   }
 
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
   final FetchShopsUseCase _fetchShopsUseCase;
   final CreateShopUseCase _createShopUseCase;
-
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -117,17 +115,6 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     emit(state.copyWith(createShopResource: response));
   }
 
-  FutureOr<void> _onResetCreateShopResource(
-    ShopResetCreateResourceEvent event,
-    Emitter<ShopState> emit,
-  ) {
-    emit(
-      state.copyWith(
-        createShopResource: Resource<CreateShopEntity?>(state: Result.idle),
-      ),
-    );
-  }
-
   FutureOr<void> _onChangeShopEvent(
     ShopChangeEvent event,
     Emitter<ShopState> emit,
@@ -139,31 +126,25 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     add(ShopInitDataEvent(userId));
   }
 
-  void createShop(CreateShopParams params) {
-    add(ShopCreateEvent(params));
-  }
-
   void submitCreateShopForm(CreateShopFormValue formValue) {
-    createShop(
-      CreateShopParams(
-        userId: state.userId,
-        shopName: formValue.shopName,
-        phone: formValue.phoneNumber,
-        email: formValue.contactEmail,
-        fullAddress: formValue.fullAddress,
-        provinceCode: formValue.provinceCode,
-        provinceName: formValue.provinceName,
-        wardCode: formValue.wardCode,
-        wardName: formValue.wardName,
-        vietMapRefId: formValue.vietMapRefId,
+    add(
+      ShopCreateEvent(
+        CreateShopParams(
+          userId: state.userId,
+          shopName: formValue.shopName,
+          phone: formValue.phoneNumber,
+          email: formValue.contactEmail,
+          fullAddress: formValue.fullAddress,
+          provinceCode: formValue.provinceCode,
+          provinceName: formValue.provinceName,
+          wardCode: formValue.wardCode,
+          wardName: formValue.wardName,
+          vietMapRefId: formValue.vietMapRefId,
+        ),
       ),
     );
   }
 
-  void resetCreateShopResource() {
-    add(const ShopResetCreateResourceEvent());
-  }
-  
   void changeShop(ShopEntity shop) {
     add(ShopChangeEvent(shop));
   }
