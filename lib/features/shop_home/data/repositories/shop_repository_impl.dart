@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_home/data/data_sources/shop_api.dart';
 import 'package:oneship_customer/features/shop_home/data/models/request/create_shop_request.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/create_shop_response.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
@@ -34,25 +33,8 @@ class ShopRepositoryImpl extends ShopRepository {
     final response = await request(
       () => _api.createShop(CreateShopRequest.fromParams(params)),
     );
-    return response.parse<CreateShopEntity?>(_mapCreateShopEntity);
-  }
-
-  CreateShopEntity _mapCreateShopEntity(CreateShopResponse dto) {
-    final profile = dto.profile;
-    return CreateShopEntity(
-      id: dto.id ?? '',
-      userId: dto.userId ?? '',
-      shopName: dto.shopName ?? '',
-      status: dto.status ?? '',
-      profile: CreateShopProfileEntity(
-        phone: profile?.phone ?? '',
-        email: profile?.email ?? '',
-        fullAddress: profile?.fullAddress ?? '',
-        provinceCode: profile?.provinceCode ?? 0,
-        provinceName: profile?.provinceName ?? '',
-        wardCode: profile?.wardCode ?? 0,
-        wardName: profile?.wardName ?? '',
-      ),
+    return response.parse<CreateShopEntity?>(
+      (dto) => CreateShopEntity.fromDto(dto),
     );
   }
 }

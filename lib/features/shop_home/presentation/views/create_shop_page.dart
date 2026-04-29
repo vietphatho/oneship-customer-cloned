@@ -11,8 +11,8 @@ import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/create_shop_form_value.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -29,7 +29,6 @@ class CreateShopPage extends StatefulWidget {
 
 class _CreateShopPageState extends State<CreateShopPage> {
   final _formKey = GlobalKey<FormState>();
-  final LocationServiceBloc _locationServiceBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
 
   final TextEditingController _shopNameController = TextEditingController();
@@ -92,7 +91,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
                           textInputAction: TextInputAction.next,
                           textCapitalization: TextCapitalization.words,
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator: _validateShopName,
+                          validator: Validators.validateShopName,
                         ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
                         PrimaryTextField(
@@ -106,7 +105,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator: _validatePhone,
+                          validator: Validators.validatePhone,
                         ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
                         PrimaryTextField(
@@ -117,7 +116,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator: _validateEmail,
+                          validator: Validators.validateEmail,
                         ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
                         ShopProvinceSelector(
@@ -157,9 +156,16 @@ class _CreateShopPageState extends State<CreateShopPage> {
                               _selectedWard != null,
                           textCapitalization: TextCapitalization.sentences,
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator: _validateAddress,
+                          validator: (value) => Validators.validateAddress(
+                            value,
+                            selectedAddress: _selectedAddress,
+                          ),
                           displayStringForOption: (item) => item.display ?? '',
-                          onSearch: _searchAddress,
+                          onSearch: (keyword) => _shopBloc.searchAddress(
+                            province: _selectedProvince!,
+                            ward: _selectedWard!,
+                            keyword: keyword,
+                          ),
                           onSelected: (value) {
                             setState(() {
                               _selectedAddress = value;
@@ -241,7 +247,6 @@ class _CreateShopPageState extends State<CreateShopPage> {
           _shopBloc.init(state.userId);
           context.pushReplacement(
             RouteName.shopPendingApprovalPage,
-            extra: createdShop.shopName,
           );
         }
         break;
@@ -280,52 +285,4 @@ class _CreateShopPageState extends State<CreateShopPage> {
     );
   }
 
-  String? _validateShopName(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập tên cửa hàng';
-    if (trimmed.length < 3) return 'Tên cửa hàng phải có ít nhất 3 ký tự';
-    return null;
-  }
-
-  String? _validateEmail(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập email liên hệ';
-
-    const emailPattern = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';
-    if (!RegExp(emailPattern).hasMatch(trimmed)) {
-      return 'Email không đúng định dạng';
-    }
-
-    return null;
-  }
-
-  String? _validatePhone(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập số điện thoại';
-    if (!RegExp(r'^0\d{9,10}$').hasMatch(trimmed)) {
-      return 'Số điện thoại Việt Nam không đúng định dạng';
-    }
-    return null;
-  }
-
-  String? _validateAddress(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập địa chỉ';
-    if (trimmed.length < 7) return 'Địa chỉ phải có ít nhất 7 ký tự';
-    if (_selectedAddress?.display != trimmed ||
-        _selectedAddress?.refId == null) {
-      return 'Vui lòng chọn một địa chỉ từ danh sách gợi ý';
-    }
-    return null;
-  }
-
-  Future<List<SuggestedAddressResponse>> _searchAddress(String keyword) async {
-    if (_selectedProvince == null || _selectedWard == null) return [];
-
-    return _locationServiceBloc.searchAddress(
-      province: _selectedProvince!,
-      ward: _selectedWard!,
-      address: keyword,
-    );
-  }
 }

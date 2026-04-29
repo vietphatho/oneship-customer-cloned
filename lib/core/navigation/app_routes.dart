@@ -53,9 +53,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: RouteName.shopPendingApprovalPage,
-      builder:
-          (context, state) =>
-              ShopPendingApprovalPage(shopName: state.extra as String? ?? ''),
+      builder: (context, state) => const ShopPendingApprovalPage(),
     ),
     GoRoute(
       path: RouteName.createOrderPage,

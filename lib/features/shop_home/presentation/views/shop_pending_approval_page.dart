@@ -1,125 +1,127 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class ShopPendingApprovalPage extends StatelessWidget {
-  const ShopPendingApprovalPage({super.key, required this.shopName});
-
-  final String shopName;
+  const ShopPendingApprovalPage({super.key});
 
   static const String _hotline = Constants.tpSwitchBoard;
 
   @override
   Widget build(BuildContext context) {
     final size = AppDimensions.getSize(context);
+    final shopBloc = getIt.get<ShopBloc>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(
-            AppDimensions.mediumSpacing,
-            AppDimensions.xxxLargeSpacing,
-            AppDimensions.mediumSpacing,
-            AppDimensions.xxxLargeSpacing,
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight:
-                  size.height -
-                  MediaQuery.of(context).padding.vertical -
-                  AppDimensions.xxxLargeSpacing * 2,
-            ),
-            child: Center(
+    return BlocBuilder<ShopBloc, ShopState>(
+      bloc: shopBloc,
+      buildWhen: (previous, current) =>
+          previous.createShopResource != current.createShopResource,
+      builder: (context, state) {
+        final shopName = state.createShopResource.data?.shopName ?? '';
+
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(
+                AppDimensions.mediumSpacing,
+                AppDimensions.xxxLargeSpacing,
+                AppDimensions.mediumSpacing,
+                AppDimensions.xxxLargeSpacing,
+              ),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 520),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(ImagePath.logo, width: size.width * 0.48),
-                    AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                    PrimaryText(
-                      shopName.isEmpty ? 'Tên shop' : shopName,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.headlineSmall.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    PrimaryText(
-                      'đang chờ phê duyệt',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.headlineSmall.copyWith(
-                        height: 1.25,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    AppSpacing.vertical(AppDimensions.xLargeSpacing),
-                    PrimaryText(
-                      'Cửa hàng của bạn đang được đội ngũ OneShip xem xét. Quá trình thường mất 1-2 ngày làm việc. Nếu cần hỗ trợ ngay, hãy liên hệ trực tiếp với chúng tôi.',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        height: 1.35,
-                        color: Colors.black,
-                      ),
-                    ),
-                    AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                    SizedBox(
-                      width: size.width * 0.66,
-                      height: size.width * 0.42,
-                      child: Image.asset(
-                        ImagePath.shopPendingApproval,
-                        fit: BoxFit.contain,
-                        errorBuilder:
-                            (_, __, ___) => const Icon(
-                              Icons.local_shipping_outlined,
-                              size: 120,
-                              color: AppColors.primary,
-                            ),
-                      ),
-                    ),
-                    AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                    _SupportCard(
-                      hotline: _hotline,
-                      onCopy: () {
-                        Clipboard.setData(const ClipboardData(text: _hotline));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Đã sao chép hotline OneShip'),
+                constraints: BoxConstraints(
+                  minHeight:
+                      size.height -
+                      MediaQuery.of(context).padding.vertical -
+                      AppDimensions.xxxLargeSpacing * 2,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 520),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(ImagePath.logo, width: size.width * 0.48),
+                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                        PrimaryText(
+                          shopName.isEmpty ? 'Tên shop' : shopName,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.headlineSmall.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w800,
                           ),
-                        );
-                      },
+                        ),
+                        PrimaryText(
+                          'đang chờ phê duyệt',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.headlineSmall.copyWith(
+                            height: 1.25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        AppSpacing.vertical(AppDimensions.xLargeSpacing),
+                        PrimaryText(
+                          'Cửa hàng của bạn đang được đội ngũ OneShip xem xét. Quá trình thường mất 1-2 ngày làm việc. Nếu cần hỗ trợ ngay, hãy liên hệ trực tiếp với chúng tôi.',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodyLarge.copyWith(
+                            height: 1.35,
+                            color: Colors.black,
+                          ),
+                        ),
+                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                        SizedBox(
+                          width: size.width * 0.66,
+                          height: size.width * 0.42,
+                          child: Image.asset(
+                            ImagePath.shopPendingApproval,
+                            fit: BoxFit.contain,
+                            errorBuilder:
+                                (_, __, ___) => const Icon(
+                                  Icons.local_shipping_outlined,
+                                  size: 120,
+                                  color: AppColors.primary,
+                                ),
+                          ),
+                        ),
+                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                        _SupportCard(
+                          hotline: _hotline,
+                          onCopy: () {
+                            Clipboard.setData(const ClipboardData(text: _hotline));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Đã sao chép hotline OneShip'),
+                              ),
+                            );
+                          },
+                        ),
+                        AppSpacing.vertical(AppDimensions.largeSpacing),
+                        PrimaryText(
+                          'Thứ Hai - Thứ Sáu : 8:00 - 17:30',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodyLarge.copyWith(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
-                    AppSpacing.vertical(AppDimensions.largeSpacing),
-                    PrimaryText(
-                      'Thứ Hai - Thứ Sáu : 8:00 - 17:30',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
-class ShopPendingApprovalView extends StatelessWidget {
-  const ShopPendingApprovalView({super.key, required this.shopName});
-
-  final String shopName;
-
-  @override
-  Widget build(BuildContext context) {
-    return ShopPendingApprovalPage(shopName: shopName);
-  }
-}
 
 class _SupportCard extends StatelessWidget {
   const _SupportCard({required this.hotline, required this.onCopy});

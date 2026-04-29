@@ -3,7 +3,11 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/core/base/models/ward.dart';
+import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
@@ -20,6 +24,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     this._fetchShopDailySummaryUseCase,
     this._fetchShopsUseCase,
     this._createShopUseCase,
+    this._locationServiceBloc,
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
@@ -37,6 +42,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
   final FetchShopsUseCase _fetchShopsUseCase;
   final CreateShopUseCase _createShopUseCase;
+  final LocationServiceBloc _locationServiceBloc;
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -138,6 +144,18 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   void changeShop(ShopEntity shop) {
     add(ShopChangeEvent(shop));
     add(ShopFetchDailySummaryEvent(shop.shopId!));
+  }
+
+  Future<List<SuggestedAddressResponse>> searchAddress({
+    required Province province,
+    required Ward ward,
+    required String keyword,
+  }) {
+    return _locationServiceBloc.searchAddress(
+      province: province,
+      ward: ward,
+      address: keyword,
+    );
   }
 
   ShopEntity? _getInitialShop(List<ShopEntity> shops) {
