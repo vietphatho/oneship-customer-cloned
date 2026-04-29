@@ -10,7 +10,12 @@ class Utils {
 
   static String formatCurrencyWithUnit(num? value) {
     if (value == null) return "--";
-    return "${value.toStringAsFixed(0)} ${Constants.currencyUnit}";
+    final formatter = NumberFormat.currency(
+      locale: 'vi_VN',
+      symbol: Constants.currencyUnit,
+    );
+
+    return formatter.format(num);
   }
 
   static String formatDimensionWithUnit({
