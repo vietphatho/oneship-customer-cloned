@@ -316,7 +316,7 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
         Expanded(
           flex: 2,
           child: PrimaryText(
-            Utils.formatCurrency(product.price),
+            Utils.formatCurrencyWithUnit(product.price),
             style: AppTextStyles.bodyMedium,
           ),
         ),
@@ -328,8 +328,6 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
               onChanged: (value) {
                 _productBloc.toggleProductSelection(product.skuCode);
               },
-              shape: CircleBorder(),
-              activeColor: AppColors.savingsBlue,
             ),
           ),
         ),
@@ -409,7 +407,7 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                 label: "product_name".tr(),
                 isRequired: true,
                 controller: _proNameCtrl,
-                validator: Validators.validateTextField,
+                validator: Validators.validateEmptyField,
               ),
               AppSpacing.vertical(AppDimensions.smallSpacing),
               Row(
@@ -419,7 +417,7 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                       label: "sku_code".tr(),
                       isRequired: true,
                       controller: _skuCodeCtrl,
-                      validator: Validators.validateTextField,
+                      validator: Validators.validateEmptyField,
                     ),
                   ),
                   AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -429,7 +427,7 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                       isRequired: true,
                       keyboardType: TextInputType.number,
                       controller: _priceCtrl,
-                      validator: Validators.validateTextField,
+                      validator: Validators.validateEmptyField,
                     ),
                   ),
                 ],

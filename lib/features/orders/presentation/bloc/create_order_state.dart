@@ -6,28 +6,6 @@ import 'package:oneship_customer/features/orders/domain/entities/calculated_deli
 import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 
-extension CreateOrderStateX on CreateOrderState {
-  int getCalculatedTotalQuantity() {
-    int totalQuantity = 0;
-
-    for (var pro in productEntitySelected) {
-      totalQuantity += pro.quantity;
-    }
-
-    return totalQuantity;
-  }
-
-  int getCalculatedTotalAmount() {
-    int totalAmount = 0;
-
-    for (var pro in productEntitySelected) {
-      totalAmount += pro.calculatedTotalAmount;
-    }
-
-    return totalAmount;
-  }
-}
-
 abstract class CreateOrderState {
   const CreateOrderState({
     this.step = CreateOrderStep.timeInfo,
@@ -142,4 +120,27 @@ class CreateOrderGetRoutingToShopState extends CreateOrderState {
     required super.routingToShopResource,
     required super.productEntitySelected,
   });
+}
+
+
+extension CreateOrderStateX on CreateOrderState {
+  int getCalculatedTotalQuantity() {
+    int totalQuantity = 0;
+
+    for (var pro in productEntitySelected) {
+      totalQuantity += pro.quantity;
+    }
+
+    return totalQuantity;
+  }
+
+  int getCalculatedTotalAmount() {
+    int totalAmount = 0;
+
+    for (var pro in productEntitySelected) {
+      totalAmount += pro.calculatedTotalAmount;
+    }
+
+    return totalAmount;
+  }
 }

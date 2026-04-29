@@ -7,6 +7,7 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
@@ -137,7 +138,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                   flex: 2,
                   child: Center(
                     child: PrimaryText(
-                      Utils.formatCurrency(state.getCalculatedTotalAmount()),
+                      Utils.formatCurrencyWithUnit(state.getCalculatedTotalAmount()),
                       style: AppTextStyles.titleSmall.copyWith(
                         color: AppColors.primary,
                       ),
@@ -175,7 +176,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
           flex: 2,
           child: Center(
             child: PrimaryText(
-              Utils.formatCurrency(product.product.price),
+              Utils.formatCurrencyWithUnit(product.product.price),
               style: AppTextStyles.bodyMedium,
             ),
           ),
@@ -195,14 +196,14 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                         onPositiveTapped: () {
                           _createOrderBloc.updateProductQuantity(
                             product.product.skuCode,
-                            ActionType.decrement,
+                            CreateOrderProductAction.decrement,
                           );
                         },
                       );
                     } else {
                       _createOrderBloc.updateProductQuantity(
                         product.product.skuCode,
-                        ActionType.decrement,
+                        CreateOrderProductAction.decrement,
                       );
                     }
                   },
@@ -226,7 +227,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                   onTap: () {
                     _createOrderBloc.updateProductQuantity(
                       product.product.skuCode,
-                      ActionType.increment,
+                      CreateOrderProductAction.increment,
                     );
                   },
                   child: Container(
@@ -247,7 +248,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
           flex: 2,
           child: Center(
             child: PrimaryText(
-              Utils.formatCurrency(product.calculatedTotalAmount),
+              Utils.formatCurrencyWithUnit(product.calculatedTotalAmount),
               style: AppTextStyles.bodyMedium,
             ),
           ),

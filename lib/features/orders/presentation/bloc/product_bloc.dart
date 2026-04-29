@@ -34,13 +34,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       currentSelectedCount: state.selectedCount,
     );
 
-    final updatedProducts = response['products'] as List<ProductEntity>;
-    final newSelectedCount = response['selectedCount'];
-
     emit(
       state.copyWith(
-        products: Resource.success(updatedProducts),
-        selectedCount: newSelectedCount,
+        products: Resource.success(response.updatedProducts),
+        selectedCount: response.newSelectedCount,
       ),
     );
   }

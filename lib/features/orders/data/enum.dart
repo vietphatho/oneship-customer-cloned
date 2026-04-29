@@ -7,6 +7,9 @@ import 'package:oneship_customer/features/orders/presentation/widgets/pending_or
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/returned_orders_list_view.dart';
 
+
+enum CreateOrderProductAction { increment, decrement }
+
 enum OrderStatus {
   pending,
   processing,

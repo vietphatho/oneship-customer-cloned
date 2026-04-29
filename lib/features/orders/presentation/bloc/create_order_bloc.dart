@@ -277,7 +277,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderChangeProductEvent(newProduct));
   }
 
-  void updateProductQuantity(String sku, ActionType actionType) async {
+  void updateProductQuantity(String sku, CreateOrderProductAction actionType) async {
     final newProduct = await _updateProductQuantityUseCase.call(
       currentProduct: state.productEntitySelected,
       sku: sku,
