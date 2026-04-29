@@ -206,6 +206,8 @@ class _LoginPageState extends State<LoginPage> {
   void _handleListener(BuildContext context, AuthState state) {
     if (state is AuthLoggedInState) {
       switch (state.resource.state) {
+        case Result.idle:
+          break;
         case Result.loading:
           PrimaryDialog.showLoadingDialog(context);
           break;
@@ -216,11 +218,19 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message:
+                state.resource.message.isEmpty
+                    ? 'Không thể đăng nhập. Vui lòng thử lại.'
+                    : state.resource.message,
+          );
           break;
       }
     } else if (state is AuthFetchedUserProfileState) {
       switch (state.resource.state) {
+        case Result.idle:
+          break;
         case Result.loading:
           PrimaryDialog.showLoadingDialog(context);
           break;
@@ -231,7 +241,13 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message:
+                state.resource.message.isEmpty
+                    ? 'Không thể tải thông tin tài khoản.'
+                    : state.resource.message,
+          );
           break;
       }
     }

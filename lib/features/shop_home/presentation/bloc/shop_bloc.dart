@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
@@ -11,7 +12,7 @@ import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/models/create_shop_form_value.dart';
+import 'package:oneship_customer/features/shop_home/data/models/create_shop_form_value.dart';
 
 @lazySingleton
 class ShopBloc extends Bloc<ShopEvent, ShopState> {
@@ -23,7 +24,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         ShopState(
           dailySummaryResource: Resource.loading(),
           shopsResource: Resource.loading(),
-          createShopResource: _emptyCreateShopResource(),
+          createShopResource: Resource<CreateShopEntity?>(state: Result.idle),
         ),
       ) {
     on<ShopFetchListEvent>(_onFetchShops);
@@ -37,9 +38,6 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final FetchShopsUseCase _fetchShopsUseCase;
   final CreateShopUseCase _createShopUseCase;
 
-  static Resource<CreateShopEntity?> _emptyCreateShopResource() {
-    return Resource.success<CreateShopEntity?>(null);
-  }
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -58,7 +56,6 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
       state.copyWith(
         userId: event.userId,
         shopsResource: Resource.loading(),
-        createShopResource: _emptyCreateShopResource(),
       ),
     );
     final response = await _fetchShopsUseCase.call(event.userId);
@@ -73,7 +70,6 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
       state.copyWith(
         userId: event.userId,
         shopsResource: Resource.loading(),
-        createShopResource: _emptyCreateShopResource(),
       ),
     );
 
@@ -123,7 +119,11 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     ShopResetCreateResourceEvent event,
     Emitter<ShopState> emit,
   ) {
-    emit(state.copyWith(createShopResource: _emptyCreateShopResource()));
+    emit(
+      state.copyWith(
+        createShopResource: Resource<CreateShopEntity?>(state: Result.idle),
+      ),
+    );
   }
 
   void init(String userId) {

@@ -8,11 +8,14 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_selection_button.dart';
 
 class ShopAppBar extends StatelessWidget {
-  const ShopAppBar({super.key});
+  const ShopAppBar({super.key, this.useDarkContent = false});
+
+  final bool useDarkContent;
 
   @override
   Widget build(BuildContext context) {
     final authBloc = getIt.get<AuthBloc>();
+    final contentColor = useDarkContent ? Colors.black : Colors.white;
 
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: authBloc,
@@ -46,7 +49,7 @@ class ShopAppBar extends StatelessWidget {
                         child: PrimaryText(
                           userProfile.displayName,
                           overflow: TextOverflow.ellipsis,
-                          color: Colors.white,
+                          color: contentColor,
                           style: AppTextStyles.labelMedium,
                         ),
                       ),

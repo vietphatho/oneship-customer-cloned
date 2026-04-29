@@ -1,4 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 
 class ShopEmptyState extends StatelessWidget {
   const ShopEmptyState({super.key, required this.onCreateShopPressed});
@@ -9,6 +10,8 @@ class ShopEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = AppDimensions.getSize(context);
+
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         AppDimensions.mediumSpacing,
@@ -17,134 +20,91 @@ class ShopEmptyState extends StatelessWidget {
         _bottomSpacing,
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: AppDimensions.getSize(context).height * 0.72,
-        ),
+        constraints: BoxConstraints(minHeight: size.height * 0.78),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 460),
-            child: Stack(
-              alignment: Alignment.center,
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const _OrbitRing(size: 420),
-                const _OrbitRing(size: 310),
-                const _OrbitRing(size: 220),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDimensions.largeSpacing,
-                    vertical: AppDimensions.largeSpacing * 1.2,
+                Image.asset(ImagePath.logo, width: size.width * 0.48),
+                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                PrimaryText(
+                  'Bạn chưa có cửa hàng?\nHãy tạo một cửa hàng mới.',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    height: 1.45,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.94),
-                    borderRadius: BorderRadius.circular(32),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 30,
-                        offset: const Offset(0, 14),
-                      ),
-                    ],
-                    border: Border.all(
-                      color: AppColors.orange.withValues(alpha: 0.12),
+                ),
+                AppSpacing.vertical(AppDimensions.xLargeSpacing),
+                PrimaryText(
+                  'OneShip giúp bạn quản lý đơn hàng hiệu quả hơn.\nHãy tạo cửa hàng đầu tiên của bạn để bắt đầu hành trình bán hàng suôn sẻ và thành công với OneShip!',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    height: 1.35,
+                    color: Colors.black,
+                  ),
+                ),
+                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                SizedBox(
+                  width: size.width * 0.48,
+                  height: size.width * 0.48,
+                  child: Image.asset(
+                    ImagePath.shopOnboarding,
+                    fit: BoxFit.contain,
+                    errorBuilder:
+                        (_, __, ___) => const Icon(
+                          Icons.storefront_outlined,
+                          size: 120,
+                          color: AppColors.primary,
+                        ),
+                  ),
+                ),
+                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                PrimaryButton(
+                  label: 'Tạo cửa hàng mới',
+                  backgroundColor: AppColors.primary,
+                  textColor: Colors.white,
+                  onPressed: onCreateShopPressed,
+                  child: Container(
+                    height: AppDimensions.largeHeightButton,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: AppDimensions.smallBorderRadius,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.add, color: Colors.white, size: 34),
+                        AppSpacing.horizontal(AppDimensions.smallSpacing),
+                        PrimaryText(
+                          'Tạo cửa hàng mới',
+                          style: AppTextStyles.titleMedium,
+                          color: Colors.white,
+                          bold: true,
+                        ),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 88,
-                        height: 88,
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryLight,
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                        child: const Icon(
-                          Icons.storefront_outlined,
-                          color: AppColors.primary,
-                          size: 44,
-                        ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      Text.rich(
-                        TextSpan(
-                          style: AppTextStyles.headlineSmall.copyWith(
-                            color: AppColors.neutral2,
-                            height: 1.35,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          children: const [
-                            TextSpan(text: 'Bạn chưa có '),
-                            TextSpan(
-                              text: 'cửa hàng',
-                              style: TextStyle(color: AppColors.primary),
-                            ),
-                            TextSpan(text: '\nhãy tạo một cửa hàng mới.'),
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      PrimaryText(
-                        'OneShip giúp bạn quản lý đơn hàng hiệu quả hơn. Tạo shop đầu tiên để bắt đầu bán hàng và theo dõi vận hành ngay trên app.',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.bodyMedium,
-                        color: AppColors.neutral4,
-                      ),
-                      AppSpacing.vertical(AppDimensions.largeSpacing),
-                      SizedBox(
-                        width: 220,
-                        child: PrimaryButton.primary(
-                          label: '+  Tạo cửa hàng mới',
-                          onPressed: onCreateShopPressed,
-                        ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryText(
-                        'Hướng dẫn',
-                        style: AppTextStyles.labelSmall,
-                        color: AppColors.neutral5,
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: AppDimensions.smallSpacing,
-                        runSpacing: AppDimensions.smallSpacing,
-                        children: const [
-                          _StepBadge(index: 1, label: 'Tạo cửa hàng mới'),
-                          _StepBadge(index: 2, label: 'Chờ xét duyệt'),
-                          _StepBadge(
-                            index: 3,
-                            label: 'Bắt đầu quản lý đơn hàng',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                ),
+                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: AppDimensions.largeSpacing,
+                  runSpacing: AppDimensions.mediumSpacing,
+                  children: const [
+                    _StepBadge(index: 1, label: 'Tạo cửa hàng mới'),
+                    _StepBadge(index: 2, label: 'Chờ xét duyệt'),
+                    _StepBadge(index: 3, label: 'Bắt đầu quản lý đơn hàng'),
+                  ],
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OrbitRing extends StatelessWidget {
-  const _OrbitRing({required this.size});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.08)),
         ),
       ),
     );
@@ -160,36 +120,15 @@ class _StepBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.neutral8),
+        borderRadius: AppDimensions.smallBorderRadius,
+        border: Border.all(color: AppColors.neutral7),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 22,
-            height: 22,
-            decoration: const BoxDecoration(
-              color: AppColors.neutral9,
-              shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: PrimaryText(
-              '$index',
-              style: AppTextStyles.labelSmall,
-              color: AppColors.neutral4,
-            ),
-          ),
-          AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-          PrimaryText(
-            label,
-            style: AppTextStyles.labelSmall,
-            color: AppColors.neutral4,
-          ),
-        ],
+      child: PrimaryText(
+        '$index.  $label',
+        style: AppTextStyles.bodyLarge.copyWith(color: Colors.black),
       ),
     );
   }

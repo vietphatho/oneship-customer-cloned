@@ -4,15 +4,19 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/create_shop_form_value.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/models/create_shop_form_value.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_province_selector.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_ward_selector.dart';
 
 class CreateShopPage extends StatefulWidget {
   const CreateShopPage({super.key});
@@ -38,6 +42,12 @@ class _CreateShopPageState extends State<CreateShopPage> {
   SuggestedAddressResponse? _selectedAddress;
 
   @override
+  void initState() {
+    super.initState();
+    _ensureDefaultProvince();
+  }
+
+  @override
   void dispose() {
     _shopNameController.dispose();
     _emailController.dispose();
@@ -55,197 +65,173 @@ class _CreateShopPageState extends State<CreateShopPage> {
               previous.createShopResource != current.createShopResource,
       listener: _handleCreateShopChanged,
       child: Scaffold(
-        appBar: PrimaryAppBar(title: 'Thêm cửa hàng'),
-        body: BlocBuilder<LocationServiceBloc, LocationServiceState>(
-          bloc: _locationServiceBloc,
-          buildWhen:
-              (previous, current) =>
-                  previous.provinces != current.provinces ||
-                  previous.wardsByProvince != current.wardsByProvince,
-          builder: (context, state) {
-            _ensureDefaultProvince(state);
-            final provinces = state.provinces;
-            final wards = _wardsForSelectedProvince(state);
-
-            return Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      AppDimensions.mediumSpacing,
-                      AppDimensions.mediumSpacing,
-                      AppDimensions.mediumSpacing,
-                      MediaQuery.of(context).viewInsets.bottom +
-                          AppDimensions.mediumSpacing,
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    AppDimensions.mediumSpacing,
+                    AppDimensions.xxxLargeSpacing,
+                    AppDimensions.mediumSpacing,
+                    MediaQuery.of(context).viewInsets.bottom +
+                        AppDimensions.mediumSpacing,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            ImagePath.logo,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                          ),
+                        ),
+                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                        PrimaryTextField(
+                          controller: _shopNameController,
+                          label: 'Tên cửa hàng',
+                          hintText: 'Nhập',
+                          isRequired: true,
+                          textInputAction: TextInputAction.next,
+                          textCapitalization: TextCapitalization.words,
+                          validateMode: AutovalidateMode.onUserInteraction,
+                          validator: _validateShopName,
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        PrimaryTextField(
+                          controller: _phoneController,
+                          label: 'Số điện thoại',
+                          hintText: 'Nhập',
+                          isRequired: true,
+                          keyboardType: TextInputType.phone,
+                          textInputAction: TextInputAction.next,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          validateMode: AutovalidateMode.onUserInteraction,
+                          validator: _validatePhone,
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        PrimaryTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          hintText: 'Nhập',
+                          isRequired: true,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          validateMode: AutovalidateMode.onUserInteraction,
+                          validator: _validateEmail,
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        ShopProvinceSelector(
+                          initialProvince: _selectedProvince,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedProvince = value;
+                              _selectedWard = null;
+                              _selectedAddress = null;
+                              _addressController.clear();
+                            });
+                          },
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        ShopWardSelector(
+                          provinceCode: _selectedProvince?.code,
+                          initialWard: _selectedWard,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedWard = value;
+                              _selectedAddress = null;
+                              _addressController.clear();
+                            });
+                          },
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        PrimaryAutoCompleteTextField<SuggestedAddressResponse>(
+                          controller: _addressController,
+                          label: 'Địa chỉ',
+                          hintText: 'Nhập',
+                          instruction:
+                              'Vui lòng nhập ít nhất 7 ký tự cho địa chỉ',
+                          isRequired: true,
+                          fillColor: Colors.white,
+                          enabled:
+                              _selectedProvince != null &&
+                              _selectedWard != null,
+                          textCapitalization: TextCapitalization.sentences,
+                          validateMode: AutovalidateMode.onUserInteraction,
+                          validator: _validateAddress,
+                          displayStringForOption: (item) => item.display ?? '',
+                          onSearch: _searchAddress,
+                          onSelected: (value) {
+                            setState(() {
+                              _selectedAddress = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    AppDimensions.mediumSpacing,
+                    AppDimensions.smallSpacing,
+                    AppDimensions.mediumSpacing,
+                    AppDimensions.mediumSpacing,
+                  ),
+                  child: BlocBuilder<ShopBloc, ShopState>(
+                    bloc: _shopBloc,
+                    buildWhen:
+                        (previous, current) =>
+                            previous.createShopResource !=
+                            current.createShopResource,
+                    builder: (context, shopState) {
+                      final isSubmitting =
+                          shopState.createShopResource.state == Result.loading;
+
+                      return Row(
                         children: [
-                          PrimaryTextField(
-                            controller: _shopNameController,
-                            label: 'Tên cửa hàng',
-                            hintText: 'Nhập tên cửa hàng',
-                            isRequired: true,
-                            textInputAction: TextInputAction.next,
-                            textCapitalization: TextCapitalization.words,
-                            validateMode: AutovalidateMode.onUserInteraction,
-                            validator: _validateShopName,
-                          ),
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          PrimaryTextField(
-                            controller: _emailController,
-                            label: 'Email liên hệ',
-                            hintText: 'shop@example.com',
-                            isRequired: true,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            validateMode: AutovalidateMode.onUserInteraction,
-                            validator: _validateEmail,
-                          ),
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          PrimaryTextField(
-                            controller: _phoneController,
-                            label: 'Số điện thoại',
-                            hintText: 'Nhập số điện thoại',
-                            isRequired: true,
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.next,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            validateMode: AutovalidateMode.onUserInteraction,
-                            validator: _validatePhone,
-                          ),
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          PrimaryDropdown<Province>(
-                            key: ValueKey(_selectedProvince?.code ?? -1),
-                            label: 'Thành phố',
-                            hintText: 'Chọn thành phố',
-                            isRequired: true,
-                            menu: provinces,
-                            initialValue: _selectedProvince,
-                            toLabel: (item) => item.name,
-                            validator:
-                                (value) =>
-                                    value == null
-                                        ? 'Vui lòng chọn thành phố'
-                                        : null,
-                            onSelected: (value) {
-                              setState(() {
-                                _selectedProvince = value;
-                                _selectedWard = null;
-                                _selectedAddress = null;
-                                _addressController.clear();
-                              });
-                            },
-                          ),
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          PrimaryDropdown<Ward>(
-                            key: ValueKey(
-                              '${_selectedProvince?.code ?? -1}-${_selectedWard?.code ?? -1}',
+                          Expanded(
+                            flex: 2,
+                            child: PrimaryButton(
+                              label: 'Hủy',
+                              onPressed:
+                                  isSubmitting
+                                      ? null
+                                      : () => Navigator.of(context).pop(),
+                              backgroundColor: Colors.white,
+                              borderColor: AppColors.neutral7,
+                              textColor: AppColors.neutral6,
                             ),
-                            label: 'Xã/Phường',
-                            hintText: 'Chọn xã/phường',
-                            isRequired: true,
-                            menu: wards,
-                            initialValue: _selectedWard,
-                            toLabel: (item) => item.name,
-                            validator:
-                                (value) =>
-                                    value == null
-                                        ? 'Vui lòng chọn xã/phường'
-                                        : null,
-                            onSelected: (value) {
-                              setState(() {
-                                _selectedWard = value;
-                                _selectedAddress = null;
-                                _addressController.clear();
-                              });
-                            },
                           ),
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          PrimaryAutoCompleteTextField<
-                            SuggestedAddressResponse
-                          >(
-                            controller: _addressController,
-                            label: 'Địa chỉ',
-                            hintText: 'Nhập địa chỉ và chọn gợi ý phù hợp',
-                            instruction:
-                                'Địa chỉ cần được chọn từ gợi ý để lấy đúng vị trí cửa hàng',
-                            isRequired: true,
-                            enabled:
-                                _selectedProvince != null &&
-                                _selectedWard != null,
-                            textCapitalization: TextCapitalization.sentences,
-                            validateMode: AutovalidateMode.onUserInteraction,
-                            validator: _validateAddress,
-                            displayStringForOption:
-                                (item) => item.display ?? '',
-                            onSearch: _searchAddress,
-                            onSelected: (value) {
-                              setState(() {
-                                _selectedAddress = value;
-                              });
-                            },
+                          AppSpacing.horizontal(AppDimensions.xxxLargeSpacing),
+                          Expanded(
+                            flex: 3,
+                            child: PrimaryButton(
+                              label:
+                                  isSubmitting
+                                      ? 'Đang xử lý...'
+                                      : 'Tạo cửa hàng',
+                              onPressed: isSubmitting ? null : _handleSubmit,
+                              backgroundColor: AppColors.secondary,
+                              textColor: Colors.white,
+                            ),
                           ),
                         ],
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
-                const Divider(height: 1),
-                SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      AppDimensions.mediumSpacing,
-                      AppDimensions.smallSpacing,
-                      AppDimensions.mediumSpacing,
-                      AppDimensions.mediumSpacing,
-                    ),
-                    child: BlocBuilder<ShopBloc, ShopState>(
-                      bloc: _shopBloc,
-                      buildWhen:
-                          (previous, current) =>
-                              previous.createShopResource !=
-                              current.createShopResource,
-                      builder: (context, shopState) {
-                        final isSubmitting =
-                            shopState.createShopResource.state ==
-                            Result.loading;
-
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: PrimaryButton.secondary(
-                                label: 'Hủy',
-                                onPressed:
-                                    isSubmitting
-                                        ? null
-                                        : () => Navigator.of(context).pop(),
-                              ),
-                            ),
-                            AppSpacing.horizontal(AppDimensions.smallSpacing),
-                            Expanded(
-                              child: PrimaryButton.primary(
-                                label:
-                                    isSubmitting
-                                        ? 'Đang xử lý...'
-                                        : 'Tạo cửa hàng',
-                                onPressed: isSubmitting ? null : _handleSubmit,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -256,6 +242,8 @@ class _CreateShopPageState extends State<CreateShopPage> {
     ShopState state,
   ) async {
     switch (state.createShopResource.state) {
+      case Result.idle:
+        break;
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;
@@ -263,16 +251,17 @@ class _CreateShopPageState extends State<CreateShopPage> {
         if (PrimaryDialog.isShowLoading) {
           PrimaryDialog.hideLoadingDialog(context);
         }
-        if (state.createShopResource.data != null) {
+        final createdShop = state.createShopResource.data;
+        if (createdShop != null) {
           _shopBloc.resetCreateShopResource();
           _shopBloc.init(state.userId);
-          PrimaryDialog.showSuccessDialog(
-            context,
-            title: 'Thành công',
-            message: 'Tạo cửa hàng thành công. Hệ thống đang chờ xét duyệt.',
+          await Navigator.of(context).pushReplacement<void, void>(
+            MaterialPageRoute(
+              builder:
+                  (_) =>
+                      ShopPendingApprovalPage(shopName: createdShop.shopName),
+            ),
           );
-          await Future.delayed(Durations.short2);
-          if (context.mounted) Navigator.of(context).pop();
         }
         break;
       case Result.error:
@@ -291,7 +280,8 @@ class _CreateShopPageState extends State<CreateShopPage> {
     }
   }
 
-  void _ensureDefaultProvince(LocationServiceState state) {
+  void _ensureDefaultProvince() {
+    final state = _locationServiceBloc.state;
     if (_selectedProvince != null || state.provinces.isEmpty) return;
 
     final fallbackProvince = state.provinces.firstWhereOrNull(
@@ -299,13 +289,6 @@ class _CreateShopPageState extends State<CreateShopPage> {
     );
 
     _selectedProvince = fallbackProvince ?? state.provinces.first;
-  }
-
-  List<Ward> _wardsForSelectedProvince(LocationServiceState state) {
-    final provinceCode = _selectedProvince?.code.toString();
-    if (provinceCode == null) return const [];
-
-    return state.wardsByProvince[provinceCode] ?? const [];
   }
 
   void _handleSubmit() {

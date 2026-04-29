@@ -111,6 +111,8 @@ class _OrdersPageState extends State<OrdersPage>
     PackagesState state,
   ) async {
     switch (state.findingShipperResult.state) {
+      case Result.idle:
+        break;
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;
@@ -136,6 +138,8 @@ class _OrdersPageState extends State<OrdersPage>
     PackagesState state,
   ) async {
     switch (state.cancelFindingShipperResult.state) {
+      case Result.idle:
+        break;
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;

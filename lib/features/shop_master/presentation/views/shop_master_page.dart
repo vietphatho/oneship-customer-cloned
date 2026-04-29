@@ -174,6 +174,8 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
   void _handleAuthListener(BuildContext context, AuthState state) {
     if (state is AuthLogOutState) {
       switch (state.resource.state) {
+        case Result.idle:
+          break;
         case Result.loading:
           PrimaryDialog.showLoadingDialog(context);
           break;
