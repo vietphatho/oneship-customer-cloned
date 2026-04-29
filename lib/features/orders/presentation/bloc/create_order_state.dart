@@ -14,6 +14,7 @@ abstract class CreateOrderState {
     required this.productEntitySelected,
     required this.shopInfo,
     required this.routingToShopResource,
+    this.acceptTerms = true,
   });
 
   final CreateOrderStep step;
@@ -22,6 +23,7 @@ abstract class CreateOrderState {
   final List<ProductEntitySelected> productEntitySelected;
   final ShopInfo shopInfo;
   final Resource<GetRoutingToShopResponse> routingToShopResource;
+  final bool acceptTerms;
 
   bool get isEnableAddressField =>
       draftRequest.province != null && draftRequest.ward != null;
@@ -44,6 +46,7 @@ class CreateOrderRequestChangedState extends CreateOrderState {
     required super.draftRequest,
     required super.shopInfo,
     required super.routingToShopResource,
+    super.acceptTerms,
     super.step,
     required super.productEntitySelected,
   });
