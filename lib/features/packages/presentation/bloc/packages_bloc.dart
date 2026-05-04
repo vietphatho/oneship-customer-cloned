@@ -78,7 +78,7 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
   }
 
   void init(ShopEntity shop) {
-    // add(PackagesFetchingEvent());
+    add(PackagesFetchingEvent());
     add(PackageInitEvent(shop));
   }
 
