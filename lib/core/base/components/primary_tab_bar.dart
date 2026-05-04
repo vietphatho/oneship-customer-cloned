@@ -12,6 +12,8 @@ class PrimaryTabBar extends StatelessWidget {
     this.isScrollable,
     this.borderRadius,
     this.height,
+    this.padding,
+    this.tabHeight,
   });
 
   final List<String> items;
@@ -20,12 +22,14 @@ class PrimaryTabBar extends StatelessWidget {
   final bool? isScrollable;
   final BorderRadius? borderRadius;
   final double? height;
+  final EdgeInsetsGeometry? padding;
+  final double? tabHeight;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      padding: EdgeInsets.symmetric(
+      padding: padding ?? EdgeInsets.symmetric(
         horizontal: AppDimensions.mediumSpacing,
         vertical: AppDimensions.xxSmallSpacing,
       ),
@@ -53,7 +57,7 @@ class PrimaryTabBar extends StatelessWidget {
             items
                 .map(
                   ((item) =>
-                      Tab(text: item, height: AppDimensions.xxxLargeSpacing)),
+                      Tab(text: item, height: tabHeight ?? AppDimensions.xxxLargeSpacing)),
                 )
                 .toList(),
         onTap: onTap,

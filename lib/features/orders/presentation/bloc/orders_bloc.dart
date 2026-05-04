@@ -10,6 +10,8 @@ import 'package:oneship_customer/features/orders/domain/repositories/orders_repo
 import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_controller.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 
 @lazySingleton
@@ -28,11 +30,17 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
     on<OrderFetchDetailEvent>(_onFetchDetailEvent);
     on<OrderDeleteEvent>(_onDeleteOrderEvent);
+    on<ArchivedOrdersFetchingByStatusEvent>(_onFetchArchivedOrdersEvent);
+    on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
+    on<OrdersHistoryFilterAppliedEvent>(_onApplyOrdersHistoryFilterEvent);
+    on<OrdersHistoryFilterClearedEvent>(_onClearOrdersHistoryFilterEvent);
   }
 
   final OrdersRepository _repository;
   final FetchOrderDetailUseCase _fetchOrderDetailUseCase;
   final DeleteOrderUseCase _deleteOrderUseCase;
+  final OrdersHistoryController _ordersHistoryController =
+      OrdersHistoryController();
 
   late String _shopId;
   set shopId(String id) {
@@ -40,6 +48,32 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   }
 
   BaseMetaResponse? _ordersMeta;
+
+  List<OrderInfo> get deliveredArchivedOrdersList =>
+      _ordersHistoryController.deliveredOrders;
+
+  List<OrderInfo> get returnedArchivedOrdersList =>
+      _ordersHistoryController.returnedOrders;
+
+  bool get showOrdersHistoryFilters => _ordersHistoryController.showFilters;
+
+  OrdersHistoryFilters get ordersHistoryFilters =>
+      _ordersHistoryController.filters;
+
+  List<OrderInfo> get filteredDeliveredArchivedOrdersList =>
+      _ordersHistoryController.filteredDeliveredOrders;
+
+  List<OrderInfo> get filteredReturnedArchivedOrdersList =>
+      _ordersHistoryController.filteredReturnedOrders;
+
+  List<OrderInfo> get visibleDeliveredArchivedOrdersList =>
+      _ordersHistoryController.visibleDeliveredOrders;
+
+  List<OrderInfo> get visibleReturnedArchivedOrdersList =>
+      _ordersHistoryController.visibleReturnedOrders;
+
+  double get ordersHistoryMaxCodAmount =>
+      _ordersHistoryController.maxCodAmount;
 
   OrderStatus _currentOrderStatus = OrderStatus.pending;
   OrderStatus get currentOrderStatus => _currentOrderStatus;
@@ -56,7 +90,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     );
     _ordersMeta = response.data?.meta;
 
-    // Prepare new state lists
     List<OrderInfo> pendingOrdersList = state.pendingOrdersList;
     List<OrderInfo> processingOrdersList = state.processingOrdersList;
     List<OrderInfo> batchedOrdersList = state.batchedOrdersList;
@@ -88,6 +121,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         returnedOrdersList = response.data?.data ?? [];
         break;
       default:
+        break;
     }
 
     emit(
@@ -123,9 +157,63 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(state.copyWith(deleteOrderResource: Resource.loading()));
     final response = await _deleteOrderUseCase.call(event.order);
     emit(state.copyWith(deleteOrderResource: response));
-
-    // Refetch orders after deletion
     add(OrdersFetchingByStatusEvent(_currentOrderStatus));
+  }
+
+  FutureOr<void> _onFetchArchivedOrdersEvent(
+    ArchivedOrdersFetchingByStatusEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(state.copyWith(orderListByStatusResource: Resource.loading()));
+    final response = await _repository.fetchArchivedOrders(
+      status: event.status,
+      shopId: _shopId,
+    );
+
+    if (event.status == OrderStatus.delivered ||
+        event.status == OrderStatus.returned) {
+      _ordersHistoryController.setOrders(
+        event.status,
+        response.data?.data ?? [],
+      );
+    }
+
+    emit(
+      state.copyWith(
+        orderListByStatusResource: response,
+        ordersHistoryVersion: state.ordersHistoryVersion + 1,
+      ),
+    );
+  }
+
+  FutureOr<void> _onToggleOrdersHistoryFilterEvent(
+    OrdersHistoryFilterToggledEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    _ordersHistoryController.toggleFilters();
+    emit(
+      state.copyWith(ordersHistoryVersion: state.ordersHistoryVersion + 1),
+    );
+  }
+
+  FutureOr<void> _onApplyOrdersHistoryFilterEvent(
+    OrdersHistoryFilterAppliedEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    _ordersHistoryController.applyFilters(event.filters);
+    emit(
+      state.copyWith(ordersHistoryVersion: state.ordersHistoryVersion + 1),
+    );
+  }
+
+  FutureOr<void> _onClearOrdersHistoryFilterEvent(
+    OrdersHistoryFilterClearedEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    _ordersHistoryController.clearFilters();
+    emit(
+      state.copyWith(ordersHistoryVersion: state.ordersHistoryVersion + 1),
+    );
   }
 
   void fetchOrdersByStatus() {
@@ -136,12 +224,28 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     add(OrderFetchDetailEvent(shopId: shopId, orderId: orderId));
   }
 
+  void deleteOrder(OrderInfo order) {
+    add(OrderDeleteEvent(order));
+  }
+
+  void fetchArchivedOrders(OrderStatus status) {
+    add(ArchivedOrdersFetchingByStatusEvent(status));
+  }
+
+  void toggleOrdersHistoryFilters() {
+    add(const OrdersHistoryFilterToggledEvent());
+  }
+
+  void applyOrdersHistoryFilters(OrdersHistoryFilters filters) {
+    add(OrdersHistoryFilterAppliedEvent(filters));
+  }
+
+  void clearOrdersHistoryFilters() {
+    add(const OrdersHistoryFilterClearedEvent());
+  }
+
   void init(String shopId) {
     _shopId = shopId;
     add(OrdersFetchingByStatusEvent(_currentOrderStatus));
-  }
-
-  void deleteOrder(OrderInfo order) {
-    add(OrderDeleteEvent(order));
   }
 }
