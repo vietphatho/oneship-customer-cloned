@@ -36,4 +36,11 @@ abstract class OrdersRepository extends BaseRepository {
     required String shopId,
     required String status,
   });
+
+  Future<Resource<OrdersListResponse>> fetchArchivedOrders({
+    required OrderStatus status,
+    required String shopId,
+    int page = 1,
+    int limit = 10,
+  });
 }
