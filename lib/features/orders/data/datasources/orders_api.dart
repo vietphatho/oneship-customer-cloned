@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
@@ -20,14 +21,22 @@ abstract class OrdersApi {
 
   @GET("/api/v1/orders")
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrdersByStatus({
-    @Query("status") required String status,
-    @Query("shopId") required String shopId,
+    @Query(Constants.statusQuery) required String status,
+    @Query(Constants.shopIdQuery) required String shopId,
   });
 
   @GET("/api/v1/orders/{orderId}")
   Future<BaseResponse<OrderDetailResponse, BaseError>> fetchOrderDetail({
     @Path("orderId") required String orderId,
-    @Query("shopId") required String shopId,
+    @Query(Constants.shopIdQuery) required String shopId,
+  });
+
+  @GET("/api/v1/archives/orders")
+  Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
+    @Query(Constants.statusQuery) required String status,
+    @Query(Constants.shopIdQuery) required String shopId,
+    @Query(Constants.pageQuery) int page = Constants.defaultPage,
+    @Query(Constants.limitQuery) int limit = Constants.defaultLimit,
   });
 
   @GET("/api/v1/onexmaps/place-and-route")
@@ -47,7 +56,7 @@ abstract class OrdersApi {
   @DELETE("/api/v1/orders/{orderId}")
   Future<BaseResponse> deleteOrder({
     @Path("orderId") required String orderId,
-    @Query("shopId") required String shopId,
-    @Query("status") required String status,
+    @Query(Constants.shopIdQuery) required String shopId,
+    @Query(Constants.statusQuery) required String status,
   });
 }
