@@ -34,10 +34,10 @@ abstract class AuthApi {
   Future<BaseResponse> registerAccount(@Body() RegisterRequest body);
 
   @PATCH("/api/v1/users/{id}")
-  Future<BaseResponse<UserProfileResponse, BaseError>> updateUserProfile(
-    @Path("id") String id,
-    @Body() UpdateUserProfileRequest body,
-  );
+  Future<BaseResponse<UserProfileResponse, BaseError>> updateUserProfile({
+    @Path("id") required String id,
+    @Body() required UpdateUserProfileRequest body,
+  });
 
   // //gen otp code
   // @POST("/api/v1/auth/shipper/register-otp")

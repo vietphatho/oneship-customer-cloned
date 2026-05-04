@@ -86,15 +86,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthUpdatedUserProfileState(response));
   }
 
-  void updateUserProfile({
-    required String displayName,
-    required String userPhone,
-  }) {
+  void updateUserProfile({String? displayName, String? userPhone}) {
     add(
       AuthUpdateUserProfileEvent(
         UpdateUserProfileRequest(
-          displayName: displayName,
-          userPhone: userPhone,
+          displayName: displayName ?? _userProfile.displayName,
+          userPhone: userPhone ?? _userProfile.userPhone,
         ),
       ),
     );

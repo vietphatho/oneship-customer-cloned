@@ -37,9 +37,9 @@ class AuthRepositoryImpl extends AuthRepository {
     required String id,
     required UpdateUserProfileRequest body,
   }) {
-    return request(() => _authApi.updateUserProfile(id, body));
+    return request(() => _authApi.updateUserProfile(id: id, body: body));
   }
-  
+
   @override
   Future<Resource> logout() {
     return request(() => _authApi.logout());

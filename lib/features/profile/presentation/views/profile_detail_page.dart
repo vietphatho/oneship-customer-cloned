@@ -129,8 +129,8 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                 onPressed: () {
                   final userProfile = _authBloc.userProfile;
 
-                  _nameCtrl.text = userProfile.displayName!;
-                  _phoneCtrl.text = userProfile.userPhone!;
+                  _nameCtrl.text = userProfile.displayName.toString();
+                  _phoneCtrl.text = userProfile.userPhone.toString();
 
                   setState(() {
                     isEdit = !isEdit;

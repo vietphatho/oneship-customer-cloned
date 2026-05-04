@@ -18,7 +18,6 @@ class GeneralProfilePage extends StatefulWidget {
 }
 
 class _GeneralProfilePageState extends State<GeneralProfilePage> {
-  final AuthBloc _authBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
@@ -31,87 +30,36 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
             children: [
               const _Header(),
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-              _settingsContainer(context),
+              _SettingsContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _utilitiesContainer(context),
+              _UtilitiesContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _supportsContainer(context),
+              _SupportsContainer(),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _settingsContainer(BuildContext context) {
+class _SupportsContainer extends StatelessWidget {
+  final AuthBloc _authBloc = getIt.get();
+  _SupportsContainer();
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        _profileTitleItem(icon: SvgPath.iconSettings, label: "settings".tr()),
-        _profileSelectedItem(
-          context,
-          label: 'account_info'.tr(),
-          onTap: () {
-            context.push(RouteName.profileDetailPage);
-          },
-        ),
+        _ProfileTitleItem(icon: SvgPath.iconHelper, label: "help".tr()),
+        _ProfileSelectedItem(label: 'info'.tr(), onTap: () {}),
         Divider(height: 1, color: AppColors.neutral7),
-        _profileSelectedItem(
-          context,
-          label: 'change_password'.tr(),
-          onTap: () {},
-        ),
-        Divider(height: 1, color: AppColors.neutral7),
-        _profileSelectedItem(
-          context,
-          label: 'change_secondary_password'.tr(),
-          onTap: () {},
-        ),
-        Divider(height: 1, color: AppColors.neutral7),
-        _profileSelectedItem(
-          context,
-          label: 'activity_history'.tr(),
-          onTap: () {},
-        ),
-      ],
-    );
-  }
-
-  Widget _utilitiesContainer(BuildContext context) {
-    return Column(
-      children: [
-        _profileTitleItem(icon: SvgPath.iconUtilities, label: "utilities".tr()),
-        _profileSelectedItem(
-          context,
-          label: 'print_warning_label'.tr(),
-          onTap: () {},
-        ),
-        Divider(height: 1, color: AppColors.neutral7),
-        _profileSelectedItem(
-          context,
-          label: 'create_api_key'.tr(),
-          onTap: () {},
-        ),
-      ],
-    );
-  }
-
-  Widget _supportsContainer(BuildContext context) {
-    return Column(
-      children: [
-        _profileTitleItem(icon: SvgPath.iconHelper, label: "help".tr()),
-        _profileSelectedItem(context, label: 'info'.tr(), onTap: () {}),
-        Divider(height: 1, color: AppColors.neutral7),
-        _profileSelectedItem(
-          context,
-          label: 'support_request'.tr(),
-          onTap: () {},
-        ),
+        _ProfileSelectedItem(label: 'support_request'.tr(), onTap: () {}),
         Divider(height: 1, color: AppColors.neutral7),
         BlocListener<AuthBloc, AuthState>(
           bloc: _authBloc,
           listener: _handleLogOutListener,
-          child: _profileSelectedItem(
-            context,
+          child: _ProfileSelectedItem(
             label: 'logout'.tr(),
             onTap: () {
               PrimaryDialog.showQuestionDialog(
@@ -122,7 +70,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
                 },
               );
             },
-            color: AppColors.expenseRed,
+            textColor: AppColors.expenseRed,
           ),
         ),
       ],
@@ -146,11 +94,62 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
       }
     }
   }
+}
 
-  Widget _profileTitleItem({required String icon, required String label}) {
+class _UtilitiesContainer extends StatelessWidget {
+  const _UtilitiesContainer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _ProfileTitleItem(icon: SvgPath.iconUtilities, label: "utilities".tr()),
+        _ProfileSelectedItem(label: 'print_warning_label'.tr(), onTap: () {}),
+        Divider(height: 1, color: AppColors.neutral7),
+        _ProfileSelectedItem(label: 'create_api_key'.tr(), onTap: () {}),
+      ],
+    );
+  }
+}
+
+class _SettingsContainer extends StatelessWidget {
+  const _SettingsContainer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _ProfileTitleItem(icon: SvgPath.iconSettings, label: "settings".tr()),
+        _ProfileSelectedItem(
+          label: 'account_info'.tr(),
+          onTap: () {
+            context.push(RouteName.profileDetailPage);
+          },
+        ),
+        Divider(height: 1, color: AppColors.neutral7),
+        _ProfileSelectedItem(label: 'change_password'.tr(), onTap: () {}),
+        Divider(height: 1, color: AppColors.neutral7),
+        _ProfileSelectedItem(
+          label: 'change_secondary_password'.tr(),
+          onTap: () {},
+        ),
+        Divider(height: 1, color: AppColors.neutral7),
+        _ProfileSelectedItem(label: 'activity_history'.tr(), onTap: () {}),
+      ],
+    );
+  }
+}
+
+class _ProfileTitleItem extends StatelessWidget {
+  final String icon;
+  final String label;
+
+  const _ProfileTitleItem({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
-        // Icon(icon, color: AppColors.primary),
         SvgPicture.asset(icon, height: AppDimensions.smallIconSize),
         AppSpacing.horizontal(AppDimensions.xSmallSpacing),
         PrimaryText(
@@ -161,13 +160,20 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
       ],
     );
   }
+}
 
-  Widget _profileSelectedItem(
-    BuildContext context, {
-    required String label,
-    VoidCallback? onTap,
-    Color? color,
-  }) {
+class _ProfileSelectedItem extends StatelessWidget {
+  const _ProfileSelectedItem({
+    required this.onTap,
+    required this.label,
+    this.textColor,
+  });
+  final VoidCallback onTap;
+  final String label;
+  final Color? textColor;
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -176,7 +182,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
         child: PrimaryText(
           label,
           style: AppTextStyles.labelLarge,
-          color: color,
+          color: textColor,
         ),
       ),
     );
@@ -184,7 +190,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({super.key});
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
