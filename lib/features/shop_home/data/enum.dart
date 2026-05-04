@@ -15,7 +15,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.createSingleOrder: RouteName.createOrderPage,
     ShopHomeFeature.createMultiOrder: RouteName.createMultiOrdersPage,
     ShopHomeFeature.orders: RouteName.ordersPage,
-    ShopHomeFeature.ordersHistory: RouteName.ordersHistoryPage,
+    ShopHomeFeature.ordersHistory: RouteName.packagesPage,
     ShopHomeFeature.package: RouteName.packagesPage,
     ShopHomeFeature.supporting: RouteName.packagesPage,
   };
@@ -29,17 +29,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.supporting: Icons.support_agent_rounded,
   };
 
-  static const _mapTitle = {
-    ShopHomeFeature.createSingleOrder: "Tao don",
-    ShopHomeFeature.createMultiOrder: "Tao nhieu don",
-    ShopHomeFeature.orders: "Don dang xu ly",
-    ShopHomeFeature.ordersHistory: "Don hoan thanh",
-    ShopHomeFeature.package: "Tui hang",
-  };
-
   String get routeName => _mapRouteName[this]!;
 
   IconData get icon => _mapIcon[this]!;
-
-  String get title => _mapTitle[this]!;
 }

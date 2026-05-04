@@ -15,7 +15,6 @@ import 'package:oneship_customer/features/packages/presentation/views/packages_p
 import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
-import 'package:oneship_customer/features/orders/presentation/views/orders_history_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -73,10 +72,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.profileDetailPage,
       builder: (context, state) => const ProfileDetailPage(),
-    ),
-    GoRoute(
-      path: RouteName.ordersHistoryPage,
-      builder: (context, state) => const OrdersHistoryPage(),
     ),
   ],
 );

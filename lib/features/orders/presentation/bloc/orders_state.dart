@@ -18,6 +18,5 @@ abstract class OrdersState with _$OrdersState {
     @Default([]) List<OrderInfo> delayedOrdersList,
     @Default([]) List<OrderInfo> cancelledOrdersList,
     @Default([]) List<OrderInfo> returnedOrdersList,
-    @Default(0) int ordersHistoryVersion,
   }) = _OrdersState;
 }

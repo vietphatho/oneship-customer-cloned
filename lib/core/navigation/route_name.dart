@@ -21,5 +21,4 @@ class RouteName {
   static const String orderTrackingPage = '/home/order_tracking_page';
 
   static const String profileDetailPage = '/profile_detail';
-  static const String ordersHistoryPage = '/shop_master/orders_history';
 }
