@@ -19,4 +19,6 @@ class RouteName {
       '/shop_master/packages/package_detail';
 
   static const String orderTrackingPage = '/home/order_tracking_page';
+
+  static const String profileDetailPage = '/profile_detail';
 }

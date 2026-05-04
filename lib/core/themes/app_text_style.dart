@@ -68,6 +68,14 @@ class AppTextStyles {
   );
 
   // Title Styles (Small headers)
+  static const TextStyle titleXXLarge = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0,
+    color: AppColors.onBackground,
+  );
+
   static const TextStyle titleXLarge = TextStyle(
     fontFamily: fontFamily,
     fontSize: 18,

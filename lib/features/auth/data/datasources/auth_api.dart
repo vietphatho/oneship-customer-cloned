@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:retrofit/retrofit.dart';
@@ -26,11 +27,17 @@ abstract class AuthApi {
   @GET("/api/v1/auth/me")
   Future<BaseResponse<UserProfileResponse, BaseError>> fetchUserProfile();
 
-  // @POST("/api/v1/auth/logout-session")
-  // Future<BaseResponse<dynamic, BaseError>> logout();
+  @POST("/api/v1/auth/logout-session")
+  Future<BaseResponse> logout();
 
   @POST("/api/v1/users")
   Future<BaseResponse> registerAccount(@Body() RegisterRequest body);
+
+  @PATCH("/api/v1/users/{id}")
+  Future<BaseResponse<UserProfileResponse, BaseError>> updateUserProfile({
+    @Path("id") required String id,
+    @Body() required UpdateUserProfileRequest body,
+  });
 
   // //gen otp code
   // @POST("/api/v1/auth/shipper/register-otp")

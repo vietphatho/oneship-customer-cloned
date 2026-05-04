@@ -48,6 +48,12 @@ class AuthFetchedUserProfileState extends AuthState {
   AuthFetchedUserProfileState(this.resource);
 }
 
+class AuthUpdatedUserProfileState extends AuthState {
+  final Resource<UserProfileResponse> resource;
+
+  AuthUpdatedUserProfileState(this.resource);
+}
+
 class AuthLogOutState extends AuthState {
   final Resource resource;
 
