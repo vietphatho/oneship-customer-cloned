@@ -7,25 +7,32 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 
 @lazySingleton
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
-  OrdersBloc(this._repository, this._fetchOrderDetailUseCase)
-    : super(
+  OrdersBloc(
+    this._repository,
+    this._fetchOrderDetailUseCase,
+    this._deleteOrderUseCase,
+  ) : super(
         OrdersState(
           orderListByStatusResource: Resource.loading(),
           orderDetailResource: Resource.loading(),
+          deleteOrderResource: Resource.loading(),
         ),
       ) {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
     on<OrderFetchDetailEvent>(_onFetchDetailEvent);
+    on<OrderDeleteEvent>(_onDeleteOrderEvent);
   }
 
   final OrdersRepository _repository;
   final FetchOrderDetailUseCase _fetchOrderDetailUseCase;
+  final DeleteOrderUseCase _deleteOrderUseCase;
 
   late String _shopId;
   set shopId(String id) {
@@ -109,6 +116,18 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(state.copyWith(orderDetailResource: response));
   }
 
+  FutureOr<void> _onDeleteOrderEvent(
+    OrderDeleteEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(state.copyWith(deleteOrderResource: Resource.loading()));
+    final response = await _deleteOrderUseCase.call(event.order);
+    emit(state.copyWith(deleteOrderResource: response));
+
+    // Refetch orders after deletion
+    add(OrdersFetchingByStatusEvent(_currentOrderStatus));
+  }
+
   void fetchOrdersByStatus() {
     add(OrdersFetchingByStatusEvent(_currentOrderStatus));
   }
@@ -120,5 +139,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   void init(String shopId) {
     _shopId = shopId;
     add(OrdersFetchingByStatusEvent(_currentOrderStatus));
+  }
+
+  void deleteOrder(OrderInfo order) {
+    add(OrderDeleteEvent(order));
   }
 }

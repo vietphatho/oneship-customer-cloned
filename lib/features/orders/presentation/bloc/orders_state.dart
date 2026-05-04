@@ -10,6 +10,7 @@ abstract class OrdersState with _$OrdersState {
   const factory OrdersState({
     required Resource<OrdersListResponse> orderListByStatusResource,
     required Resource<OrderDetailEntity> orderDetailResource,
+    required Resource deleteOrderResource,
     @Default([]) List<OrderInfo> pendingOrdersList,
     @Default([]) List<OrderInfo> processingOrdersList,
     @Default([]) List<OrderInfo> batchedOrdersList,

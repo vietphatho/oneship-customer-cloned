@@ -10,6 +10,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class PackagesPage extends StatefulWidget {
   const PackagesPage({super.key});
@@ -20,6 +21,16 @@ class PackagesPage extends StatefulWidget {
 
 class _PackagesPageState extends State<PackagesPage> {
   final PackagesBloc _packagesBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
+
+  @override
+  void initState() {
+    super.initState();
+    var currentShop = _shopBloc.state.currentShop;
+    if (currentShop != null) {
+      _packagesBloc.init(currentShop);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -41,6 +41,13 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                   previous.orderDetailResource != current.orderDetailResource,
           listener: _listenLoadDetailOrder,
         ),
+        BlocListener<OrdersBloc, OrdersState>(
+          bloc: _ordersBloc,
+          listenWhen:
+              (previous, current) =>
+                  previous.deleteOrderResource != current.deleteOrderResource,
+          listener: _listenDeleteOrderState,
+        ),
       ],
       child: Column(
         children: [
@@ -68,6 +75,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                         index: index + 1,
                         order: _orders[index],
                         onTap: onTap,
+                        onRemoved: _onRemoved,
                       ),
                   separatorBuilder:
                       (context, index) =>
@@ -85,6 +93,10 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
     _ordersBloc.fetchOrderDetail(shopId: order.shopId!, orderId: order.id!);
   }
 
+  void _onRemoved(OrderInfo order) {
+    _ordersBloc.deleteOrder(order);
+  }
+
   void _listenLoadDetailOrder(BuildContext context, OrdersState state) {
     switch (state.orderDetailResource.state) {
       case Result.loading:
@@ -99,6 +111,24 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
         PrimaryDialog.showErrorDialog(
           context,
           message: state.orderDetailResource.message,
+        );
+    }
+  }
+
+  void _listenDeleteOrderState(BuildContext context, OrdersState state) {
+    switch (state.deleteOrderResource.state) {
+      case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
+        break;
+      case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
+
+        break;
+      case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.deleteOrderResource.message,
         );
     }
   }
