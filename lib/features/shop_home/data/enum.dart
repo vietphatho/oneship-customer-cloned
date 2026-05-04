@@ -30,11 +30,12 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
   };
 
   static const _mapTitle = {
-    ShopHomeFeature.createSingleOrder: "Tao don",
-    ShopHomeFeature.createMultiOrder: "Tao nhieu don",
-    ShopHomeFeature.orders: "Don dang xu ly",
-    ShopHomeFeature.ordersHistory: "Don hoan thanh",
-    ShopHomeFeature.package: "Tui hang",
+    ShopHomeFeature.createSingleOrder: "create_order",
+    ShopHomeFeature.createMultiOrder: "Create_multi_order",
+    ShopHomeFeature.orders: "Processing_orders",
+    ShopHomeFeature.ordersHistory: "Order_history",
+    ShopHomeFeature.package: "Packages",
+    ShopHomeFeature.supporting: "Support",
   };
 
   String get routeName => _mapRouteName[this]!;

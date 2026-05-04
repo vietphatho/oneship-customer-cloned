@@ -22,7 +22,7 @@ class OrdersHistoryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isFilterExpanded = ordersBloc.showOrdersHistoryFilters;
+    final isFilterExpanded = state.showOrdersHistoryFilters;
 
     if (isFilterExpanded) {
       return SingleChildScrollView(
@@ -41,7 +41,7 @@ class OrdersHistoryContent extends StatelessWidget {
                 AppDimensions.smallSpacing,
               ),
               child: OrdersHistoryFilterPanel(
-                initialFilters: ordersBloc.ordersHistoryFilters,
+                initialFilters: state.ordersHistoryFilters,
                 maxCodAmount: ordersBloc.ordersHistoryMaxCodAmount,
                 onApply: ordersBloc.applyOrdersHistoryFilters,
                 onClear: ordersBloc.clearOrdersHistoryFilters,
@@ -64,10 +64,16 @@ class OrdersHistoryContent extends StatelessWidget {
             children: [
               OrdersHistoryListCard(
                 status: OrderStatus.delivered,
+                orders: ordersBloc.visibleDeliveredArchivedOrdersList,
+                onRefresh:
+                    () => ordersBloc.fetchOrderHistory(OrderStatus.delivered),
                 isLoading: isLoadingFor(OrderStatus.delivered, state),
               ),
               OrdersHistoryListCard(
                 status: OrderStatus.returned,
+                orders: ordersBloc.visibleReturnedArchivedOrdersList,
+                onRefresh:
+                    () => ordersBloc.fetchOrderHistory(OrderStatus.returned),
                 isLoading: isLoadingFor(OrderStatus.returned, state),
               ),
             ],
@@ -108,10 +114,7 @@ class _OrdersHistoryListHeader extends StatelessWidget {
               ),
             ),
           ),
-          OrdersHistoryFilterButton(
-            isExpanded: isExpanded,
-            onTap: onToggle,
-          ),
+          OrdersHistoryFilterButton(isExpanded: isExpanded, onTap: onToggle),
         ],
       ),
     );

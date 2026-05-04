@@ -5,7 +5,6 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_app_bar.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_content.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_tab_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -22,90 +21,81 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
   final OrdersBloc _ordersBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
 
-  late final TabController _tabController;
-
-  final List<OrderStatus> _tabs = const [
-    OrderStatus.delivered,
-    OrderStatus.returned,
-  ];
+  late List<OrderStatus> _tabList;
+  late TabController _tabCtrl;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabList = const [OrderStatus.delivered, OrderStatus.returned];
+    _tabCtrl = TabController(length: _tabList.length, vsync: this);
 
     final shopId = _shopBloc.state.currentShop?.shopId ?? "";
     _ordersBloc.shopId = shopId;
-    _ordersBloc.fetchArchivedOrders(OrderStatus.delivered);
+    _ordersBloc.fetchOrderHistory(OrderStatus.delivered);
+  }
+
+  @override
+  void dispose() {
+    _tabCtrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: OrdersHistoryAppBar(
-        onBack: _goToPreviousTabOrBack,
-        onNext: _goToNextTab,
-      ),
-      body: SafeArea(
-        top: false,
-        child: BlocBuilder<OrdersBloc, OrdersState>(
-          bloc: _ordersBloc,
-          builder: (context, state) {
-            return Column(
-              children: [
-                OrdersHistoryTabBar(
-                  controller: _tabController,
-                  deliveredCount:
-                      _ordersBloc.filteredDeliveredArchivedOrdersList.length,
-                  returnedCount:
-                      _ordersBloc.filteredReturnedArchivedOrdersList.length,
-                  onTap: _onTabChanged,
-                ),
-                Expanded(
-                  child: OrdersHistoryContent(
-                    controller: _tabController,
-                    ordersBloc: _ordersBloc,
-                    state: state,
-                    isLoadingFor: _isLoadingFor,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+      appBar: const PrimaryAppBar(title: "Đơn hàng đã xử lý"),
+      body: Column(
+        children: [
+          Expanded(
+            child: DefaultTabController(
+              length: _tabList.length,
+              child: BlocBuilder<OrdersBloc, OrdersState>(
+                bloc: _ordersBloc,
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      OrdersHistoryTabBar(
+                        controller: _tabCtrl,
+                        deliveredCount:
+                            _ordersBloc
+                                .filteredDeliveredArchivedOrdersList
+                                .length,
+                        returnedCount:
+                            _ordersBloc
+                                .filteredReturnedArchivedOrdersList
+                                .length,
+                        onTap: _onTabChanged,
+                      ),
+                      Expanded(
+                        child: OrdersHistoryContent(
+                          controller: _tabCtrl,
+                          ordersBloc: _ordersBloc,
+                          state: state,
+                          isLoadingFor: _isLoadingFor,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   bool _isLoadingFor(OrderStatus status, OrdersState state) {
-    if (state.orderListByStatusResource.state != Result.loading) {
+    if (state.ordersHistoryResource.state != Result.loading) {
       return false;
     }
 
-    return _tabs[_tabController.index] == status;
+    return _tabList[_tabCtrl.index] == status;
   }
 
   void _onTabChanged(int index) {
-    _ordersBloc.fetchArchivedOrders(_tabs[index]);
-  }
-
-  void _goToNextTab() {
-    final nextIndex = (_tabController.index + 1).clamp(0, _tabs.length - 1);
-    if (nextIndex == _tabController.index) return;
-
-    _tabController.animateTo(nextIndex);
-    _onTabChanged(nextIndex);
-  }
-
-  void _goToPreviousTabOrBack() {
-    final previousIndex = _tabController.index - 1;
-    if (previousIndex < 0) {
-      Navigator.of(context).maybePop();
-      return;
-    }
-
-    _tabController.animateTo(previousIndex);
-    _onTabChanged(previousIndex);
+    _ordersBloc.fetchOrderHistory(_tabList[index]);
   }
 }

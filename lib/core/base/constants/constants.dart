@@ -15,6 +15,12 @@ class Constants {
   static const String imgEndpoint = "https://xbyw3unofel1.cmccdn.net";
   static const String orderTrackingAction = "track_shipment";
   static const String orderTrackingNonce = "039a82a441";
+  static const String statusQuery = "status";
+  static const String shopIdQuery = "shopId";
+  static const String pageQuery = "page";
+  static const String limitQuery = "limit";
+  static const int defaultPage = 1;
+  static const int defaultLimit = 10;
 
   // Duration
   static const Duration connectTimeout = Duration(seconds: 30);

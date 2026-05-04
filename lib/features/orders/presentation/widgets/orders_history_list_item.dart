@@ -1,5 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 
 class OrdersHistoryListItem extends StatelessWidget {
   const OrdersHistoryListItem({
@@ -9,7 +9,7 @@ class OrdersHistoryListItem extends StatelessWidget {
   });
 
   final int index;
-  final OrderInfo order;
+  final OrderHistoryInfoEntity order;
 
   @override
   Widget build(BuildContext context) {
@@ -59,18 +59,9 @@ class OrdersHistoryListItem extends StatelessWidget {
             ],
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
-          _OrdersHistoryInfoLine(
-            icon: Icons.person,
-            value: order.customerName,
-          ),
-          _OrdersHistoryInfoLine(
-            icon: Icons.home_rounded,
-            value: address,
-          ),
-          _OrdersHistoryInfoLine(
-            icon: Icons.payments_rounded,
-            value: cod,
-          ),
+          _OrdersHistoryInfoLine(icon: Icons.person, value: order.customerName),
+          _OrdersHistoryInfoLine(icon: Icons.home_rounded, value: address),
+          _OrdersHistoryInfoLine(icon: Icons.payments_rounded, value: cod),
           _OrdersHistoryInfoLine(
             icon: Icons.access_time_filled_rounded,
             value: createdAt,
@@ -107,10 +98,7 @@ class OrdersHistoryListItem extends StatelessWidget {
 }
 
 class _OrdersHistoryInfoLine extends StatelessWidget {
-  const _OrdersHistoryInfoLine({
-    required this.icon,
-    required this.value,
-  });
+  const _OrdersHistoryInfoLine({required this.icon, required this.value});
 
   final IconData icon;
   final String? value;

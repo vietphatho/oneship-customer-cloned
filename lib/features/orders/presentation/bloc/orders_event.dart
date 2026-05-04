@@ -31,10 +31,10 @@ class OrderDeleteEvent extends OrdersEvent {
   OrderDeleteEvent(this.order);
 }
 
-class ArchivedOrdersFetchingByStatusEvent extends OrdersEvent {
+class OrdersHistoryFetchingByStatusEvent extends OrdersEvent {
   final OrderStatus status;
 
-  const ArchivedOrdersFetchingByStatusEvent(this.status);
+  const OrdersHistoryFetchingByStatusEvent(this.status);
 }
 
 class OrdersHistoryFilterToggledEvent extends OrdersEvent {
