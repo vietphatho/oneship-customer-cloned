@@ -42,14 +42,14 @@ class _ShopWardSelectorState extends State<ShopWardSelector> {
           key: ValueKey(
             '${widget.provinceCode ?? -1}-${widget.initialWard?.code ?? -1}',
           ),
-          label: 'Xã/Phường',
-          hintText: 'Nhập',
+          label: "ward_or_commune".tr(),
+          hintText: "enter_text".tr(),
           isRequired: true,
           menu: wards,
           initialValue: widget.initialWard,
           toLabel: (item) => item.name,
           validator:
-              (value) => value == null ? 'Vui lòng chọn xã/phường' : null,
+              (value) => value == null ? "please_select_ward".tr() : null,
           onSelected: (value) {
             widget.onChanged(value);
           },

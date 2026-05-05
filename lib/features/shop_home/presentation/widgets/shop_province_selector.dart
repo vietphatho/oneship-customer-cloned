@@ -32,14 +32,14 @@ class _ShopProvinceSelectorState extends State<ShopProvinceSelector> {
 
         return PrimaryDropdown<Province>(
           key: ValueKey(widget.initialProvince?.code ?? -1),
-          label: 'Thành phố',
-          hintText: 'Nhập',
+          label: "city".tr(),
+          hintText: "enter_text".tr(),
           isRequired: true,
           menu: provinces,
           initialValue: widget.initialProvince,
           toLabel: (item) => item.name,
           validator:
-              (value) => value == null ? 'Vui lòng chọn thành phố' : null,
+              (value) => value == null ? "please_select_city".tr() : null,
           onSelected: (value) {
             widget.onChanged(value);
           },

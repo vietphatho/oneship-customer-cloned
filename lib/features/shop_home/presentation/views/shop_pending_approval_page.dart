@@ -49,7 +49,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                         Image.asset(ImagePath.logo, width: size.width * 0.48),
                         AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                         PrimaryText(
-                          shopName.isEmpty ? 'Tên shop' : shopName,
+                          shopName.isEmpty ? "shop_name_placeholder".tr() : shopName,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.headlineSmall.copyWith(
                             color: AppColors.primary,
@@ -57,7 +57,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                           ),
                         ),
                         PrimaryText(
-                          'đang chờ phê duyệt',
+                          "pending_approval".tr(),
                           textAlign: TextAlign.center,
                           style: AppTextStyles.headlineSmall.copyWith(
                             height: 1.25,
@@ -67,7 +67,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                         ),
                         AppSpacing.vertical(AppDimensions.xLargeSpacing),
                         PrimaryText(
-                          'Cửa hàng của bạn đang được đội ngũ OneShip xem xét. Quá trình thường mất 1-2 ngày làm việc. Nếu cần hỗ trợ ngay, hãy liên hệ trực tiếp với chúng tôi.',
+                          "pending_approval_description".tr(),
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyLarge.copyWith(
                             height: 1.35,
@@ -95,15 +95,15 @@ class ShopPendingApprovalPage extends StatelessWidget {
                           onCopy: () {
                             Clipboard.setData(const ClipboardData(text: _hotline));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Đã sao chép hotline OneShip'),
+                              SnackBar(
+                                content: Text("hotline_copied".tr()),
                               ),
                             );
                           },
                         ),
                         AppSpacing.vertical(AppDimensions.largeSpacing),
                         PrimaryText(
-                          'Thứ Hai - Thứ Sáu : 8:00 - 17:30',
+                          "support_working_hours".tr(),
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyLarge.copyWith(
                             color: Colors.black,
@@ -145,7 +145,7 @@ class _SupportCard extends StatelessWidget {
       child: Column(
         children: [
           PrimaryText(
-            'Liên hệ hỗ trợ',
+            "contact_support".tr(),
             style: AppTextStyles.headlineSmall.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.w800,
@@ -165,7 +165,7 @@ class _SupportCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PrimaryText(
-                      'Hotline OneShip',
+                      "oneship_hotline".tr(),
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: Colors.black,
                       ),
@@ -195,7 +195,7 @@ class _SupportCard extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.copy, size: 18),
                 label: PrimaryText(
-                  'Sao chép',
+                  "copy".tr(),
                   style: AppTextStyles.titleSmall.copyWith(
                     color: AppColors.primary,
                   ),

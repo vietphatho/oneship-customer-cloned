@@ -30,7 +30,7 @@ class ShopEmptyState extends StatelessWidget {
                 Image.asset(ImagePath.logo, width: size.width * 0.48),
                 AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                 PrimaryText(
-                  'Bạn chưa có cửa hàng?\nHãy tạo một cửa hàng mới.',
+                  "no_shop_title".tr(),
                   textAlign: TextAlign.center,
                   style: AppTextStyles.headlineSmall.copyWith(
                     height: 1.45,
@@ -40,7 +40,7 @@ class ShopEmptyState extends StatelessWidget {
                 ),
                 AppSpacing.vertical(AppDimensions.xLargeSpacing),
                 PrimaryText(
-                  'OneShip giúp bạn quản lý đơn hàng hiệu quả hơn.\nHãy tạo cửa hàng đầu tiên của bạn để bắt đầu hành trình bán hàng suôn sẻ và thành công với OneShip!',
+                  "no_shop_description".tr(),
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodyLarge.copyWith(
                     height: 1.35,
@@ -64,7 +64,7 @@ class ShopEmptyState extends StatelessWidget {
                 ),
                 AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                 PrimaryButton.iconFilled(
-                  label: 'Tạo cửa hàng mới',
+                  label: "create_new_shop".tr(),
                   onPressed: onCreateShopPressed,
                   height: AppDimensions.largeHeightButton,
                   icon: const Icon(Icons.add, color: Colors.white, size: 34),
@@ -74,10 +74,10 @@ class ShopEmptyState extends StatelessWidget {
                   alignment: WrapAlignment.center,
                   spacing: AppDimensions.largeSpacing,
                   runSpacing: AppDimensions.mediumSpacing,
-                  children: const [
-                    _StepBadge(index: 1, label: 'Tạo cửa hàng mới'),
-                    _StepBadge(index: 2, label: 'Chờ xét duyệt'),
-                    _StepBadge(index: 3, label: 'Bắt đầu quản lý đơn hàng'),
+                  children: [
+                    _StepBadge(index: 1, label: "create_new_shop".tr()),
+                    _StepBadge(index: 2, label: "wait_for_approval".tr()),
+                    _StepBadge(index: 3, label: "start_managing_orders".tr()),
                   ],
                 ),
               ],
