@@ -1,4 +1,6 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 
 class OrdersHistoryListItem extends StatelessWidget {
@@ -14,8 +16,8 @@ class OrdersHistoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final address = order.fullAddress ?? order.address ?? "--";
-    final createdAt = _formatDate(order.createdAt);
-    final cod = _formatMoney(order.codAmount ?? 0);
+    final createdAt = DateTimeUtils.formatDateFromDT(order.createdAt) ?? "--";
+    final cod = Utils.formatCurrencyWithUnit(order.codAmount);
     final statusLabel = switch (order.status) {
       "delivered" => "Đã giao",
       "returned" => "Đã trả",
@@ -69,31 +71,6 @@ class OrdersHistoryListItem extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  static String _formatDate(DateTime? value) {
-    if (value == null) return "--";
-
-    final local = value.toLocal();
-    final day = local.day.toString().padLeft(2, "0");
-    final month = local.month.toString().padLeft(2, "0");
-    final year = local.year.toString();
-    return "$day/$month/$year";
-  }
-
-  static String _formatMoney(int value) {
-    final digits = value.toString();
-    final buffer = StringBuffer();
-
-    for (var i = 0; i < digits.length; i++) {
-      final reverseIndex = digits.length - i;
-      buffer.write(digits[i]);
-      if (reverseIndex > 1 && reverseIndex % 3 == 1) {
-        buffer.write('.');
-      }
-    }
-
-    return "${buffer}đ";
   }
 }
 

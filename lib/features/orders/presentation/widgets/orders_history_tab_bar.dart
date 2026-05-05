@@ -24,8 +24,6 @@ class OrdersHistoryTabBar extends StatelessWidget {
       child: PrimaryTabBar(
         controller: controller,
         onTap: onTap,
-        height: 44,
-        borderRadius: AppDimensions.smallBorderRadius,
         items: const ["Đã giao hàng", "Đã trả hàng"],
       ),
     );
