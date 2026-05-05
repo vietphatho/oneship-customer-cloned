@@ -287,7 +287,6 @@
       "user_duplicate_log_in": "Tài khoản của bạn đang được đăng nhập trên một thiết bị khác",
       "rejection_lock": "Tài khoản của bạn đã bị khoá do từ chối nhận giao đơn nhiều lần.\nVui lòng liên hệ quản trị viên để được hỗ trợ"
     },
-
     "address": {
       "province_not_found": "Không tìm thấy tỉnh/thành phố",
       "ward_not_found": "Không tìm thấy phường/xã",
@@ -295,7 +294,6 @@
       "invalid_coordinates": "Tọa độ không hợp lệ",
       "access_denied": "Bạn không có quyền truy cập địa chỉ này"
     },
-
     "order": {
       "not_found": "Không tìm thấy đơn hàng",
       "date_range_too_large": "Khoảng thời gian tìm kiếm quá lớn",
@@ -305,7 +303,6 @@
       "shop_inactive": "Shop đang không hoạt động",
       "order_must_be_in_shipping": "Đơn hàng của bạn đang không trong trạng thái GIAO HÀNG"
     },
-
     "package": {
       "not_found": "Không tìm thấy túi hàng",
       "data_not_found": "Không tìm thấy dữ liệu túi hàng",
@@ -328,7 +325,6 @@
       "shop_not_found": "Không tìm thấy shop",
       "shipper_too_far_from_delivery": "Vui lòng di chuyển đến địa điểm để tiếp tục"
     },
-
     "shipper": {
       "not_found": "Không tìm thấy tài xế",
       "user_not_shipper": "Người dùng không phải tài xế",
@@ -343,13 +339,11 @@
       "shipper_not_arrived_hub": "Vui lòng di chuyển đến kho để trả hàng",
       "not_reach_delivery_destination": "Bạn phải đến đúng điểm giao hàng (cách ít nhất 100m)"
     },
-
     "statistics": {
       "shipper_id_required": "Thiếu mã shipper",
       "period_type_required": "Thiếu loại kỳ thống kê",
       "invalid_start_date": "Ngày bắt đầu không hợp lệ"
     },
-
     "user": {
       "not_found": "Không tìm thấy người dùng",
       "already_exists": "Người dùng đã tồn tại",
@@ -367,14 +361,12 @@
       "second_password_not_found": "Bạn chưa thiết lập mật khẩu cấp 2",
       "phone_not_belong": "Số điện thoại không thuộc người dùng"
     },
-
     "user_document": {
       "not_found": "Không tìm thấy hồ sơ",
       "already_exists": "Hồ sơ đã tồn tại",
       "invalid": "Hồ sơ không hợp lệ",
       "forbidden": "Bạn không có quyền truy cập tài liệu này"
     },
-
     "card": {
       "not_found": "Không tìm thấy thẻ",
       "invalid_number": "Số thẻ không hợp lệ",
@@ -386,7 +378,6 @@
       "blocked": "Thẻ đã bị khóa",
       "already_exists": "Thẻ đã tồn tại"
     },
-
     "wallet": {
       "not_found": "Không tìm thấy ví của người dùng này",
       "insufficient_balance": "Số dư ví không đủ",

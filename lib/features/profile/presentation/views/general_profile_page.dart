@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
@@ -18,7 +19,6 @@ class GeneralProfilePage extends StatefulWidget {
 }
 
 class _GeneralProfilePageState extends State<GeneralProfilePage> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -204,7 +204,10 @@ class _Header extends StatelessWidget {
         return PrimaryCard(
           child: Row(
             children: [
-              CircleAvatar(radius: AppDimensions.defaultAvatarRadius),
+              PrimaryAvatar(
+                radius: AppDimensions.defaultAvatarRadius,
+                isOnline: true,
+              ),
               AppSpacing.horizontal(AppDimensions.mediumSpacing),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,19 +223,19 @@ class _Header extends StatelessWidget {
                 ],
               ),
               AppSpacing.horizontal(AppDimensions.mediumSpacing),
-              const Spacer(),
-              Container(
-                padding: AppDimensions.xxSmallPaddingAll,
-                decoration: BoxDecoration(
-                  color: AppColors.green100,
-                  borderRadius: AppDimensions.mediumBorderRadius,
-                ),
-                child: PrimaryText(
-                  "online".tr(),
-                  style: AppTextStyles.bodySmall,
-                  color: AppColors.green600,
-                ),
-              ),
+              // const Spacer(),
+              // Container(
+              //   padding: AppDimensions.xxSmallPaddingAll,
+              //   decoration: BoxDecoration(
+              //     color: AppColors.green100,
+              //     borderRadius: AppDimensions.mediumBorderRadius,
+              //   ),
+              //   child: PrimaryText(
+              //     "online".tr(),
+              //     style: AppTextStyles.bodySmall,
+              //     color: AppColors.green600,
+              //   ),
+              // ),
             ],
           ),
         );
