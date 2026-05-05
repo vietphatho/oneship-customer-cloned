@@ -1,4 +1,8 @@
 {
+  "order_information": "Thông tin đơn hàng",
+  "imported_from_excel": "Nhập từ excel",
+  "create_order": "Tạo đơn hàng",
+  "no_data": "Không có dữ liệu",
   "confirm_logout": "Bạn chắc chắn muốn đăng xuất?",
   "settings": "Cài đặt",
   "account_info": "Thông tin tài khoản",
