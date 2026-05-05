@@ -21,14 +21,14 @@ abstract class OrdersApi {
 
   @GET("/api/v1/orders")
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrdersByStatus({
-    @Query(Constants.statusQuery) required String status,
-    @Query(Constants.shopIdQuery) required String shopId,
+    @Query("status") required String status,
+    @Query("shopId") required String shopId,
   });
 
   @GET("/api/v1/orders/{orderId}")
   Future<BaseResponse<OrderDetailResponse, BaseError>> fetchOrderDetail({
     @Path("orderId") required String orderId,
-    @Query(Constants.shopIdQuery) required String shopId,
+    @Query("shopId") required String shopId,
   });
 
   @GET("/api/v1/archives/orders")
@@ -54,7 +54,7 @@ abstract class OrdersApi {
   @DELETE("/api/v1/orders/{orderId}")
   Future<BaseResponse> deleteOrder({
     @Path("orderId") required String orderId,
-    @Query(Constants.shopIdQuery) required String shopId,
-    @Query(Constants.statusQuery) required String status,
+    @Query("shopId") required String shopId,
+    @Query("status") required String status,
   });
 }
