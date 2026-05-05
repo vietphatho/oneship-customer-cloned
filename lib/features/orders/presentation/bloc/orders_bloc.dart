@@ -6,6 +6,7 @@ import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_by_status_lists.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
