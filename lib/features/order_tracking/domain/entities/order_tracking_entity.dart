@@ -30,6 +30,10 @@ abstract class OrderTrackingEntity with _$OrderTrackingEntity {
   }
 }
 
+extension OrderTrackingEntityX on OrderTrackingEntity {
+  bool get isEmpty => orderNumber.isEmpty;
+}
+
 @freezed
 abstract class ShipperEntity with _$ShipperEntity {
   const factory ShipperEntity({
