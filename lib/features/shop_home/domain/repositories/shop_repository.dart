@@ -10,5 +10,5 @@ abstract class ShopRepository extends BaseRepository {
 
   Future<Resource<ShopDailySummaryEntity>> fetchShopDailySummary(String shopId);
 
-  Future<Resource<CreateShopEntity?>> createShop(CreateShopParams params);
+  Future<Resource<CreateShopEntity>> createShop(CreateShopParams params);
 }

@@ -29,11 +29,11 @@ class ShopRepositoryImpl extends ShopRepository {
   }
 
   @override
-  Future<Resource<CreateShopEntity?>> createShop(CreateShopParams params) async {
+  Future<Resource<CreateShopEntity>> createShop(CreateShopParams params) async {
     final response = await request(
       () => _api.createShop(CreateShopRequest.fromParams(params)),
     );
-    return response.parse<CreateShopEntity?>(
+    return response.parse<CreateShopEntity>(
       (dto) => CreateShopEntity.fromDto(dto),
     );
   }

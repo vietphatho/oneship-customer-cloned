@@ -10,7 +10,7 @@ class CreateShopUseCase {
 
   final ShopRepository _repository;
 
-  Future<Resource<CreateShopEntity?>> call(CreateShopParams params) {
+  Future<Resource<CreateShopEntity>> call(CreateShopParams params) {
     return _repository.createShop(params);
   }
 }

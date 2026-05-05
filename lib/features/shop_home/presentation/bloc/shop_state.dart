@@ -14,7 +14,7 @@ abstract class ShopState with _$ShopState {
     @Default('') String userId,
     required Resource<ShopDailySummaryEntity> dailySummaryResource,
     required Resource<GetShopsEntity> shopsResource,
-    required Resource<CreateShopEntity?> createShopResource,
+    required Resource<CreateShopEntity> createShopResource,
     ShopEntity? currentShop,
   }) = _ShopState;
 
