@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
@@ -33,8 +32,8 @@ abstract class OrdersApi {
 
   @GET("/api/v1/archives/orders")
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
-    @Query(Constants.statusQuery) required String status,
-    @Query(Constants.shopIdQuery) required String shopId,
+    @Query("status") required String status,
+    @Query("shopId") required String shopId,
   });
 
   @GET("/api/v1/onexmaps/place-and-route")
