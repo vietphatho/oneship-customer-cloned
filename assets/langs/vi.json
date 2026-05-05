@@ -633,5 +633,18 @@
   "delete_this_product": "Xoá sản phẩm này?",
   "validate" : {
     "text_required": "Không được để trống"
-  }
+  },
+  "please_input_shop_name": "Vui lòng nhập tên cửa hàng",
+  "shop_name_min_length": "Tên cửa hàng phải có ít nhất 3 ký tự",
+  "please_input_email": "Vui lòng nhập email liên hệ",
+  "invalid_email_format": "Email không đúng định dạng",
+  "please_input_phone": "Vui lòng nhập số điện thoại",
+  "invalid_phone_format": "Số điện thoại Việt Nam không đúng định dạng",
+  "please_input_address": "Vui lòng nhập địa chỉ",
+  "address_min_length": "Địa chỉ phải có ít nhất 7 ký tự",
+  "please_select_address_from_suggestion": "Vui lòng chọn một địa chỉ từ danh sách gợi ý",
+  "enter_text": "Nhập",
+  "create_shop": "Tạo cửa hàng",
+  "cannot_create_shop": "Không thể tạo cửa hàng",
+  "please_enter_at_least_7_characters_for_address": "Vui lòng nhập ít nhất 7 ký tự cho địa chỉ"
 }

@@ -1,5 +1,5 @@
-class CreateShopFormValue {
-  const CreateShopFormValue({
+class CreateShopFormEntity {
+  const CreateShopFormEntity({
     required this.shopName,
     required this.contactEmail,
     required this.phoneNumber,

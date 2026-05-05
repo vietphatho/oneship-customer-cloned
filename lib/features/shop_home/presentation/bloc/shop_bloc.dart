@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/location_service/data/repositories/location_service_repository.dart';
+import 'package:oneship_customer/features/location_service/domain/use_cases/search_address_use_case.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
@@ -15,7 +15,7 @@ import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/data/models/create_shop_form_value.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_form_entity.dart';
 
 @lazySingleton
 class ShopBloc extends Bloc<ShopEvent, ShopState> {
@@ -23,12 +23,12 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     this._fetchShopDailySummaryUseCase,
     this._fetchShopsUseCase,
     this._createShopUseCase,
-    this._locationServiceRepository,
+    this._searchAddressUseCase,
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
           shopsResource: Resource.loading(),
-          createShopResource: Resource.success<CreateShopEntity?>(null),
+          createShopResource: Resource.loading(),
         ),
       ) {
     on<ShopFetchListEvent>(_onFetchShops);
@@ -41,7 +41,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
   final FetchShopsUseCase _fetchShopsUseCase;
   final CreateShopUseCase _createShopUseCase;
-  final LocationServiceRepository _locationServiceRepository;
+  final SearchAddressUseCase _searchAddressUseCase;
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -95,7 +95,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     add(ShopInitDataEvent(userId));
   }
 
-  void submitCreateShopForm(CreateShopFormValue formValue) {
+  void submitCreateShopForm(CreateShopFormEntity formValue) {
     add(
       ShopCreateEvent(
         CreateShopParams(
@@ -124,12 +124,12 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     required Ward ward,
     required String keyword,
   }) async {
-    final resource = await _locationServiceRepository.searchAddress(
+    final resource = await _searchAddressUseCase.call(
       provinceName: province.name,
       provinceCode: province.code,
       wardName: ward.name,
       wardCode: ward.code,
-      address: keyword,
+      keyword: keyword,
     );
     return resource.data ?? [];
   }

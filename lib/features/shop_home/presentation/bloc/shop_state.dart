@@ -8,6 +8,8 @@ part 'shop_state.freezed.dart';
 
 @freezed
 abstract class ShopState with _$ShopState {
+  const ShopState._();
+
   const factory ShopState({
     @Default('') String userId,
     required Resource<ShopDailySummaryEntity> dailySummaryResource,
@@ -15,4 +17,9 @@ abstract class ShopState with _$ShopState {
     required Resource<CreateShopEntity?> createShopResource,
     ShopEntity? currentShop,
   }) = _ShopState;
+
+  bool get hasApprovedShop {
+    final shops = shopsResource.data?.data ?? const [];
+    return shops.any((shop) => shop.isActive);
+  }
 }

@@ -96,20 +96,14 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
 
     final shops = state.shopsResource.data?.data ?? const [];
     if (shops.isEmpty) {
-      return const ShopEmptyPage(); // Trang 1: Chưa có shop
+      return const ShopEmptyPage(); 
     }
 
-    // Tìm xem có shop nào đã được duyệt chưa (status == 'active')
-    final hasApprovedShop = shops.any(
-      (shop) => shop.shopStatus?.trim().toLowerCase() == 'active',
-    );
-
-    // Nếu chưa có shop nào được duyệt (tức là tất cả đều đang pending)
-    if (!hasApprovedShop) {
-      return const ShopPendingApprovalPage(); // Trang 2: Đang chờ duyệt
+    if (!state.hasApprovedShop) {
+      return const ShopPendingApprovalPage(); 
     }
 
-    return null; // Trang 3: Đã có shop duyệt -> Return null để build ApprovedShopPage
+    return null; 
   }
 
   void _handleListener(BuildContext context, ShopMasterState state) {
