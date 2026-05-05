@@ -216,7 +216,10 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
           break;
       }
     } else if (state is AuthFetchedUserProfileState) {
@@ -231,7 +234,10 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
           break;
       }
     }

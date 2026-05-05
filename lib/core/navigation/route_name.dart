@@ -9,6 +9,10 @@ class RouteName {
   static const String registerPage = '/register';
 
   static const String shopMasterPage = '/shop_master';
+  static const String shopEmptyPage = '/shop_master/shop_empty';
+  static const String createShopPage = '/shop_master/create_shop';
+  static const String shopPendingApprovalPage =
+      '/shop_master/shop_pending_approval';
   static const String createOrderPage = '/shop_master/create_order';
   static const String createMultiOrdersPage =
       '/shop_master/create_multi_orders';
@@ -21,4 +25,5 @@ class RouteName {
   static const String orderTrackingPage = '/home/order_tracking_page';
 
   static const String profileDetailPage = '/profile_detail';
+  static const String ordersHistoryPage = '/shop_master/orders_history';
 }

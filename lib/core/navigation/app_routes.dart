@@ -12,9 +12,13 @@ import 'package:oneship_customer/features/orders/presentation/views/order_detail
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_empty_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/orders_history_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -40,6 +44,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopMasterPage,
       builder: (context, state) => const ShopMasterPage(),
+    ),
+    GoRoute(
+      path: RouteName.shopEmptyPage,
+      builder: (context, state) => const ShopEmptyPage(),
+    ),
+    GoRoute(
+      path: RouteName.createShopPage,
+      builder: (context, state) => const CreateShopPage(),
+    ),
+    GoRoute(
+      path: RouteName.shopPendingApprovalPage,
+      builder: (context, state) => const ShopPendingApprovalPage(),
     ),
     GoRoute(
       path: RouteName.createOrderPage,
@@ -72,6 +88,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.profileDetailPage,
       builder: (context, state) => const ProfileDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.ordersHistoryPage,
+      builder: (context, state) => const OrdersHistoryPage(),
     ),
   ],
 );
