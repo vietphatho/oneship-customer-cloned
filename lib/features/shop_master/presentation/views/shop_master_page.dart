@@ -87,45 +87,29 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
   }
 
   Widget? _buildOnboardingPage(ShopState state) {
-    if (state.isLoadingShops) {
+    if (state.shopsResource.state == Result.loading) {
       return const Scaffold(
         backgroundColor: Colors.white,
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    if (state.shops.isEmpty) {
-      return const ShopEmptyPage();
+    final shops = state.shopsResource.data?.data ?? const [];
+    if (shops.isEmpty) {
+      return const ShopEmptyPage(); // Trang 1: Chưa có shop
     }
 
-    final currentShop = state.currentShop;
-    if (currentShop != null && _isPendingApproval(currentShop)) {
-      return ShopPendingApprovalPage(shopName: currentShop.shopName);
+    // Tìm xem có shop nào đã được duyệt chưa (status == 'active')
+    final hasApprovedShop = shops.any(
+      (shop) => shop.shopStatus?.trim().toLowerCase() == 'active',
+    );
+
+    // Nếu chưa có shop nào được duyệt (tức là tất cả đều đang pending)
+    if (!hasApprovedShop) {
+      return const ShopPendingApprovalPage(); // Trang 2: Đang chờ duyệt
     }
 
-    return null;
-  }
-
-  bool _isPendingApproval(ShopEntity shop) {
-    final status = shop.shopStatus?.trim().toLowerCase();
-    if (status == null || status.isEmpty) return false;
-
-    const approvedStatuses = {
-      'active',
-      'approved',
-      'approve',
-      'accepted',
-      'enabled',
-    };
-
-    if (approvedStatuses.contains(status)) {
-      return false;
-    }
-
-    return status.contains('pending') ||
-        status.contains('approval') ||
-        status.contains('waiting') ||
-        status.contains('review');
+    return null; // Trang 3: Đã có shop duyệt -> Return null để build ApprovedShopPage
   }
 
   void _handleListener(BuildContext context, ShopMasterState state) {

@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_customer/features/location_service/data/repositories/location_service_repository.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
@@ -24,7 +23,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     this._fetchShopDailySummaryUseCase,
     this._fetchShopsUseCase,
     this._createShopUseCase,
-    this._locationServiceBloc,
+    this._locationServiceRepository,
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
@@ -42,7 +41,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
   final FetchShopsUseCase _fetchShopsUseCase;
   final CreateShopUseCase _createShopUseCase;
-  final LocationServiceBloc _locationServiceBloc;
+  final LocationServiceRepository _locationServiceRepository;
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -73,33 +72,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     );
 
     final getShopsResponse = await _fetchShopsUseCase.call(event.userId);
-    final currentShop = _getInitialShop(getShopsResponse.data?.data ?? []);
-
-    emit(
-      state.copyWith(shopsResource: getShopsResponse, currentShop: currentShop),
-    );
-
-    final shopId = currentShop?.shopId;
-    if (shopId == null) return;
-
-    emit(
-      state.copyWith(
-        shopsResource: getShopsResponse,
-        currentShop: currentShop,
-        dailySummaryResource: Resource.loading(),
-      ),
-    );
-
-    final dailySummaryResponse = await _fetchShopDailySummaryUseCase.call(
-      shopId,
-    );
-    emit(
-      state.copyWith(
-        shopsResource: getShopsResponse,
-        currentShop: currentShop,
-        dailySummaryResource: dailySummaryResponse,
-      ),
-    );
+    emit(state.copyWith(shopsResource: getShopsResponse));
   }
 
   FutureOr<void> _onCreateShop(
@@ -150,30 +123,16 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     required Province province,
     required Ward ward,
     required String keyword,
-  }) {
-    return _locationServiceBloc.searchAddress(
-      province: province,
-      ward: ward,
+  }) async {
+    final resource = await _locationServiceRepository.searchAddress(
+      provinceName: province.name,
+      provinceCode: province.code,
+      wardName: ward.name,
+      wardCode: ward.code,
       address: keyword,
     );
+    return resource.data ?? [];
   }
 
-  ShopEntity? _getInitialShop(List<ShopEntity> shops) {
-    return shops.firstWhereOrNull(_isApprovedShop) ?? shops.firstOrNull;
-  }
 
-  bool _isApprovedShop(ShopEntity shop) {
-    final status = shop.shopStatus?.trim().toLowerCase();
-    if (status == null || status.isEmpty) return false;
-
-    const approvedStatuses = {
-      'active',
-      'approved',
-      'approve',
-      'accepted',
-      'enabled',
-    };
-
-    return approvedStatuses.contains(status);
-  }
 }

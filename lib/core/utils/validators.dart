@@ -11,18 +11,18 @@ class Validators {
 
   static String? validateShopName(String value) {
     final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập tên cửa hàng';
-    if (trimmed.length < 3) return 'Tên cửa hàng phải có ít nhất 3 ký tự';
+    if (trimmed.isEmpty) return 'please_input_shop_name'.tr();
+    if (trimmed.length < 3) return 'shop_name_min_length'.tr();
     return null;
   }
 
   static String? validateEmail(String value) {
     final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập email liên hệ';
+    if (trimmed.isEmpty) return 'please_input_email'.tr();
 
     const emailPattern = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';
     if (!RegExp(emailPattern).hasMatch(trimmed)) {
-      return 'Email không đúng định dạng';
+      return 'invalid_email_format'.tr();
     }
 
     return null;
@@ -30,9 +30,9 @@ class Validators {
 
   static String? validatePhone(String value) {
     final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập số điện thoại';
+    if (trimmed.isEmpty) return 'please_input_phone'.tr();
     if (!RegExp(r'^0\d{9,10}$').hasMatch(trimmed)) {
-      return 'Số điện thoại Việt Nam không đúng định dạng';
+      return 'invalid_phone_format'.tr();
     }
     return null;
   }
@@ -42,11 +42,11 @@ class Validators {
     SuggestedAddressResponse? selectedAddress,
   }) {
     final trimmed = value.trim();
-    if (trimmed.isEmpty) return 'Vui lòng nhập địa chỉ';
-    if (trimmed.length < 7) return 'Địa chỉ phải có ít nhất 7 ký tự';
+    if (trimmed.isEmpty) return 'please_input_address'.tr();
+    if (trimmed.length < 7) return 'address_min_length'.tr();
     if (selectedAddress?.display != trimmed ||
         selectedAddress?.refId == null) {
-      return 'Vui lòng chọn một địa chỉ từ danh sách gợi ý';
+      return 'please_select_address_from_suggestion'.tr();
     }
     return null;
   }

@@ -256,10 +256,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
         }
         PrimaryDialog.showErrorDialog(
           context,
-          message:
-              state.createShopResource.message.isEmpty
-                  ? 'Không thể tạo cửa hàng'
-                  : state.createShopResource.message,
+          message: state.createShopResource.message,
         );
         break;
     }
