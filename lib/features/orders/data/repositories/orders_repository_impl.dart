@@ -65,4 +65,19 @@ class OrdersRepositoryImpl extends OrdersRepository {
     );
     return response.parse((dto) => OrderDetailEntity.from(dto));
   }
+
+  @override
+  Future<Resource> deleteOrder({
+    required String orderId,
+    required String shopId,
+    required String status,
+  }) {
+    return request(
+      () => _ordersApi.deleteOrder(
+        orderId: orderId,
+        shopId: shopId,
+        status: status,
+      ),
+    );
+  }
 }
