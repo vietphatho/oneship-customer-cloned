@@ -5,21 +5,22 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/components/tertiary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class CreateShopFooter extends StatelessWidget {
   const CreateShopFooter({
     super.key,
-    required this.shopBloc,
     required this.onSubmit,
   });
 
-  final ShopBloc shopBloc;
   final VoidCallback onSubmit;
 
   @override
   Widget build(BuildContext context) {
+    final shopBloc = getIt.get<ShopBloc>();
+
     return SafeArea(
       top: false,
       child: Padding(

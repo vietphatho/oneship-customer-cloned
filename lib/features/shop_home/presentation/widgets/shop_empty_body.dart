@@ -1,8 +1,8 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 
-class ShopEmptyState extends StatelessWidget {
-  const ShopEmptyState({super.key, required this.onCreateShopPressed});
+class ShopEmptyBody extends StatelessWidget {
+  const ShopEmptyBody({super.key, required this.onCreateShopPressed});
 
   static const double _bottomSpacing = 96;
 

@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_empty_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_empty_body.dart';
 
 class ShopEmptyPage extends StatelessWidget {
   const ShopEmptyPage({super.key});
@@ -11,7 +11,7 @@ class ShopEmptyPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ShopEmptyState(
+        child: ShopEmptyBody(
           onCreateShopPressed: () => context.push(RouteName.createShopPage),
         ),
       ),
