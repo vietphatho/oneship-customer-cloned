@@ -59,13 +59,9 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
                       OrdersHistoryTabBar(
                         controller: _tabCtrl,
                         deliveredCount:
-                            _ordersBloc
-                                .filteredDeliveredArchivedOrdersList
-                                .length,
+                            state.filteredDeliveredOrdersHistoryList.length,
                         returnedCount:
-                            _ordersBloc
-                                .filteredReturnedArchivedOrdersList
-                                .length,
+                            state.filteredReturnedOrdersHistoryList.length,
                         onTap: _onTabChanged,
                       ),
                       Expanded(

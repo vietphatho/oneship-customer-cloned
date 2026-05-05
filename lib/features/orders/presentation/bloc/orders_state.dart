@@ -23,6 +23,11 @@ abstract class OrdersState with _$OrdersState {
     @Default([]) List<OrderInfo> returnedOrdersList,
     @Default([]) List<OrderHistoryInfoEntity> deliveredOrdersHistoryList,
     @Default([]) List<OrderHistoryInfoEntity> returnedOrdersHistoryList,
+    @Default([]) List<OrderHistoryInfoEntity> filteredDeliveredOrdersHistoryList,
+    @Default([]) List<OrderHistoryInfoEntity> filteredReturnedOrdersHistoryList,
+    @Default([]) List<OrderHistoryInfoEntity> visibleDeliveredOrdersHistoryList,
+    @Default([]) List<OrderHistoryInfoEntity> visibleReturnedOrdersHistoryList,
+    @Default(1000000) double ordersHistoryMaxCodAmount,
     @Default(false) bool showOrdersHistoryFilters,
     @Default(OrdersHistoryFilters()) OrdersHistoryFilters ordersHistoryFilters,
   }) = _OrdersState;

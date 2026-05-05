@@ -42,7 +42,7 @@ class OrdersHistoryContent extends StatelessWidget {
               ),
               child: OrdersHistoryFilterPanel(
                 initialFilters: state.ordersHistoryFilters,
-                maxCodAmount: ordersBloc.ordersHistoryMaxCodAmount,
+                maxCodAmount: state.ordersHistoryMaxCodAmount,
                 onApply: ordersBloc.applyOrdersHistoryFilters,
                 onClear: ordersBloc.clearOrdersHistoryFilters,
               ),
@@ -64,14 +64,14 @@ class OrdersHistoryContent extends StatelessWidget {
             children: [
               OrdersHistoryListCard(
                 status: OrderStatus.delivered,
-                orders: ordersBloc.visibleDeliveredArchivedOrdersList,
+                orders: state.visibleDeliveredOrdersHistoryList,
                 onRefresh:
                     () => ordersBloc.fetchOrderHistory(OrderStatus.delivered),
                 isLoading: isLoadingFor(OrderStatus.delivered, state),
               ),
               OrdersHistoryListCard(
                 status: OrderStatus.returned,
-                orders: ordersBloc.visibleReturnedArchivedOrdersList,
+                orders: state.visibleReturnedOrdersHistoryList,
                 onRefresh:
                     () => ordersBloc.fetchOrderHistory(OrderStatus.returned),
                 isLoading: isLoadingFor(OrderStatus.returned, state),
