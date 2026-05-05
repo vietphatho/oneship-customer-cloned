@@ -30,6 +30,12 @@ abstract class OrdersApi {
     @Query("shopId") required String shopId,
   });
 
+  @GET("/api/v1/archives/orders")
+  Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
+    @Query("status") required String status,
+    @Query("shopId") required String shopId,
+  });
+
   @GET("/api/v1/onexmaps/place-and-route")
   Future<BaseResponse<GetRoutingToShopResponse, BaseError>> getRoutingToShop({
     @Query("coordinates") required List<double> coordinates,
