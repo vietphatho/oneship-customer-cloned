@@ -31,6 +31,12 @@ class _CreateMultiOrdersPageState extends State<CreateMultiOrdersPage> {
   }
 
   @override
+  void dispose() {
+    getIt.resetLazySingleton<CreateMultiOrdersBloc>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PrimaryAppBar(title: "create_multi_orders".tr()),
