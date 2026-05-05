@@ -35,8 +35,6 @@ abstract class OrdersApi {
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
     @Query(Constants.statusQuery) required String status,
     @Query(Constants.shopIdQuery) required String shopId,
-    @Query(Constants.pageQuery) int? page,
-    @Query(Constants.limitQuery) int? limit,
   });
 
   @GET("/api/v1/onexmaps/place-and-route")
