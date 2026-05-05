@@ -31,11 +31,11 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
 
   static const _mapTitle = {
     ShopHomeFeature.createSingleOrder: "create_order",
-    ShopHomeFeature.createMultiOrder: "Create_multi_order",
-    ShopHomeFeature.orders: "Processing_orders",
-    ShopHomeFeature.ordersHistory: "Order_history",
-    ShopHomeFeature.package: "Packages",
-    ShopHomeFeature.supporting: "Support",
+    ShopHomeFeature.createMultiOrder: "create_multi_order",
+    ShopHomeFeature.orders: "processing_orders",
+    ShopHomeFeature.ordersHistory: "order_history",
+    ShopHomeFeature.package: "packages",
+    ShopHomeFeature.supporting: "support",
   };
 
   String get routeName => _mapRouteName[this]!;

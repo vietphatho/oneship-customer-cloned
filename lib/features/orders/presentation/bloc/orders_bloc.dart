@@ -7,20 +7,25 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
-import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/apply_orders_history_filters_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_controller.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 
 @lazySingleton
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersBloc(
-    this._repository,
+    this._fetchOrdersByStatusUseCase,
+    this._fetchOrderHistoryUseCase,
     this._fetchOrderDetailUseCase,
     this._deleteOrderUseCase,
+    this._applyOrdersHistoryFiltersUseCase,
+    this._resolveOrdersByStatusUseCase,
   ) : super(
         OrdersState(
           orderListByStatusResource: Resource.loading(),
@@ -38,10 +43,14 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrdersHistoryFilterClearedEvent>(_onClearOrdersHistoryFilterEvent);
   }
 
-  final OrdersRepository _repository;
+  final FetchOrdersByStatusUseCase _fetchOrdersByStatusUseCase;
+  final FetchOrderHistoryUseCase _fetchOrderHistoryUseCase;
   final FetchOrderDetailUseCase _fetchOrderDetailUseCase;
   final DeleteOrderUseCase _deleteOrderUseCase;
+  final ApplyOrdersHistoryFiltersUseCase _applyOrdersHistoryFiltersUseCase;
+  final ResolveOrdersByStatusUseCase _resolveOrdersByStatusUseCase;
   static const int _ordersHistoryPageSize = 10;
+  static const double _defaultMaxCodAmount = 1000000;
 
   late String _shopId;
   set shopId(String id) {
@@ -61,10 +70,28 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersHistoryFilters get ordersHistoryFilters => state.ordersHistoryFilters;
 
   List<OrderHistoryInfoEntity> get filteredDeliveredArchivedOrdersList =>
-      _applyOrdersHistoryFilters(state.deliveredOrdersHistoryList);
+      _applyOrdersHistoryFiltersUseCase.call(
+        orders: state.deliveredOrdersHistoryList,
+        provinceCode: state.ordersHistoryFilters.province?.code,
+        wardCode: state.ordersHistoryFilters.ward?.code,
+        createdDate: state.ordersHistoryFilters.createdDate,
+        phone: state.ordersHistoryFilters.phone,
+        orderCode: state.ordersHistoryFilters.orderCode,
+        minCodAmount: state.ordersHistoryFilters.codRange.start,
+        maxCodAmount: state.ordersHistoryFilters.codRange.end,
+      );
 
   List<OrderHistoryInfoEntity> get filteredReturnedArchivedOrdersList =>
-      _applyOrdersHistoryFilters(state.returnedOrdersHistoryList);
+      _applyOrdersHistoryFiltersUseCase.call(
+        orders: state.returnedOrdersHistoryList,
+        provinceCode: state.ordersHistoryFilters.province?.code,
+        wardCode: state.ordersHistoryFilters.ward?.code,
+        createdDate: state.ordersHistoryFilters.createdDate,
+        phone: state.ordersHistoryFilters.phone,
+        orderCode: state.ordersHistoryFilters.orderCode,
+        minCodAmount: state.ordersHistoryFilters.codRange.start,
+        maxCodAmount: state.ordersHistoryFilters.codRange.end,
+      );
 
   List<OrderHistoryInfoEntity> get visibleDeliveredArchivedOrdersList =>
       _limitOrdersHistory(filteredDeliveredArchivedOrdersList);
@@ -77,14 +104,14 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       ...state.deliveredOrdersHistoryList,
       ...state.returnedOrdersHistoryList,
     ];
-    if (allOrders.isEmpty) return 1000000;
+    if (allOrders.isEmpty) return _defaultMaxCodAmount;
 
     final maxCod = allOrders
         .map((order) => (order.codAmount ?? 0).toDouble())
         .reduce((current, next) => current > next ? current : next);
 
-    if (maxCod <= 0) return 1000000;
-    if (maxCod < 1000000) return 1000000;
+    if (maxCod <= 0) return _defaultMaxCodAmount;
+    if (maxCod < _defaultMaxCodAmount) return _defaultMaxCodAmount;
     return maxCod;
   }
 
@@ -97,56 +124,36 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     Emitter<OrdersState> emit,
   ) async {
     emit(state.copyWith(orderListByStatusResource: Resource.loading()));
-    final response = await _repository.fetchOrdersByStatus(
+    final response = await _fetchOrdersByStatusUseCase.call(
       status: _currentOrderStatus,
       shopId: _shopId,
     );
     _ordersMeta = response.data?.meta;
 
-    List<OrderInfo> pendingOrdersList = state.pendingOrdersList;
-    List<OrderInfo> processingOrdersList = state.processingOrdersList;
-    List<OrderInfo> batchedOrdersList = state.batchedOrdersList;
-    List<OrderInfo> deliveringOrdersList = state.deliveringOrdersList;
-    List<OrderInfo> delayedOrdersList = state.delayedOrdersList;
-    List<OrderInfo> cancelledOrdersList = state.cancelledOrdersList;
-    List<OrderInfo> returnedOrdersList = state.returnedOrdersList;
-
-    switch (_currentOrderStatus) {
-      case OrderStatus.pending:
-        pendingOrdersList = response.data?.data ?? [];
-        break;
-      case OrderStatus.processing:
-        processingOrdersList = response.data?.data ?? [];
-        break;
-      case OrderStatus.batched:
-        batchedOrdersList = response.data?.data ?? [];
-        break;
-      case OrderStatus.shipping:
-        deliveringOrdersList = response.data?.data ?? [];
-        break;
-      case OrderStatus.delayed:
-        delayedOrdersList = response.data?.data ?? [];
-        break;
-      case OrderStatus.cancelled:
-        cancelledOrdersList = response.data?.data ?? [];
-        break;
-      case OrderStatus.returned:
-        returnedOrdersList = response.data?.data ?? [];
-        break;
-      default:
-        break;
-    }
+    final ordersByStatus = _resolveOrdersByStatusUseCase.call(
+      status: _currentOrderStatus,
+      orders: response.data?.data ?? [],
+      current: OrdersByStatusLists(
+        pendingOrdersList: state.pendingOrdersList,
+        processingOrdersList: state.processingOrdersList,
+        batchedOrdersList: state.batchedOrdersList,
+        deliveringOrdersList: state.deliveringOrdersList,
+        delayedOrdersList: state.delayedOrdersList,
+        cancelledOrdersList: state.cancelledOrdersList,
+        returnedOrdersList: state.returnedOrdersList,
+      ),
+    );
 
     emit(
       state.copyWith(
         orderListByStatusResource: response,
-        pendingOrdersList: pendingOrdersList,
-        processingOrdersList: processingOrdersList,
-        batchedOrdersList: batchedOrdersList,
-        deliveringOrdersList: deliveringOrdersList,
-        delayedOrdersList: delayedOrdersList,
-        cancelledOrdersList: cancelledOrdersList,
-        returnedOrdersList: returnedOrdersList,
+        pendingOrdersList: ordersByStatus.pendingOrdersList,
+        processingOrdersList: ordersByStatus.processingOrdersList,
+        batchedOrdersList: ordersByStatus.batchedOrdersList,
+        deliveringOrdersList: ordersByStatus.deliveringOrdersList,
+        delayedOrdersList: ordersByStatus.delayedOrdersList,
+        cancelledOrdersList: ordersByStatus.cancelledOrdersList,
+        returnedOrdersList: ordersByStatus.returnedOrdersList,
       ),
     );
   }
@@ -178,7 +185,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     Emitter<OrdersState> emit,
   ) async {
     emit(state.copyWith(ordersHistoryResource: Resource.loading()));
-    final response = await _repository.fetchOrderHistory(
+    final response = await _fetchOrderHistoryUseCase.call(
       status: event.status,
       shopId: _shopId,
     );
@@ -237,60 +244,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   ) {
     if (orders.length <= _ordersHistoryPageSize) return orders;
     return orders.take(_ordersHistoryPageSize).toList();
-  }
-
-  List<OrderHistoryInfoEntity> _applyOrdersHistoryFilters(
-    List<OrderHistoryInfoEntity> orders,
-  ) {
-    final filters = state.ordersHistoryFilters;
-
-    return orders.where((order) {
-      final provinceCode = order.city ?? order.provinceCode;
-      if (filters.province != null && provinceCode != filters.province!.code) {
-        return false;
-      }
-
-      final wardCode = order.ward ?? order.wardCode;
-      if (filters.ward != null && wardCode != filters.ward!.code) {
-        return false;
-      }
-
-      if (filters.phone.isNotEmpty &&
-          !(order.phone ?? "").toLowerCase().contains(
-            filters.phone.toLowerCase(),
-          )) {
-        return false;
-      }
-
-      if (filters.orderCode.isNotEmpty &&
-          !(order.orderNumber ?? "").toLowerCase().contains(
-            filters.orderCode.toLowerCase(),
-          )) {
-        return false;
-      }
-
-      if (filters.createdDate != null &&
-          !_isSameDate(order.createdAt, filters.createdDate)) {
-        return false;
-      }
-
-      final codAmount = (order.codAmount ?? 0).toDouble();
-      if (codAmount < filters.codRange.start ||
-          codAmount > filters.codRange.end) {
-        return false;
-      }
-
-      return true;
-    }).toList();
-  }
-
-  bool _isSameDate(DateTime? source, DateTime? target) {
-    if (source == null || target == null) return false;
-
-    final local = source.toLocal();
-    return local.year == target.year &&
-        local.month == target.month &&
-        local.day == target.day;
   }
 
   void fetchOrdersByStatus() {

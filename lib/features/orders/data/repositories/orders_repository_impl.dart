@@ -86,15 +86,11 @@ class OrdersRepositoryImpl extends OrdersRepository {
   Future<Resource<OrdersHistoryEntity>> fetchOrderHistory({
     required OrderStatus status,
     required String shopId,
-    int page = Constants.defaultPage,
-    int limit = Constants.defaultLimit,
   }) async {
     final response = await request(
       () => _ordersApi.fetchOrderHistory(
         status: status.value,
         shopId: shopId,
-        page: page,
-        limit: limit,
       ),
     );
     return response.parse((dto) => OrdersHistoryEntity.from(dto));
