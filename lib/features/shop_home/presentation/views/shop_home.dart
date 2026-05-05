@@ -5,7 +5,6 @@ import 'package:oneship_customer/features/packages/presentation/bloc/packages_bl
 import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_app_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_brief_info.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_button.dart';
 
@@ -43,7 +42,6 @@ class _ShopHomeState extends State<ShopHome> {
           ),
           Column(
             children: [
-              const ShopAppBar(),
               AppSpacing.vertical(AppDimensions.smallSpacing),
               const ShopBriefInfo(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),

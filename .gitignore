@@ -49,3 +49,5 @@ macos/
 # FVM Version Cache
 .fvm/
 .fvmrc
+.gitnexus
+.agents/

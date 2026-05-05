@@ -5,6 +5,9 @@ class ImagePath {
   //image
   static const String logo = 'assets/images/logo_app.png';
   static const String logoBreak = 'assets/images/logo_break.png';
+  static const String shopOnboarding = 'assets/images/shop_onboarding.png';
+  static const String shopPendingApproval =
+      'assets/images/shop_pending_approval.png';
   static String onboarding_1 = 'assets/images/onboarding_1.png';
   static String onboarding_2 = 'assets/images/onboarding_2.png';
   static String onboarding_3 = 'assets/images/onboarding_3.png';
