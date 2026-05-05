@@ -17,10 +17,14 @@ class UpdateProductQuantityUseCase {
     final current = currentMap[sku]!;
 
     if (actionType == CreateOrderProductAction.increment) {
-      currentMap[sku] = current.copyWith(quantity: current.quantity + 1);
+      currentMap[sku] = current.copyWith(
+        quantity: current.quantity + 1,
+      );
     } else {
       if (current.quantity > 1) {
-        currentMap[sku] = current.copyWith(quantity: current.quantity - 1);
+        currentMap[sku] = current.copyWith(
+          quantity: current.quantity - 1,
+        );
       } else {
         currentMap.remove(sku);
       }
