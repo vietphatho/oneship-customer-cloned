@@ -1,12 +1,12 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
 
-abstract class OrderTrackingState {
-  const OrderTrackingState({required this.trackingResult});
+part 'order_tracking_state.freezed.dart';
 
-  final Resource<OrderTrackingEntity> trackingResult;
-}
-
-class OrderTrackingInitState extends OrderTrackingState {
-  const OrderTrackingInitState({required super.trackingResult});
+@freezed
+abstract class OrderTrackingState with _$OrderTrackingState {
+  factory OrderTrackingState({
+    required Resource<OrderTrackingEntity> trackingResult,
+  }) = _OrderTrackingState;
 }
