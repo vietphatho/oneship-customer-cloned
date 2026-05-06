@@ -1,7 +1,11 @@
 {
+  "enter_verify_email_code": "Nhập mã 6 số đã được gửi đến email của bạn",
+  "verify_email": "Xác thực email",
+  "verify": "Xác thực",
+  "we_sent_an_mail_to": "Chúng tôi đã gửi mail tới:",
+  "have_not_received_email": "Chưa nhận được email?",
   "order_information": "Thông tin đơn hàng",
   "imported_from_excel": "Nhập từ excel",
-  "create_order": "Tạo đơn hàng",
   "no_data": "Không có dữ liệu",
   "confirm_logout": "Bạn chắc chắn muốn đăng xuất?",
   "settings": "Cài đặt",
@@ -666,6 +670,16 @@
   "validate": {
     "text_required": "Không được để trống",
     "phone_required": "Số điện thoại không được để trống",
-    "invalid_phone_format": "Số điện thoại không đúng định dạng"
+    "invalid_phone_format": "Số điện thoại không đúng định dạng",
+    "username_required": "Tên đăng nhập không được để trống",
+    "username_min_length": "Tên đăng nhập phải có ít nhất 3 ký tự",
+    "full_name_required": "Họ tên không được để trống",
+    "full_name_min_length": "Họ tên phải có ít nhất 2 ký tự",
+    "email_required": "Email không được để trống",
+    "invalid_email_format": "Email không đúng định dạng",
+    "password_required": "Mật khẩu không được để trống",
+    "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự",
+    "confirm_password_required": "Xác nhận mật khẩu không được để trống",
+    "confirm_password_mismatch": "Xác nhận mật khẩu không khớp"
   }
 }
