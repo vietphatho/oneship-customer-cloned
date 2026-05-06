@@ -3,6 +3,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -11,15 +12,13 @@ class ShopBriefInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shopBloc = getIt.get<ShopBloc>();
+    final ShopBloc _shopBloc = getIt.get();
 
     return BlocBuilder<ShopBloc, ShopState>(
-      bloc: shopBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.dailySummaryResource != current.dailySummaryResource,
+      bloc: _shopBloc,
+
       builder: (context, state) {
-        final data = state.dailySummaryResource.data;
+        ShopDailySummaryEntity? data = state.dailySummaryResource.data;
 
         return Padding(
           padding: const EdgeInsets.symmetric(
@@ -60,6 +59,7 @@ class ShopBriefInfo extends StatelessWidget {
 
 class _InfoField extends StatelessWidget {
   const _InfoField({
+    super.key,
     // required this.icon,
     required this.icon,
     required this.label,

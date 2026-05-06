@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -10,34 +11,45 @@ class ShopSelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shopBloc = getIt.get<ShopBloc>();
+    final ShopBloc _shopBloc = getIt.get();
 
     return BlocBuilder<ShopBloc, ShopState>(
-      bloc: shopBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.shopsResource != current.shopsResource ||
-              previous.currentShop != current.currentShop,
+      bloc: _shopBloc,
       builder: (context, state) {
-        final shops = state.shopsResource.data?.data ?? const [];
-        if (shops.isEmpty || state.currentShop == null) {
-          return const SizedBox.shrink();
-        }
-
-        final selectedShop =
-            shops.contains(state.currentShop) ? state.currentShop : null;
+        final _shopLogoUrl = state.currentShop?.shopLogo;
 
         return _ShopDropdownButton<ShopEntity>(
-          items: shops,
-          value: selectedShop,
+          items: state.shopsResource.data?.data ?? [],
+          value: state.currentShop,
           labelBuilder: (shop) => shop.shopName,
           onChanged: (value) {
             if (value != null) {
-              shopBloc.changeShop(value);
+              _shopBloc.changeShop(value);
             }
           },
         );
       },
+    );
+  }
+}
+
+class _ShopAvatar extends StatelessWidget {
+  const _ShopAvatar({super.key, required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: AppDimensions.smallIconSize,
+      height: AppDimensions.smallIconSize,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: CachedNetworkImageProvider(url),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: AppDimensions.xSmallBorderRadius,
+      ),
     );
   }
 }

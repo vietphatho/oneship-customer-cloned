@@ -22,8 +22,6 @@ abstract class GetShopsEntity with _$GetShopsEntity {
 
 @freezed
 abstract class ShopEntity with _$ShopEntity {
-  const ShopEntity._();
-
   const factory ShopEntity({
     String? staffId,
     String? userId,
@@ -37,8 +35,6 @@ abstract class ShopEntity with _$ShopEntity {
     @Default(false) bool isHub,
     @Default(false) bool hasSecondPassword,
   }) = _ShopEntity;
-
-  bool get isActive => shopStatus?.trim().toLowerCase() == 'active';
 
   factory ShopEntity.from(ShopInfo dto) {
     return ShopEntity(
