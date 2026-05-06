@@ -6,6 +6,7 @@ part 'order_tracking_state.freezed.dart';
 
 @freezed
 abstract class OrderTrackingState with _$OrderTrackingState {
-  factory OrderTrackingState({Resource<OrderTrackingEntity>? trackingResult}) =
-      _OrderTrackingState;
+  factory OrderTrackingState({
+    required Resource<OrderTrackingEntity> trackingResult,
+  }) = _OrderTrackingState;
 }
