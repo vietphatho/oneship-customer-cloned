@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
@@ -36,6 +37,9 @@ abstract class AuthApi {
 
   @POST("/api/v1/auth/verify-email")
   Future<BaseResponse> verifyEmail(@Body() VerifyEmailRequest body);
+
+  @POST("/api/v1/auth/resend-verification-email")
+  Future<BaseResponse> resendVerificationEmail(@Body() ResendVerificationEmailRequest body);
   
   @PATCH("/api/v1/users/{id}")
   Future<BaseResponse<UserProfileResponse, BaseError>> updateUserProfile({

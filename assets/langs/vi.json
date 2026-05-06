@@ -1,4 +1,9 @@
 {
+  "enter_verify_email_code": "Nhập mã 6 số đã được gửi đến email của bạn",
+  "verify_email": "Xác thực email",
+  "verify": "Xác thực",
+  "we_sent_an_mail_to": "Chúng tôi đã gửi mail tới:",
+  "have_not_received_email": "Chưa nhận được email?",
   "order_information": "Thông tin đơn hàng",
   "imported_from_excel": "Nhập từ excel",
   "no_data": "Không có dữ liệu",

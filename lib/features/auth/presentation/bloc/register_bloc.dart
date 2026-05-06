@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/register_account_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/resend_verification_email_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/verify_email_use_case.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_state.dart';
@@ -14,11 +16,19 @@ import 'package:oneship_customer/features/auth/presentation/bloc/register_state.
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final RegisterAccountUseCase _registerAccountUseCase;
   final VerifyEmailUseCase _verifyEmailUseCase;
+  final ResendVerificationEmailUseCase _resendVerificationEmailUseCase;
 
-  RegisterBloc(this._registerAccountUseCase, this._verifyEmailUseCase)
-    : super(RegisterState()) {
+  RegisterBloc(
+    this._registerAccountUseCase,
+    this._verifyEmailUseCase,
+    this._resendVerificationEmailUseCase,
+  ) : super(RegisterState()) {
     on<RegisterRequestEvent>(_onRegisterRequestEvent);
     on<RegisterVerifyEmailEvent>(_onRegisterVerifyEmailEvent);
+    on<RegisterSetUserEmailEvent>(_onRegisterSetUserEmailEvent);
+    on<RegisterResendVerificationEmailEvent>(
+      _onRegisterResendVerificationEmailEvent,
+    );
   }
 
   Future<void> _onRegisterRequestEvent(
@@ -29,7 +39,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
     final response = await _registerAccountUseCase.call(event.request);
 
-    emit(state.copyWith(registerResult: response, email: event.request.userEmail));
+    emit(
+      state.copyWith(registerResult: response, email: event.request.userEmail),
+    );
   }
 
   Future<void> _onRegisterVerifyEmailEvent(
@@ -65,5 +77,33 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   void verifyEmailRequest({required String code, required String email}) {
     final request = VerifyEmailRequest(code: code, email: email);
     add(RegisterVerifyEmailEvent(request));
+  }
+
+  FutureOr<void> _onRegisterSetUserEmailEvent(
+    RegisterSetUserEmailEvent event,
+    Emitter<RegisterState> emit,
+  ) {
+    emit(state.copyWith(email: event.userEmail));
+  }
+
+  void setUserEmail(String userEmail) {
+    add(RegisterSetUserEmailEvent(userEmail));
+  }
+
+  FutureOr<void> _onRegisterResendVerificationEmailEvent(
+    RegisterResendVerificationEmailEvent event,
+    Emitter<RegisterState> emit,
+  ) async {
+    emit(state.copyWith(resendVerificationEmailResult: Resource.loading()));
+
+    final response = await _resendVerificationEmailUseCase.call(
+      ResendVerificationEmailRequest(email: state.email.toString()),
+    );
+
+    emit(state.copyWith(resendVerificationEmailResult: response));
+  }
+
+  void resendVerificationEmail(){
+    add(RegisterResendVerificationEmailEvent());
   }
 }

@@ -16,3 +16,13 @@ class RegisterVerifyEmailEvent extends RegisterEvent {
 
   RegisterVerifyEmailEvent(this.request);
 }
+
+class RegisterSetUserEmailEvent extends RegisterEvent {
+  final String userEmail;
+
+  RegisterSetUserEmailEvent(this.userEmail);
+}
+
+class RegisterResendVerificationEmailEvent extends RegisterEvent {
+  RegisterResendVerificationEmailEvent();
+}
