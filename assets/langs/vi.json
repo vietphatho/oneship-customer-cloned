@@ -667,5 +667,23 @@
     "text_required": "Không được để trống",
     "phone_required": "Số điện thoại không được để trống",
     "invalid_phone_format": "Số điện thoại không đúng định dạng"
+  },
+  "shop_management": {
+    "page_title": "Cửa hàng",
+    "title": "Quản lý cửa hàng",
+    "subtitle": "Quản lý thông tin các cửa hàng trong hệ thống\n({count} tổng cộng)",
+    "add_shop": "Thêm cửa hàng",
+    "search_hint": "Tìm kiếm cửa hàng",
+    "empty_title": "Chưa có cửa hàng nào",
+    "empty_subtitle": "Bấm \"Thêm cửa hàng\" để bắt đầu.",
+    "field_name": "Tên cửa hàng",
+    "field_address": "Địa chỉ",
+    "field_phone": "Số điện thoại",
+    "field_email": "Email",
+    "field_status": "Trạng thái",
+    "field_created_at": "Ngày tạo",
+    "status_active": "Hoạt động",
+    "status_pending": "Chờ duyệt",
+    "status_inactive": "Không hoạt động"
   }
-}
+}

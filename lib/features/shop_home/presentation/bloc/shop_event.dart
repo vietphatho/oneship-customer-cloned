@@ -27,3 +27,9 @@ class ShopChangeEvent extends ShopEvent {
 
   ShopChangeEvent(this.shop);
 }
+
+class ShopSearchEvent extends ShopEvent {
+  final String query;
+
+  const ShopSearchEvent(this.query);
+}

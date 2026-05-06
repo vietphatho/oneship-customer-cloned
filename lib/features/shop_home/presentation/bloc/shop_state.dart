@@ -12,5 +12,6 @@ abstract class ShopState with _$ShopState {
     required Resource<ShopDailySummaryEntity> dailySummaryResource,
     required Resource<GetShopsEntity> shopsResource,
     ShopEntity? currentShop,
+    @Default([]) List<ShopEntity> filteredShops,
   }) = _ShopState;
 }

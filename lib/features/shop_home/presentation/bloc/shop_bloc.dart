@@ -22,6 +22,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     on<ShopFetchDailySummaryEvent>(_onFetchDailySummary);
     on<ShopInitDataEvent>(_onInit);
     on<ShopChangeEvent>(_onChangeShopEvent);
+    on<ShopSearchEvent>(_onSearch);
   }
 
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
@@ -58,6 +59,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     emit(
       state.copyWith(
         shopsResource: getShopsResponse,
+        filteredShops: getShopsResponse.data?.data ?? [],
         currentShop: getShopsResponse.data?.data.firstOrNull,
       ),
     );
@@ -84,5 +86,23 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   void changeShop(ShopEntity shop) {
     add(ShopChangeEvent(shop));
     add(ShopFetchDailySummaryEvent(shop.shopId!));
+  }
+
+  void searchShops(String query) {
+    add(ShopSearchEvent(query));
+  }
+
+  FutureOr<void> _onSearch(
+    ShopSearchEvent event,
+    Emitter<ShopState> emit,
+  ) {
+    final allShops = state.shopsResource.data?.data ?? [];
+    final query = event.query.trim().toLowerCase();
+    final filtered = query.isEmpty
+        ? allShops
+        : allShops
+            .where((s) => s.shopName.toLowerCase().contains(query))
+            .toList();
+    emit(state.copyWith(filteredShops: filtered));
   }
 }

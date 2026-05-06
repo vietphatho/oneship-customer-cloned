@@ -34,6 +34,10 @@ abstract class ShopEntity with _$ShopEntity {
     @Default({}) Map<String, ShopPermissionEntity> permissions,
     @Default(false) bool isHub,
     @Default(false) bool hasSecondPassword,
+    String? phone,
+    String? email,
+    String? address,
+    DateTime? createdAt,
   }) = _ShopEntity;
 
   factory ShopEntity.from(ShopInfo dto) {
@@ -53,6 +57,10 @@ abstract class ShopEntity with _$ShopEntity {
           {},
       isHub: dto.isHub ?? false,
       hasSecondPassword: dto.hasSecondPassword ?? false,
+      phone: dto.profile?.phone,
+      email: dto.profile?.email,
+      address: dto.profile?.fullAddress,
+      createdAt: dto.createdAt,
     );
   }
 }

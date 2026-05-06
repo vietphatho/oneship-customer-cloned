@@ -30,6 +30,8 @@ abstract class ShopInfo with _$ShopInfo {
     @JsonKey(name: "permissions") Map<String, ShopPermission>? permissions,
     @JsonKey(name: "isHub") bool? isHub,
     @JsonKey(name: "hasSecondPassword") bool? hasSecondPassword,
+    @JsonKey(name: "profile") ShopProfile? profile,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
   }) = _ShopInfo;
 
   factory ShopInfo.fromJson(Map<String, dynamic> json) =>
@@ -47,4 +49,16 @@ abstract class ShopPermission with _$ShopPermission {
 
   factory ShopPermission.fromJson(Map<String, dynamic> json) =>
       _$ShopPermissionFromJson(json);
+}
+
+@freezed
+abstract class ShopProfile with _$ShopProfile {
+  const factory ShopProfile({
+    @JsonKey(name: "phone") String? phone,
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "fullAddress") String? fullAddress,
+  }) = _ShopProfile;
+
+  factory ShopProfile.fromJson(Map<String, dynamic> json) =>
+      _$ShopProfileFromJson(json);
 }
