@@ -55,6 +55,31 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(state.copyWith(verifyEmailResult: response));
   }
 
+  FutureOr<void> _onRegisterResendVerificationEmailEvent(
+    RegisterResendVerificationEmailEvent event,
+    Emitter<RegisterState> emit,
+  ) async {
+    emit(state.copyWith(resendVerificationEmailResult: Resource.loading()));
+
+    final response = await _resendVerificationEmailUseCase.call(
+      ResendVerificationEmailRequest(email: state.email.toString()),
+    );
+
+    emit(state.copyWith(resendVerificationEmailResult: response));
+  }
+
+  void verifyEmailRequest({required String code, required String email}) {
+    final request = VerifyEmailRequest(code: code, email: email);
+    add(RegisterVerifyEmailEvent(request));
+  }
+
+  FutureOr<void> _onRegisterSetUserEmailEvent(
+    RegisterSetUserEmailEvent event,
+    Emitter<RegisterState> emit,
+  ) {
+    emit(state.copyWith(email: event.userEmail));
+  }
+
   void registerRequest({
     required String userLogin,
     required String displayName,
@@ -74,33 +99,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     add(RegisterRequestEvent(request));
   }
 
-  void verifyEmailRequest({required String code, required String email}) {
-    final request = VerifyEmailRequest(code: code, email: email);
-    add(RegisterVerifyEmailEvent(request));
-  }
-
-  FutureOr<void> _onRegisterSetUserEmailEvent(
-    RegisterSetUserEmailEvent event,
-    Emitter<RegisterState> emit,
-  ) {
-    emit(state.copyWith(email: event.userEmail));
-  }
-
   void setUserEmail(String userEmail) {
     add(RegisterSetUserEmailEvent(userEmail));
-  }
-
-  FutureOr<void> _onRegisterResendVerificationEmailEvent(
-    RegisterResendVerificationEmailEvent event,
-    Emitter<RegisterState> emit,
-  ) async {
-    emit(state.copyWith(resendVerificationEmailResult: Resource.loading()));
-
-    final response = await _resendVerificationEmailUseCase.call(
-      ResendVerificationEmailRequest(email: state.email.toString()),
-    );
-
-    emit(state.copyWith(resendVerificationEmailResult: response));
   }
 
   void resendVerificationEmail(){
