@@ -49,7 +49,7 @@ class AppTheme {
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       },
     ),
-    tabBarTheme: const TabBarThemeData(
+    tabBarTheme: const TabBarTheme(
       // indicator: BoxDecoration(
       //   // color: AppColors.primary,
       //   borderRadius: AppDimensions.smallBorderRadius,
@@ -197,7 +197,7 @@ class AppTheme {
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       },
     ),
-    tabBarTheme: const TabBarThemeData(
+    tabBarTheme: const TabBarTheme(
       indicator: BoxDecoration(
         color: AppColors.primaryDark,
         borderRadius: AppDimensions.smallBorderRadius,

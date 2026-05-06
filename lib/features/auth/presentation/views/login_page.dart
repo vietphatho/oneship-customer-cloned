@@ -17,6 +17,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -211,15 +212,19 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          _authBloc.fetchUserProfile();
-          // context.pushReplacement(RouteName.homePage);
+          if (state.resource.data?.refreshToken != null) {
+            _authBloc.fetchUserProfile();
+          } else {
+            final RegisterBloc registerBloc = getIt.get();
+            registerBloc.setUserEmail(
+              state.resource.data!.userEmail.toString(),
+            );
+            context.pushReplacement(RouteName.verifyEmailPage);
+          }
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(
-            context,
-            message: state.resource.message,
-          );
+          PrimaryDialog.showErrorDialog(context);
           break;
       }
     } else if (state is AuthFetchedUserProfileState) {
@@ -234,10 +239,7 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(
-            context,
-            message: state.resource.message,
-          );
+          PrimaryDialog.showErrorDialog(context);
           break;
       }
     }

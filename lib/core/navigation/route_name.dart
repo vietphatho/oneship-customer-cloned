@@ -6,13 +6,10 @@ class RouteName {
   static const String splashPage = '/';
   static const String homePage = '/home';
   static const String loginPage = '/login';
+  static const String verifyEmailPage = '/verify_email';
+  static const String shopMasterPage = '/shop_master';
   static const String registerPage = '/register';
 
-  static const String shopMasterPage = '/shop_master';
-  static const String shopEmptyPage = '/shop_master/shop_empty';
-  static const String createShopPage = '/shop_master/create_shop';
-  static const String shopPendingApprovalPage =
-      '/shop_master/shop_pending_approval';
   static const String createOrderPage = '/shop_master/create_order';
   static const String createMultiOrdersPage =
       '/shop_master/create_multi_orders';
