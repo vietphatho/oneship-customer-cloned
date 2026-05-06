@@ -153,7 +153,9 @@ class _AuthActionButtons extends StatelessWidget {
         AppSpacing.horizontal(AppDimensions.smallSpacing),
         PrimaryTextButton(
           label: "sign_up".tr(),
-          onPressed: () {},
+          onPressed: () {
+            context.push(RouteName.registerPage);
+          },
           labelColor: Colors.white,
         ),
       ],
