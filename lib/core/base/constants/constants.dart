@@ -29,7 +29,7 @@ class Constants {
   );
   static const Duration assignedPackageNotiTimeOut = Duration(seconds: 6);
 
-  static const String currencyUnit = "VNĐ ";
+  static const String currencyUnit = "đ";
   static const String currencyUnitRequest = "vnd";
   static const String distanceUnit = "m";
   static const String pkgDimensionsUnit = "cm";

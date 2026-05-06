@@ -125,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 SafeArea(
-                  child: PrimaryButton.primaryButton(
+                  child: PrimaryButton.filled(
                     label: "register".tr(),
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {

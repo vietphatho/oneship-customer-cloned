@@ -38,7 +38,7 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
           ),
           AppSpacing.horizontal(AppDimensions.xSmallSpacing),
           Expanded(
-            child: PrimaryButton.primaryButton(
+            child: PrimaryButton.filled(
               label: "search".tr(),
               height: AppDimensions.mediumHeightButton,
               onPressed: _onSearch,

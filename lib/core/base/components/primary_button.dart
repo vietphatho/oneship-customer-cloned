@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
 
 class PrimaryButton extends StatelessWidget {
   final Function()? onPressed;
@@ -13,48 +10,106 @@ class PrimaryButton extends StatelessWidget {
   final Color? textColor;
 
   final bool isDisable;
-  final Widget? child;
-  final double? height;
+  // final Widget? child;
+  final double height;
 
-  const PrimaryButton({
+  final Widget? icon;
+
+  const PrimaryButton._({
     super.key,
     required this.onPressed,
     this.label = "",
     this.backgroundColor,
     this.isDisable = false,
-    this.child,
-    this.height = 56.0,
+    // this.child,
+    this.height = AppDimensions.mediumHeightButton,
     this.borderColor,
     this.textColor,
+    this.icon,
   });
 
-  static final double _defaultHeightButton = AppDimensions.mediumHeightButton;
-
-  factory PrimaryButton.primaryButton({
+  factory PrimaryButton.filled({
     required String label,
     Function()? onPressed,
-    final double? height,
-  }) => PrimaryButton(
+    double height = AppDimensions.mediumHeightButton,
+  }) => PrimaryButton._(
     label: label,
     onPressed: onPressed,
-    height: height ?? _defaultHeightButton,
+    height: height,
     textColor: Colors.white,
+    backgroundColor: AppColors.primary,
   );
 
-  factory PrimaryButton.secondaryButton({
+  factory PrimaryButton.outlined({
     required String label,
     Function()? onPressed,
-    final double? height,
-    bool isHighlightAction = false,
+    double height = AppDimensions.mediumHeightButton,
   }) {
-    return PrimaryButton(
+    return PrimaryButton._(
       label: label,
       onPressed: onPressed,
-      height: height ?? _defaultHeightButton,
-      backgroundColor: AppColors.primaryLight,
-      textColor: isHighlightAction ? AppColors.expenseRed : AppColors.primary,
-      // borderColor:
-      //     isHighlightAction ? AppColors.expenseRed : AppColors.neutral7,
+      height: height,
+      backgroundColor: Colors.white,
+      textColor: AppColors.primary,
+      borderColor: AppColors.primary,
+    );
+  }
+
+  factory PrimaryButton.iconFilled({
+    required String label,
+    Function()? onPressed,
+    double height = AppDimensions.mediumHeightButton,
+    required Widget icon,
+  }) => PrimaryButton._(
+    label: label,
+    onPressed: onPressed,
+    height: height,
+    textColor: Colors.white,
+    backgroundColor: AppColors.primary,
+    icon: icon,
+  );
+
+  factory PrimaryButton.iconOutlined({
+    required String label,
+    Function()? onPressed,
+    double height = AppDimensions.mediumHeightButton,
+    required Widget icon,
+  }) {
+    return PrimaryButton._(
+      label: label,
+      onPressed: onPressed,
+      height: height,
+      backgroundColor: Colors.white,
+      textColor: AppColors.primary,
+      borderColor: AppColors.primary,
+      icon: icon,
+    );
+  }
+
+  factory PrimaryButton.warningFilled({
+    required String label,
+    Function()? onPressed,
+    double height = AppDimensions.mediumHeightButton,
+  }) => PrimaryButton._(
+    label: label,
+    onPressed: onPressed,
+    height: height,
+    textColor: Colors.white,
+    backgroundColor: AppColors.red500,
+  );
+
+  factory PrimaryButton.warningOutlined({
+    required String label,
+    Function()? onPressed,
+    double height = AppDimensions.mediumHeightButton,
+  }) {
+    return PrimaryButton._(
+      label: label,
+      onPressed: onPressed,
+      height: height,
+      backgroundColor: Colors.white,
+      textColor: AppColors.red500,
+      borderColor: AppColors.red500,
     );
   }
 
@@ -69,23 +124,30 @@ class PrimaryButton extends StatelessWidget {
         if (isDisable) return;
         onPressed?.call();
       },
-      child:
-          child ??
-          Container(
-            height: height,
-            padding: AppDimensions.xSmallPaddingHorizontal,
-            width: AppDimensions.getSize(context).width,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color:
-                  onPressed == null || isDisable
-                      ? AppColors.neutral8
-                      : backgroundColor ?? AppColors.primary,
-              borderRadius: AppDimensions.largeBorderRadius,
-              border:
-                  borderColor != null ? Border.all(color: borderColor!) : null,
-            ),
-            child: PrimaryText(
+      child: Container(
+        height: height,
+        padding: AppDimensions.xSmallPaddingHorizontal,
+        width: AppDimensions.getSize(context).width,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color:
+              onPressed == null || isDisable
+                  ? AppColors.neutral8
+                  : backgroundColor ?? AppColors.primary,
+          borderRadius:
+              height < AppDimensions.mediumHeightButton
+                  ? AppDimensions.smallBorderRadius
+                  : AppDimensions.largeBorderRadius,
+          border: borderColor != null ? Border.all(color: borderColor!) : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              icon!,
+              AppSpacing.horizontal(AppDimensions.smallSpacing),
+            ],
+            PrimaryText(
               label,
               textAlign: TextAlign.center,
               color:
@@ -93,8 +155,14 @@ class PrimaryButton extends StatelessWidget {
                       ? AppColors.neutral6
                       : textColor ?? Colors.white,
               bold: true,
+              style:
+                  height < AppDimensions.mediumHeightButton
+                      ? AppTextStyles.labelSmall
+                      : AppTextStyles.labelMedium,
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 }

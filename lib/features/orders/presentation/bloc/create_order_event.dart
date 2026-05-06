@@ -1,24 +1,31 @@
 import 'package:oneship_customer/core/base/models/lat_long.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/management/data/models/response/get_shops_response.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 
 abstract class CreateOrderEvent {
   const CreateOrderEvent();
 }
 
+class CreateOrderChangeProductEvent extends CreateOrderEvent {
+  final List<ProductEntitySelected> products;
+
+  const CreateOrderChangeProductEvent(this.products);
+}
+
 class CreateOrderInitShopEvent extends CreateOrderEvent {
-  final ShopInfo shop;
+  final ShopEntity shop;
 
   CreateOrderInitShopEvent(this.shop);
 }
 
 class CreateOrderChangeRequestEvent extends CreateOrderEvent {
   final CreateOrderStep step;
-  final CreateOrderEntity request;
+  final CreateOrderRequestEntity request;
 
   const CreateOrderChangeRequestEvent(
     this.request, {
@@ -37,6 +44,7 @@ class CreateOrderChangeCustomerInfoEvent extends CreateOrderEvent {
   final String? customerName;
   final String? phoneNumber;
   final String? address;
+  final bool? isNewAddress;
   final Province? province;
   final Ward? ward;
 
@@ -44,6 +52,7 @@ class CreateOrderChangeCustomerInfoEvent extends CreateOrderEvent {
     this.customerName,
     this.phoneNumber,
     this.address,
+    this.isNewAddress,
     this.province,
     this.ward,
   });
@@ -69,6 +78,12 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
   });
 }
 
+class CreateOrderChangeAcceptTermsEvent extends CreateOrderEvent {
+  final bool accept;
+
+  CreateOrderChangeAcceptTermsEvent(this.accept);
+}
+
 class CreateOrderCreateEvent extends CreateOrderEvent {
   const CreateOrderCreateEvent();
 }
@@ -87,4 +102,10 @@ class CreateOrderGetRoutingToShopEvent extends CreateOrderEvent {
     required this.shopCoor,
     required this.destinationRefId,
   });
+}
+
+class CreateOrderErrorEvent extends CreateOrderEvent {
+  final String message;
+
+  CreateOrderErrorEvent(this.message);
 }

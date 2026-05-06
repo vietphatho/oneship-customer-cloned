@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/error_code.dart';
 import 'package:oneship_customer/core/navigation/app_navigator.dart';
@@ -65,9 +66,7 @@ class ApiInterceptor extends Interceptor {
             // FunctionUtils.handleAfterLogOut();
 
             await Future.delayed(Durations.medium4);
-            AppNavigator.globalKey.currentState?.pushReplacementNamed(
-              RouteName.loginPage,
-            );
+            AppNavigator.globalContext.pushReplacement(RouteName.loginPage);
           } else {
             AppLogger().log("another error refresh token", detail: e);
             return handler.next(e is DioException ? e : err);
@@ -80,9 +79,8 @@ class ApiInterceptor extends Interceptor {
         );
         await SecureStorage.deleteSecureData(SecureStorageKey.userId);
         // FunctionUtils.handleAfterLogOut();
-        AppNavigator.globalKey.currentState!.pushReplacementNamed(
-          RouteName.loginPage,
-        );
+        await Future.delayed(Durations.medium4);
+        AppNavigator.globalContext.pushReplacement(RouteName.loginPage);
       }
       return;
     }

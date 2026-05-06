@@ -1,8 +1,11 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/product_selected_container.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/product_selection_button.dart';
 
 class OrderInfoPageView extends StatefulWidget {
   const OrderInfoPageView({super.key});
@@ -11,7 +14,8 @@ class OrderInfoPageView extends StatefulWidget {
   State<OrderInfoPageView> createState() => _OrderInfoPageViewState();
 }
 
-class _OrderInfoPageViewState extends State<OrderInfoPageView> {
+class _OrderInfoPageViewState extends State<OrderInfoPageView>
+    with AutomaticKeepAliveClientMixin {
   final CreateOrderBloc _createOrderBloc = getIt.get();
 
   final TextEditingController _codCtrl = TextEditingController();
@@ -20,11 +24,19 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
   final TextEditingController _widthCtrl = TextEditingController();
   final TextEditingController _heightCtrl = TextEditingController();
   final TextEditingController _noteCtrl = TextEditingController();
+  final TextEditingController _externalOrderIdCtrl = TextEditingController();
+  final TextEditingController _orderSourceCtrl = TextEditingController();
 
   // DeliveryServiceType _deliveryServiceType = DeliveryServiceType.standard;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    final isStepValid = (int.tryParse(_weightCtrl.text) ?? 0) > 0;
+
+    super.build(context);
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.mediumSpacing,
@@ -40,6 +52,12 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                 children: [
                   PrimaryText("order_info".tr()),
                   AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  //
+                  const ProductSelectionButton(),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  const ProductSelectedContainer(),
+                  //
+                  AppSpacing.vertical(AppDimensions.xxLargeSpacing),
                   const DeliveryServiceTypeRadioGroup(),
                   Row(
                     children: [
@@ -48,6 +66,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "cod".tr(),
                           controller: _codCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
+                          suffixText: Constants.currencyUnit,
                         ),
                       ),
                       // AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -60,6 +80,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                     isRequired: true,
                     controller: _weightCtrl,
                     keyboardType: TextInputType.number,
+                    onChanged: (_) => setState(() {}),
+                    suffixText: Constants.weightUnit,
                   ),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   Row(
@@ -69,6 +91,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "length".tr(),
                           controller: _lengthCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
+                          suffixText: Constants.pkgDimensionsUnit,
                         ),
                       ),
                       AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -77,6 +101,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "width".tr(),
                           controller: _widthCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
+                          suffixText: Constants.pkgDimensionsUnit,
                         ),
                       ),
                       AppSpacing.horizontal(AppDimensions.smallSpacing),
@@ -85,12 +111,32 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                           label: "height".tr(),
                           controller: _heightCtrl,
                           keyboardType: TextInputType.number,
+                          onChanged: (_) => setState(() {}),
+                          suffixText: Constants.pkgDimensionsUnit,
                         ),
                       ),
                     ],
                   ),
-                  // AppSpacing.vertical(AppDimensions.smallSpacing),
-                  // PrimaryTextField(label: "source"),
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: PrimaryTextField(
+                          label: "external_order_id".tr(),
+                          controller: _externalOrderIdCtrl,
+                          // onChanged: (_) => setState(() {}),
+                        ),
+                      ),
+                      AppSpacing.horizontal(AppDimensions.smallSpacing),
+                      Expanded(
+                        child: PrimaryTextField(
+                          label: "order_source".tr(),
+                          controller: _orderSourceCtrl,
+                          // onChanged: (_) => setState(() {}),
+                        ),
+                      ),
+                    ],
+                  ),
                   // AppSpacing.vertical(AppDimensions.smallSpacing),
                   // PrimaryDropdown(),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
@@ -98,6 +144,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
                     label: "note".tr(),
                     maxLine: 5,
                     controller: _noteCtrl,
+                    onChanged: (_) => setState(() {}),
                   ),
                 ],
               ),
@@ -110,16 +157,16 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
             child: Row(
               children: [
                 Expanded(
-                  child: PrimaryButton.secondaryButton(
+                  child: PrimaryButton.outlined(
                     label: "previous".tr(),
                     onPressed: _onPrevious,
                   ),
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
-                  child: PrimaryButton.primaryButton(
+                  child: SecondaryButton.filled(
                     label: "done".tr(),
-                    onPressed: _onNext,
+                    onPressed: isStepValid ? _onNext : null,
                   ),
                 ),
               ],
@@ -143,6 +190,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView> {
       width: int.tryParse(_widthCtrl.text),
       height: int.tryParse(_heightCtrl.text),
       note: _noteCtrl.text,
+      externalOrderId: _externalOrderIdCtrl.text,
+      orderSource: _orderSourceCtrl.text,
     );
   }
 }

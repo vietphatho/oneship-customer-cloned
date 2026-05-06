@@ -1,4 +1,5 @@
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 
 abstract class AuthEvent {
   const AuthEvent();
@@ -23,6 +24,12 @@ class AuthRegisterEvent extends AuthEvent {
   final RegisterRequest request;
 
   AuthRegisterEvent(this.request);
+}
+
+class AuthUpdateUserProfileEvent extends AuthEvent {
+  final UpdateUserProfileRequest request;
+
+  AuthUpdateUserProfileEvent(this.request);
 }
 
 // class GenOtpCodeEvent extends AuthEvent {

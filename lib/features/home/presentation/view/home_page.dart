@@ -59,9 +59,7 @@ class _HomePageState extends State<HomePage> {
                     child: PrimaryTextField(hintText: "input".tr()),
                   ),
                   AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                  Expanded(
-                    child: PrimaryButton.primaryButton(label: "search".tr()),
-                  ),
+                  Expanded(child: PrimaryButton.filled(label: "search".tr())),
                 ],
               ),
               Align(

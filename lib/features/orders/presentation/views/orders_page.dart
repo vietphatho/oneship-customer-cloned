@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/management/presentation/bloc/management_bloc.dart';
-import 'package:oneship_customer/features/management/presentation/bloc/management_state.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tab_bar.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -21,8 +20,8 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage>
     with SingleTickerProviderStateMixin {
   final OrdersBloc _ordersBloc = getIt.get();
-  final ManagementBloc _managementBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   late List<OrderStatus> _tabList;
   late TabController _tabCtrl;
@@ -40,11 +39,21 @@ class _OrdersPageState extends State<OrdersPage>
       OrderStatus.returned,
     ];
     _tabCtrl = TabController(length: _tabList.length, vsync: this);
+
+    var shopId = _shopBloc.state.currentShop?.shopId ?? "";
+    _ordersBloc.init(shopId);
+  }
+
+  @override
+  void dispose() {
+    _tabCtrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PrimaryAppBar(title: "orders".tr()),
       body: MultiBlocListener(
         listeners: [
           BlocListener<PackagesBloc, PackagesState>(
@@ -61,10 +70,6 @@ class _OrdersPageState extends State<OrdersPage>
                     pre.cancelFindingShipperResult !=
                     cur.cancelFindingShipperResult,
             listener: _handleCancelFindingShipperChanged,
-          ),
-          BlocListener<ManagementBloc, ManagementState>(
-            bloc: _managementBloc,
-            listener: _handleListener,
           ),
         ],
         child: Column(
@@ -105,16 +110,6 @@ class _OrdersPageState extends State<OrdersPage>
         ),
       ),
     );
-  }
-
-  void _handleListener(BuildContext context, ManagementState state) {
-    if (state is ManagementGetShopsState &&
-        state.resource.state == Result.success &&
-        _managementBloc.currentShop != null) {
-      String shopId = _managementBloc.currentShop?.shopId ?? "";
-      _ordersBloc.init(shopId);
-      _packagesBloc.init(shopId);
-    }
   }
 
   void _handleFindingShipperChanged(

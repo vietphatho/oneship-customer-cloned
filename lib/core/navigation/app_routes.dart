@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/navigation/app_navigator.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
@@ -8,11 +9,17 @@ import 'package:oneship_customer/features/home/presentation/view/home_page.dart'
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_multi_orders_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_order_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/order_detail_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
+import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/orders_history_page.dart';
 
 final GoRouter appRouter = GoRouter(
+  navigatorKey: AppNavigator.globalKey,
   initialLocation: RouteName.splashPage,
   observers: [RouteObserverPage()],
   routes: [
@@ -45,6 +52,18 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const CreateOrderPage(),
     ),
     GoRoute(
+      path: RouteName.ordersPage,
+      builder: (context, state) => const OrdersPage(),
+    ),
+    GoRoute(
+      path: RouteName.orderDetailPage,
+      builder: (context, state) => const OrderDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.packagesPage,
+      builder: (context, state) => const PackagesPage(),
+    ),
+    GoRoute(
       path: RouteName.packageDetailPage,
       builder: (context, state) => const PackageDetailPage(),
     ),
@@ -55,6 +74,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.createMultiOrdersPage,
       builder: (context, state) => const CreateMultiOrdersPage(),
+    ),
+    GoRoute(
+      path: RouteName.profileDetailPage,
+      builder: (context, state) => const ProfileDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.ordersHistoryPage,
+      builder: (context, state) => const OrdersHistoryPage(),
     ),
   ],
 );

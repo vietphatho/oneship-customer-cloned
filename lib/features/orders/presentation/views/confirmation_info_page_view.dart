@@ -1,13 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
+import 'package:oneship_customer/core/base/components/primary_check_box.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 
@@ -31,155 +35,169 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
       //         pre.request.detail?.pickupDate != cur.request.detail?.pickupDate,
       listener: _handleListener,
       builder: (context, state) {
-        var request = state.request;
+        final request = state.request;
+        final isStepValid =
+            request.detail?.pickupDate != null &&
+            request.detail?.pickupSession != null &&
+            (request.customerName?.trim().isNotEmpty ?? false) &&
+            (request.phone?.trim().isNotEmpty ?? false) &&
+            (request.fullAddress?.trim().isNotEmpty ?? false) &&
+            request.province != null &&
+            request.ward != null &&
+            (request.detail?.weight ?? 0) > 0;
 
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.mediumSpacing,
-            vertical: AppDimensions.mediumSpacing,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PrimaryText("info_confirmation".tr()),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          children: [
-                            _InfoField(
-                              label: "shop_name".tr(),
-                              value: state.shopInfo.shopName,
-                            ),
-                            _InfoField(
-                              label: "pick_up_time".tr(),
-                              value: DateTimeUtils.formatDateFromDT(
-                                request.detail?.pickupDate,
-                              ),
-                            ),
-                            _InfoField(
-                              label: "service_type".tr(),
-                              value: request.serviceCode.name,
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          children: [
-                            _InfoField(
-                              label: "customer_name".tr(),
-                              value: request.recipientName,
-                            ),
-                            _InfoField(
-                              label: "phone_number".tr(),
-                              value: request.recipientPhone,
-                            ),
-                            _InfoField(
-                              label: "address".tr(),
-                              value: request.fullAddress,
-                            ),
-
-                            // _InfoField(label: "shop_name".tr(), value: ""),
-                            // _InfoField(label: "shop_name".tr(), value: ""),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          children: [
-                            _InfoField(
-                              label: "weight".tr(),
-                              value: Utils.formatWeightWithUnit(
-                                request.detail?.weight,
-                              ),
-                            ),
-                            _InfoField(
-                              label: "dimensions".tr(),
-                              value: Utils.formatDimensionWithUnit(
-                                length: request.detail?.length,
-                                width: request.detail?.width,
-                                height: request.detail?.height,
-                              ),
-                            ),
-
-                            // _InfoField(
-                            //   label: "cod".tr(),
-                            //   value: Utils.formatCurrencyWithUnit(
-                            //     request.codAmount,
-                            //   ),
-                            // ),
-                            _InfoField(
-                              label: "note".tr(),
-                              value: request.detail?.note,
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      const _FeeSession(),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      PrimaryCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PrimaryText(
-                              "payer".tr(),
-                              style: AppTextStyles.labelMedium,
-                            ),
-                            PrimaryRadioGroup<Payer>(
-                              direction: Axis.horizontal,
-                              options: Payer.values,
-                              value: Payer.recipient,
-                              displayLabel: (item) => item.name,
-                              onChanged: (item) {},
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.largeSpacing),
-                      // const Spacer(),
-                    ],
-                  ),
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.mediumSpacing,
+                  vertical: AppDimensions.mediumSpacing,
                 ),
-              ),
-
-              SafeArea(
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: PrimaryButton.secondaryButton(
-                        label: "previous".tr(),
-                        onPressed: _onPrevious,
+                    PrimaryText("info_confirmation".tr()),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        children: [
+                          _InfoField(
+                            label: "shop_name".tr(),
+                            value: state.shopInfo.shopName,
+                          ),
+                          _InfoField(
+                            label: "pick_up_time".tr(),
+                            value: DateTimeUtils.formatDateFromDT(
+                              request.detail?.pickupDate,
+                            ),
+                          ),
+                          _InfoField(
+                            label: "service_type".tr(),
+                            value: request.serviceCode?.name,
+                          ),
+                        ],
                       ),
                     ),
-                    AppSpacing.horizontal(AppDimensions.smallSpacing),
-                    Expanded(
-                      child: PrimaryButton.primaryButton(
-                        label: "confirm".tr(),
-                        onPressed: () {
-                          _createOrderBloc.createOrder();
-                        },
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        children: [
+                          _InfoField(
+                            label: "customer_name".tr(),
+                            value: request.customerName,
+                          ),
+                          _InfoField(
+                            label: "phone_number".tr(),
+                            value: request.phone,
+                          ),
+                          _InfoField(
+                            label: "address_type".tr(),
+                            value:
+                                (request.isNewAddress ?? true)
+                                    ? "new_address".tr()
+                                    : "old_address".tr(),
+                          ),
+                          _InfoField(
+                            label: "province".tr(),
+                            value: request.province?.name,
+                          ),
+                          _InfoField(
+                            label: "ward".tr(),
+                            value: request.ward?.name,
+                          ),
+                          _InfoField(
+                            label: "address".tr(),
+                            value: request.fullAddress,
+                          ),
+
+                          // _InfoField(label: "shop_name".tr(), value: ""),
+                          // _InfoField(label: "shop_name".tr(), value: ""),
+                        ],
                       ),
                     ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        children: [
+                          _InfoField(
+                            label: "weight".tr(),
+                            value: Utils.formatWeightWithUnit(
+                              request.detail?.weight,
+                            ),
+                          ),
+                          _InfoField(
+                            label: "dimensions".tr(),
+                            value: Utils.formatDimensionWithUnit(
+                              length: request.detail?.length,
+                              width: request.detail?.width,
+                              height: request.detail?.height,
+                            ),
+                          ),
+
+                          // _InfoField(
+                          //   label: "cod".tr(),
+                          //   value: Utils.formatCurrencyWithUnit(
+                          //     request.codAmount,
+                          //   ),
+                          // ),
+                          _InfoField(
+                            label: "note".tr(),
+                            value: request.detail?.note,
+                          ),
+                        ],
+                      ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    const _FeeSession(),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PrimaryText(
+                            "payer".tr(),
+                            style: AppTextStyles.labelMedium,
+                          ),
+                          PrimaryRadioGroup<Payer>(
+                            direction: Axis.horizontal,
+                            options: Payer.values,
+                            value: request.payer,
+                            displayLabel: (item) => item.name,
+                            onChanged: _createOrderBloc.changePayer,
+                          ),
+                        ],
+                      ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.largeSpacing),
+                    // Checkbox(
+                    //   value: state.acceptTerms,
+                    //   onChanged: (value) {
+                    //     if (value != null) {
+                    //       _createOrderBloc.changeAcceptTerms(value);
+                    //     }
+                    //   },
+                    // ),
+                    PrimaryCheckBox(
+                      label: "accept_terms".tr(),
+                      value: state.acceptTerms,
+                      onChanged: (value) {
+                        if (value != null) {
+                          _createOrderBloc.changeAcceptTerms(value);
+                        }
+                      },
+                    ),
+                    // const Spacer(),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+
+            SafeArea(child: _BottomActionButtons()),
+          ],
         );
       },
     );
-  }
-
-  void _onPrevious() {
-    // _createOrderBloc.changeStep(CreateOrderStep.receiverInfo);
-    _createOrderBloc.backToStep(CreateOrderStep.orderInfo);
   }
 
   void _handleListener(BuildContext context, CreateOrderState state) {
@@ -190,7 +208,13 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showSuccessDialog(context);
+          PrimaryDialog.showSuccessDialog(
+            context,
+            message: "create_order_successfully".tr(),
+            onClosed: () {
+              context.pop();
+            },
+          );
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
@@ -203,8 +227,43 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
   }
 }
 
+class _BottomActionButtons extends StatelessWidget {
+  const _BottomActionButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final CreateOrderBloc _createOrderBloc = getIt.get();
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppDimensions.mediumSpacing,
+        vertical: AppDimensions.mediumSpacing,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: PrimaryButton.outlined(
+              label: "previous".tr(),
+              onPressed: () {
+                _createOrderBloc.backToStep(CreateOrderStep.orderInfo);
+              },
+            ),
+          ),
+          AppSpacing.horizontal(AppDimensions.smallSpacing),
+          Expanded(
+            child: SecondaryButton.filled(
+              label: "create_order".tr(),
+              onPressed: _createOrderBloc.createOrder,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _InfoField extends StatelessWidget {
-  const _InfoField({super.key, required this.label, required this.value});
+  const _InfoField({required this.label, required this.value});
 
   final String label;
   final String? value;
@@ -239,19 +298,20 @@ class _InfoField extends StatelessWidget {
 }
 
 class _FeeSession extends StatelessWidget {
-  const _FeeSession({super.key});
+  const _FeeSession();
 
   @override
   Widget build(BuildContext context) {
-    final CreateOrderBloc _createOrderBloc = getIt.get();
+    final CreateOrderBloc createOrderBloc = getIt.get();
 
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
-      bloc: _createOrderBloc,
+      bloc: createOrderBloc,
       buildWhen: (_, state) => state is CreateOrderCalculatedFeeState,
       builder: (context, state) {
         var request = state.request;
         if (state is! CreateOrderCalculatedFeeState) return SizedBox();
 
+        CalculatedDeliveryFeeEntity? fee = state.resource.data;
         return PrimaryCard(
           child: Column(
             children: [
@@ -268,26 +328,24 @@ class _FeeSession extends StatelessWidget {
               _InfoField(
                 label: "gross_fee".tr(),
                 value: Utils.formatCurrencyWithUnit(
-                  state.resource.data?.grossFee,
+                  fee?.baseFee?.originalAmount,
                 ),
               ),
               _InfoField(
-                label: "VAT (${state.resource.data?.vatRate})".tr(),
-                value: Utils.formatCurrencyWithUnit(state.resource.data?.vat),
-              ),
-              _InfoField(
-                label: "total_fee".tr(),
-                value: Utils.formatCurrencyWithUnit(
-                  state.resource.data?.deliveryFee,
-                ),
+                label: "VAT (${fee?.baseFee?.vatRate})".tr(),
+                value: Utils.formatCurrencyWithUnit(fee?.baseFee?.vatAmount),
               ),
               _InfoField(
                 label: "total".tr(),
-                value: Utils.formatCurrencyWithUnit(
-                  (state.resource.data?.deliveryFee ?? 0) +
-                      (state.resource.data?.vat ?? 0),
-                ),
+                value: Utils.formatCurrencyWithUnit(fee?.deliveryFee),
               ),
+              // _InfoField(
+              //   label: "total".tr(),
+              //   value: Utils.formatCurrencyWithUnit(
+              //     ( ?? 0) +
+              //         (state.resource.data?.vat ?? 0),
+              //   ),
+              // ),
             ],
           ),
         );

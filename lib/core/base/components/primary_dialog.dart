@@ -52,7 +52,7 @@ class PrimaryDialog {
               ],
             ],
           ),
-          bottomActions: PrimaryButton.primaryButton(
+          bottomActions: PrimaryButton.filled(
             label: "close".tr(),
             onPressed: () {
               Navigator.pop(context, true);
@@ -135,7 +135,7 @@ class PrimaryDialog {
                 ],
               ],
             ),
-            bottomActions: PrimaryButton.primaryButton(
+            bottomActions: PrimaryButton.filled(
               label: closeText?.tr() ?? "close".tr(),
               onPressed: () {
                 Navigator.pop(context, true);
@@ -186,7 +186,7 @@ class PrimaryDialog {
                 ),
               ],
             ),
-            bottomActions: PrimaryButton.primaryButton(
+            bottomActions: PrimaryButton.filled(
               label: buttonText ?? "close".tr(),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop(true);
@@ -197,7 +197,7 @@ class PrimaryDialog {
     );
   }
 
-  static Future<dynamic> showQuestionDialog(
+  static Future<T?> showQuestionDialog<T>(
     BuildContext context, {
     String title = "confirm",
     String? message,
@@ -206,7 +206,7 @@ class PrimaryDialog {
     String positiveButtonText = "yes",
     String negativeButtonText = "cancel",
   }) {
-    return showGeneralDialog<dynamic>(
+    return showGeneralDialog<T?>(
       context: context,
       pageBuilder:
           (_, n, m) => _CustomDialogView(
@@ -244,7 +244,7 @@ class PrimaryDialog {
             bottomActions: Row(
               children: [
                 Expanded(
-                  child: PrimaryButton.secondaryButton(
+                  child: PrimaryButton.outlined(
                     label: negativeButtonText.tr(),
                     onPressed: () {
                       Navigator.pop(context, true);
@@ -254,7 +254,7 @@ class PrimaryDialog {
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
-                  child: PrimaryButton.primaryButton(
+                  child: PrimaryButton.filled(
                     label: positiveButtonText.tr(),
                     onPressed: () {
                       Navigator.pop(context, true);

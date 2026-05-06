@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -30,9 +29,9 @@ class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: _ordersBloc,
       buildWhen:
-          (_, state) => _ordersBloc.currentOrderStatus == OrderStatus.shipping,
+          (pre, cur) => pre.deliveringOrdersList != cur.deliveringOrdersList,
       builder: (context, state) {
-        List<OrderInfo> _orders = _ordersBloc.deliveringOrdersList;
+        List<OrderInfo> _orders = state.deliveringOrdersList;
 
         if (_orders.isEmpty) {
           return SafeArea(top: false, child: const PrimaryEmptyData());

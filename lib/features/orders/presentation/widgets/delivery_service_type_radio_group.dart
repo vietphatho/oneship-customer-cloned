@@ -3,7 +3,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 
@@ -24,7 +24,8 @@ class _DeliveryServiceTypeRadioGroupState
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
       bloc: _createOrderBloc,
       builder: (context, state) {
-        CreateOrderEntity draftRequest = _createOrderBloc.state.draftRequest;
+        CreateOrderRequestEntity draftRequest =
+            _createOrderBloc.state.draftRequest;
 
         return PrimaryRadioGroup(
           direction: Axis.horizontal,

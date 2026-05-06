@@ -7,16 +7,25 @@ part 'calculate_delivery_fee_response.g.dart';
 abstract class CalculateDeliveryFeeResponse
     with _$CalculateDeliveryFeeResponse {
   const factory CalculateDeliveryFeeResponse({
-    @JsonKey(name: "baseFee") @Default(0) int baseFee,
-    @JsonKey(name: "totalSurchargeFee") @Default(0) int totalSurchargeFee,
-    @JsonKey(name: "subtotal") @Default(0) int subtotal,
-    @JsonKey(name: "deliveryFee") @Default(0) int deliveryFee,
-    @JsonKey(name: "grossFee") @Default(0) int grossFee,
-    @JsonKey(name: "vat") @Default(0) int vat,
-    @JsonKey(name: "vatRate") @Default(0) int vatRate,
-    @JsonKey(name: "surcharges") @Default([]) List<dynamic> surcharges,
+    @JsonKey(name: "baseFee") Fee? baseFee,
+    @JsonKey(name: "surchargesFee") Fee? surchargesFee,
+    @JsonKey(name: "deliveryFee") int? deliveryFee,
+    @JsonKey(name: "surcharges") List<dynamic>? surcharges,
   }) = _CalculateDeliveryFeeResponse;
 
   factory CalculateDeliveryFeeResponse.fromJson(Map<String, dynamic> json) =>
       _$CalculateDeliveryFeeResponseFromJson(json);
+}
+
+@freezed
+abstract class Fee with _$Fee {
+  const factory Fee({
+    @JsonKey(name: "originalAmount") int? originalAmount,
+    @JsonKey(name: "vatRate") int? vatRate,
+    @JsonKey(name: "vatAmount") int? vatAmount,
+    @JsonKey(name: "totalAmount") int? totalAmount,
+    @JsonKey(name: "currency") String? currency,
+  }) = _Fee;
+
+  factory Fee.fromJson(Map<String, dynamic> json) => _$FeeFromJson(json);
 }

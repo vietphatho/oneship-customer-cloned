@@ -9,11 +9,11 @@ import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_mas
 @lazySingleton
 class ShopMasterBloc extends Bloc<ShopMasterEvent, ShopMasterState> {
   ShopMasterBloc()
-    : super(const ShopMasterMenuTabChangedState(BottomNavigationItem.orders)) {
+    : super(const ShopMasterMenuTabChangedState(BottomNavigationItem.home)) {
     on<ShopMasterChangeMenuTabEvent>(_onTabChanged);
   }
 
-  BottomNavigationItem _currentTab = BottomNavigationItem.orders;
+  BottomNavigationItem _currentTab = BottomNavigationItem.home;
   BottomNavigationItem get currentTab => _currentTab;
 
   FutureOr<void> _onTabChanged(

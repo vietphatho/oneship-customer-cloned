@@ -60,7 +60,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
         PrimaryText("dich vu: ${order.payer}", style: AppTextStyles.bodyMedium),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
-          "${"address".tr()}: ${order.address}",
+          "${"address".tr()}: ${order.fullAddress}",
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),

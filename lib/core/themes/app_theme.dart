@@ -38,8 +38,8 @@ class AppTheme {
     primaryTextTheme: const TextTheme(bodyMedium: AppTextStyles.bodyMedium),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.background,
-      foregroundColor: AppColors.neutral2,
-      iconTheme: IconThemeData(color: Colors.white),
+      foregroundColor: AppColors.primary,
+      iconTheme: IconThemeData(color: AppColors.primary),
     ),
     dividerColor: AppColors.grey200,
     dividerTheme: const DividerThemeData(color: AppColors.grey200),
@@ -58,6 +58,7 @@ class AppTheme {
       indicatorSize: TabBarIndicatorSize.tab,
       labelColor: AppColors.primary,
       labelStyle: AppTextStyles.titleSmall,
+      unselectedLabelStyle: AppTextStyles.bodySmall,
       unselectedLabelColor: AppColors.neutral5,
       dividerColor: Colors.transparent,
       indicatorAnimation: TabIndicatorAnimation.elastic,

@@ -32,6 +32,13 @@ class Validators {
     return null;
   }
 
+  static String? validateEmptyField(String? value) {
+    if (value == null || value.isEmpty) {
+      return "validate.text_required".tr();
+    }
+    return null;
+  }
+
   static String? validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return "error_code.validate.phone_required".tr();

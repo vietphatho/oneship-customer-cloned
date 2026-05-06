@@ -1,14 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/management/presentation/bloc/management_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/views/confirmation_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/pick_up_time_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/receiver_info_page_view.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class CreateOrderPage extends StatefulWidget {
   const CreateOrderPage({super.key});
@@ -19,19 +20,16 @@ class CreateOrderPage extends StatefulWidget {
 
 class _CreateOrderPageState extends State<CreateOrderPage> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
-  final ManagementBloc _managementBloc = getIt.get();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
-
+  final ShopBloc _shopBloc = getIt.get();
   final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
-    var shop = _managementBloc.currentShop;
+    var shop = _shopBloc.state.currentShop;
     if (shop != null) {
       _createOrderBloc.setShop(shop);
-    } else {
-      Navigator.pop(context);
     }
   }
 
@@ -47,10 +45,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     return BlocListener<CreateOrderBloc, CreateOrderState>(
       bloc: _createOrderBloc,
       listenWhen:
-          (pre, cur) => pre.step != cur.step || pre.request != cur.request,
+          (pre, cur) =>
+              pre.step != cur.step ||
+              pre.request != cur.request ||
+              cur is CreateOrderErrorState,
       listener: _handleListener,
       child: Scaffold(
-        appBar: PrimaryAppBar(title: "Create order"),
+        appBar: PrimaryAppBar(title: "Create order", confirmPop: true),
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
@@ -72,6 +73,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
         duration: Constants.pageViewTransitionDur,
         curve: Curves.easeInOut,
       );
+    } else if (state is CreateOrderErrorState && state.errorMessage != null) {
+      PrimaryDialog.showErrorDialog(context, message: state.errorMessage);
     }
   }
 }

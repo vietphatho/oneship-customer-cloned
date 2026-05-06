@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 
 part 'orders_list_response.freezed.dart';
@@ -24,6 +25,9 @@ abstract class OrderInfo with _$OrderInfo {
     @JsonKey(name: "customerName") String? customerName,
     @JsonKey(name: "phone") String? phone,
     @JsonKey(name: "email") String? email,
+    @JsonKey(name: "fullAddress") String? fullAddress,
+    @JsonKey(name: "wardCode") int? wardCode,
+    @JsonKey(name: "provinceCode") int? provinceCode,
     @JsonKey(name: "address") String? address,
     @JsonKey(name: "ward") int? ward,
     @JsonKey(name: "city") int? city,
@@ -32,18 +36,54 @@ abstract class OrderInfo with _$OrderInfo {
     @JsonKey(name: "paymentMethod") String? paymentMethod,
     @JsonKey(name: "packageType") String? packageType,
     @JsonKey(name: "payer") String? payer,
-    @JsonKey(name: "deliveryFee") int? deliveryFee,
-    @JsonKey(name: "vat") int? vat,
-    @JsonKey(name: "vatRate") int? vatRate,
     @JsonKey(name: "codAmount") int? codAmount,
-    @JsonKey(name: "totalAmount") int? totalAmount,
+    @JsonKey(name: "collectAmount") int? collectAmount,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "shopId") String? shopId,
+    @JsonKey(name: "serviceCode") String? serviceCode,
+    @JsonKey(name: "externalOrderId") String? externalOrderId,
+    @JsonKey(name: "sequenceDate") String? sequenceDate,
+    @JsonKey(name: "dailySequence") int? dailySequence,
+    @JsonKey(name: "totalProductAmount") int? totalProductAmount,
+    @JsonKey(name: "totalDiscountAmount") int? totalDiscountAmount,
+    @JsonKey(name: "totalFeeAmount") int? totalFeeAmount,
+    @JsonKey(name: "totalDeliveryFee") int? totalDeliveryFee,
+    @JsonKey(name: "createdByUserId") String? createdByUserId,
+    @JsonKey(name: "statusUpdateTime") DateTime? statusUpdateTime,
+    @JsonKey(name: "fullAddressOld") String? fullAddressOld,
+    @JsonKey(name: "wardName") String? wardName,
+    @JsonKey(name: "provinceName") String? provinceName,
+    @JsonKey(name: "coordinates") BaseCoordinates? coordinates,
+    @JsonKey(name: "distance") String? distance,
+    @JsonKey(name: "isReturnOrder") bool? isReturnOrder,
+    @JsonKey(name: "userCodes") List<String>? userCodes,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "orderFees") List<OrderFee>? orderFees,
     @JsonKey(name: "shop") ShopOfOrder? shop,
   }) = _OrderInfo;
 
   factory OrderInfo.fromJson(Map<String, dynamic> json) =>
       _$OrderInfoFromJson(json);
+}
+
+@freezed
+abstract class OrderFee with _$OrderFee {
+  const factory OrderFee({
+    @JsonKey(name: "id") String? id,
+    @JsonKey(name: "shopId") String? shopId,
+    @JsonKey(name: "orderId") String? orderId,
+    @JsonKey(name: "feeGroup") String? feeGroup,
+    @JsonKey(name: "feeSubtype") String? feeSubtype,
+    @JsonKey(name: "baseAmount") int? baseAmount,
+    @JsonKey(name: "vatRate") int? vatRate,
+    @JsonKey(name: "vatAmount") int? vatAmount,
+    @JsonKey(name: "totalAmount") int? totalAmount,
+    @JsonKey(name: "snapshot") dynamic snapshot,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+  }) = _OrderFee;
+
+  factory OrderFee.fromJson(Map<String, dynamic> json) =>
+      _$OrderFeeFromJson(json);
 }
 
 @freezed

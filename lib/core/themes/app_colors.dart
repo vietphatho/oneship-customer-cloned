@@ -6,12 +6,10 @@ class AppColors {
   static const Color primary = Color(0xFFF58220);
   static const Color primaryLight = Color.fromARGB(255, 253, 229, 207);
   static const Color primaryDark = Color.fromARGB(255, 211, 106, 14);
-  // static const Color primaryContainer = Color(0xFFE8F5E8);
 
-  static const Color secondary = Color(0xFF2765B0);
+  static const Color secondary = Color(0xFF3677BC);
   // static const Color secondaryLight = Color(0xFFFF9800);
   static const Color secondaryDark = Color.fromARGB(255, 159, 221, 252);
-  // static const Color secondaryContainer = Color(0xFFFFF3E0);
 
   // Expense Categories Colors
   static const Color expenseRed = Color(0xFFE53E3E);
@@ -26,7 +24,7 @@ class AppColors {
   static const Color info = Color(0xFF2196F3);
 
   // Light Scheme Colors
-  static const Color background = Color(0xFFFAFAFA);
+  static const Color background = Color(0xFFFFFFFF);
   static const Color dialogBarrierColor = Color(0x50000000);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceContainerHigh = Color(0xFFedf4ff);
@@ -121,4 +119,10 @@ class AppColors {
 
   static const Color bottomNavBarBackgroundDark = Color(0xFF101A24);
   static const Color bottomNavBarBackground = neutral9;
+
+  static const LinearGradient shopHomeGradBg = LinearGradient(
+    colors: [Color(0xFFFFB16F), AppColors.accentColor2],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }

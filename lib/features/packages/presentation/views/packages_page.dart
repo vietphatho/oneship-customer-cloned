@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
@@ -10,6 +9,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_customer/features/packages/presentation/widgets/package_item.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class PackagesPage extends StatefulWidget {
   const PackagesPage({super.key});
@@ -20,40 +21,53 @@ class PackagesPage extends StatefulWidget {
 
 class _PackagesPageState extends State<PackagesPage> {
   final PackagesBloc _packagesBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
+
+  @override
+  void initState() {
+    super.initState();
+    var currentShop = _shopBloc.state.currentShop;
+    if (currentShop != null) {
+      _packagesBloc.init(currentShop);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<PackagesBloc, PackagesState>(
+    return Scaffold(
+      appBar: PrimaryAppBar(title: "packages".tr()),
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<PackagesBloc, PackagesState>(
+            bloc: _packagesBloc,
+            listenWhen: (pre, cur) => pre.currentPkg != cur.currentPkg,
+            listener: _handleCurrentPkgChanged,
+          ),
+        ],
+        child: BlocBuilder<PackagesBloc, PackagesState>(
           bloc: _packagesBloc,
-          listenWhen: (pre, cur) => pre.currentPkg != cur.currentPkg,
-          listener: _handleCurrentPkgChanged,
-        ),
-      ],
-      child: BlocBuilder<PackagesBloc, PackagesState>(
-        bloc: _packagesBloc,
-        builder: (context, state) {
-          if (_packagesBloc.packages.isEmpty) {
-            return const PrimaryEmptyData();
-          }
+          builder: (context, state) {
+            if (_packagesBloc.packages.isEmpty) {
+              return const PrimaryEmptyData();
+            }
 
-          return ListView.separated(
-            itemCount: _packagesBloc.packages.length,
-            padding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.mediumSpacing,
-            ),
-            itemBuilder:
-                (context, index) => PackageItem(
-                  index: index,
-                  package: _packagesBloc.packages[index],
-                  onViewDetail: onViewDetail,
-                ),
-            separatorBuilder:
-                (context, index) =>
-                    const SizedBox(height: AppDimensions.smallSpacing),
-          );
-        },
+            return ListView.separated(
+              itemCount: _packagesBloc.packages.length,
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.mediumSpacing,
+              ),
+              itemBuilder:
+                  (context, index) => PackageItem(
+                    index: index,
+                    package: _packagesBloc.packages[index],
+                    onViewDetail: onViewDetail,
+                  ),
+              separatorBuilder:
+                  (context, index) =>
+                      const SizedBox(height: AppDimensions.smallSpacing),
+            );
+          },
+        ),
       ),
     );
   }
@@ -79,59 +93,5 @@ class _PackagesPageState extends State<PackagesPage> {
         );
         break;
     }
-  }
-}
-
-class PackageItem extends StatelessWidget {
-  const PackageItem({
-    super.key,
-    required this.package,
-    required this.index,
-    this.onViewDetail,
-  });
-
-  final int index;
-  final Package package;
-  final void Function(Package pkg)? onViewDetail;
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryAnimatedPressableWidget(
-      onTap: () => onViewDetail?.call(package),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surfaceVariant,
-          borderRadius: AppDimensions.largeBorderRadius,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: AppDimensions.smallSpacing,
-          vertical: AppDimensions.smallSpacing,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      PrimaryText("#${index + 1}. "),
-                      PrimaryText(
-                        package.packageNumber,
-                        style: AppTextStyles.titleMedium,
-                      ),
-                    ],
-                  ),
-                ),
-                PrimaryText(package.status),
-              ],
-            ),
-            AppSpacing.vertical(AppDimensions.xSmallSpacing),
-            PrimaryText("Total orders: ${package.totalOrders}"),
-          ],
-        ),
-      ),
-    );
   }
 }

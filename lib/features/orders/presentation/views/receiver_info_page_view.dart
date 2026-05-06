@@ -1,6 +1,9 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
+import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -8,6 +11,8 @@ import 'package:oneship_customer/features/orders/presentation/bloc/create_order_
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_province_selector.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_ward_selector.dart';
+
+enum ReceiverAddressOption { newAddress, oldAddress }
 
 class ReceiverInfoPageView extends StatefulWidget {
   const ReceiverInfoPageView({super.key});
@@ -19,6 +24,7 @@ class ReceiverInfoPageView extends StatefulWidget {
 class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
+  static final RegExp _vnPhoneRegex = RegExp(r'^0\d{9}$');
 
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _phoneCtrl = TextEditingController();
@@ -29,8 +35,8 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
     super.initState();
 
     var request = _createOrderBloc.state.request;
-    _nameCtrl.text = request.recipientName;
-    _phoneCtrl.text = request.recipientPhone;
+    _nameCtrl.text = request.customerName ?? "";
+    _phoneCtrl.text = request.phone ?? "";
     _addressCtrl.text = request.fullAddress ?? "";
   }
 
@@ -40,6 +46,15 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
       bloc: _createOrderBloc,
       buildWhen: (_, state) => state is CreateOrderCustomerInfoChangedState,
       builder: (context, state) {
+        final phone = _phoneCtrl.text.trim();
+        final hasValidPhone = _vnPhoneRegex.hasMatch(phone);
+        final isStepValid =
+            _nameCtrl.text.trim().isNotEmpty &&
+            hasValidPhone &&
+            _addressCtrl.text.trim().isNotEmpty &&
+            state.draftRequest.province != null &&
+            state.draftRequest.ward != null;
+
         return Container(
           padding: EdgeInsets.symmetric(
             horizontal: AppDimensions.mediumSpacing,
@@ -57,6 +72,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.mediumSpacing),
                       PrimaryTextField(
                         label: "recipient_name".tr(),
+                        isRequired: true,
                         controller: _nameCtrl,
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
@@ -68,11 +84,37 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       PrimaryTextField(
                         label: "phone_number".tr(),
+                        isRequired: true,
                         controller: _phoneCtrl,
                         keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
+                        ],
                         onChanged:
                             (value) => _createOrderBloc.changeCustomerInfo(
                               phoneNumber: value,
+                            ),
+                      ),
+                      AppSpacing.vertical(AppDimensions.smallSpacing),
+                      PrimaryRadioGroup<ReceiverAddressOption>(
+                        title: "address_type".tr(),
+                        isRequired: true,
+                        direction: Axis.horizontal,
+                        options: ReceiverAddressOption.values,
+                        value:
+                            (state.draftRequest.isNewAddress ?? true)
+                                ? ReceiverAddressOption.newAddress
+                                : ReceiverAddressOption.oldAddress,
+                        displayLabel:
+                            (item) =>
+                                item == ReceiverAddressOption.newAddress
+                                    ? "new_address".tr()
+                                    : "old_address".tr(),
+                        onChanged:
+                            (value) => _createOrderBloc.changeCustomerInfo(
+                              isNewAddress:
+                                  value == ReceiverAddressOption.newAddress,
                             ),
                       ),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
@@ -84,6 +126,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       PrimaryAutoCompleteTextField(
                         label: "address".tr(),
+                        isRequired: true,
                         enabled: state.isEnableAddressField,
                         controller: _addressCtrl,
                         displayStringForOption: (item) => item.display ?? "--",
@@ -99,31 +142,33 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                               destinationRefId: value.refId,
                             ),
                       ),
+                      AppSpacing.vertical(AppDimensions.smallSpacing),
+                      Container(height: 200, color: Colors.green),
                     ],
                   ),
                 ),
               ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              //map view
-              Expanded(
-                flex: 2,
-                child: Container(height: 200, color: Colors.green),
-              ),
+              // //map view
+              // Expanded(
+              //   flex: 2,
+              //   child: Container(height: 200, color: Colors.green),
+              // ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               SafeArea(
                 child: Row(
                   children: [
                     Expanded(
-                      child: PrimaryButton.secondaryButton(
+                      child: PrimaryButton.outlined(
                         label: "previous".tr(),
                         onPressed: _onPrevious,
                       ),
                     ),
                     AppSpacing.horizontal(AppDimensions.smallSpacing),
                     Expanded(
-                      child: PrimaryButton.primaryButton(
+                      child: SecondaryButton.filled(
                         label: "next".tr(),
-                        onPressed: _onNext,
+                        onPressed: isStepValid ? _onNext : null,
                       ),
                     ),
                   ],

@@ -7,6 +7,9 @@ import 'package:oneship_customer/features/orders/presentation/widgets/pending_or
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/returned_orders_list_view.dart';
 
+
+enum CreateOrderProductAction { increment, decrement }
+
 enum OrderStatus {
   pending,
   processing,
@@ -97,11 +100,18 @@ enum OrderPickUpSession { morning, afternoon }
 
 extension OrderPickUpSessionExt on OrderPickUpSession {
   static final _mapValue = {
-    OrderPickUpSession.morning: "MORNING",
-    OrderPickUpSession.afternoon: "AFTERNOON",
+    OrderPickUpSession.morning: "08:00 - 12:00",
+    OrderPickUpSession.afternoon: "14:00 - 18:00",
+  };
+
+  static final _mapLabel = {
+    OrderPickUpSession.morning: "Sáng (8:00-12:00)",
+    OrderPickUpSession.afternoon: "Chiều (14:00-18:00)",
   };
 
   String get requestValue => _mapValue[this]!;
+
+  String get label => _mapLabel[this]!;
 }
 
 enum CreateOrderPayer { sender, recipient }
@@ -145,7 +155,7 @@ enum Payer { sender, recipient }
 extension PayerExt on Payer {
   static final _mapValue = {
     Payer.sender: "sender",
-    Payer.recipient: "recipient",
+    Payer.recipient: "receiver",
   };
 
   static final _mapName = {
@@ -157,3 +167,5 @@ extension PayerExt on Payer {
 
   String get nameValue => _mapName[this]!;
 }
+
+enum OrderDetailTab { info, products, transHistory }

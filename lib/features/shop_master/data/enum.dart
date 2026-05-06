@@ -1,21 +1,31 @@
 import 'package:flutter/cupertino.dart';
-import 'package:oneship_customer/features/management/presentation/views/management_page.dart';
-import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/finance/presentation/views/finance_page.dart';
+import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
 
-enum BottomNavigationItem { orders, packages, management }
+enum BottomNavigationItem {
+  home,
+  finance,
+  staffManagement,
+  shopManagement,
+  menu,
+}
 
 extension BottomNavigationItemExt on BottomNavigationItem {
   static const _mapIcon = {
-    BottomNavigationItem.orders: CupertinoIcons.cube_box_fill,
-    BottomNavigationItem.packages: CupertinoIcons.cart,
-    BottomNavigationItem.management: CupertinoIcons.settings,
+    BottomNavigationItem.home: CupertinoIcons.home,
+    BottomNavigationItem.finance: CupertinoIcons.money_dollar,
+    BottomNavigationItem.staffManagement: CupertinoIcons.person_3,
+    BottomNavigationItem.shopManagement: CupertinoIcons.shopping_cart,
+    BottomNavigationItem.menu: CupertinoIcons.settings,
   };
 
   static const _mapPage = {
-    BottomNavigationItem.orders: ShopHome(),
-    BottomNavigationItem.packages: PackagesPage(),
-    BottomNavigationItem.management: ManagementPage(),
+    BottomNavigationItem.home: ShopHome(),
+    BottomNavigationItem.finance: FinancePage(),
+    BottomNavigationItem.staffManagement: GeneralProfilePage(),
+    BottomNavigationItem.shopManagement: GeneralProfilePage(),
+    BottomNavigationItem.menu: GeneralProfilePage(),
   };
 
   IconData get icon => _mapIcon[this]!;

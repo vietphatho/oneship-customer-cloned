@@ -6,6 +6,7 @@ import 'package:oneship_customer/features/orders/data/models/request/calculate_d
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
+import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -23,6 +24,18 @@ abstract class OrdersApi {
     @Query("shopId") required String shopId,
   });
 
+  @GET("/api/v1/orders/{orderId}")
+  Future<BaseResponse<OrderDetailResponse, BaseError>> fetchOrderDetail({
+    @Path("orderId") required String orderId,
+    @Query("shopId") required String shopId,
+  });
+
+  @GET("/api/v1/archives/orders")
+  Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
+    @Query("status") required String status,
+    @Query("shopId") required String shopId,
+  });
+
   @GET("/api/v1/onexmaps/place-and-route")
   Future<BaseResponse<GetRoutingToShopResponse, BaseError>> getRoutingToShop({
     @Query("coordinates") required List<double> coordinates,
@@ -36,4 +49,11 @@ abstract class OrdersApi {
 
   @POST("/api/v1/orders")
   Future<BaseResponse> createOrder(@Body() CreateOrderRequest body);
+
+  @DELETE("/api/v1/orders/{orderId}")
+  Future<BaseResponse> deleteOrder({
+    @Path("orderId") required String orderId,
+    @Query("shopId") required String shopId,
+    @Query("status") required String status,
+  });
 }
