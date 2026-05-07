@@ -42,6 +42,7 @@ class Constants {
 
   // Date time format
   static const String defaultDateFormat = "dd/MM/yyyy";
+  static const String defaultTimeFormat = "HH:mm";
   static const String defaultDateTimeFormat = "HH:mm dd/MM/yyyy";
   static const String requestDateFormat = "yyyy-MM-dd";
 

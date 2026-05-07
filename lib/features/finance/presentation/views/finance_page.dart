@@ -23,7 +23,7 @@ class _FinancePageState extends State<FinancePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(title: "finance".tr()),
+      appBar: PrimaryAppBar(title: "finance".tr(), canPop: false),
       body: SafeArea(
         child: DefaultTabController(
           length: FinanceSubFeature.values.length,

@@ -16,8 +16,8 @@ import 'package:oneship_customer/core/themes/app_spacing.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/widgets/search_orders_info_widget.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -201,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           const Spacer(),
-                          const SearchOrdersInfoWidget(),
+                          const BackToHomeWidget(),
                           // const AppVersionWidget(),
                         ],
                       ),

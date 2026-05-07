@@ -1,7 +1,7 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 
-class PrimaryTabBar extends StatelessWidget {
-  const PrimaryTabBar({
+class SecondaryTabBar extends StatelessWidget {
+  const SecondaryTabBar({
     super.key,
     this.onTap,
     required this.items,
@@ -28,7 +28,7 @@ class PrimaryTabBar extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        color: AppColors.primary,
+        color: AppColors.secondary,
       ),
       child: TabBar(
         controller: controller,
