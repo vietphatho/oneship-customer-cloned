@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
@@ -9,6 +10,7 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_state.dart';
 
@@ -32,24 +34,35 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SplashBloc, SplashState>(
-      bloc: _splashBloc,
-      listener: _handleListener,
-      child: BlocListener<AuthBloc, AuthState>(
-        bloc: _authBloc,
-        listener: _handleAuthBlocListener,
-        child: Scaffold(
-          body: Container(
-            color: AppColors.primary,
-            child: Center(
-              // child: Image.asset(
-              //   ImagePath.logo,
-              //   width: 250,
-              //   height: 250,
-              //   fit: BoxFit.contain,
-              //   color: Colors.white,
-              // ),
-            ),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SplashBloc, SplashState>(
+          bloc: _splashBloc,
+          listener: _handleListener,
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          bloc: _authBloc,
+          listener: _handleAuthBlocListener,
+        ),
+        BlocListener<ShopBloc, ShopState>(
+          bloc: _shopBloc,
+          listenWhen:
+              (previous, current) =>
+                  previous.shopsResource != current.shopsResource,
+          listener: _listenShopsListChanged,
+        ),
+      ],
+      child: Scaffold(
+        body: Container(
+          color: AppColors.primary,
+          child: Center(
+            // child: Image.asset(
+            //   ImagePath.logo,
+            //   width: 250,
+            //   height: 250,
+            //   fit: BoxFit.contain,
+            //   color: Colors.white,
+            // ),
           ),
         ),
       ),
@@ -71,13 +84,31 @@ class _SplashPageState extends State<SplashPage> {
           break;
         case Result.success:
           _shopBloc.init(state.resource.data?.id ?? "");
-          // _ordersBloc.init(_managementBloc.currentShop?.shopId ?? "");
-          context.pushReplacement(RouteName.shopMasterPage);
           break;
         case Result.error:
           context.pushReplacement(RouteName.homePage);
           break;
       }
+    }
+  }
+
+  void _listenShopsListChanged(BuildContext context, ShopState state) {
+    switch (state.shopsResource.state) {
+      case Result.loading:
+        break;
+      case Result.success:
+        if (state.hasNoShops) {
+          context.pushReplacement(RouteName.shopEmptyPage);
+        } else if (!state.hasApprovedShop) {
+          context.pushReplacement(RouteName.shopPendingApprovalPage);
+        } else {
+          context.pushReplacement(RouteName.shopMasterPage);
+        }
+      case Result.error:
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.shopsResource.message,
+        );
     }
   }
 }
