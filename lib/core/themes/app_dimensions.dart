@@ -82,6 +82,7 @@ class AppDimensions {
   static const double largeHeightButton = 56;
 
   static const double tabBarHeight = 48.0;
+  static const double bottomNavBarHeight = 64.0;
   static const double dropdownMenuHeight = 240.0;
 
   // Spacing

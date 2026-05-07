@@ -2,18 +2,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 
-part 'get_shops_response.freezed.dart';
-part 'get_shops_response.g.dart';
+part 'get_brief_shops_response.freezed.dart';
+part 'get_brief_shops_response.g.dart';
 
 @freezed
-abstract class GetShopsResponse with _$GetShopsResponse {
-  const factory GetShopsResponse({
+abstract class GetBriefShopsResponse with _$GetBriefShopsResponse {
+  const factory GetBriefShopsResponse({
     @JsonKey(name: "items") List<ShopInfo>? data,
     @JsonKey(name: "meta") BaseMetaResponse? meta,
-  }) = _GetShopsResponse;
+  }) = _GetBriefShopsResponse;
 
-  factory GetShopsResponse.fromJson(Map<String, dynamic> json) =>
-      _$GetShopsResponseFromJson(json);
+  factory GetBriefShopsResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetBriefShopsResponseFromJson(json);
 }
 
 @freezed

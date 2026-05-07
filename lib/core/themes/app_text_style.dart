@@ -45,7 +45,7 @@ class AppTextStyles {
   // Headline Styles (Medium headers)
   static const TextStyle headlineLarge = TextStyle(
     fontFamily: fontFamily,
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: FontWeight.bold,
     letterSpacing: 0,
     color: AppColors.onBackground,
@@ -53,7 +53,7 @@ class AppTextStyles {
 
   static const TextStyle headlineMedium = TextStyle(
     fontFamily: fontFamily,
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: FontWeight.bold,
     letterSpacing: 0,
     color: AppColors.onBackground,
@@ -61,7 +61,7 @@ class AppTextStyles {
 
   static const TextStyle headlineSmall = TextStyle(
     fontFamily: fontFamily,
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     letterSpacing: 0,
     color: AppColors.onBackground,

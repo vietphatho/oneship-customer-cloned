@@ -1,9 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_status_badge.dart';
 
 class ShopCard extends StatelessWidget {
   final int index;
@@ -13,69 +11,49 @@ class ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.neutral7),
-      ),
+    return PrimaryFrame(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Index badge
-          Container(
-            margin: const EdgeInsets.only(left: 12, top: 10),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              index.toString().padLeft(2, '0'),
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    PrimaryText(
+                      "#$index. ",
+                      style: AppTextStyles.bodySmall,
+                      color: AppColors.secondary,
+                    ),
+                    PrimaryText(shop.shopName, style: AppTextStyles.titleLarge),
+                  ],
+                ),
               ),
-            ),
+              // ShopStatusBadge(shop: shop),
+            ],
           ),
-          const SizedBox(height: 4),
-          _buildRow(
-            context,
-            'shop_management.field_name'.tr(),
-            shop.shopName,
-          ),
+          AppSpacing.vertical(AppDimensions.smallSpacing),
           _buildRow(
             context,
             'shop_management.field_address'.tr(),
-            shop.address ?? '--',
+            shop.profile?.fullAddress,
           ),
           _buildRow(
             context,
             'shop_management.field_phone'.tr(),
-            shop.phone ?? '--',
+            shop.profile?.phone,
           ),
           _buildRow(
             context,
             'shop_management.field_email'.tr(),
-            shop.email ?? '--',
-          ),
-          _buildRow(
-            context,
-            'shop_management.field_status'.tr(),
-            null,
-            trailing: Align(
-              alignment: Alignment.centerRight,
-              child: ShopStatusBadge(shop: shop),
-            ),
+            shop.profile?.email,
           ),
           _buildRow(
             context,
             'shop_management.field_created_at'.tr(),
             DateTimeUtils.formatDateFromDT(shop.createdAt) ?? '--',
           ),
-          const SizedBox(height: 8),
         ],
       ),
     );
@@ -88,28 +66,24 @@ class ShopCard extends StatelessWidget {
     Widget? trailing,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: AppDimensions.xxxSmallSpacing),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 110,
-            child: Text(
-              label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: AppColors.neutral5),
-            ),
+          PrimaryText(
+            label,
+            style: AppTextStyles.bodyMedium,
+            color: AppColors.neutral6,
           ),
+          AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(
-            child: trailing ??
-                Text(
+            child:
+                trailing ??
+                PrimaryText(
                   value ?? '--',
                   textAlign: TextAlign.right,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                  style: AppTextStyles.bodyMedium,
+                  color: AppColors.neutral2,
                 ),
           ),
         ],

@@ -2,7 +2,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_date_time_picker.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_customer/core/base/components/secondary_tab_bar.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/features/finance/presentation/widgets/finance_overview_card.dart';
 
@@ -56,7 +56,7 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
                   flex: 2,
                   child: DefaultTabController(
                     length: _tabList.length,
-                    child: PrimaryTabBar(
+                    child: SecondaryTabBar(
                       height: AppDimensions.mediumHeightButton,
                       items: _tabList,
                       controller: _tabController,

@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 class ShopStatusBadge extends StatelessWidget {
-  final ShopEntity shop;
+  final BriefShopEntity shop;
 
   const ShopStatusBadge({super.key, required this.shop});
 
