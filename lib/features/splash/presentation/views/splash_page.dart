@@ -48,7 +48,7 @@ class _SplashPageState extends State<SplashPage> {
           bloc: _shopBloc,
           listenWhen:
               (previous, current) =>
-                  previous.shopsResource != current.shopsResource,
+                  previous.briefShopsResource != current.briefShopsResource,
           listener: _listenShopsListChanged,
         ),
       ],
@@ -93,7 +93,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _listenShopsListChanged(BuildContext context, ShopState state) {
-    switch (state.shopsResource.state) {
+    switch (state.briefShopsResource.state) {
       case Result.loading:
         break;
       case Result.success:
@@ -107,7 +107,7 @@ class _SplashPageState extends State<SplashPage> {
       case Result.error:
         PrimaryDialog.showErrorDialog(
           context,
-          message: state.shopsResource.message,
+          message: state.briefShopsResource.message,
         );
     }
   }

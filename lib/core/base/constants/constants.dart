@@ -61,6 +61,8 @@ class Constants {
   static const int maxReceivingAssignedPkgs = 50;
   static const double minDistanceToSnapRoute = 10;
 
+  static const int defaultLimitPerPage = 10;
+
   static const tpSwitchBoard = "0981191608";
 
   static const ValueKey profileAvatarHeroKey = ValueKey(

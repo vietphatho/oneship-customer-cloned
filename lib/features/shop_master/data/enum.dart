@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_management_page.dart';
 
 enum BottomNavigationItem {
   home,
@@ -24,7 +25,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     BottomNavigationItem.home: ShopHome(),
     BottomNavigationItem.finance: FinancePage(),
     BottomNavigationItem.staffManagement: GeneralProfilePage(),
-    BottomNavigationItem.shopManagement: GeneralProfilePage(),
+    BottomNavigationItem.shopManagement: ShopManagementPage(),
     BottomNavigationItem.menu: GeneralProfilePage(),
   };
 

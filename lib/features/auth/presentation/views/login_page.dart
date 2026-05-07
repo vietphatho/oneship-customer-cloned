@@ -16,8 +16,8 @@ import 'package:oneship_customer/core/themes/app_spacing.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
+import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -78,7 +78,8 @@ class _LoginPageState extends State<LoginPage> {
                 bloc: _shopBloc,
                 listenWhen:
                     (previous, current) =>
-                        previous.shopsResource != current.shopsResource,
+                        previous.briefShopsResource !=
+                        current.briefShopsResource,
                 listener: _listenShopsListChanged,
               ),
             ],
@@ -263,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _listenShopsListChanged(BuildContext context, ShopState state) {
-    switch (state.shopsResource.state) {
+    switch (state.briefShopsResource.state) {
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;
@@ -280,7 +281,7 @@ class _LoginPageState extends State<LoginPage> {
         PrimaryDialog.hideLoadingDialog(context);
         PrimaryDialog.showErrorDialog(
           context,
-          message: state.shopsResource.message,
+          message: state.briefShopsResource.message,
         );
     }
   }

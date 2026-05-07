@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/get_shops_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/request/create_shop_request.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/create_shop_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/shop_daily_summary_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'shop_api.g.dart';
@@ -17,7 +18,7 @@ abstract class ShopApi {
   factory ShopApi(Dio dio) = _ShopApi;
 
   @GET("/api/v1/shop-staff/users/{user_id}/shops")
-  Future<BaseResponse<GetShopsResponse, BaseError>> getShops(
+  Future<BaseResponse<GetBriefShopsResponse, BaseError>> getBriefShops(
     @Path("user_id") String userId,
   );
 
@@ -29,4 +30,10 @@ abstract class ShopApi {
   Future<BaseResponse<CreateShopResponse, BaseError>> createShop(
     @Body() CreateShopRequest body,
   );
+
+  @GET("/api/v1/shops")
+  Future<BaseResponse<GetShopsResponse, BaseError>> getShops({
+    @Query("page") required int page,
+    @Query("limit") required int limit,
+  });
 }

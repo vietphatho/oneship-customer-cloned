@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -16,10 +16,10 @@ class ShopSelectionButton extends StatelessWidget {
       bloc: shopBloc,
       buildWhen:
           (previous, current) =>
-              previous.shopsResource != current.shopsResource ||
+              previous.briefShopsResource != current.briefShopsResource ||
               previous.currentShop != current.currentShop,
       builder: (context, state) {
-        final shops = state.shopsResource.data?.data ?? const [];
+        final shops = state.briefShopsResource.data?.data ?? const [];
         if (shops.isEmpty || state.currentShop == null) {
           return const SizedBox.shrink();
         }
@@ -27,7 +27,7 @@ class ShopSelectionButton extends StatelessWidget {
         final selectedShop =
             shops.contains(state.currentShop) ? state.currentShop : null;
 
-        return _ShopDropdownButton<ShopEntity>(
+        return _ShopDropdownButton<BriefShopEntity>(
           items: shops,
           value: selectedShop,
           labelBuilder: (shop) => shop.shopName,

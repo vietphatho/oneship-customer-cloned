@@ -9,6 +9,7 @@ import 'package:oneship_customer/features/location_service/data/models/response/
 import 'package:oneship_customer/features/location_service/domain/use_cases/search_address_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_form_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
@@ -26,15 +27,19 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
-          shopsResource: Resource.loading(),
+          briefShopsResource: Resource.loading(),
           createShopResource: Resource.loading(),
+          shopsResource: Resource.loading(),
         ),
       ) {
-    on<ShopFetchListEvent>(_onFetchShops);
+    on<ShopFetchBriefListEvent>(_onFetchBriefShops);
+    on<ShopFetchDataEvent>(_onFetchShops);
+    on<ShopLoadMoreDataEvent>(_onLoadMoreShops);
     on<ShopFetchDailySummaryEvent>(_onFetchDailySummary);
     on<ShopInitDataEvent>(_onInit);
     on<ShopCreateEvent>(_onCreateShop);
     on<ShopChangeEvent>(_onChangeShopEvent);
+    on<ShopSearchEvent>(_onSearch);
   }
 
   final FetchShopDailySummaryUseCase _fetchShopDailySummaryUseCase;
@@ -51,14 +56,42 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     emit(state.copyWith(dailySummaryResource: response));
   }
 
-  FutureOr<void> _onFetchShops(
-    ShopFetchListEvent event,
+  FutureOr<void> _onFetchBriefShops(
+    ShopFetchBriefListEvent event,
     Emitter<ShopState> emit,
   ) async {
     emit(
-      state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
+      state.copyWith(
+        userId: event.userId,
+        briefShopsResource: Resource.loading(),
+      ),
     );
-    final response = await _fetchShopsUseCase.call(event.userId);
+    final response = await _fetchShopsUseCase.getBriefShops(event.userId);
+    emit(state.copyWith(briefShopsResource: response));
+  }
+
+  FutureOr<void> _onFetchShops(
+    ShopFetchDataEvent event,
+    Emitter<ShopState> emit,
+  ) async {
+    emit(state.copyWith(shopsResource: Resource.loading()));
+    final response = await _fetchShopsUseCase.getShops();
+    emit(state.copyWith(shopsResource: response));
+  }
+
+  FutureOr<void> _onLoadMoreShops(
+    ShopLoadMoreDataEvent event,
+    Emitter<ShopState> emit,
+  ) async {
+    var shopsData = state.shopsResource.data;
+
+    if (shopsData?.hasMoreData != true) {
+      return Future.value();
+    }
+
+    final response = await _fetchShopsUseCase.getShops(
+      page: shopsData?.meta?.page,
+    );
     emit(state.copyWith(shopsResource: response));
   }
 
@@ -67,12 +100,18 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     Emitter<ShopState> emit,
   ) async {
     emit(
-      state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
+      state.copyWith(
+        userId: event.userId,
+        briefShopsResource: Resource.loading(),
+      ),
     );
-    final getShopsResponse = await _fetchShopsUseCase.call(event.userId);
+    final getShopsResponse = await _fetchShopsUseCase.getBriefShops(
+      event.userId,
+    );
     emit(
       state.copyWith(
-        shopsResource: getShopsResponse,
+        briefShopsResource: getShopsResponse,
+        filteredShops: getShopsResponse.data?.data ?? [],
         currentShop: getShopsResponse.data?.data.firstOrNull,
       ),
     );
@@ -103,6 +142,15 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
 
   void init(String userId) {
     add(ShopInitDataEvent(userId));
+    add(ShopFetchDataEvent());
+  }
+
+  void fetchShop() {
+    add(ShopFetchDataEvent());
+  }
+
+  void loadMore() {
+    add(ShopLoadMoreDataEvent());
   }
 
   void submitCreateShopForm(CreateShopFormEntity formValue) {
@@ -124,9 +172,25 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     );
   }
 
-  void changeShop(ShopEntity shop) {
+  void changeShop(BriefShopEntity shop) {
     add(ShopChangeEvent(shop));
     add(ShopFetchDailySummaryEvent(shop.shopId!));
+  }
+
+  void searchShops(String query) {
+    add(ShopSearchEvent(query));
+  }
+
+  FutureOr<void> _onSearch(ShopSearchEvent event, Emitter<ShopState> emit) {
+    final allShops = state.briefShopsResource.data?.data ?? [];
+    final query = event.query.trim().toLowerCase();
+    final filtered =
+        query.isEmpty
+            ? allShops
+            : allShops
+                .where((s) => s.shopName.toLowerCase().contains(query))
+                .toList();
+    emit(state.copyWith(filteredShops: filtered));
   }
 
   Future<List<SuggestedAddressResponse>> searchAddress({
