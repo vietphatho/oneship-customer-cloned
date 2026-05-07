@@ -118,7 +118,7 @@ class OrderTrackingDetailSession extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         PrimaryText(
-                          stage.description,
+                          stage.description.tr(),
                           style: AppTextStyles.bodySmall,
                           color: AppColors.neutral6,
                         ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_dimensions.dart';
@@ -37,7 +38,7 @@ class OrderDetailTabBar extends StatelessWidget {
             items
                 .map(
                   ((status) => Tab(
-                    text: status.name,
+                    text: status.name.tr(),
                     height: AppDimensions.xxxLargeSpacing,
                   )),
                 )

@@ -44,7 +44,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
                 horizontal: AppDimensions.xSmallSpacing,
               ),
               child: PrimaryText(
-                order.status,
+                _translateStatus(order.status),
                 style: AppTextStyles.bodySmall,
                 color: Colors.white,
               ),
@@ -57,7 +57,10 @@ class OrderOfPkgInfoItem extends StatelessWidget {
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-        PrimaryText("dich vu: ${order.payer}", style: AppTextStyles.bodyMedium),
+        PrimaryText(
+          "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+          style: AppTextStyles.bodyMedium,
+        ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"address".tr()}: ${order.fullAddress}",
@@ -70,5 +73,19 @@ class OrderOfPkgInfoItem extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _translateStatus(String? status) {
+    final normalized = status?.toLowerCase();
+    if (normalized == null || normalized.isEmpty) return "--";
+    return normalized.tr();
+  }
+
+  String _translatePayer(String? payer) {
+    return switch (payer?.toUpperCase()) {
+      "SENDER" => "sender".tr(),
+      "RECEIVER" => "recipient".tr(),
+      _ => payer ?? "--",
+    };
   }
 }

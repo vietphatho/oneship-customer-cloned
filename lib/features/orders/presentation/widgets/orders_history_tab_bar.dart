@@ -24,7 +24,7 @@ class OrdersHistoryTabBar extends StatelessWidget {
       child: PrimaryTabBar(
         controller: controller,
         onTap: onTap,
-        items: const ["Đã giao hàng", "Đã trả hàng"],
+        items: ["delivered".tr(), "returned".tr()],
       ),
     );
   }

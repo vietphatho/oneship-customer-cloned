@@ -106,15 +106,15 @@ class _OrdersHistoryFilterPanelState extends State<OrdersHistoryFilterPanel> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _CompactTextField(
-            label: "Thành phố",
-            hintText: "Thành phố Hồ Chí Minh",
+            label: "city".tr(),
+            hintText: "city".tr(),
             controller: _cityController,
             enabled: false,
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           _CompactWardDropdown(
-            label: "Xã/Phường",
-            hintText: "Chọn xã/phường",
+            label: "ward_or_commune".tr(),
+            hintText: "select_ward_commune".tr(),
             wards: _wards,
             selectedWard: _selectedWard,
             onSelected: (ward) {
@@ -125,8 +125,8 @@ class _OrdersHistoryFilterPanelState extends State<OrdersHistoryFilterPanel> {
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           _CompactTextField(
-            label: "Số điện thoại",
-            hintText: "Nhập",
+            label: "phone_number".tr(),
+            hintText: "enter_text".tr(),
             controller: _phoneController,
             keyboardType: TextInputType.phone,
           ),
@@ -135,8 +135,8 @@ class _OrdersHistoryFilterPanelState extends State<OrdersHistoryFilterPanel> {
             onTap: _pickDate,
             child: AbsorbPointer(
               child: _CompactTextField(
-                label: "Chọn ngày",
-                hintText: "Nhập",
+                label: "select_date".tr(),
+                hintText: "enter_text".tr(),
                 controller: _dateController,
                 suffixIcon: const Icon(
                   Icons.calendar_month,
@@ -148,8 +148,8 @@ class _OrdersHistoryFilterPanelState extends State<OrdersHistoryFilterPanel> {
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           _CompactTextField(
-            label: "Mã đơn hàng",
-            hintText: "Nhập",
+            label: "order_code".tr(),
+            hintText: "enter_text".tr(),
             controller: _orderCodeController,
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -180,8 +180,8 @@ class _OrdersHistoryFilterPanelState extends State<OrdersHistoryFilterPanel> {
                         ),
                       ),
                     ),
-                    child: const Text(
-                      "Lọc kết quả",
+                    child: Text(
+                      "filt".tr(),
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
@@ -201,7 +201,7 @@ class _OrdersHistoryFilterPanelState extends State<OrdersHistoryFilterPanel> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  child: const Text("Xóa bộ lọc"),
+                  child: Text("clear_filter".tr()),
                 ),
               ),
             ],
@@ -462,8 +462,8 @@ class _OrdersHistoryCodRangeField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Tiền thu hộ",
+        Text(
+          "cod_fee".tr(),
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,

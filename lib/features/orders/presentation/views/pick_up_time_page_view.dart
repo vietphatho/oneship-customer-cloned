@@ -49,11 +49,12 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PrimaryText(
-                "Thông tin người gửi",
+                "sender_info".tr(),
                 style: AppTextStyles.headlineSmall,
               ),
+
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              PrimaryText("Tên cửa hàng", style: AppTextStyles.labelMedium),
+              PrimaryText("shop_name".tr(), style: AppTextStyles.labelMedium),
               const SizedBox(height: 8),
               PrimaryTextField(controller: _shopNameController, enabled: false),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
@@ -71,8 +72,8 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
                 isRequired: true,
                 initialValue: request.detail?.pickupSession,
                 menu: OrderPickUpSession.values,
-                hintText: "Chọn thời gian",
-                toLabel: (item) => item.label,
+                hintText: "select_time".tr(),
+                toLabel: (item) => item.label.tr(),
                 onSelected:
                     (value) =>
                         _createOrderBloc.changePickUpDate(session: value),

@@ -286,7 +286,7 @@ class _OrdersFeeListView extends StatelessWidget {
                 value: Utils.formatCurrencyWithUnit(fees[index].baseAmount),
               ),
               _buildInfoField(
-                label: "VAT (${fees[index].vatRate}%)".tr(),
+                label: "VAT (${fees[index].vatRate}%)",
                 value: Utils.formatCurrencyWithUnit(fees[index].vatAmount),
               ),
               _buildInfoField(

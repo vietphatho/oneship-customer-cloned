@@ -51,7 +51,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               cur is CreateOrderErrorState,
       listener: _handleListener,
       child: Scaffold(
-        appBar: PrimaryAppBar(title: "Create order", confirmPop: true),
+        appBar: PrimaryAppBar(title: "sender_info".tr(), confirmPop: true),
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),

@@ -32,7 +32,7 @@ class _DeliveryServiceTypeRadioGroupState
           title: "delivery_service_type".tr(),
           isRequired: true,
           options: DeliveryServiceType.values,
-          subTitle: (value) => value.description,
+          subTitle: (value) => value.description.tr(),
           value: draftRequest.serviceCode,
           displayLabel: (value) => value.nameValue.tr(),
           onChanged: _onChanged,

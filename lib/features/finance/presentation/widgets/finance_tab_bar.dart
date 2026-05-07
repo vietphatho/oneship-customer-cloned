@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
 import 'package:oneship_customer/features/finance/data/enum.dart';
 
@@ -10,7 +11,7 @@ class FinanceTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PrimaryTabBar(
-      items: FinanceSubFeature.values.map((e) => e.name).toList(),
+      items: FinanceSubFeature.values.map((e) => e.name.tr()).toList(),
       controller: controller,
     );
   }

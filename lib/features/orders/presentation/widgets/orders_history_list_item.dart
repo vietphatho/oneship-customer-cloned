@@ -19,8 +19,8 @@ class OrdersHistoryListItem extends StatelessWidget {
     final createdAt = DateTimeUtils.formatDateFromDT(order.createdAt) ?? "--";
     final cod = Utils.formatCurrencyWithUnit(order.codAmount);
     final statusLabel = switch (order.status) {
-      "delivered" => "Đã giao",
-      "returned" => "Đã trả",
+      "delivered" => "delivered".tr(),
+      "returned" => "returned".tr(),
       _ => order.status ?? "--",
     };
 

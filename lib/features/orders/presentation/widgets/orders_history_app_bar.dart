@@ -25,7 +25,7 @@ class OrdersHistoryAppBar extends StatelessWidget
         ),
       ),
       title: Text(
-        "Đơn hàng đã xử lý",
+        "order_history".tr(),
         style: AppTextStyles.titleMedium.copyWith(
           color: AppColors.primary,
           fontSize: 18,

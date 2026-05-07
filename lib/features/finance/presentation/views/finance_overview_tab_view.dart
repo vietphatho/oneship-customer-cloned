@@ -26,7 +26,7 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
     super.initState();
     fromDate = DateTime.now();
     toDate = DateTime.now();
-    _tabList = const ['24 gio', '7 ngay', '30 ngay'];
+    _tabList = ['last_24_hours'.tr(), 'last_7_days'.tr(), 'last_30_days'.tr()];
     _tabController = TabController(length: _tabList.length, vsync: this);
   }
 

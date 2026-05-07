@@ -74,7 +74,7 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                           ),
                           _InfoField(
                             label: "service_type".tr(),
-                            value: request.serviceCode?.name,
+                            value: request.serviceCode?.nameValue.tr(),
                           ),
                         ],
                       ),
@@ -332,7 +332,7 @@ class _FeeSession extends StatelessWidget {
                 ),
               ),
               _InfoField(
-                label: "VAT (${fee?.baseFee?.vatRate})".tr(),
+                label: "VAT (${fee?.baseFee?.vatRate})",
                 value: Utils.formatCurrencyWithUnit(fee?.baseFee?.vatAmount),
               ),
               _InfoField(

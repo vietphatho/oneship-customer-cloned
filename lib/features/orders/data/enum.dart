@@ -105,8 +105,8 @@ extension OrderPickUpSessionExt on OrderPickUpSession {
   };
 
   static final _mapLabel = {
-    OrderPickUpSession.morning: "Sáng (8:00-12:00)",
-    OrderPickUpSession.afternoon: "Chiều (14:00-18:00)",
+    OrderPickUpSession.morning: "morning_session",
+    OrderPickUpSession.afternoon: "afternoon_session",
   };
 
   String get requestValue => _mapValue[this]!;

@@ -22,7 +22,7 @@ class OrdersHistoryFilterButton extends StatelessWidget {
       ),
       icon: const Icon(Icons.filter_alt, size: 15),
       label: Text(
-        isExpanded ? "Ẩn bộ lọc" : "Hiện bộ lọc",
+        isExpanded ? "hide_filter".tr() : "show_filter".tr(),
         style: AppTextStyles.bodySmall.copyWith(
           color: AppColors.secondary,
           fontSize: 13,
