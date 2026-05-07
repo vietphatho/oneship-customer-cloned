@@ -22,4 +22,6 @@ abstract class ShopState with _$ShopState {
     final shops = shopsResource.data?.data ?? const [];
     return shops.any((shop) => shop.isActive);
   }
+
+  bool get hasNoShops => shopsResource.data?.data.isEmpty ?? true;
 }

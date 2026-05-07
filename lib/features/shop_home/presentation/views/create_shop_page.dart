@@ -17,8 +17,6 @@ import 'package:oneship_customer/features/location_service/data/models/response/
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_form_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/create_shop_footer.dart';
-
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_province_selector.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_ward_selector.dart';
 
@@ -159,16 +157,18 @@ class _CreateShopPageState extends State<CreateShopPage> {
                               _selectedWard != null,
                           textCapitalization: TextCapitalization.sentences,
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => Validators.validateAddress(
-                            value,
-                            selectedAddress: _selectedAddress,
-                          ),
+                          validator:
+                              (value) => Validators.validateAddress(
+                                value,
+                                selectedAddress: _selectedAddress,
+                              ),
                           displayStringForOption: (item) => item.display ?? '',
-                          onSearch: (keyword) => _shopBloc.searchAddress(
-                            province: _selectedProvince!,
-                            ward: _selectedWard!,
-                            keyword: keyword,
-                          ),
+                          onSearch:
+                              (keyword) => _shopBloc.searchAddress(
+                                province: _selectedProvince!,
+                                ward: _selectedWard!,
+                                keyword: keyword,
+                              ),
                           onSelected: (value) {
                             setState(() {
                               _selectedAddress = value;
@@ -180,9 +180,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
                   ),
                 ),
               ),
-              CreateShopFooter(
-                onSubmit: _handleSubmit,
-              ),
+              _Footer(onSubmit: _handleSubmit),
             ],
           ),
         ),
@@ -190,10 +188,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
     );
   }
 
-  void _handleCreateShopChanged(
-    BuildContext context,
-    ShopState state,
-  ) {
+  void _handleCreateShopChanged(BuildContext context, ShopState state) {
     switch (state.createShopResource.state) {
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
@@ -203,9 +198,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
         final createdShop = state.createShopResource.data;
         if (createdShop != null) {
           _shopBloc.init(state.userId);
-          context.pushReplacement(
-            RouteName.shopPendingApprovalPage,
-          );
+          context.go(RouteName.shopPendingApprovalPage);
         }
         break;
       case Result.error:
@@ -237,5 +230,54 @@ class _CreateShopPageState extends State<CreateShopPage> {
       ),
     );
   }
+}
 
+class _Footer extends StatelessWidget {
+  const _Footer({super.key, required this.onSubmit});
+
+  final VoidCallback onSubmit;
+
+  @override
+  Widget build(BuildContext context) {
+    final shopBloc = getIt.get<ShopBloc>();
+
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          AppDimensions.mediumSpacing,
+          AppDimensions.smallSpacing,
+          AppDimensions.mediumSpacing,
+          AppDimensions.mediumSpacing,
+        ),
+        child: BlocBuilder<ShopBloc, ShopState>(
+          bloc: shopBloc,
+          buildWhen:
+              (previous, current) =>
+                  previous.createShopResource != current.createShopResource,
+          builder: (context, shopState) {
+            return Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TertiaryButton.filled(
+                    label: 'exit'.tr(),
+                    onPressed: () => context.pop(),
+                  ),
+                ),
+                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                Expanded(
+                  flex: 3,
+                  child: SecondaryButton.filled(
+                    label: 'create_shop'.tr(),
+                    onPressed: onSubmit,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }

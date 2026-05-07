@@ -5,17 +5,16 @@ import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/location_service/domain/use_cases/search_address_use_case.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
+import 'package:oneship_customer/features/location_service/domain/use_cases/search_address_use_case.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_form_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
-import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_form_entity.dart';
 
 @lazySingleton
 class ShopBloc extends Bloc<ShopEvent, ShopState> {
@@ -70,9 +69,20 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     emit(
       state.copyWith(userId: event.userId, shopsResource: Resource.loading()),
     );
-
     final getShopsResponse = await _fetchShopsUseCase.call(event.userId);
-    emit(state.copyWith(shopsResource: getShopsResponse));
+    emit(
+      state.copyWith(
+        shopsResource: getShopsResponse,
+        currentShop: getShopsResponse.data?.data.firstOrNull,
+      ),
+    );
+
+    String? shopId = state.currentShop?.shopId;
+    if (shopId == null) return;
+
+    emit(state.copyWith(dailySummaryResource: Resource.loading()));
+    final dailySumResponse = await _fetchShopDailySummaryUseCase.call(shopId);
+    emit(state.copyWith(dailySummaryResource: dailySumResponse));
   }
 
   FutureOr<void> _onCreateShop(
@@ -133,6 +143,4 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     );
     return resource.data ?? [];
   }
-
-
 }

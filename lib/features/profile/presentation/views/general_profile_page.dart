@@ -35,6 +35,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
               _UtilitiesContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               _SupportsContainer(),
+              AppSpacing.vertical(AppDimensions.mobileBreakpoint),
             ],
           ),
         ),
