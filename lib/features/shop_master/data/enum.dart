@@ -24,7 +24,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
   static const _mapPage = {
     BottomNavigationItem.home: ShopHome(),
     BottomNavigationItem.finance: FinancePage(),
-    BottomNavigationItem.staffManagement: GeneralProfilePage(),
+    BottomNavigationItem.staffManagement: Placeholder(),
     BottomNavigationItem.shopManagement: ShopManagementPage(),
     BottomNavigationItem.menu: GeneralProfilePage(),
   };
