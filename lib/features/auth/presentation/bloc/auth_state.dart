@@ -1,5 +1,6 @@
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_customer/features/auth/data/models/response/verify_secondary_password_response.dart';
 
 import '../../../../core/base/models/resource.dart';
 
@@ -58,6 +59,12 @@ class AuthLogOutState extends AuthState {
   final Resource resource;
 
   AuthLogOutState(this.resource);
+}
+
+class AuthVerifySecondaryPasswordState extends AuthState {
+  final Resource<VerifySecondaryPasswordResponse> resource;
+
+  AuthVerifySecondaryPasswordState(this.resource);
 }
 
 // class AuthUpdatedFcmTokenState extends AuthState {

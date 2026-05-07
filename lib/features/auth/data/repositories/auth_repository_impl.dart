@@ -5,8 +5,10 @@ import 'package:oneship_customer/features/auth/data/datasources/auth_api.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_customer/features/auth/data/models/response/verify_secondary_password_response.dart';
 import 'package:oneship_customer/features/auth/domain/repositories/auth_repository.dart';
 
 @LazySingleton(as: AuthRepository)
@@ -43,5 +45,14 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Resource> logout() {
     return request(() => _authApi.logout());
+  }
+
+  @override
+  Future<Resource<VerifySecondaryPasswordResponse>> verifySecondaryPassword(
+    VerifySecondaryPasswordRequest body,
+  ) {
+    return request<VerifySecondaryPasswordResponse, BaseError>(
+      () => _authApi.verifySecondaryPassword(body),
+    );
   }
 }

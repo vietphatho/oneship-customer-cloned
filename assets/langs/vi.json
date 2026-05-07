@@ -1,4 +1,8 @@
 {
+  "security_verification": "Xác thực bảo mật",
+  "enter_secondary_password": "Vui lòng nhập mật khẩu cấp 2 để tiếp tục",
+  "forgot_secondary_password": "Quên mật khẩu cấp 2 ?",
+  "information_completely_secure": "Thông tin của bạn được bảo mật an toàn",
   "order_information": "Thông tin đơn hàng",
   "imported_from_excel": "Nhập từ excel",
   "create_order": "Tạo đơn hàng",
@@ -21,6 +25,7 @@
   "logout": "Đăng xuất",
   "update_information": "Cập nhật thông tin",
   "financial_overview": "Tổng quan tài chính",
+  "finance": "Tài chính",
   "total_cost": "Tổng chi",
   "discount_1": "Giảm giá",
   "successful_orders": "Số đơn giao thành công",
