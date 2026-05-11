@@ -7,6 +7,7 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 
 class ChangeSecondaryPasswordPage extends StatefulWidget {
@@ -20,12 +21,14 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
   final AuthBloc _authBloc = getIt.get();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _currentPwdCtrl = TextEditingController();
+  final TextEditingController _currentSecondaryPwdCtrl = TextEditingController();
   final TextEditingController _newSecondaryPwdCtrl = TextEditingController();
   final TextEditingController _confirmNewSecondaryPwdCtrl = TextEditingController();
 
   @override
   void dispose() {
     _currentPwdCtrl.dispose();
+    _currentSecondaryPwdCtrl.dispose();
     _newSecondaryPwdCtrl.dispose();
     _confirmNewSecondaryPwdCtrl.dispose();
     super.dispose();
@@ -59,6 +62,17 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
                   obscureText: true,
                   validator: Validators.validateEmptyField,
                 ),
+                if (userProfile.hasSecondPassword ?? false) ...[
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  PrimaryTextField(
+                    label: 'secondary_password.current_secondary_password'.tr(),
+                    isRequired: true,
+                    controller: _currentSecondaryPwdCtrl,
+                    hintText: 'input'.tr(),
+                    obscureText: true,
+                    validator: Validators.validateEmptyField,
+                  ),
+                ],
                 AppSpacing.vertical(AppDimensions.mediumSpacing),
                 PrimaryTextField(
                   label: 'secondary_password.new_password'.tr(),
@@ -85,35 +99,12 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
                     return null;
                   },
                 ),
-                AppSpacing.vertical(AppDimensions.smallSpacing),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // TODO: Implement forgot password
-                    },
-                    child: PrimaryText(
-                      'secondary_password.forgot_password'.tr(),
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.secondary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
                 const Spacer(),
                 SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: AppDimensions.mediumSpacing),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: SecondaryButton.outlined(
-                            label: 'change_password.button_close'.tr(),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
-                        AppSpacing.horizontal(AppDimensions.mediumSpacing),
                         Expanded(
                           child: SecondaryButton.filled(
                             label: 'secondary_password.button_update'.tr(),
@@ -134,12 +125,23 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
 
   void _onUpdatePressed() {
     if (_formKey.currentState?.validate() ?? false) {
+      final hasSecondPassword = _authBloc.userProfile.hasSecondPassword ?? false;
+      final Map<String, dynamic> body = {
+        'currentPassword': _currentPwdCtrl.text.trim(),
+      };
+
+      if (hasSecondPassword) {
+        body['currentSecondPassword'] = _currentSecondaryPwdCtrl.text.trim();
+        body['newSecondPassword'] = _newSecondaryPwdCtrl.text.trim();
+      } else {
+        body['secondPassword'] = _newSecondaryPwdCtrl.text.trim();
+      }
+
       _authBloc.updatePassword(
-        {
-          'currentPassword': _currentPwdCtrl.text.trim(),
-          'secondPassword': _newSecondaryPwdCtrl.text.trim(),
-        },
-        isCreatingSecondaryPassword: !(_authBloc.userProfile.hasSecondPassword ?? false),
+        body,
+        updateType: hasSecondPassword
+            ? AuthUpdatePasswordType.updateSecondary
+            : AuthUpdatePasswordType.createSecondary,
       );
     }
   }

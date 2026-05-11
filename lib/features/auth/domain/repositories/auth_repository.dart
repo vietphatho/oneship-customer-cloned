@@ -22,6 +22,7 @@ abstract class AuthRepository extends BaseRepository {
 
   Future<Resource> updatePassword(Map<String, dynamic> body);
   Future<Resource> createSecondPassword(Map<String, dynamic> body);
+  Future<Resource> updateSecondPassword(Map<String, dynamic> body);
 
   // Future<Resource<OtpResult>> genOtpCode(String phoneNumber);
 

@@ -45,6 +45,9 @@ abstract class AuthApi {
   @POST("/api/v1/users/second-password")
   Future<BaseResponse> createSecondPassword(@Body() Map<String, dynamic> body);
 
+  @PATCH("/api/v1/users/second-password")
+  Future<BaseResponse> updateSecondPassword(@Body() Map<String, dynamic> body);
+
 
   // //gen otp code
   // @POST("/api/v1/auth/shipper/register-otp")

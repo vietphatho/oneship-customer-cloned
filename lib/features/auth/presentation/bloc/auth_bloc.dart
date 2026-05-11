@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profi
 import 'package:oneship_customer/features/auth/domain/use_cases/log_in_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_password_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/update_second_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_user_profile_use_case.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
@@ -25,6 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._updateUserProfileUseCase,
     this._updatePasswordUseCase,
     this._createSecondPasswordUseCase,
+    this._updateSecondPasswordUseCase,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
     on<AuthFetchingUserProfileEvent>(_onProfileFetchedEvent);
@@ -39,6 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UpdateUserProfileUseCase _updateUserProfileUseCase;
   final UpdatePasswordUseCase _updatePasswordUseCase;
   final CreateSecondPasswordUseCase _createSecondPasswordUseCase;
+  final UpdateSecondPasswordUseCase _updateSecondPasswordUseCase;
 
   late UserProfileResponse _userProfile;
   UserProfileResponse get userProfile => _userProfile;
@@ -99,9 +102,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthUpdatedPasswordState(Resource.loading()));
 
-    final response = event.isCreatingSecondaryPassword
-        ? await _createSecondPasswordUseCase.call(event.body)
-        : await _updatePasswordUseCase.call(event.body);
+    late Resource response;
+    switch (event.updateType) {
+      case AuthUpdatePasswordType.main:
+        response = await _updatePasswordUseCase.call(event.body);
+        break;
+      case AuthUpdatePasswordType.createSecondary:
+        response = await _createSecondPasswordUseCase.call(event.body);
+        break;
+      case AuthUpdatePasswordType.updateSecondary:
+        response = await _updateSecondPasswordUseCase.call(event.body);
+        break;
+    }
 
     if (response.state == Result.success) {
       add(const AuthFetchingUserProfileEvent());
@@ -109,8 +121,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthUpdatedPasswordState(response));
   }
 
-  void updatePassword(Map<String, dynamic> body, {bool isCreatingSecondaryPassword = false}) {
-    add(AuthUpdatePasswordEvent(body, isCreatingSecondaryPassword: isCreatingSecondaryPassword));
+  void updatePassword(Map<String, dynamic> body, {AuthUpdatePasswordType updateType = AuthUpdatePasswordType.main}) {
+    add(AuthUpdatePasswordEvent(body, updateType: updateType));
   }
 
   void updateUserProfile({String? displayName, String? userPhone}) {

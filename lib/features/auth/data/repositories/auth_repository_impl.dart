@@ -54,4 +54,9 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Resource> createSecondPassword(Map<String, dynamic> body) {
     return request(() => _authApi.createSecondPassword(body));
   }
+
+  @override
+  Future<Resource> updateSecondPassword(Map<String, dynamic> body) {
+    return request(() => _authApi.updateSecondPassword(body));
+  }
 }

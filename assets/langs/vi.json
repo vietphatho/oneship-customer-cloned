@@ -686,6 +686,7 @@
     "create_page_title": "Tạo mật khẩu cấp 2",
     "change_page_title": "Đổi mật khẩu cấp 2",
     "current_password": "Mật khẩu hiện tại",
+    "current_secondary_password": "Mật khẩu cấp 2 hiện tại",
     "new_password": "Mật khẩu cấp 2 mới",
     "confirm_new_password": "Nhập lại mật khẩu cấp 2 mới",
     "forgot_password": "Quên mật khẩu?",
