@@ -60,6 +60,12 @@ class AuthLogOutState extends AuthState {
   AuthLogOutState(this.resource);
 }
 
+class AuthUpdatedPasswordState extends AuthState {
+  final Resource resource;
+
+  AuthUpdatedPasswordState(this.resource);
+}
+
 // class AuthUpdatedFcmTokenState extends AuthState {
 //   final Resource resource;
 

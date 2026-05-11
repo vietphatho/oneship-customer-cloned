@@ -5,8 +5,6 @@
   "no_data": "Không có dữ liệu",
   "confirm_logout": "Bạn chắc chắn muốn đăng xuất?",
   "settings": "Cài đặt",
-  "account_info": "Thông tin tài khoản",
-  "change_secondary_password": "Đổi mật khẩu cấp 2",
   "activity_history": "Lịch sử hoạt động",
   "utilities": "Tiện ích",
   "print_warning_label": "In nhãn cảnh báo",
@@ -19,7 +17,6 @@
   "packages": "Kiện hàng",
   "support": "Hỗ trợ",
   "logout": "Đăng xuất",
-  "update_information": "Cập nhật thông tin",
   "financial_overview": "Tổng quan tài chính",
   "total_cost": "Tổng chi",
   "discount_1": "Giảm giá",
@@ -667,5 +664,43 @@
     "text_required": "Không được để trống",
     "phone_required": "Số điện thoại không được để trống",
     "invalid_phone_format": "Số điện thoại không đúng định dạng"
+  },
+  "account_info": {
+    "page_title": "Thông tin tài khoản",
+    "section_account": "Tài khoản",
+    "field_name": "Họ và tên",
+    "field_email": "Email",
+    "field_phone": "Số điện thoại",
+    "button_update": "Cập nhật thông tin",
+    "update_success": "Cập nhật thông tin thành công"
+  },
+  "change_password": {
+    "page_title": "Đổi mật khẩu",
+    "current_password": "Mật khẩu hiện tại",
+    "secondary_password": "Nhập mật khẩu cấp 2",
+    "new_password": "Mật khẩu mới",
+    "button_close": "Đóng",
+    "button_update": "Cập nhật"
+  },
+  "secondary_password": {
+    "create_page_title": "Tạo mật khẩu cấp 2",
+    "change_page_title": "Đổi mật khẩu cấp 2",
+    "current_password": "Mật khẩu hiện tại",
+    "new_password": "Mật khẩu cấp 2 mới",
+    "confirm_new_password": "Nhập lại mật khẩu cấp 2 mới",
+    "forgot_password": "Quên mật khẩu?",
+    "button_update": "Cập nhật"
+  },
+  "input": "Nhập",
+  "password_not_match": "Mật khẩu không khớp",
+  "error_code": {
+    "server_error": "Lỗi máy chủ. Vui lòng thử lại sau",
+    "user": {
+      "second_password_not_found": "Mật khẩu cấp 2 chưa được thiết lập",
+      "current_password_incorrect": "Mật khẩu hiện tại không đúng",
+      "second_password_incorrect": "Mật khẩu cấp 2 không đúng"
+    }
   }
 }
+
+

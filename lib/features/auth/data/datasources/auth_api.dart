@@ -39,6 +39,13 @@ abstract class AuthApi {
     @Body() required UpdateUserProfileRequest body,
   });
 
+  @PATCH("/api/v1/users/password")
+  Future<BaseResponse> updatePassword(@Body() Map<String, dynamic> body);
+
+  @POST("/api/v1/users/second-password")
+  Future<BaseResponse> createSecondPassword(@Body() Map<String, dynamic> body);
+
+
   // //gen otp code
   // @POST("/api/v1/auth/shipper/register-otp")
   // Future<BaseResponse<OtpResult, OtpError>> genOtpCode(

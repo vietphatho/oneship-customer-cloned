@@ -32,6 +32,13 @@ class AuthUpdateUserProfileEvent extends AuthEvent {
   AuthUpdateUserProfileEvent(this.request);
 }
 
+class AuthUpdatePasswordEvent extends AuthEvent {
+  final Map<String, dynamic> body;
+  final bool isCreatingSecondaryPassword;
+
+  AuthUpdatePasswordEvent(this.body, {this.isCreatingSecondaryPassword = false});
+}
+
 // class GenOtpCodeEvent extends AuthEvent {
 //   final String phoneNumber;
 
