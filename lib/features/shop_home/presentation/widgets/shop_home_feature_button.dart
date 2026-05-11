@@ -20,14 +20,14 @@ class ShopHomeFeatureButton extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.white, AppColors.primaryLight],
+                colors: [AppColors.background, AppColors.primaryLight],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               shape: BoxShape.circle,
             ),
-            padding: AppDimensions.mediumPaddingAll,
-            child: Icon(feature.icon, size: 32, color: AppColors.primary),
+            padding: AppDimensions.smallPaddingAll,
+            child: SvgPicture.asset(feature.icon, width: 48, height: 48),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           PrimaryText(
