@@ -27,7 +27,11 @@ class ShopHomeFeatureButton extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             padding: AppDimensions.smallPaddingAll,
-            child: SvgPicture.asset(feature.icon, width: 48, height: 48),
+            child: SvgPicture.asset(
+              feature.icon,
+              width: AppDimensions.xLargeIconSize,
+              height: AppDimensions.xLargeIconSize,
+            ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           PrimaryText(
