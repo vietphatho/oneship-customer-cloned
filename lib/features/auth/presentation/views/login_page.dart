@@ -17,8 +17,9 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/widgets/search_orders_info_widget.dart';
+import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -67,9 +68,21 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: SizedBox(
           height: AppDimensions.getSize(context).height,
-          child: BlocListener<AuthBloc, AuthState>(
-            bloc: _authBloc,
-            listener: _handleListener,
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<AuthBloc, AuthState>(
+                bloc: _authBloc,
+                listener: _handleListener,
+              ),
+              BlocListener<ShopBloc, ShopState>(
+                bloc: _shopBloc,
+                listenWhen:
+                    (previous, current) =>
+                        previous.briefShopsResource !=
+                        current.briefShopsResource,
+                listener: _listenShopsListChanged,
+              ),
+            ],
             child: Stack(
               children: [
                 Container(
@@ -189,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           const Spacer(),
-                          const SearchOrdersInfoWidget(),
+                          const BackToHomeWidget(),
                           // const AppVersionWidget(),
                         ],
                       ),
@@ -224,7 +237,10 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
           break;
       }
     } else if (state is AuthFetchedUserProfileState) {
@@ -235,13 +251,38 @@ class _LoginPageState extends State<LoginPage> {
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
           _shopBloc.init(state.resource.data?.id ?? "");
-          context.pushReplacement(RouteName.shopMasterPage);
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
           break;
       }
+    }
+  }
+
+  void _listenShopsListChanged(BuildContext context, ShopState state) {
+    switch (state.briefShopsResource.state) {
+      case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
+        break;
+      case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
+        if (state.hasNoShops) {
+          context.pushReplacement(RouteName.shopEmptyPage);
+        } else if (!state.hasApprovedShop) {
+          context.pushReplacement(RouteName.shopPendingApprovalPage);
+        } else {
+          context.pushReplacement(RouteName.shopMasterPage);
+        }
+      case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.briefShopsResource.message,
+        );
     }
   }
 

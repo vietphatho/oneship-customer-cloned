@@ -4,7 +4,7 @@ import 'package:oneship_customer/features/orders/data/models/response/get_routin
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 abstract class CreateOrderState {
   const CreateOrderState({
@@ -22,7 +22,7 @@ abstract class CreateOrderState {
   final CreateOrderRequestEntity request;
   final CreateOrderRequestEntity draftRequest;
   final List<ProductEntitySelected> productEntitySelected;
-  final ShopEntity shopInfo;
+  final BriefShopEntity shopInfo;
   final Resource<GetRoutingToShopResponse> routingToShopResource;
   final bool acceptTerms;
   final String? errorMessage;

@@ -22,7 +22,17 @@ class OrderTrackingDetailSession extends StatelessWidget {
     return BlocBuilder<OrderTrackingBloc, OrderTrackingState>(
       bloc: _orderTrackingBloc,
       builder: (context, state) {
+        final DeliveryHistoryEntity deliveryHistory =
+            _orderTrackingBloc
+                .state
+                .trackingResult!
+                .data!
+                .deliveryHistory
+                .firstOrNull ??
+            DeliveryHistoryEntity();
+
         return Timeline.tileBuilder(
+          padding: EdgeInsets.zero,
           // reverse: true,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -38,7 +48,11 @@ class OrderTrackingDetailSession extends StatelessWidget {
           builder: TimelineTileBuilder.connected(
             itemCount: OrderTrackingStatus.values.length,
             indicatorBuilder: (context, index) {
-              final completed = true;
+              final completed = _checkOrderStatus(
+                index: index,
+                history: deliveryHistory,
+              );
+              if (!completed) return Container();
               return DotIndicator(
                 color: completed ? Colors.green : Colors.grey,
                 size: AppDimensions.xSmallIconSize,
@@ -51,19 +65,18 @@ class OrderTrackingDetailSession extends StatelessWidget {
             },
             // indicatorPositionBuilder: (context, index) => 0.5,
             connectorBuilder: (context, index, type) {
-              final completed = true;
+              final completed = _checkOrderStatus(
+                index: index,
+                history: deliveryHistory,
+              );
+              if (!completed) return Container();
               return SolidLineConnector(
                 color: completed ? Colors.green : Colors.grey,
                 thickness: AppDimensions.xxxSmallSpacing,
               );
             },
             contentsBuilder: (context, index) {
-              // final stage = stages[index];
               OrderTrackingStatus stage = OrderTrackingStatus.values[index];
-
-              DeliveryHistoryEntity history =
-                  state.trackingResult.data?.deliveryHistory.firstOrNull ??
-                  DeliveryHistoryEntity();
 
               return Container(
                 decoration: BoxDecoration(
@@ -92,38 +105,40 @@ class OrderTrackingDetailSession extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         PrimaryText(
-                          stage.name,
+                          stage.statusName.tr(),
                           style: AppTextStyles.labelLarge,
                         ),
                         PrimaryText(
-                          _getTime(stage: stage, result: history),
+                          _getTime(stage: stage, result: deliveryHistory),
+                          style: AppTextStyles.titleMedium,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        PrimaryText(
+                          stage.description,
+                          style: AppTextStyles.bodySmall,
+                          color: AppColors.neutral6,
+                        ),
+                        PrimaryText(
+                          _getDate(stage: stage, result: deliveryHistory),
                           style: AppTextStyles.bodySmall,
                           color: AppColors.neutral6,
                         ),
                       ],
                     ),
-                    PrimaryText(
-                      stage.description,
-                      style: AppTextStyles.bodySmall,
-                      color: AppColors.neutral6,
-                    ),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     if (stage == OrderTrackingStatus.pickedUp &&
-                        (history.pickupImages?.isNotEmpty ?? false)) ...[
-                      _ImageSession(imgs: history.pickupImages!),
+                        (deliveryHistory.pickupImages?.isNotEmpty ??
+                            false)) ...[
+                      _ImageSession(imgs: deliveryHistory.pickupImages!),
                     ] else if (stage == OrderTrackingStatus.delivered &&
-                        (history.confirmationImages?.isNotEmpty ?? false)) ...[
-                      _ImageSession(imgs: history.confirmationImages!),
+                        (deliveryHistory.confirmationImages?.isNotEmpty ??
+                            false)) ...[
+                      _ImageSession(imgs: deliveryHistory.confirmationImages!),
                     ],
-                    // if (stage['desc'] != null) Text(stage['desc'] ?? ''),
-                    // if (stage['time'] != null)
-                    //   Text(
-                    //     stage['time'] ?? '',
-                    //     style: const TextStyle(
-                    //       fontSize: 12,
-                    //       color: Colors.grey,
-                    //     ),
-                    //   ),
                   ],
                 ),
               );
@@ -138,21 +153,65 @@ class OrderTrackingDetailSession extends StatelessWidget {
     required OrderTrackingStatus stage,
     required DeliveryHistoryEntity result,
   }) {
-    // final OrderTrackingBloc _orderTrackingBloc = getIt.get();
     switch (stage) {
       case OrderTrackingStatus.delivered:
-        return DateTimeUtils.formatDateFromDT(result.deliveredAt);
+        return DateTimeUtils.formatTimeFromDT(result.deliveredAt?.toLocal());
       case OrderTrackingStatus.arrivedAtDelivery:
-        return DateTimeUtils.formatDateFromDT(result.arrivedAtDelivery);
+        return DateTimeUtils.formatTimeFromDT(
+          result.arrivedAtDelivery?.toLocal(),
+        );
       case OrderTrackingStatus.pickedUp:
-        return DateTimeUtils.formatDateFromDT(result.pickupConfirmedAt);
+        return DateTimeUtils.formatTimeFromDT(
+          result.pickupConfirmedAt?.toLocal(),
+        );
       case OrderTrackingStatus.confirmQty:
-        return DateTimeUtils.formatDateFromDT(result.quantityConfirmedAt);
+        return DateTimeUtils.formatTimeFromDT(
+          result.quantityConfirmedAt?.toLocal(),
+        );
       case OrderTrackingStatus.arrivedAtShop:
-        return DateTimeUtils.formatDateFromDT(result.scannedAt);
+        return DateTimeUtils.formatTimeFromDT(result.scannedAt?.toLocal());
       case OrderTrackingStatus.packed:
-        return DateTimeUtils.formatDateFromDT(result.addedToPackageAt);
+        return DateTimeUtils.formatTimeFromDT(
+          result.addedToPackageAt?.toLocal(),
+        );
     }
+  }
+
+  String? _getDate({
+    required OrderTrackingStatus stage,
+    required DeliveryHistoryEntity result,
+  }) {
+    switch (stage) {
+      case OrderTrackingStatus.delivered:
+        return DateTimeUtils.formatDateFromDT(result.deliveredAt?.toLocal());
+      case OrderTrackingStatus.arrivedAtDelivery:
+        return DateTimeUtils.formatDateFromDT(
+          result.arrivedAtDelivery?.toLocal(),
+        );
+      case OrderTrackingStatus.pickedUp:
+        return DateTimeUtils.formatDateFromDT(
+          result.pickupConfirmedAt?.toLocal(),
+        );
+      case OrderTrackingStatus.confirmQty:
+        return DateTimeUtils.formatDateFromDT(
+          result.quantityConfirmedAt?.toLocal(),
+        );
+      case OrderTrackingStatus.arrivedAtShop:
+        return DateTimeUtils.formatDateFromDT(result.scannedAt?.toLocal());
+      case OrderTrackingStatus.packed:
+        return DateTimeUtils.formatDateFromDT(
+          result.addedToPackageAt?.toLocal(),
+        );
+    }
+  }
+
+  bool _checkOrderStatus({
+    required int index,
+    required DeliveryHistoryEntity history,
+  }) {
+    OrderTrackingStatus stage = OrderTrackingStatus.values[index];
+    final completed = _getTime(stage: stage, result: history) != null;
+    return completed;
   }
 }
 
@@ -174,6 +233,7 @@ class _ImageSession extends StatelessWidget {
         itemCount: imgs.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
         itemBuilder:
             (context, index) => PrimaryImageThumbnail.network(
               StringUtils.getImgUrl(imgs[index]) ?? "",
