@@ -5,6 +5,7 @@ import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/register_page.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
+import 'package:oneship_customer/features/auth/presentation/views/verify_email_page.dart';
 import 'package:oneship_customer/features/home/presentation/view/home_page.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_multi_orders_page.dart';
@@ -38,6 +39,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.registerPage,
       builder: (context, state) => const RegisterPage(),
+    ),
+    GoRoute(
+      path: RouteName.verifyEmailPage,
+      builder: (context, state) => VerifyEmailPage(),
     ),
     GoRoute(
       path: RouteName.shopMasterPage,
