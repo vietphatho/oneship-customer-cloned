@@ -120,6 +120,8 @@ enum ErrorCodeEnum {
   wallet006,
   wallet007,
 
+  shopStaff008,
+
   unknown,
 }
 
@@ -243,6 +245,8 @@ extension ErrorCodeEnumExt on ErrorCodeEnum {
     ErrorCodeEnum.wallet005: 'WALLET_005',
     ErrorCodeEnum.wallet006: 'WALLET_006',
     ErrorCodeEnum.wallet007: 'WALLET_007',
+
+    ErrorCodeEnum.shopStaff008: 'SHOP_STAFF_008',
 
     ErrorCodeEnum.unknown: '',
   };
@@ -382,6 +386,8 @@ extension ErrorCodeEnumExt on ErrorCodeEnum {
     ErrorCodeEnum.wallet005: 'error_code.wallet.transaction_not_found',
     ErrorCodeEnum.wallet006: 'error_code.wallet.invalid_transaction_type',
     ErrorCodeEnum.wallet007: 'error_code.wallet.pending_withdraw_exists',
+
+    ErrorCodeEnum.shopStaff008: 'error_code.shop_staff.already_exists',
 
     ErrorCodeEnum.unknown: 'error_code.server_error',
   };

@@ -13,6 +13,13 @@ class PrimaryDropdown<T> extends StatelessWidget {
   final FormFieldValidator<T>? validator;
   final double paddingMenu;
   final bool requestFocusOnTap;
+  final bool enableFilter;
+  final double? menuHeight;
+  final BorderRadius? borderRadius;
+  final EdgeInsetsGeometry? contentPadding;
+  final TextStyle? textStyle;
+  final TextStyle? labelStyle;
+  final double? menuItemHeight;
 
   const PrimaryDropdown({
     super.key,
@@ -27,6 +34,13 @@ class PrimaryDropdown<T> extends StatelessWidget {
     this.isRequired = false,
     this.paddingMenu = AppDimensions.mediumSpacing * 2,
     this.requestFocusOnTap = true,
+    this.enableFilter = true,
+    this.menuHeight,
+    this.borderRadius,
+    this.contentPadding,
+    this.textStyle,
+    this.labelStyle,
+    this.menuItemHeight,
   });
 
   @override
@@ -46,7 +60,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 children: [
                   PrimaryText(
                     label,
-                    style: AppTextStyles.labelMedium,
+                    style: labelStyle ?? AppTextStyles.labelMedium,
                     color: hasError ? AppColors.primary : colorScheme.onSurface,
                   ),
                   if (isRequired)
@@ -57,9 +71,9 @@ class PrimaryDropdown<T> extends StatelessWidget {
             DropdownMenu<T>(
               requestFocusOnTap: requestFocusOnTap,
               controller: controller,
-              menuHeight: AppDimensions.dropdownMenuHeight,
+              menuHeight: menuHeight ?? AppDimensions.dropdownMenuHeight,
               width: double.maxFinite,
-              enableFilter: true,
+              enableFilter: enableFilter,
               hintText: hintText,
               trailingIcon: const Icon(
                 Icons.keyboard_arrow_down,
@@ -69,7 +83,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 Icons.keyboard_arrow_up,
                 color: AppColors.neutral6,
               ),
-              textStyle: AppTextStyles.defaultTextStyle,
+              textStyle: textStyle ?? AppTextStyles.defaultTextStyle,
               inputDecorationTheme: InputDecorationTheme(
                 hintStyle: TextStyle(
                   // fontSize: TextSize.p + 1,
@@ -85,10 +99,12 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 focusedBorder: _outlineField,
                 errorBorder: _outlineField,
                 focusedErrorBorder: _outlineField,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: AppDimensions.smallSpacing,
-                  horizontal: AppDimensions.mediumSpacing,
-                ),
+                contentPadding:
+                    contentPadding ??
+                    EdgeInsets.symmetric(
+                      vertical: AppDimensions.smallSpacing,
+                      horizontal: AppDimensions.mediumSpacing,
+                    ),
                 isDense: true,
                 isCollapsed: true,
               ),
@@ -99,14 +115,19 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 onSelected?.call(value);
               },
               menuStyle: MenuStyle(
-                padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8)),
+                padding: WidgetStateProperty.all(
+                  EdgeInsets.only(
+                    top: menuItemHeight == null ? AppDimensions.xSmallSpacing : 0,
+                  ),
+                ),
                 elevation: WidgetStateProperty.all(4),
                 // backgroundColor: WidgetStateProperty.all(
                 //   colorScheme.surfaceContainerHigh,
                 // ),
                 shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius:
+                        borderRadius ?? BorderRadius.circular(8),
                   ),
                 ),
               ),
@@ -117,6 +138,23 @@ class PrimaryDropdown<T> extends StatelessWidget {
                         (e) => DropdownMenuEntry(
                           value: e,
                           label: toLabel?.call(e) ?? e.toString(),
+                          style:
+                              menuItemHeight == null
+                                  ? null
+                                  : ButtonStyle(
+                                    minimumSize: WidgetStateProperty.all(
+                                      Size.fromHeight(menuItemHeight!),
+                                    ),
+                                    fixedSize: WidgetStateProperty.all(
+                                      Size.fromHeight(menuItemHeight!),
+                                    ),
+                                    padding: WidgetStateProperty.all(
+                                      AppDimensions.xSmallPaddingHorizontal,
+                                    ),
+                                    textStyle: WidgetStateProperty.all(
+                                      textStyle ?? AppTextStyles.bodySmall,
+                                    ),
+                                  ),
                         ),
                       )
                       .toList(),
@@ -143,7 +181,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
 
     return OutlineInputBorder(
       borderSide: BorderSide(color: AppColors.neutral7),
-      borderRadius: AppDimensions.largeBorderRadius,
+      borderRadius: borderRadius ?? AppDimensions.largeBorderRadius,
     );
   }
 }
