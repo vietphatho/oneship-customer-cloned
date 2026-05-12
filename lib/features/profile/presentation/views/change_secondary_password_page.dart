@@ -9,6 +9,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
 
 class ChangeSecondaryPasswordPage extends StatefulWidget {
   const ChangeSecondaryPasswordPage({super.key});
@@ -126,23 +128,27 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
   void _onUpdatePressed() {
     if (_formKey.currentState?.validate() ?? false) {
       final hasSecondPassword = _authBloc.userProfile.hasSecondPassword ?? false;
-      final Map<String, dynamic> body = {
-        'currentPassword': _currentPwdCtrl.text.trim(),
-      };
 
       if (hasSecondPassword) {
-        body['currentSecondPassword'] = _currentSecondaryPwdCtrl.text.trim();
-        body['newSecondPassword'] = _newSecondaryPwdCtrl.text.trim();
+        final request = UpdateSecondPasswordRequest(
+          currentPassword: _currentPwdCtrl.text.trim(),
+          currentSecondPassword: _currentSecondaryPwdCtrl.text.trim(),
+          newSecondPassword: _newSecondaryPwdCtrl.text.trim(),
+        );
+        _authBloc.updatePassword(
+          request,
+          updateType: AuthUpdatePasswordType.updateSecondary,
+        );
       } else {
-        body['secondPassword'] = _newSecondaryPwdCtrl.text.trim();
+        final request = CreateSecondPasswordRequest(
+          currentPassword: _currentPwdCtrl.text.trim(),
+          secondPassword: _newSecondaryPwdCtrl.text.trim(),
+        );
+        _authBloc.updatePassword(
+          request,
+          updateType: AuthUpdatePasswordType.createSecondary,
+        );
       }
-
-      _authBloc.updatePassword(
-        body,
-        updateType: hasSecondPassword
-            ? AuthUpdatePasswordType.updateSecondary
-            : AuthUpdatePasswordType.createSecondary,
-      );
     }
   }
 
@@ -154,12 +160,14 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          _authBloc.fetchUserProfile();
           PrimaryDialog.showSuccessDialog(
             context,
             message: 'account_info.update_success'.tr(),
-          ).then((_) {
-            if (mounted) Navigator.pop(context);
-          });
+            onClosed: () {
+              if (mounted) Navigator.pop(context);
+            },
+          );
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);

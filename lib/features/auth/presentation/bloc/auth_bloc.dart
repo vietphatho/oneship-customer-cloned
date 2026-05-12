@@ -115,13 +115,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         break;
     }
 
-    if (response.state == Result.success) {
-      add(const AuthFetchingUserProfileEvent());
-    }
     emit(AuthUpdatedPasswordState(response));
   }
 
-  void updatePassword(Map<String, dynamic> body, {AuthUpdatePasswordType updateType = AuthUpdatePasswordType.main}) {
+  void updatePassword(dynamic body, {AuthUpdatePasswordType updateType = AuthUpdatePasswordType.main}) {
     add(AuthUpdatePasswordEvent(body, updateType: updateType));
   }
 

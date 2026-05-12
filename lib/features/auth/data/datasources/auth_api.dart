@@ -2,8 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
+import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
@@ -40,13 +43,13 @@ abstract class AuthApi {
   });
 
   @PATCH("/api/v1/users/password")
-  Future<BaseResponse> updatePassword(@Body() Map<String, dynamic> body);
+  Future<BaseResponse> updatePassword(@Body() UpdatePasswordRequest body);
 
   @POST("/api/v1/users/second-password")
-  Future<BaseResponse> createSecondPassword(@Body() Map<String, dynamic> body);
+  Future<BaseResponse> createSecondPassword(@Body() CreateSecondPasswordRequest body);
 
   @PATCH("/api/v1/users/second-password")
-  Future<BaseResponse> updateSecondPassword(@Body() Map<String, dynamic> body);
+  Future<BaseResponse> updateSecondPassword(@Body() UpdateSecondPasswordRequest body);
 
 
   // //gen otp code

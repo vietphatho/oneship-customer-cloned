@@ -39,7 +39,7 @@ enum AuthUpdatePasswordType {
 }
 
 class AuthUpdatePasswordEvent extends AuthEvent {
-  final Map<String, dynamic> body;
+  final dynamic body;
   final AuthUpdatePasswordType updateType;
 
   AuthUpdatePasswordEvent(

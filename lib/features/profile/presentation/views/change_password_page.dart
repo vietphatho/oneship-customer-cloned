@@ -8,6 +8,7 @@ import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -106,11 +107,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   void _onUpdatePressed() {
     if (_formKey.currentState?.validate() ?? false) {
-      _authBloc.updatePassword({
-        'currentPassword': _currentPwdCtrl.text.trim(),
-        'secondPassword': _secondaryPwdCtrl.text.trim(),
-        'newPassword': _newPwdCtrl.text.trim(),
-      });
+      final request = UpdatePasswordRequest(
+        currentPassword: _currentPwdCtrl.text.trim(),
+        secondPassword: _secondaryPwdCtrl.text.trim(),
+        newPassword: _newPwdCtrl.text.trim(),
+      );
+      _authBloc.updatePassword(request);
     }
   }
 
@@ -122,12 +124,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          _authBloc.fetchUserProfile();
           PrimaryDialog.showSuccessDialog(
             context,
             message: 'account_info.update_success'.tr(),
-          ).then((_) {
-            if (mounted) Navigator.pop(context);
-          });
+            onClosed: () {
+              if (mounted) Navigator.pop(context);
+            },
+          );
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
