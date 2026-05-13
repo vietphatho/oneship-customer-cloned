@@ -98,7 +98,11 @@ class _CreateComplaintPageState extends State<CreateComplaintPage> {
                     isRequired: true,
                     controller: _subjectController,
                     hintText: 'complaints.subject_hint'.tr(),
-                    validator: (val) => (val == null || val.isEmpty) ? 'complaints.validation_required'.tr() : null,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'complaints.validation_required'.tr();
+                      if (val.trim().length < 5) return 'complaints.validation_subject_min'.tr();
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
                   PrimaryTextField(
@@ -113,7 +117,11 @@ class _CreateComplaintPageState extends State<CreateComplaintPage> {
                     controller: _descriptionController,
                     hintText: 'complaints.description_hint'.tr(),
                     maxLine: 5,
-                    validator: (val) => (val == null || val.isEmpty) ? 'complaints.validation_required'.tr() : null,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'complaints.validation_required'.tr();
+                      if (val.trim().length < 10) return 'complaints.validation_description_min'.tr();
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 32),
                   BlocBuilder<CreateComplaintBloc, CreateComplaintState>(
@@ -121,7 +129,7 @@ class _CreateComplaintPageState extends State<CreateComplaintPage> {
                       final isLoading = state.createResource.state == Result.loading;
                       return PrimaryButton.filled(
                         label: 'complaints.submit'.tr(),
-                        onPressed: isLoading ? null : _onSubmit,
+                        onPressed: isLoading ? null : () => _onSubmit(context),
                       );
                     },
                   ),
@@ -134,7 +142,7 @@ class _CreateComplaintPageState extends State<CreateComplaintPage> {
     );
   }
 
-  void _onSubmit() {
+  void _onSubmit(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
     context.read<CreateComplaintBloc>().add(
           CreateComplaintEvent.submitted(

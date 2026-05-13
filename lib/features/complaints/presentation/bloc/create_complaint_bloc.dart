@@ -5,6 +5,7 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/complaints/domain/use_cases/create_complaint_use_case.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/create_complaint_event.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/create_complaint_state.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 @injectable

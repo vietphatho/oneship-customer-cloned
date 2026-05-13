@@ -11,6 +11,6 @@ abstract class CreateComplaintState with _$CreateComplaintState {
   }) = CreateComplaintStateData;
 
   factory CreateComplaintState.initial() => CreateComplaintState(
-        createResource: Resource.loading(),
+        createResource: Resource.success(null),
       );
 }

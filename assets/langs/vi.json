@@ -692,6 +692,14 @@
     "confirm_password_required": "Xác nhận mật khẩu không được để trống",
     "confirm_password_mismatch": "Xác nhận mật khẩu không khớp"
   },
+  "error_code": {
+    "server_error": "Lỗi máy chủ. Vui lòng thử lại sau",
+    "user": {
+      "second_password_not_found": "Mật khẩu cấp 2 chưa được thiết lập",
+      "current_password_incorrect": "Mật khẩu hiện tại không đúng",
+      "second_password_incorrect": "Mật khẩu cấp 2 không đúng"
+    }
+  },
   "please_input_shop_name": "Vui lòng nhập tên cửa hàng",
   "shop_name_min_length": "Tên cửa hàng phải có ít nhất 3 ký tự",
   "please_input_email": "Vui lòng nhập email liên hệ",
@@ -771,6 +779,8 @@
     "create_success": "Tạo khiếu nại thành công",
     "create_error": "Có lỗi xảy ra khi tạo khiếu nại",
     "validation_required": "Vui lòng không để trống trường này",
+    "validation_subject_min": "Tiêu đề phải có ít nhất 5 ký tự",
+    "validation_description_min": "Mô tả phải có ít nhất 10 ký tự",
     "newly_created": "Mới tạo",
     "delete": "Xoá",
     "fetch_error": "Có lỗi xảy ra khi tải dữ liệu"
