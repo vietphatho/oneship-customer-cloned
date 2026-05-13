@@ -45,7 +45,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(title: 'account_info'.tr()),
+      appBar: PrimaryAppBar(title: 'account_info.page_title'.tr()),
       body: Padding(
         padding: AppDimensions.mediumPaddingAll,
         child: Form(
@@ -56,7 +56,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
             child: Column(
               children: [
                 PrimaryTextField(
-                  label: 'name'.tr(),
+                  label: 'account_info.field_name'.tr(),
                   isRequired: true,
                   controller: _nameCtrl,
                   enabled: isEdit,
@@ -64,13 +64,13 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                 ),
                 AppSpacing.vertical(AppDimensions.largeSpacing),
                 PrimaryTextField(
-                  label: 'email'.tr(),
+                  label: 'account_info.field_email'.tr(),
                   controller: _emailCtrl,
                   enabled: false,
                 ),
                 AppSpacing.vertical(AppDimensions.largeSpacing),
                 PrimaryTextField(
-                  label: 'phone_number'.tr(),
+                  label: 'account_info.field_phone'.tr(),
                   isRequired: true,
                   controller: _phoneCtrl,
                   enabled: isEdit,
@@ -111,7 +111,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
     if (isEdit == false) {
       return SafeArea(
         child: SecondaryButton.filled(
-          label: 'update_information'.tr(),
+          label: 'account_info.button_update'.tr(),
           onPressed: () {
             setState(() {
               isEdit = !isEdit;

@@ -19,7 +19,15 @@
   "no_data": "Không có dữ liệu",
   "confirm_logout": "Bạn chắc chắn muốn đăng xuất?",
   "settings": "Cài đặt",
-  "account_info": "Thông tin tài khoản",
+  "account_info": {
+    "page_title": "Thông tin tài khoản",
+    "section_account": "Tài khoản",
+    "field_name": "Họ và tên",
+    "field_email": "Email",
+    "field_phone": "Số điện thoại",
+    "button_update": "Cập nhật thông tin",
+    "update_success": "Cập nhật thông tin thành công"
+  },
   "change_secondary_password": "Đổi mật khẩu cấp 2",
   "activity_history": "Lịch sử hoạt động",
   "utilities": "Tiện ích",
@@ -291,128 +299,10 @@
   "error": "Có lỗi xảy ra",
   "error_code": {
     "server_error": "Lỗi máy chủ. Vui lòng thử lại sau",
-    "unknown": "Đã xảy ra lỗi không xác định. Vui lòng thử lại sau",
-    "auth": {
-      "user_not_found": "Không tìm thấy người dùng",
-      "invalid_credentials": "Thông tin đăng nhập không hợp lệ",
-      "user_already_exists": "Người dùng đã tồn tại",
-      "account_locked": "Tài khoản đã bị khóa",
-      "token_expired": "Token đã hết hạn",
-      "token_invalid": "Token không hợp lệ",
-      "token_not_found": "Không tìm thấy token",
-      "authentication_required": "Yêu cầu xác thực",
-      "access_denied": "Truy cập bị từ chối",
-      "session_revoked": "Phiên làm việc đã hết hạn",
-      "otp_invalid_or_expired": "OTP không hợp lệ hoặc đã hết hạn",
-      "otp_request_cooldown": "Vui lòng chờ trước khi yêu cầu OTP mới",
-      "user_locked": "Tài khoản người dùng đã bị khóa",
-      "otp_invalid": "OTP không hợp lệ",
-      "phone_invalid": "Số điện thoại không hợp lệ",
-      "user_duplicate_log_in": "Tài khoản của bạn đang được đăng nhập trên một thiết bị khác",
-      "rejection_lock": "Tài khoản của bạn đã bị khoá do từ chối nhận giao đơn nhiều lần.\nVui lòng liên hệ quản trị viên để được hỗ trợ"
-    },
-    "address": {
-      "province_not_found": "Không tìm thấy tỉnh/thành phố",
-      "ward_not_found": "Không tìm thấy phường/xã",
-      "not_found": "Không tìm thấy địa chỉ",
-      "invalid_coordinates": "Tọa độ không hợp lệ",
-      "access_denied": "Bạn không có quyền truy cập địa chỉ này"
-    },
-    "order": {
-      "not_found": "Không tìm thấy đơn hàng",
-      "date_range_too_large": "Khoảng thời gian tìm kiếm quá lớn",
-      "access_denied": "Không có quyền truy cập đơn hàng",
-      "terms_not_accepted": "Bạn chưa chấp nhận điều khoản",
-      "deletion_not_allowed": "Không thể xoá đơn hàng này",
-      "shop_inactive": "Shop đang không hoạt động",
-      "order_must_be_in_shipping": "Đơn hàng của bạn đang không trong trạng thái GIAO HÀNG"
-    },
-    "package": {
-      "not_found": "Không tìm thấy túi hàng",
-      "data_not_found": "Không tìm thấy dữ liệu túi hàng",
-      "assignment_not_found": "Không tìm thấy thông tin túi hàng đã phân công",
-      "already_picked_up": "Túi hàng đã được lấy",
-      "invalid_status": "Trạng thái túi hàng không hợp lệ",
-      "being_processed": "Kiện hàng đang được xử lý",
-      "shop_coordinates_required": "Thiếu tọa độ shop",
-      "tsp_route_failed": "Tối ưu tuyến đường thất bại",
-      "no_available_shippers": "Không có shipper khả dụng",
-      "vietmap_failed": "Tối ưu VietMap thất bại",
-      "invalid_tsp_data": "Dữ liệu tuyến đường không hợp lệ",
-      "order_sequence_not_found": "Không tìm thấy thứ tự đơn hàng",
-      "no_valid_orders": "Không có đơn hàng hợp lệ",
-      "split_failed": "Tách túi hàng thất bại",
-      "timeout_expired": "Đã hết thời gian xử lý",
-      "tracking_code_not_in_package": "Mã vận đơn không thuộc túi hàng",
-      "not_all_orders_scanned": "Chưa quét đủ tất cả đơn hàng",
-      "merged_conflict": "Xung đột khi gộp túi hàng",
-      "shop_not_found": "Không tìm thấy shop",
-      "shipper_too_far_from_delivery": "Vui lòng di chuyển đến địa điểm để tiếp tục"
-    },
-    "shipper": {
-      "not_found": "Không tìm thấy tài xế",
-      "user_not_shipper": "Người dùng không phải tài xế",
-      "coordinates_update_failed": "Cập nhật tọa độ thất bại",
-      "already_exists": "Shipper đã tồn tại",
-      "user_not_authorized": "Người dùng không được phép",
-      "refresh_token_header_required": "Thiếu header refresh token",
-      "email_exists": "Email đã được sử dụng",
-      "phone_exists": "Số điện thoại đã được sử dụng",
-      "phone_not_found": "Không tìm thấy số điện thoại",
-      "delivery_history_not_found": "Không tìm thấy lịch sử giao hàng",
-      "shipper_not_arrived_hub": "Vui lòng di chuyển đến kho để trả hàng",
-      "not_reach_delivery_destination": "Bạn phải đến đúng điểm giao hàng (cách ít nhất 100m)"
-    },
-    "statistics": {
-      "shipper_id_required": "Thiếu mã shipper",
-      "period_type_required": "Thiếu loại kỳ thống kê",
-      "invalid_start_date": "Ngày bắt đầu không hợp lệ"
-    },
     "user": {
-      "not_found": "Không tìm thấy người dùng",
-      "already_exists": "Người dùng đã tồn tại",
-      "invalid_phone": "Số điện thoại không hợp lệ",
-      "invalid_email_format": "Email không đúng định dạng",
-      "email_not_found": "Không tìm thấy email",
-      "password_policy_violation": "Mật khẩu không đáp ứng yêu cầu",
+      "second_password_not_found": "Mật khẩu cấp 2 chưa được thiết lập",
       "current_password_incorrect": "Mật khẩu hiện tại không đúng",
-      "sessions_not_found": "Không tìm thấy phiên đăng nhập",
-      "email_exists": "Email đã được sử dụng",
-      "phone_exists": "Số điện thoại đã được sử dụng",
-      "id_required": "Thiếu ID người dùng",
-      "second_password_exists": "Đã có mật khẩu cấp 2",
-      "second_password_incorrect": "Mật khẩu cấp 2 không đúng",
-      "second_password_not_found": "Bạn chưa thiết lập mật khẩu cấp 2",
-      "phone_not_belong": "Số điện thoại không thuộc người dùng"
-    },
-    "user_document": {
-      "not_found": "Không tìm thấy hồ sơ",
-      "already_exists": "Hồ sơ đã tồn tại",
-      "invalid": "Hồ sơ không hợp lệ",
-      "forbidden": "Bạn không có quyền truy cập tài liệu này"
-    },
-    "card": {
-      "not_found": "Không tìm thấy thẻ",
-      "invalid_number": "Số thẻ không hợp lệ",
-      "expired": "Thẻ đã hết hạn",
-      "not_supported": "Thẻ không được hỗ trợ",
-      "network_error": "Lỗi mạng khi xử lý thanh toán",
-      "limit_exceeded": "Vượt quá hạn mức thanh toán",
-      "invalid_cvv": "Mã CVV không hợp lệ",
-      "blocked": "Thẻ đã bị khóa",
-      "already_exists": "Thẻ đã tồn tại"
-    },
-    "wallet": {
-      "not_found": "Không tìm thấy ví của người dùng này",
-      "insufficient_balance": "Số dư ví không đủ",
-      "invalid_amount": "Số tiền không hợp lệ",
-      "already_exists": "Ví đã tồn tại",
-      "transaction_not_found": "Không tìm thấy giao dịch",
-      "invalid_transaction_type": "Loại giao dịch không hợp lệ",
-      "pending_withdraw_exists": "Đã có yêu cầu rút tiền đang chờ xử lý"
-    },
-    "validate": {
-      "invalid_vn_phone_number": "Số điện thoại không đúng định dạng Việt Nam"
+      "second_password_incorrect": "Mật khẩu cấp 2 không đúng"
     }
   },
   "cancel": "Huỷ",
@@ -427,7 +317,14 @@
   "order_has_been_postponed": "Đơn đã được báo tạm hoãn",
   "select_destination_account": "Chọn tài khoản ngân hàng",
   "success": "Thành công",
-  "change_password": "Đổi mật khẩu",
+  "change_password": {
+    "page_title": "Đổi mật khẩu",
+    "current_password": "Mật khẩu hiện tại",
+    "secondary_password": "Nhập mật khẩu cấp 2",
+    "new_password": "Mật khẩu mới",
+    "button_close": "Đóng",
+    "button_update": "Cập nhật"
+  },
   "current_password": "Mật khẩu hiện tại",
   "new_password": "Mật khẩu mới",
   "confirm_new_pw": "Xác nhận mật khẩu",
@@ -680,17 +577,7 @@
   "validate": {
     "text_required": "Không được để trống",
     "phone_required": "Số điện thoại không được để trống",
-    "invalid_phone_format": "Số điện thoại không đúng định dạng",
-    "username_required": "Tên đăng nhập không được để trống",
-    "username_min_length": "Tên đăng nhập phải có ít nhất 3 ký tự",
-    "full_name_required": "Họ tên không được để trống",
-    "full_name_min_length": "Họ tên phải có ít nhất 2 ký tự",
-    "email_required": "Email không được để trống",
-    "invalid_email_format": "Email không đúng định dạng",
-    "password_required": "Mật khẩu không được để trống",
-    "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự",
-    "confirm_password_required": "Xác nhận mật khẩu không được để trống",
-    "confirm_password_mismatch": "Xác nhận mật khẩu không khớp"
+    "invalid_phone_format": "Số điện thoại không đúng định dạng"
   },
   "please_input_shop_name": "Vui lòng nhập tên cửa hàng",
   "shop_name_min_length": "Tên cửa hàng phải có ít nhất 3 ký tự",
@@ -738,5 +625,16 @@
     "status_active": "Hoạt động",
     "status_pending": "Chờ duyệt",
     "status_inactive": "Không hoạt động"
-  }
+  },
+  "secondary_password": {
+    "create_page_title": "Tạo mật khẩu cấp 2",
+    "change_page_title": "Đổi mật khẩu cấp 2",
+    "current_password": "Mật khẩu hiện tại",
+    "current_secondary_password": "Mật khẩu cấp 2 hiện tại",
+    "new_password": "Mật khẩu cấp 2 mới",
+    "confirm_new_password": "Nhập lại mật khẩu cấp 2 mới",
+    "forgot_password": "Quên mật khẩu?",
+    "button_update": "Cập nhật"
+  },
+  "password_not_match": "Mật khẩu không khớp"
 }
