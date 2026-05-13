@@ -33,6 +33,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthUpdateUserProfileEvent>(_onProfileUpdatedEvent);
     on<AuthLogOutEvent>(_onLogOutEvent);
     on<AuthUpdatePasswordEvent>(_onPasswordUpdatedEvent);
+    on<AuthCreateSecondPasswordEvent>(_onSecondPasswordCreatedEvent);
+    on<AuthUpdateSecondPasswordEvent>(_onSecondPasswordUpdatedEvent);
   }
 
   final LogInUseCase _logInUseCase;
@@ -101,25 +103,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthUpdatedPasswordState(Resource.loading()));
-
-    late Resource response;
-    switch (event.updateType) {
-      case AuthUpdatePasswordType.main:
-        response = await _updatePasswordUseCase.call(event.body);
-        break;
-      case AuthUpdatePasswordType.createSecondary:
-        response = await _createSecondPasswordUseCase.call(event.body);
-        break;
-      case AuthUpdatePasswordType.updateSecondary:
-        response = await _updateSecondPasswordUseCase.call(event.body);
-        break;
-    }
-
+    final response = await _updatePasswordUseCase.call(event.body);
     emit(AuthUpdatedPasswordState(response));
   }
 
-  void updatePassword(dynamic body, {AuthUpdatePasswordType updateType = AuthUpdatePasswordType.main}) {
-    add(AuthUpdatePasswordEvent(body, updateType: updateType));
+  FutureOr<void> _onSecondPasswordCreatedEvent(
+    AuthCreateSecondPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthUpdatedPasswordState(Resource.loading()));
+    final response = await _createSecondPasswordUseCase.call(event.body);
+    emit(AuthUpdatedPasswordState(response));
+  }
+
+  FutureOr<void> _onSecondPasswordUpdatedEvent(
+    AuthUpdateSecondPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthUpdatedPasswordState(Resource.loading()));
+    final response = await _updateSecondPasswordUseCase.call(event.body);
+    emit(AuthUpdatedPasswordState(response));
+  }
+
+  void updatePassword(dynamic body) {
+    add(AuthUpdatePasswordEvent(body));
+  }
+
+  void createSecondPassword(dynamic body) {
+    add(AuthCreateSecondPasswordEvent(body));
+  }
+
+  void updateSecondPassword(dynamic body) {
+    add(AuthUpdateSecondPasswordEvent(body));
   }
 
   void updateUserProfile({String? displayName, String? userPhone}) {

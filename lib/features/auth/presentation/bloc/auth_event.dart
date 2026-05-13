@@ -32,20 +32,20 @@ class AuthUpdateUserProfileEvent extends AuthEvent {
   AuthUpdateUserProfileEvent(this.request);
 }
 
-enum AuthUpdatePasswordType {
-  main,
-  createSecondary,
-  updateSecondary,
-}
 
 class AuthUpdatePasswordEvent extends AuthEvent {
   final dynamic body;
-  final AuthUpdatePasswordType updateType;
+  AuthUpdatePasswordEvent(this.body);
+}
 
-  AuthUpdatePasswordEvent(
-    this.body, {
-    this.updateType = AuthUpdatePasswordType.main,
-  });
+class AuthCreateSecondPasswordEvent extends AuthEvent {
+  final dynamic body;
+  AuthCreateSecondPasswordEvent(this.body);
+}
+
+class AuthUpdateSecondPasswordEvent extends AuthEvent {
+  final dynamic body;
+  AuthUpdateSecondPasswordEvent(this.body);
 }
 
 // class GenOtpCodeEvent extends AuthEvent {

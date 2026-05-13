@@ -135,19 +135,13 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
           currentSecondPassword: _currentSecondaryPwdCtrl.text.trim(),
           newSecondPassword: _newSecondaryPwdCtrl.text.trim(),
         );
-        _authBloc.updatePassword(
-          request,
-          updateType: AuthUpdatePasswordType.updateSecondary,
-        );
+        _authBloc.updateSecondPassword(request);
       } else {
         final request = CreateSecondPasswordRequest(
           currentPassword: _currentPwdCtrl.text.trim(),
           secondPassword: _newSecondaryPwdCtrl.text.trim(),
         );
-        _authBloc.updatePassword(
-          request,
-          updateType: AuthUpdatePasswordType.createSecondary,
-        );
+        _authBloc.createSecondPassword(request);
       }
     }
   }
