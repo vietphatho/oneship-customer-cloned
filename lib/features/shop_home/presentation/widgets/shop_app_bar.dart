@@ -8,17 +8,21 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_selection_button.dart';
 
 class ShopAppBar extends StatelessWidget {
-  const ShopAppBar({super.key});
+  const ShopAppBar({super.key, this.useDarkContent = false});
+
+  final bool useDarkContent;
 
   @override
   Widget build(BuildContext context) {
-    final _authBloc = getIt.get<AuthBloc>();
+    final authBloc = getIt.get<AuthBloc>();
+    final contentColor = useDarkContent ? Colors.black : Colors.white;
 
     return BlocBuilder<AuthBloc, AuthState>(
-      bloc: _authBloc,
+      bloc: authBloc,
       buildWhen: (_, state) => state is AuthFetchedUserProfileState,
       builder: (context, state) {
-        UserProfileResponse userProfile = _authBloc.userProfile;
+        UserProfileResponse userProfile = authBloc.userProfile;
+        final avatarUrl = userProfile.avatarUrl;
 
         return SafeArea(
           bottom: false,
@@ -35,9 +39,10 @@ class ShopAppBar extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: AppDimensions.homeAvatarRadius,
-                        foregroundImage: CachedNetworkImageProvider(
-                          userProfile.avatarUrl ?? "",
-                        ),
+                        foregroundImage:
+                            avatarUrl != null && avatarUrl.isNotEmpty
+                                ? CachedNetworkImageProvider(avatarUrl)
+                                : null,
                         backgroundColor: AppColors.neutral7,
                       ),
                       AppSpacing.horizontal(AppDimensions.xSmallSpacing),
@@ -45,24 +50,15 @@ class ShopAppBar extends StatelessWidget {
                         child: PrimaryText(
                           "${"hello".tr()} ${userProfile.displayName}",
                           overflow: TextOverflow.ellipsis,
-                          color: Colors.white,
+                          color: contentColor,
                           style: AppTextStyles.labelMedium,
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                // AppSpacing.horizontal(AppDimensions.smallSpacing),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(
-                //     Icons.post_add_rounded,
-                //     size: AppDimensions.mediumIconSize,
-                //   ),
-                // ),
-                // EndDrawerButton(),
-                Expanded(flex: 2, child: const ShopSelectionButton()),
+                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                const Expanded(flex: 2, child: ShopSelectionButton()),
               ],
             ),
           ),

@@ -10,7 +10,7 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_multi_orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_multi_orders_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:universal_file_viewer/universal_file_viewer.dart';
@@ -56,12 +56,12 @@ class _CreateMultiOrdersPageState extends State<CreateMultiOrdersPage> {
                     (pre, cur) =>
                         pre.dailySummaryResource != cur.dailySummaryResource,
                 listener: _handleListenerChangedShop,
-                child: PrimaryDropdown<ShopEntity>(
+                child: PrimaryDropdown<BriefShopEntity>(
                   initialValue: _shopBloc.state.currentShop,
                   toLabel: (item) {
                     return item.shopName;
                   },
-                  menu: _shopBloc.state.shopsResource.data!.data,
+                  menu: _shopBloc.state.briefShopsResource.data!.data,
                   onSelected: (value) {
                     if (value != _shopBloc.state.currentShop) {
                       _shopBloc.changeShop(value!);

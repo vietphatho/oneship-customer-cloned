@@ -4,6 +4,8 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/datasources/auth_api.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
@@ -33,6 +35,16 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Resource> registerAccount(RegisterRequest body) {
     return request(() => _authApi.registerAccount(body));
+  }
+
+  @override
+  Future<Resource> verifyEmail(VerifyEmailRequest body) {
+    return request(() => _authApi.verifyEmail(body));
+  }
+
+  @override
+  Future<Resource> resendVerificationEmail(ResendVerificationEmailRequest body) {
+    return request(() => _authApi.resendVerificationEmail(body));
   }
 
   @override

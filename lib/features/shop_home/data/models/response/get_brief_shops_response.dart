@@ -2,18 +2,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 
-part 'get_shops_response.freezed.dart';
-part 'get_shops_response.g.dart';
+part 'get_brief_shops_response.freezed.dart';
+part 'get_brief_shops_response.g.dart';
 
 @freezed
-abstract class GetShopsResponse with _$GetShopsResponse {
-  const factory GetShopsResponse({
+abstract class GetBriefShopsResponse with _$GetBriefShopsResponse {
+  const factory GetBriefShopsResponse({
     @JsonKey(name: "items") List<ShopInfo>? data,
     @JsonKey(name: "meta") BaseMetaResponse? meta,
-  }) = _GetShopsResponse;
+  }) = _GetBriefShopsResponse;
 
-  factory GetShopsResponse.fromJson(Map<String, dynamic> json) =>
-      _$GetShopsResponseFromJson(json);
+  factory GetBriefShopsResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetBriefShopsResponseFromJson(json);
 }
 
 @freezed
@@ -30,6 +30,8 @@ abstract class ShopInfo with _$ShopInfo {
     @JsonKey(name: "permissions") Map<String, ShopPermission>? permissions,
     @JsonKey(name: "isHub") bool? isHub,
     @JsonKey(name: "hasSecondPassword") bool? hasSecondPassword,
+    @JsonKey(name: "profile") ShopProfile? profile,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
   }) = _ShopInfo;
 
   factory ShopInfo.fromJson(Map<String, dynamic> json) =>
@@ -47,4 +49,16 @@ abstract class ShopPermission with _$ShopPermission {
 
   factory ShopPermission.fromJson(Map<String, dynamic> json) =>
       _$ShopPermissionFromJson(json);
+}
+
+@freezed
+abstract class ShopProfile with _$ShopProfile {
+  const factory ShopProfile({
+    @JsonKey(name: "phone") String? phone,
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "fullAddress") String? fullAddress,
+  }) = _ShopProfile;
+
+  factory ShopProfile.fromJson(Map<String, dynamic> json) =>
+      _$ShopProfileFromJson(json);
 }

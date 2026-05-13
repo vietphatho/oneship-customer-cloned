@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
 
 class PrimaryTabBar extends StatelessWidget {
   const PrimaryTabBar({

@@ -14,6 +14,10 @@ abstract class LoginResponse with _$LoginResponse {
         String? tokenType,
         @JsonKey(name: "expires_in")
         int? expiresIn,
+        @JsonKey(name: "userEmail") 
+        String? userEmail,
+        @JsonKey(name: "isVerified") 
+        bool? isVerified,
     }) = _LoginResponse;
 
     factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);

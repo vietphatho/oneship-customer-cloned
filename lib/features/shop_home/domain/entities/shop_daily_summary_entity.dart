@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/shop_home/data/models/shop_daily_summary_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
 
 part 'shop_daily_summary_entity.freezed.dart';
 

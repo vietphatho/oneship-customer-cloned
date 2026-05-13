@@ -7,12 +7,14 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.actions,
     this.confirmPop = false,
+    this.canPop = true,
   });
 
   final String? title;
   final List<Widget>? actions;
 
   final bool confirmPop;
+  final bool canPop;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         centerTitle: true,
         actions: actions,
+        automaticallyImplyLeading: canPop,
       ),
     );
   }
