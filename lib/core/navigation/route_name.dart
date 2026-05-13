@@ -27,4 +27,6 @@ class RouteName {
 
   static const String profileDetailPage = '/profile_detail';
   static const String ordersHistoryPage = '/shop_master/orders_history';
+  static const String complaintPage = '/complaints';
+  static const String createComplaintPage = '/complaints/create';
 }

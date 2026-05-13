@@ -20,6 +20,8 @@ import 'package:oneship_customer/features/shop_home/presentation/views/empty_sho
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -97,6 +99,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.ordersHistoryPage,
       builder: (context, state) => const OrdersHistoryPage(),
+    ),
+    GoRoute(
+      path: RouteName.complaintPage,
+      builder: (context, state) => const ComplaintPage(),
+    ),
+    GoRoute(
+      path: RouteName.createComplaintPage,
+      builder: (context, state) => const CreateComplaintPage(),
     ),
   ],
 );

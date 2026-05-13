@@ -692,6 +692,14 @@
     "confirm_password_required": "Xác nhận mật khẩu không được để trống",
     "confirm_password_mismatch": "Xác nhận mật khẩu không khớp"
   },
+  "error_code": {
+    "server_error": "Lỗi máy chủ. Vui lòng thử lại sau",
+    "user": {
+      "second_password_not_found": "Mật khẩu cấp 2 chưa được thiết lập",
+      "current_password_incorrect": "Mật khẩu hiện tại không đúng",
+      "second_password_incorrect": "Mật khẩu cấp 2 không đúng"
+    }
+  },
   "please_input_shop_name": "Vui lòng nhập tên cửa hàng",
   "shop_name_min_length": "Tên cửa hàng phải có ít nhất 3 ký tự",
   "please_input_email": "Vui lòng nhập email liên hệ",
@@ -738,5 +746,43 @@
     "status_active": "Hoạt động",
     "status_pending": "Chờ duyệt",
     "status_inactive": "Không hoạt động"
+  },
+  "complaints": {
+    "page_title": "Khiếu nại - Sự cố",
+    "list_title": "Danh sách khiếu nại",
+    "order_issues": "Vấn đề đơn hàng",
+    "delivery_issues": "Vấn đề giao hàng",
+    "order_issue": "Vấn đề đơn hàng",
+    "delivery_issue": "Vấn đề giao hàng",
+    "created_at": "Ngày tạo",
+    "category": "Danh mục",
+    "priority": "Mức độ ưu tiên",
+    "title": "Tiêu đề",
+    "description": "Mô tả",
+    "reference_type": "Loại tham chiếu",
+    "reference_code": "Mã tham chiếu",
+    "status": "Trạng thái",
+    "status_open": "Đang mở",
+    "status_resolved": "Đã giải quyết",
+    "status_closed": "Đã đóng",
+    "priority_low": "Thấp",
+    "priority_medium": "Trung bình",
+    "priority_high": "Cao",
+    "reference_type_order": "Đơn hàng",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa khiếu nại này?",
+    "empty_list": "Chưa có khiếu nại nào",
+    "create_title": "Tạo khiếu nại mới",
+    "subject_hint": "Nhập tiêu đề khiếu nại",
+    "description_hint": "Nhập nội dung khiếu nại chi tiết",
+    "reference_id_hint": "Nhập mã đơn hàng hoặc mã tham chiếu",
+    "submit": "Gửi khiếu nại",
+    "create_success": "Tạo khiếu nại thành công",
+    "create_error": "Có lỗi xảy ra khi tạo khiếu nại",
+    "validation_required": "Vui lòng không để trống trường này",
+    "validation_subject_min": "Tiêu đề phải có ít nhất 5 ký tự",
+    "validation_description_min": "Mô tả phải có ít nhất 10 ký tự",
+    "newly_created": "Mới tạo",
+    "delete": "Xoá",
+    "fetch_error": "Có lỗi xảy ra khi tải dữ liệu"
   }
 }
