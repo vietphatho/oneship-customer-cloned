@@ -7,6 +7,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_map_view.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {
   const OrderDetailInfoTabView({super.key});
@@ -14,11 +16,13 @@ class OrderDetailInfoTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrdersBloc _ordersBloc = getIt.get();
+    final ShopBloc _shopBloc = getIt.get();
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: _ordersBloc,
       builder: (context, state) {
         var ordDtl = state.orderDetailResource.data;
+        final shopCoordinates = _shopBloc.state.currentShop?.shopCoordinates;
 
         return SingleChildScrollView(
           child: Padding(
@@ -224,6 +228,20 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         label: "call_right_now".tr(),
                         icon: Icon(Icons.call_rounded, color: Colors.white),
                         onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                PrimaryFrame(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      OrderDetailMapView(
+                        shopCoordinates: shopCoordinates,
+                        deliveryCoordinates: ordDtl?.coordinates,
+                        shopAddress: ordDtl?.shop?.profile?.fullAddress,
+                        deliveryAddress: ordDtl?.fullAddress,
                       ),
                     ],
                   ),

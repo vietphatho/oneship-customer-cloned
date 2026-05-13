@@ -63,6 +63,7 @@ dependencies:
   universal_file_viewer: ^0.1.3
   excel: ^4.0.6
   pin_code_fields: ^9.3.0
+  vietmap_flutter_gl: ^4.1.0
 
 dev_dependencies:
   flutter_test:

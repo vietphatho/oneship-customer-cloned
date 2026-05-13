@@ -9,7 +9,19 @@ class Constants {
   static const String versionCodeKey = "VERSION_CODE";
   static const String envKey = "ENV";
   static const String refreshTokenEndpoint = "/api/v1/auth/refresh";
-  static const vietmapAccessToken = "VIETMAP_ACCESS_TOKEN";
+  static const vietmapApiBaseUrl = String.fromEnvironment(
+    "VIETMAP_API_BASE_URL",
+    defaultValue: "https://maps.vietmap.vn/api/navigations/route/",
+  );
+  static const vietmapAccessToken = String.fromEnvironment(
+    "VIETMAP_ACCESS_TOKEN",
+    defaultValue: "bbbb02b84e3c7fdf956e6add0c45df2cf2788391334f474c",
+  );
+  static const vietmapUrl = String.fromEnvironment(
+    "VIETMAP_URL",
+    defaultValue:
+        "https://maps.vietmap.vn/api/maps/light/styles.json?apikey=bbbb02b84e3c7fdf956e6add0c45df2cf2788391334f474c",
+  );
   static const String vehicleDefault = "motorcycle";
   static const String endpoint = "https://one-ship-api.de.onexway.io";
   static const String imgEndpoint = "https://xbyw3unofel1.cmccdn.net";
