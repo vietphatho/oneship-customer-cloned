@@ -1,22 +1,29 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/models/base_coordinates.dart';
+import 'package:oneship_customer/core/base/models/lat_long.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/map_state.dart';
 import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
 
 class OrderDetailMapView extends StatefulWidget {
   const OrderDetailMapView({
     super.key,
-    required this.shopCoordinates,
-    required this.deliveryCoordinates,
+    required this.shopLatLong,
+    required this.deliveryLatLong,
+    required this.selectedMarker,
+    required this.onMarkerTap,
+    required this.onMarkerInfoClose,
     this.shopAddress,
     this.deliveryAddress,
   });
 
-  final BaseCoordinates? shopCoordinates;
-  final BaseCoordinates? deliveryCoordinates;
+  final LatLong? shopLatLong;
+  final LatLong? deliveryLatLong;
+  final OrderDetailMapMarkerType? selectedMarker;
   final String? shopAddress;
   final String? deliveryAddress;
+  final ValueChanged<OrderDetailMapMarkerType> onMarkerTap;
+  final VoidCallback onMarkerInfoClose;
 
   @override
   State<OrderDetailMapView> createState() => _OrderDetailMapViewState();
@@ -25,16 +32,16 @@ class OrderDetailMapView extends StatefulWidget {
 class _OrderDetailMapViewState extends State<OrderDetailMapView> {
   VietmapController? _mapController;
   bool _isAnimatingCamera = false;
-  _SelectedMarkerInfo? _selectedMarkerInfo;
 
-  LatLng? get _shopLatLng => _toLatLng(widget.shopCoordinates);
+  LatLng? get _shopLatLng => _toLatLng(widget.shopLatLong);
 
-  LatLng? get _deliveryLatLng => _toLatLng(widget.deliveryCoordinates);
+  LatLng? get _deliveryLatLng => _toLatLng(widget.deliveryLatLong);
 
   @override
   Widget build(BuildContext context) {
     final initialTarget = _initialTarget;
     if (initialTarget == null) return const SizedBox.shrink();
+    final selectedMarkerInfo = _markerInfo(widget.selectedMarker);
 
     return ClipRRect(
       borderRadius: AppDimensions.smallBorderRadius,
@@ -52,7 +59,7 @@ class _OrderDetailMapViewState extends State<OrderDetailMapView> {
               ),
               compassEnabled: false,
               myLocationEnabled: false,
-              trackCameraPosition: true,
+              trackCameraPosition: false,
               rotateGesturesEnabled: false,
               scrollGesturesEnabled: true,
               tiltGesturesEnabled: false,
@@ -80,9 +87,7 @@ class _OrderDetailMapViewState extends State<OrderDetailMapView> {
                       latLng: _shopLatLng!,
                       child: GestureDetector(
                         onTap: () => _toggleMarker(
-                          id: "shop",
-                          address: widget.shopAddress,
-                          color: const Color(0xFF22A866),
+                          OrderDetailMapMarkerType.shop,
                         ),
                         child: const _MapMarker(
                           icon: Icons.home_work_rounded,
@@ -97,9 +102,7 @@ class _OrderDetailMapViewState extends State<OrderDetailMapView> {
                       latLng: _deliveryLatLng!,
                       child: GestureDetector(
                         onTap: () => _toggleMarker(
-                          id: "delivery",
-                          address: widget.deliveryAddress,
-                          color: const Color(0xFF4F7CF7),
+                          OrderDetailMapMarkerType.delivery,
                         ),
                         child: const _MapMarker(
                           icon: Icons.near_me_rounded,
@@ -109,18 +112,14 @@ class _OrderDetailMapViewState extends State<OrderDetailMapView> {
                     ),
                 ],
               ),
-            if (_selectedMarkerInfo != null)
+            if (selectedMarkerInfo != null)
               Positioned(
                 left: AppDimensions.xSmallSpacing,
                 right: AppDimensions.xSmallSpacing + 48,
                 top: AppDimensions.xSmallSpacing,
                 child: _MarkerInfoCard(
-                  info: _selectedMarkerInfo!,
-                  onClose: () {
-                    setState(() {
-                      _selectedMarkerInfo = null;
-                    });
-                  },
+                  info: selectedMarkerInfo,
+                  onClose: widget.onMarkerInfoClose,
                 ),
               ),
             Positioned(
@@ -198,41 +197,41 @@ class _OrderDetailMapViewState extends State<OrderDetailMapView> {
     return Constants.defaultMapZoomValue;
   }
 
-  LatLng? _toLatLng(BaseCoordinates? coordinates) {
-    final latLong = coordinates?.latLong;
+  LatLng? _toLatLng(LatLong? latLong) {
     final lat = latLong?.lat;
     final long = latLong?.long;
     if (lat == null || long == null) return null;
     return LatLng(lat, long);
   }
 
-  void _toggleMarker({
-    required String id,
-    required String? address,
-    required Color color,
-  }) {
-    setState(() {
-      if (_selectedMarkerInfo?.id == id) {
-        _selectedMarkerInfo = null;
-        return;
-      }
-      _selectedMarkerInfo = _SelectedMarkerInfo(
-        id: id,
-        address: address,
-        color: color,
-      );
-    });
+  void _toggleMarker(OrderDetailMapMarkerType marker) {
+    widget.onMarkerTap(marker);
+  }
+
+  _SelectedMarkerInfo? _markerInfo(OrderDetailMapMarkerType? marker) {
+    switch (marker) {
+      case OrderDetailMapMarkerType.shop:
+        return _SelectedMarkerInfo(
+          address: widget.shopAddress,
+          color: const Color(0xFF22A866),
+        );
+      case OrderDetailMapMarkerType.delivery:
+        return _SelectedMarkerInfo(
+          address: widget.deliveryAddress,
+          color: const Color(0xFF4F7CF7),
+        );
+      case null:
+        return null;
+    }
   }
 }
 
 class _SelectedMarkerInfo {
   const _SelectedMarkerInfo({
-    required this.id,
     required this.address,
     required this.color,
   });
 
-  final String id;
   final String? address;
   final Color color;
 }
