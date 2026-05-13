@@ -1,10 +1,14 @@
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/components/primary_date_time_picker.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/secondary_tab_bar.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
+import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/widgets/finance_overview_card.dart';
+import 'package:oneship_customer/features/finance/presentation/widgets/finance_text_row.dart';
 
 class FinanceOverviewTabView extends StatefulWidget {
   const FinanceOverviewTabView({super.key});
@@ -15,88 +19,37 @@ class FinanceOverviewTabView extends StatefulWidget {
 
 class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
     with SingleTickerProviderStateMixin {
-  late DateTime fromDate;
-  late DateTime toDate;
-
-  late List<String> _tabList;
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    fromDate = DateTime.now();
-    toDate = DateTime.now();
-    _tabList = const ['24 gio', '7 ngay', '30 ngay'];
-    _tabController = TabController(length: _tabList.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
+    final FinanceEntity financeEntity =
+        _financeOverviewBloc.state.shopFinancialData.data ?? FinanceEntity();
     return SingleChildScrollView(
       child: Container(
         width: AppDimensions.getSize(context).width,
         padding: EdgeInsets.symmetric(horizontal: AppDimensions.mediumSpacing),
         child: Column(
           children: [
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
+            AppSpacing.vertical(AppDimensions.xxLargeSpacing),
             PrimaryText(
-              '22/04/2026 - 23/04/2026',
+              'financial_overview'.tr(),
               style: AppTextStyles.titleXLarge,
             ),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: DefaultTabController(
-                    length: _tabList.length,
-                    child: SecondaryTabBar(
-                      height: AppDimensions.mediumHeightButton,
-                      items: _tabList,
-                      controller: _tabController,
-                      borderRadius: AppDimensions.mediumBorderRadius,
-                      onTap: (index) {},
-                    ),
-                  ),
-                ),
-                AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                Expanded(
-                  flex: 1,
-                  child: PrimaryButton.iconFilled(
-                    icon: Icon(
-                      Icons.date_range,
-                      color: AppColors.backgroundColor,
-                    ),
-                    label: 'select_date'.tr(),
-                    onPressed: () {
-                      PrimaryDialog.showCustomDialog(
-                        context,
-                        child: _selectedDateDialog(),
-                        actionButtons: PrimaryButton.filled(
-                          label: 'done'.tr(),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+            AppSpacing.vertical(AppDimensions.smallSpacing),
+            PrimaryText(
+              '${DateTimeUtils.formatDateFromDT(_financeOverviewBloc.state.startDate)} - ${DateTimeUtils.formatDateFromDT(_financeOverviewBloc.state.endDate)}',
+              style: AppTextStyles.labelMedium,
             ),
             AppSpacing.vertical(AppDimensions.mediumSpacing),
             Row(
               children: [
                 Expanded(
                   child: FinanceOverviewCard(
-                    label: "remain_balance".tr(),
-                    value: "787899",
+                    label: "balance_after".tr(),
+                    value: Utils.formatCurrencyWithUnit(
+                      financeEntity.netAmount,
+                    ),
                     icon: Icons.account_balance_wallet_rounded,
                   ),
                 ),
@@ -104,7 +57,9 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
                 Expanded(
                   child: FinanceOverviewCard(
                     label: "cod".tr(),
-                    value: "787899",
+                    value: Utils.formatCurrencyWithUnit(
+                      financeEntity.codCollected,
+                    ),
                     icon: Icons.attach_money_rounded,
                   ),
                 ),
@@ -116,15 +71,17 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
                 Expanded(
                   child: FinanceOverviewCard(
                     label: "total_expense".tr(),
-                    value: "787899",
+                    value: Utils.formatCurrencyWithUnit(financeEntity.totalOut),
                     icon: Icons.attach_money_rounded,
                   ),
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
                   child: FinanceOverviewCard(
-                    label: "discount".tr(),
-                    value: "787899",
+                    label: "discount_1".tr(),
+                    value: Utils.formatCurrencyWithUnit(
+                      financeEntity.discountAmount,
+                    ),
                     icon: Icons.discount_rounded,
                   ),
                 ),
@@ -132,11 +89,12 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
             ),
             AppSpacing.vertical(AppDimensions.smallSpacing),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: FinanceOverviewCard(
                     label: "total_complete_orders".tr(),
-                    value: "787899",
+                    value: financeEntity.orderCount.toString(),
                     icon: Icons.category_rounded,
                   ),
                 ),
@@ -144,118 +102,31 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
                 Expanded(
                   child: FinanceOverviewCard(
                     label: "total_returned_orders".tr(),
-                    value: "787899",
+                    value: financeEntity.returnedOrderCount.toString(),
                     icon: Icons.category_rounded,
                   ),
                 ),
               ],
             ),
-            // AppSpacing.vertical(AppDimensions.smallSpacing),
-            // _buildFinanceSummary(),
             AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildFeeOrderSuccess(),
+            _buildFeeOrderSuccess(financeEntity),
             AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildFeeOrderReturned(),
+            _buildFeeOrderReturned(financeEntity),
             AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildDiscountsAndCashback(),
+            _buildDiscountsAndCashback(financeEntity),
             AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildDetailByDay(),
-            // AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-            // SizedBox(height: 100),
+            PrimaryButton.outlined(
+              label: 'detail_by_day'.tr(),
+              onPressed: () => context.push(RouteName.financeDetailByDayPage),
+            ),
+            AppSpacing.vertical(AppDimensions.safeBottomSpacing),
           ],
         ),
       ),
     );
   }
 
-  Widget _selectedDateDialog() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PrimaryText('from_date'.tr(), style: AppTextStyles.titleLarge),
-        AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        PrimaryDateTimePicker(
-          onChanged: (value) {
-            setState(() {
-              fromDate = value;
-            });
-          },
-        ),
-        AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        PrimaryText('to_date'.tr(), style: AppTextStyles.titleLarge),
-        AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        PrimaryDateTimePicker(
-          onChanged: (value) {
-            setState(() {
-              toDate = value;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFinanceSummary() {
-    return Column(
-      children: [
-        PrimaryCard(
-          child: _buildFinanceRowItem(
-            label: 'balance_after'.tr(),
-            labelStyle: AppTextStyles.titleLarge,
-            value: Utils.formatCurrencyWithUnit(12222100000),
-            valueStyle: AppTextStyles.titleXLarge,
-          ),
-        ),
-        AppSpacing.vertical(AppDimensions.mediumSpacing),
-        PrimaryCard(
-          child: _buildFinanceRowItem(
-            label: 'cod'.tr(),
-            labelStyle: AppTextStyles.titleLarge,
-            value: '-100.000',
-            valueStyle: AppTextStyles.titleXLarge,
-          ),
-        ),
-        AppSpacing.vertical(AppDimensions.mediumSpacing),
-        PrimaryCard(
-          child: _buildFinanceRowItem(
-            label: 'total'.tr(),
-            labelStyle: AppTextStyles.titleLarge,
-            value: '-100.000',
-            valueStyle: AppTextStyles.titleXLarge,
-          ),
-        ),
-        AppSpacing.vertical(AppDimensions.mediumSpacing),
-        PrimaryCard(
-          child: _buildFinanceRowItem(
-            label: 'discount_1'.tr(),
-            labelStyle: AppTextStyles.titleLarge,
-            value: '0',
-            valueStyle: AppTextStyles.titleXLarge,
-          ),
-        ),
-        AppSpacing.vertical(AppDimensions.mediumSpacing),
-        PrimaryCard(
-          child: _buildFinanceRowItem(
-            label: 'successful_orders'.tr(),
-            labelStyle: AppTextStyles.titleLarge,
-            value: '1',
-            valueStyle: AppTextStyles.titleXLarge,
-          ),
-        ),
-        AppSpacing.vertical(AppDimensions.mediumSpacing),
-        PrimaryCard(
-          child: _buildFinanceRowItem(
-            label: 'returned_orders'.tr(),
-            labelStyle: AppTextStyles.titleLarge,
-            value: '1',
-            valueStyle: AppTextStyles.titleXLarge,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFeeOrderSuccess() {
+  Widget _buildFeeOrderSuccess(FinanceEntity financeEntity) {
     return PrimaryCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,21 +136,30 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
             style: AppTextStyles.titleLarge,
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'shipping_fee'.tr(), value: '-100.000'),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
-            label: 'shipping_fee_VAT'.tr(),
-            value: '-100.000',
+          FinanceTextRow(
+            label: 'shipping_fee'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.deliveryFee),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'surcharge'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'shipping_fee_VAT'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.deliveryFeeVat),
+          ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'surcharge_vat'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'surcharge'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.surchargeFee),
+          ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
+          FinanceTextRow(
+            label: 'surcharge_vat'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.surchargeVat),
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          FinanceTextRow(
             label: 'total'.tr(),
             labelStyle: AppTextStyles.titleLarge,
-            value: '-100.000',
+            value: Utils.formatCurrencyWithUnit(financeEntity.totalOut),
             valueStyle: AppTextStyles.titleLarge,
           ),
         ],
@@ -287,41 +167,57 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
     );
   }
 
-  Widget _buildFeeOrderReturned() {
+  Widget _buildFeeOrderReturned(FinanceEntity financeEntity) {
     return PrimaryCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PrimaryText('return_order_fee'.tr(), style: AppTextStyles.titleLarge),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
+          FinanceTextRow(
             label: 'forward_shipping_fee'.tr(),
-            value: '-100.000',
+            value: Utils.formatCurrencyWithUnit(financeEntity.returnForwardFee),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
+          FinanceTextRow(
             label: 'forward_shipping_vat'.tr(),
-            value: '-100.000',
+            value: Utils.formatCurrencyWithUnit(
+              financeEntity.returnForwardFeeVat,
+            ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
+          FinanceTextRow(
             label: 'return_shipping_fee'.tr(),
-            value: '-100.000',
+            value: Utils.formatCurrencyWithUnit(
+              financeEntity.returnDeliveryFee,
+            ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
+          FinanceTextRow(
             label: 'return_shipping_vat'.tr(),
-            value: '-100.000',
+            value: Utils.formatCurrencyWithUnit(
+              financeEntity.returnDeliveryFeeVat,
+            ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'surcharge'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'surcharge'.tr(),
+            value: Utils.formatCurrencyWithUnit(
+              financeEntity.returnSurchargeFee,
+            ),
+          ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'surcharge_vat'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'surcharge_vat'.tr(),
+            value: Utils.formatCurrencyWithUnit(
+              financeEntity.returnSurchargeVat,
+            ),
+          ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
+          FinanceTextRow(
             label: 'total'.tr(),
             labelStyle: AppTextStyles.titleLarge,
-            value: '-100.000',
+            value: Utils.formatCurrencyWithUnit(financeEntity.totalReturnedFee),
             valueStyle: AppTextStyles.titleLarge,
           ),
         ],
@@ -329,72 +225,29 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
     );
   }
 
-  Widget _buildDiscountsAndCashback() {
+  Widget _buildDiscountsAndCashback(FinanceEntity financeEntity) {
     return PrimaryCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PrimaryText('discount_refund'.tr(), style: AppTextStyles.titleLarge),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'discount_1'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'discount_1'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.discountAmount),
+          ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'refund'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'refund'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.rebateAmount),
+          ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'adjustment'.tr(), value: '-100.000'),
+          FinanceTextRow(
+            label: 'adjustment'.tr(),
+            value: Utils.formatCurrencyWithUnit(financeEntity.adjustmentAmount),
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDetailByDay() {
-    return PrimaryCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PrimaryText('detail_by_day'.tr(), style: AppTextStyles.titleLarge),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'date'.tr(), value: '23/04/2026'),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'cod'.tr(), value: '-100.000'),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'shipping_fee'.tr(), value: '-100.000'),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'surcharge'.tr(), value: '-100.000'),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
-            label: 'return_order_fee'.tr(),
-            value: '-100.000',
-          ),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(label: 'balance_after'.tr(), value: '-100.000'),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
-            label: 'successful_orders'.tr(),
-            value: '-100.000',
-          ),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFinanceRowItem(
-            label: 'returned_orders'.tr(),
-            value: '-100.000',
-          ),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFinanceRowItem({
-    required String label,
-    TextStyle? labelStyle,
-    required String value,
-    TextStyle? valueStyle,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        PrimaryText(label, style: labelStyle ?? AppTextStyles.bodyMedium),
-        PrimaryText(value, style: valueStyle ?? AppTextStyles.titleMedium),
-      ],
     );
   }
 }
