@@ -9,6 +9,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_add_footer.dart';
@@ -184,9 +185,9 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                                   index: index + 1,
                                   staff: state.staffs[index],
                                   onViewDetails:
-                                      () => context.push(
-                                        RouteName.shopStaffDetailPage,
-                                        extra: state.staffs[index],
+                                      () => _openStaffDetail(
+                                        context,
+                                        state.staffs[index],
                                       ),
                                 );
                               },
@@ -228,6 +229,11 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     if (shop == null) return;
     _isLoadingMore = false;
     _shopBloc.changeShop(shop);
+  }
+
+  void _openStaffDetail(BuildContext context, ShopStaffEntity staff) {
+    _shopStaffBloc.fetchDetail(shopId: staff.shopId, staffId: staff.staffId);
+    context.push(RouteName.shopStaffDetailPage);
   }
 
   void _handleStaffsResourceChanged(

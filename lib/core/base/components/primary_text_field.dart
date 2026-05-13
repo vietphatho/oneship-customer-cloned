@@ -36,9 +36,7 @@ class PrimaryTextField extends StatefulWidget {
   final int? maxLine;
   final AutovalidateMode? validateMode;
   final EdgeInsets? paddingInput;
-  final EdgeInsetsGeometry? contentPadding;
   final Color? fillColor;
-  final BorderRadius? borderRadius;
 
   final Widget? suffixIcon;
   final Widget? prefixIcon;
@@ -61,9 +59,7 @@ class PrimaryTextField extends StatefulWidget {
     this.autofocus = false,
     this.label,
     this.paddingInput,
-    this.contentPadding,
     this.fillColor,
-    this.borderRadius,
     this.maxLine = 1,
     this.isRequired = false,
     this.enabledText,
@@ -150,7 +146,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
 
           Container(
             decoration: BoxDecoration(
-              borderRadius: widget.borderRadius ?? AppDimensions.largeBorderRadius,
+              borderRadius: AppDimensions.largeBorderRadius,
             ),
             child: TextFormField(
               textAlign: widget.textAlign ?? TextAlign.left,
@@ -204,14 +200,12 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
                   fontFamily: AppTextStyles.fontFamily,
                   fontWeight: FontWeight.w300,
                 ),
-                contentPadding:
-                    widget.contentPadding ??
-                    const EdgeInsets.only(
-                      left: 14.0,
-                      bottom: 8.0,
-                      top: 8.0,
-                      right: 14,
-                    ),
+                contentPadding: const EdgeInsets.only(
+                  left: 14.0,
+                  bottom: 8.0,
+                  top: 8.0,
+                  right: 14,
+                ),
                 helper: widget.helper,
                 filled: true,
                 fillColor: widget.fillColor ?? Colors.white,
@@ -286,7 +280,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
                 ? AppColors.neutral7
                 : AppColors.red500,
       ),
-      borderRadius: widget.borderRadius ?? AppDimensions.largeBorderRadius,
+      borderRadius: AppDimensions.largeBorderRadius,
     );
   }
 }

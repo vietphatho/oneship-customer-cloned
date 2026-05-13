@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/shop_staff/data/models/request/add_shop_staff_request.dart';
@@ -22,8 +23,8 @@ abstract class ShopStaffApi {
     @Query("shopId") required String queryShopId,
     @Query("page") required int page,
     @Query("limit") required int limit,
-    @Query("sortBy") String sortBy = "createdAt",
-    @Query("sortOrder") String sortOrder = "desc",
+    @Query("sortBy") String sortBy = Constants.defaultSortByCreatedAt,
+    @Query("sortOrder") String sortOrder = Constants.defaultSortOrderDesc,
     @Query("displayName") String? displayName,
     @Query("userEmail") String? userEmail,
     @Query("userStatus") String? userStatus,

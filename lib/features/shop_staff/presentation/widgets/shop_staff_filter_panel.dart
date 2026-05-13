@@ -53,16 +53,6 @@ class ShopStaffFilterPanel extends StatelessWidget {
             menu: StaffStatusFilter.filterValues,
             toLabel: StaffStatusFilter.label,
             onSelected: onStatusSelected,
-            enableFilter: false,
-            menuHeight: 92,
-            menuItemHeight: 30,
-            borderRadius: AppDimensions.xSmallBorderRadius,
-            labelStyle: AppTextStyles.labelMedium,
-            textStyle: AppTextStyles.bodyMedium,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.smallSpacing,
-              vertical: AppDimensions.xSmallSpacing,
-            ),
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
           Row(
@@ -107,11 +97,6 @@ class _CompactTextField extends StatelessWidget {
       hintText: "enter_text".tr(),
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
-      borderRadius: AppDimensions.xSmallBorderRadius,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.smallSpacing,
-        vertical: AppDimensions.xSmallSpacing,
-      ),
     );
   }
 }
