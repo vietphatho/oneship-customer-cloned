@@ -123,6 +123,7 @@ class AppDimensions {
   static const double smallIconSize = 20;
   static const double mediumIconSize = 24;
   static const double largeIconSize = 28;
+  static const double xLargeIconSize = 48;
   static const double displayIconSize = 56;
 
   static const double myLocationIconSize = 36;
