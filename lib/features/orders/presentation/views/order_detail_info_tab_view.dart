@@ -5,8 +5,13 @@ import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/map_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/map_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_map_view.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {
   const OrderDetailInfoTabView({super.key});
@@ -14,6 +19,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrdersBloc _ordersBloc = getIt.get();
+    final ShopBloc _shopBloc = getIt.get();
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: _ordersBloc,
@@ -228,6 +234,11 @@ class OrderDetailInfoTabView extends StatelessWidget {
                     ],
                   ),
                 ),
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                _OrderDetailMapSection(
+                  orderDetail: ordDtl,
+                  shop: _shopBloc.state.currentShop,
+                ),
                 AppSpacing.vertical(AppDimensions.mediumSpacing),
               ],
             ),
@@ -264,6 +275,61 @@ class OrderDetailInfoTabView extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _OrderDetailMapSection extends StatefulWidget {
+  const _OrderDetailMapSection({required this.orderDetail, required this.shop});
+
+  final OrderDetailEntity? orderDetail;
+  final BriefShopEntity? shop;
+
+  @override
+  State<_OrderDetailMapSection> createState() => _OrderDetailMapSectionState();
+}
+
+class _OrderDetailMapSectionState extends State<_OrderDetailMapSection> {
+  final OrderDetailMapBloc _mapBloc = getIt.get();
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveMap();
+  }
+
+  @override
+  void didUpdateWidget(covariant _OrderDetailMapSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.orderDetail != widget.orderDetail ||
+        oldWidget.shop != widget.shop) {
+      _resolveMap();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderDetailMapBloc, OrderDetailMapState>(
+      bloc: _mapBloc,
+      builder: (context, state) {
+        if (!state.map.hasAnyCoordinates) return const SizedBox.shrink();
+
+        return PrimaryFrame(
+          child: OrderDetailMapView(
+            shopLatLong: state.map.shopLatLong,
+            deliveryLatLong: state.map.deliveryLatLong,
+            selectedMarker: state.selectedMarker,
+            shopAddress: state.map.shopAddress,
+            deliveryAddress: state.map.deliveryAddress,
+            onMarkerTap: _mapBloc.selectMarker,
+            onMarkerInfoClose: _mapBloc.dismissMarker,
+          ),
+        );
+      },
+    );
+  }
+
+  void _resolveMap() {
+    _mapBloc.resolve(orderDetail: widget.orderDetail, shop: widget.shop);
   }
 }
 
