@@ -17,7 +17,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.orders: RouteName.ordersPage,
     ShopHomeFeature.ordersHistory: RouteName.ordersHistoryPage,
     ShopHomeFeature.package: RouteName.packagesPage,
-    ShopHomeFeature.supporting: RouteName.packagesPage,
+    ShopHomeFeature.supporting: RouteName.complaintPage,
   };
 
   static const _mapIcon = {
