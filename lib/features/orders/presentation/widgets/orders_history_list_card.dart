@@ -11,12 +11,14 @@ class OrdersHistoryListCard extends StatefulWidget {
     required this.status,
     required this.orders,
     required this.onRefresh,
+    this.onOrderTap,
     this.isLoading = false,
   });
 
   final OrderStatus status;
   final List<OrderHistoryInfoEntity> orders;
   final VoidCallback onRefresh;
+  final ValueChanged<OrderHistoryInfoEntity>? onOrderTap;
   final bool isLoading;
 
   @override
@@ -48,7 +50,13 @@ class _OrdersHistoryListCardState extends State<OrdersHistoryListCard> {
       },
       itemBuilder: (context, index) {
         final order = widget.orders[index];
-        return OrdersHistoryListItem(index: index + 1, order: order);
+        return OrdersHistoryListItem(
+          index: index + 1,
+          order: order,
+          onTap: widget.onOrderTap != null
+              ? () => widget.onOrderTap!(order)
+              : null,
+        );
       },
       separatorBuilder:
           (_, __) => AppSpacing.vertical(AppDimensions.smallSpacing),

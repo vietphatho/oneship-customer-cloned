@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_u
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_detail_from_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_history_view_data_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
@@ -37,6 +38,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       ) {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
     on<OrderFetchDetailEvent>(_onFetchDetailEvent);
+    on<OrderHistoryOpenDetailEvent>(_onOpenHistoryDetailEvent);
     on<OrderDeleteEvent>(_onDeleteOrderEvent);
     on<OrdersHistoryFetchingByStatusEvent>(_onFetchOrderHistoryEvent);
     on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
@@ -50,6 +52,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final DeleteOrderUseCase _deleteOrderUseCase;
   final ResolveOrdersHistoryViewDataUseCase _resolveOrdersHistoryViewDataUseCase;
   final ResolveOrdersByStatusUseCase _resolveOrdersByStatusUseCase;
+  final ResolveOrderDetailFromHistoryUseCase
+      _resolveOrderDetailFromHistoryUseCase =
+      const ResolveOrderDetailFromHistoryUseCase();
 
   late String _shopId;
   set shopId(String id) {
@@ -206,6 +211,32 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   void fetchOrderDetail({required String shopId, required String orderId}) {
     add(OrderFetchDetailEvent(shopId: shopId, orderId: orderId));
+  }
+
+  void openOrderDetail(OrderInfo order) {
+    final shopId = order.shopId;
+    final orderId = order.id;
+    if ((shopId?.isNotEmpty ?? false) && (orderId?.isNotEmpty ?? false)) {
+      add(OrderFetchDetailEvent(shopId: shopId!, orderId: orderId!));
+    }
+  }
+
+  FutureOr<void> _onOpenHistoryDetailEvent(
+    OrderHistoryOpenDetailEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    emit(state.copyWith(orderDetailResource: Resource.loading()));
+    emit(
+      state.copyWith(
+        orderDetailResource: Resource.success(
+          _resolveOrderDetailFromHistoryUseCase.call(event.order),
+        ),
+      ),
+    );
+  }
+
+  void openOrderHistoryDetail(OrderHistoryInfoEntity order) {
+    add(OrderHistoryOpenDetailEvent(order));
   }
 
   void deleteOrder(OrderInfo order) {

@@ -51,8 +51,11 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
                 ),
                 itemCount: _orders.length,
                 itemBuilder:
-                    (context, index) =>
-                        OrderInfoItem(index: index + 1, order: _orders[index]),
+                    (context, index) => OrderInfoItem(
+                      index: index + 1,
+                      order: _orders[index],
+                      onTap: _ordersBloc.openOrderDetail,
+                    ),
                 separatorBuilder:
                     (context, index) =>
                         AppSpacing.vertical(AppDimensions.xSmallSpacing),

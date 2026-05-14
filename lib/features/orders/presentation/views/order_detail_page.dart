@@ -27,6 +27,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
 
   final _tabList = OrderDetailTab.values;
   late TabController _tabCtrl;
+  bool _didSelectInitialTab = false;
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
           if (ordDtl == null) {
             return const PrimaryEmptyData();
           }
+          _selectInitialTab(ordDtl);
 
           return DefaultTabController(
             length: _tabList.length,
@@ -72,10 +74,13 @@ class _OrderDetailPageState extends State<OrderDetailPage>
                 Expanded(
                   child: TabBarView(
                     controller: _tabCtrl,
-                    children: const [
-                      OrderDetailInfoTabView(),
-                      OrderDetailProductsListTabView(),
-                      OrderDetailTransportationHistoryTabView(),
+                    children: [
+                      const OrderDetailInfoTabView(),
+                      const OrderDetailProductsListTabView(),
+                      OrderDetailTransportationHistoryTabView(
+                        trackingCode: ordDtl.trackingCode ?? ordDtl.orderNumber,
+                        fallbackStartedAt: ordDtl.createdAt,
+                      ),
                     ],
                   ),
                 ),
@@ -90,6 +95,18 @@ class _OrderDetailPageState extends State<OrderDetailPage>
   void _handleListener(BuildContext context, OrdersState state) {}
 
   void _onTabChanged(int p1) {}
+
+  void _selectInitialTab(OrderDetailEntity ordDtl) {
+    if (_didSelectInitialTab) return;
+
+    final shouldOpenTransportHistory =
+        ordDtl.status == OrderStatus.delivered.value ||
+        ordDtl.status == OrderStatus.returned.value;
+    if (shouldOpenTransportHistory) {
+      _tabCtrl.index = _tabList.indexOf(OrderDetailTab.transHistory);
+    }
+    _didSelectInitialTab = true;
+  }
 }
 
 class _Header extends StatelessWidget {
