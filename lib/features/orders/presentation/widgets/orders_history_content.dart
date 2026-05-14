@@ -1,5 +1,6 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_filter_button.dart';
@@ -67,6 +68,7 @@ class OrdersHistoryContent extends StatelessWidget {
                 orders: state.visibleDeliveredOrdersHistoryList,
                 onRefresh:
                     () => ordersBloc.fetchOrderHistory(OrderStatus.delivered),
+                onOrderTap: _onOrderTap,
                 isLoading: isLoadingFor(OrderStatus.delivered, state),
               ),
               OrdersHistoryListCard(
@@ -74,6 +76,7 @@ class OrdersHistoryContent extends StatelessWidget {
                 orders: state.visibleReturnedOrdersHistoryList,
                 onRefresh:
                     () => ordersBloc.fetchOrderHistory(OrderStatus.returned),
+                onOrderTap: _onOrderTap,
                 isLoading: isLoadingFor(OrderStatus.returned, state),
               ),
             ],
@@ -81,6 +84,10 @@ class OrdersHistoryContent extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _onOrderTap(OrderHistoryInfoEntity order) {
+    ordersBloc.openOrderHistoryDetail(order);
   }
 }
 
@@ -105,7 +112,7 @@ class _OrdersHistoryListHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
+            child: PrimaryText(
               "Danh sách đơn hàng đã xử lý",
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.neutral1,

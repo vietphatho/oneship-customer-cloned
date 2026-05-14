@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
@@ -46,39 +49,46 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const PrimaryAppBar(title: "Đơn hàng đã xử lý"),
-      body: Column(
-        children: [
-          Expanded(
-            child: DefaultTabController(
-              length: _tabList.length,
-              child: BlocBuilder<OrdersBloc, OrdersState>(
-                bloc: _ordersBloc,
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      OrdersHistoryTabBar(
-                        controller: _tabCtrl,
-                        deliveredCount:
-                            state.filteredDeliveredOrdersHistoryList.length,
-                        returnedCount:
-                            state.filteredReturnedOrdersHistoryList.length,
-                        onTap: _onTabChanged,
-                      ),
-                      Expanded(
-                        child: OrdersHistoryContent(
+      body: BlocListener<OrdersBloc, OrdersState>(
+        bloc: _ordersBloc,
+        listenWhen:
+            (previous, current) =>
+                previous.orderDetailResource != current.orderDetailResource,
+        listener: _listenLoadDetailOrder,
+        child: Column(
+          children: [
+            Expanded(
+              child: DefaultTabController(
+                length: _tabList.length,
+                child: BlocBuilder<OrdersBloc, OrdersState>(
+                  bloc: _ordersBloc,
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        OrdersHistoryTabBar(
                           controller: _tabCtrl,
-                          ordersBloc: _ordersBloc,
-                          state: state,
-                          isLoadingFor: _isLoadingFor,
+                          deliveredCount:
+                              state.filteredDeliveredOrdersHistoryList.length,
+                          returnedCount:
+                              state.filteredReturnedOrdersHistoryList.length,
+                          onTap: _onTabChanged,
                         ),
-                      ),
-                    ],
-                  );
-                },
+                        Expanded(
+                          child: OrdersHistoryContent(
+                            controller: _tabCtrl,
+                            ordersBloc: _ordersBloc,
+                            state: state,
+                            isLoadingFor: _isLoadingFor,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -93,5 +103,23 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
 
   void _onTabChanged(int index) {
     _ordersBloc.fetchOrderHistory(_tabList[index]);
+  }
+
+  void _listenLoadDetailOrder(BuildContext context, OrdersState state) {
+    switch (state.orderDetailResource.state) {
+      case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
+        break;
+      case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
+        context.push(RouteName.orderDetailPage);
+        break;
+      case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.orderDetailResource.message,
+        );
+    }
   }
 }

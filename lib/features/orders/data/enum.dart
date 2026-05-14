@@ -169,3 +169,13 @@ extension PayerExt on Payer {
 }
 
 enum OrderDetailTab { info, products, transHistory }
+
+extension OrderDetailTabExt on OrderDetailTab {
+  static const _mapTitle = {
+    OrderDetailTab.info: "order_information",
+    OrderDetailTab.products: "product",
+    OrderDetailTab.transHistory: "transportation_history",
+  };
+
+  String get title => _mapTitle[this]!;
+}
