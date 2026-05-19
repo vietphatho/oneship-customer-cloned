@@ -61,6 +61,12 @@ class AuthLogOutState extends AuthState {
   AuthLogOutState(this.resource);
 }
 
+class AuthUpdatedPasswordState extends AuthState {
+  final Resource resource;
+
+  AuthUpdatedPasswordState(this.resource);
+}
+
 class AuthVerifySecondaryPasswordState extends AuthState {
   final Resource<VerifySecondaryPasswordResponse> resource;
 

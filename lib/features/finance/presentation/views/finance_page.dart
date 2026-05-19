@@ -80,6 +80,18 @@ class _FinancePageState extends State<FinancePage>
                   },
                 );
               }
+
+              return PrimaryEmptyData(
+                onRetry: () {
+                  _financeOverviewBloc.fetchFinancialData(
+                    filter: state.financeFilter,
+                    startDate: state.startDate,
+                    endDate: state.endDate,
+                    shopId: _shopBloc.state.currentShop?.shopId ?? "",
+                    requestSource: FinanceRequestSource.page,
+                  );
+                },
+              );
             }
 
             return DefaultTabController(

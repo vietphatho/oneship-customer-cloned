@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 
 enum ShopHomeFeature {
@@ -21,12 +21,12 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
   };
 
   static const _mapIcon = {
-    ShopHomeFeature.createSingleOrder: Icons.add_box_rounded,
-    ShopHomeFeature.createMultiOrder: Icons.add_to_photos_rounded,
-    ShopHomeFeature.orders: Icons.category_rounded,
-    ShopHomeFeature.package: Icons.card_travel_rounded,
-    ShopHomeFeature.ordersHistory: Icons.history_rounded,
-    ShopHomeFeature.supporting: Icons.support_agent_rounded,
+    ShopHomeFeature.createSingleOrder: SvgPath.icOrderSingle,
+    ShopHomeFeature.createMultiOrder: SvgPath.icOrderMultiple,
+    ShopHomeFeature.orders: SvgPath.icOrderProcessing,
+    ShopHomeFeature.package: SvgPath.icOrderBag,
+    ShopHomeFeature.ordersHistory: SvgPath.icOrderProcessed,
+    ShopHomeFeature.supporting: SvgPath.icOrderSupport,
   };
 
   static const _mapTitle = {
@@ -40,7 +40,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
 
   String get routeName => _mapRouteName[this]!;
 
-  IconData get icon => _mapIcon[this]!;
+  String get icon => _mapIcon[this]!;
 
   String get title => _mapTitle[this]!;
 }

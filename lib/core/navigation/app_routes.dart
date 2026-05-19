@@ -15,11 +15,16 @@ import 'package:oneship_customer/features/orders/presentation/views/orders_histo
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/profile/presentation/views/change_password_page.dart';
+import 'package:oneship_customer/features/profile/presentation/views/change_secondary_password_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop_to_staff_page.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -60,6 +65,18 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const CreateShopPage(),
     ),
     GoRoute(
+      path: RouteName.createShopStaffPage,
+      builder: (context, state) => const CreateShopStaffPage(),
+    ),
+    GoRoute(
+      path: RouteName.shopStaffDetailPage,
+      builder: (context, state) => const ShopStaffDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.addShopToStaffPage,
+      builder: (context, state) => const AddShopToStaffPage(),
+    ),
+    GoRoute(
       path: RouteName.shopPendingApprovalPage,
       builder: (context, state) => const ShopPendingApprovalPage(),
     ),
@@ -94,6 +111,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.profileDetailPage,
       builder: (context, state) => const ProfileDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.changePasswordPage,
+      builder: (context, state) => const ChangePasswordPage(),
+    ),
+    GoRoute(
+      path: RouteName.changeSecondaryPasswordPage,
+      builder: (context, state) => const ChangeSecondaryPasswordPage(),
     ),
     GoRoute(
       path: RouteName.ordersHistoryPage,
