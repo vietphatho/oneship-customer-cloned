@@ -46,11 +46,7 @@ class ShopStaffDetailContent extends StatelessWidget {
               color: Colors.white,
               size: AppDimensions.smallIconSize,
             ),
-            onPressed:
-                () => context.push(
-                  RouteName.addShopToStaffPage,
-                  extra: staff,
-                ),
+            onPressed: () => context.push(RouteName.addShopToStaffPage),
             height: AppDimensions.smallHeightButton,
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
@@ -78,27 +74,27 @@ class _PersonalInfoSection extends StatelessWidget {
       icon: Icons.person,
       title: "shop_management.staff_personal_info".tr(),
       children: [
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.staff_username".tr(),
           value: staff.userLogin,
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.staff_full_name".tr(),
           value: staff.displayName,
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.field_email".tr(),
           value: staff.userEmail,
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.field_phone".tr(),
           value: staff.userPhone,
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.staff_role".tr(),
           trailing: ShopStaffRoleBadge(role: staff.role),
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.field_status".tr(),
           trailing: ShopStaffStatusBadge(isActive: staff.isActive),
         ),
@@ -118,11 +114,11 @@ class _ShopInfoSection extends StatelessWidget {
       icon: Icons.store,
       title: "shop_management.staff_shop_info".tr(),
       children: [
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.field_name".tr(),
           value: staff.shopName,
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.staff_shop_status".tr(),
           trailing: ShopStaffStatusBadge(isActive: staff.isShopActive),
         ),
@@ -142,11 +138,11 @@ class _TimeInfoSection extends StatelessWidget {
       icon: Icons.access_time,
       title: "shop_management.staff_time".tr(),
       children: [
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.field_created_at".tr(),
           value: _formatDateTime(staff.createdAt),
         ),
-        ShopStaffInfoRow(
+        _ShopStaffInfoRow(
           label: "shop_management.staff_updated_at".tr(),
           value: _formatDateTime(staff.updatedAt),
         ),
@@ -193,10 +189,7 @@ class _PermissionInfoSection extends StatelessWidget {
 }
 
 class _PermissionGroupView extends StatelessWidget {
-  const _PermissionGroupView({
-    required this.group,
-    required this.permissions,
-  });
+  const _PermissionGroupView({required this.group, required this.permissions});
 
   final StaffPermissionGroup group;
   final Map<String, bool> permissions;
@@ -254,6 +247,53 @@ class _PermissionItem extends StatelessWidget {
           color: isEnabled ? AppColors.green600 : AppColors.neutral6,
         ),
       ],
+    );
+  }
+}
+
+class _ShopStaffInfoRow extends StatelessWidget {
+  const _ShopStaffInfoRow({
+    required this.label,
+    this.value = "",
+    this.trailing,
+  });
+
+  final String label;
+  final String value;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimensions.xSmallSpacing),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 4,
+            child: PrimaryText(
+              label,
+              style: AppTextStyles.bodyMedium,
+              color: AppColors.neutral4,
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child:
+                  trailing ??
+                  PrimaryText(
+                    value,
+                    textAlign: TextAlign.right,
+                    style: AppTextStyles.titleSmall,
+                    color: AppColors.neutral1,
+                    maxLine: 2,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

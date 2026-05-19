@@ -17,9 +17,7 @@ import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_section.dart';
 
 class AddShopToStaffPage extends StatefulWidget {
-  const AddShopToStaffPage({super.key, this.staff});
-
-  final ShopStaffDetailEntity? staff;
+  const AddShopToStaffPage({super.key});
 
   @override
   State<AddShopToStaffPage> createState() => _AddShopToStaffPageState();
@@ -30,12 +28,20 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
   final ShopStaffBloc _shopStaffBloc = getIt.get();
 
   BriefShopEntity? _selectedShop;
-  late Map<String, Map<String, bool>> _permissions;
+  late final ValueNotifier<Map<String, Map<String, bool>>> _permissionsNotifier;
 
   @override
   void initState() {
     super.initState();
-    _permissions = CreateShopStaffRequest.defaultPermissions();
+    _permissionsNotifier = ValueNotifier(
+      CreateShopStaffRequest.defaultPermissions(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _permissionsNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,140 +53,125 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
               previous.addStaffToShopResource != current.addStaffToShopResource,
       listener: _handleAddStaffToShopChanged,
       child: Scaffold(
-        appBar: PrimaryAppBar(title: "shop_management.staff_add_shop_title".tr()),
+        appBar: PrimaryAppBar(
+          title: "shop_management.staff_add_shop_title".tr(),
+        ),
         body: SafeArea(
-          child:
-              widget.staff == null
-                  ? Center(
-                    child: PrimaryText(
-                      "shop_management.staff_detail_not_found".tr(),
-                      style: AppTextStyles.bodyMedium,
-                    ),
-                  )
-                  : SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppDimensions.mediumSpacing,
-                      AppDimensions.xSmallSpacing,
-                      AppDimensions.mediumSpacing,
-                      AppDimensions.mediumSpacing,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: PrimaryText(
-                            "shop_management.staff_create".tr(),
-                            style: AppTextStyles.titleMedium,
-                            bold: true,
-                          ),
-                        ),
-                        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-                        Center(
-                          child: PrimaryText(
-                            widget.staff?.displayName,
-                            style: AppTextStyles.bodyMedium,
-                            color: AppColors.neutral4,
-                          ),
-                        ),
-                        AppSpacing.vertical(AppDimensions.largeSpacing),
-                        PrimaryText(
-                          "shop_management.staff_shop_info".tr(),
-                          style: AppTextStyles.titleMedium,
-                          bold: true,
-                        ),
-                        AppSpacing.vertical(AppDimensions.smallSpacing),
-                        BlocBuilder<ShopBloc, ShopState>(
-                          bloc: _shopBloc,
-                          buildWhen:
-                              (previous, current) =>
-                                  previous.briefShopsResource !=
-                                      current.briefShopsResource ||
-                                  previous.currentShop != current.currentShop,
-                          builder: (context, state) {
-                            final shops =
-                                state.briefShopsResource.data?.data ?? const [];
-                            return PrimaryDropdown<BriefShopEntity>(
-                              key: ValueKey(_selectedShop?.shopId),
-                              label: "shop_management.staff_select_shop".tr(),
-                              hintText: "select".tr(),
-                              menu: shops,
-                              initialValue: _selectedShop,
-                              toLabel: (shop) => shop.shopName,
-                              onSelected:
-                                  (shop) => setState(() => _selectedShop = shop),
-                            );
-                          },
-                        ),
-                        AppSpacing.vertical(AppDimensions.smallSpacing),
-                        Row(
-                          children: [
-                            PrimaryText(
-                              "shop_management.field_status".tr(),
-                              style: AppTextStyles.bodyMedium,
-                              color: AppColors.neutral4,
-                            ),
-                            const Spacer(),
-                            ShopStaffStatusBadge(
-                              isActive: _selectedShop?.isActive == true,
-                            ),
-                          ],
-                        ),
-                        AppSpacing.vertical(AppDimensions.mediumSpacing),
-                        PrimaryText(
-                          "shop_management.staff_permission".tr(),
-                          style: AppTextStyles.titleMedium,
-                          bold: true,
-                        ),
-                        AppSpacing.vertical(AppDimensions.xxSmallSpacing),
-                        PrimaryText(
-                          "shop_management.staff_permission_role".tr(),
-                          style: AppTextStyles.bodyMedium,
-                          color: AppColors.primary,
-                        ),
-                        PrimaryText(
-                          "shop_management.staff_permission_description".tr(),
-                          style: AppTextStyles.bodyMedium,
-                          color: AppColors.green600,
-                          maxLine: 2,
-                        ),
-                        AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                        ...staffPermissionGroups.map(
-                          (group) => StaffPermissionSection(
-                            group: group,
-                            values: _permissions[group.key] ?? const {},
-                            onChanged:
-                                (action, value) => _handlePermissionChanged(
-                                  group.key,
-                                  action,
-                                  value,
-                                ),
-                          ),
-                        ),
-                        AppSpacing.vertical(AppDimensions.largeSpacing),
-                        SecondaryButton.filled(
-                          label: "shop_management.save_changes".tr(),
-                          onPressed: _handleSubmit,
-                          height: AppDimensions.smallHeightButton,
-                        ),
-                      ],
-                    ),
+          child: BlocBuilder<ShopStaffBloc, ShopStaffState>(
+            bloc: _shopStaffBloc,
+            buildWhen:
+                (previous, current) =>
+                    previous.staffDetailResource != current.staffDetailResource,
+            builder: (context, state) {
+              final staff = state.staffDetailResource.data;
+              if (staff == null) {
+                return Center(
+                  child: PrimaryText(
+                    "shop_management.staff_detail_not_found".tr(),
+                    style: AppTextStyles.bodyMedium,
                   ),
+                );
+              }
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppDimensions.mediumSpacing,
+                  AppDimensions.xSmallSpacing,
+                  AppDimensions.mediumSpacing,
+                  AppDimensions.mediumSpacing,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: PrimaryText(
+                        "shop_management.staff_create".tr(),
+                        style: AppTextStyles.titleMedium,
+                        bold: true,
+                      ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+                    Center(
+                      child: PrimaryText(
+                        staff.displayName,
+                        style: AppTextStyles.bodyMedium,
+                        color: AppColors.neutral4,
+                      ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.largeSpacing),
+                    _ShopSelectionSection(
+                      shopBloc: _shopBloc,
+                      selectedShop: _selectedShop,
+                      onSelected:
+                          (shop) => setState(() => _selectedShop = shop),
+                    ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryText(
+                      "shop_management.staff_permission".tr(),
+                      style: AppTextStyles.titleMedium,
+                      bold: true,
+                    ),
+                    AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                    PrimaryText(
+                      "shop_management.staff_permission_role".tr(),
+                      style: AppTextStyles.bodyMedium,
+                      color: AppColors.primary,
+                    ),
+                    PrimaryText(
+                      "shop_management.staff_permission_description".tr(),
+                      style: AppTextStyles.bodyMedium,
+                      color: AppColors.green600,
+                      maxLine: 2,
+                    ),
+                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                    ValueListenableBuilder<Map<String, Map<String, bool>>>(
+                      valueListenable: _permissionsNotifier,
+                      builder: (context, permissions, child) {
+                        return Column(
+                          children:
+                              staffPermissionGroups.map((group) {
+                                return StaffPermissionSection(
+                                  group: group,
+                                  values: permissions[group.key] ?? const {},
+                                  onChanged:
+                                      (action, value) =>
+                                          _handlePermissionChanged(
+                                            group.key,
+                                            action,
+                                            value,
+                                          ),
+                                );
+                              }).toList(),
+                        );
+                      },
+                    ),
+                    AppSpacing.vertical(AppDimensions.largeSpacing),
+                    SecondaryButton.filled(
+                      label: "shop_management.save_changes".tr(),
+                      onPressed: () => _handleSubmit(staff),
+                      height: AppDimensions.smallHeightButton,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
   void _handlePermissionChanged(String group, String action, bool value) {
-    setState(() {
-      _permissions[group] = Map<String, bool>.from(_permissions[group] ?? {})
-        ..[action] = value;
-    });
+    final permissions = Map<String, Map<String, bool>>.from(
+      _permissionsNotifier.value,
+    );
+    permissions[group] = Map<String, bool>.from(permissions[group] ?? {})
+      ..[action] = value;
+    _permissionsNotifier.value = permissions;
   }
 
-  void _handleSubmit() {
-    final staff = widget.staff;
+  void _handleSubmit(ShopStaffDetailEntity staff) {
     final shopId = _selectedShop?.shopId;
-    if (staff == null) return;
     if (shopId == null || shopId.isEmpty) {
       PrimaryDialog.showErrorDialog(
         context,
@@ -192,7 +183,7 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
     _shopStaffBloc.addStaffToShop(
       shopId: shopId,
       userId: staff.userId,
-      permissions: _permissions.map(
+      permissions: _permissionsNotifier.value.map(
         (key, value) => MapEntry(key, Map<String, bool>.from(value)),
       ),
     );
@@ -218,5 +209,63 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
         );
         break;
     }
+  }
+}
+
+class _ShopSelectionSection extends StatelessWidget {
+  const _ShopSelectionSection({
+    required this.shopBloc,
+    required this.selectedShop,
+    required this.onSelected,
+  });
+
+  final ShopBloc shopBloc;
+  final BriefShopEntity? selectedShop;
+  final ValueChanged<BriefShopEntity?> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PrimaryText(
+          "shop_management.staff_shop_info".tr(),
+          style: AppTextStyles.titleMedium,
+          bold: true,
+        ),
+        AppSpacing.vertical(AppDimensions.smallSpacing),
+        BlocBuilder<ShopBloc, ShopState>(
+          bloc: shopBloc,
+          buildWhen:
+              (previous, current) =>
+                  previous.briefShopsResource != current.briefShopsResource ||
+                  previous.currentShop != current.currentShop,
+          builder: (context, state) {
+            final shops = state.briefShopsResource.data?.data ?? const [];
+            return PrimaryDropdown<BriefShopEntity>(
+              key: ValueKey(selectedShop?.shopId),
+              label: "shop_management.staff_select_shop".tr(),
+              hintText: "select".tr(),
+              menu: shops,
+              initialValue: selectedShop,
+              toLabel: (shop) => shop.shopName,
+              onSelected: onSelected,
+            );
+          },
+        ),
+        AppSpacing.vertical(AppDimensions.smallSpacing),
+        Row(
+          children: [
+            PrimaryText(
+              "shop_management.field_status".tr(),
+              style: AppTextStyles.bodyMedium,
+              color: AppColors.neutral4,
+            ),
+            const Spacer(),
+            ShopStaffStatusBadge(isActive: selectedShop?.isActive == true),
+          ],
+        ),
+      ],
+    );
   }
 }

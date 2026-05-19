@@ -50,7 +50,7 @@ class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {
   final AddStaffToShopUseCase _addStaffToShopUseCase;
   final ToggleDisableShopStaffUseCase _toggleDisableShopStaffUseCase;
 
-  int _page = 1;
+  int _page = Constants.defaultPage;
   String? _displayName;
   String? _userEmail;
   String? _userStatus;
@@ -81,7 +81,7 @@ class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {
     }
 
     if (event.refresh) {
-      _page = 1;
+      _page = Constants.defaultPage;
     }
 
     emit(state.copyWith(staffsResource: Resource.loading(data: state.staffs)));

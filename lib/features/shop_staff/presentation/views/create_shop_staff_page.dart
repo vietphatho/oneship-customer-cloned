@@ -100,33 +100,11 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
                           ),
                         ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
-                        BlocBuilder<ShopBloc, ShopState>(
-                          bloc: _shopBloc,
-                          buildWhen:
-                              (previous, current) =>
-                                  previous.briefShopsResource !=
-                                      current.briefShopsResource ||
-                                  previous.currentShop != current.currentShop,
-                          builder: (context, state) {
-                            final shops =
-                                state.briefShopsResource.data?.data ?? const [];
-
-                            return PrimaryDropdown<BriefShopEntity>(
-                              label: "shop_management.staff_select_shop".tr(),
-                              hintText: "select".tr(),
-                              menu: shops,
-                              initialValue: _selectedShop,
-                              toLabel: (shop) => shop.shopName,
-                              validator:
-                                  (value) =>
-                                      value == null
-                                          ? "validate.text_required".tr()
-                                          : null,
-                              onSelected:
-                                  (shop) =>
-                                      setState(() => _selectedShop = shop),
-                            );
-                          },
+                        _StaffShopSelector(
+                          shopBloc: _shopBloc,
+                          selectedShop: _selectedShop,
+                          onSelected:
+                              (shop) => setState(() => _selectedShop = shop),
                         ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
                         PrimaryText(
@@ -313,5 +291,42 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
         );
         break;
     }
+  }
+}
+
+class _StaffShopSelector extends StatelessWidget {
+  const _StaffShopSelector({
+    required this.shopBloc,
+    required this.selectedShop,
+    required this.onSelected,
+  });
+
+  final ShopBloc shopBloc;
+  final BriefShopEntity? selectedShop;
+  final ValueChanged<BriefShopEntity?> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ShopBloc, ShopState>(
+      bloc: shopBloc,
+      buildWhen:
+          (previous, current) =>
+              previous.briefShopsResource != current.briefShopsResource ||
+              previous.currentShop != current.currentShop,
+      builder: (context, state) {
+        final shops = state.briefShopsResource.data?.data ?? const [];
+
+        return PrimaryDropdown<BriefShopEntity>(
+          label: "shop_management.staff_select_shop".tr(),
+          hintText: "select".tr(),
+          menu: shops,
+          initialValue: selectedShop,
+          toLabel: (shop) => shop.shopName,
+          validator:
+              (value) => value == null ? "validate.text_required".tr() : null,
+          onSelected: onSelected,
+        );
+      },
+    );
   }
 }

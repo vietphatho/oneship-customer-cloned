@@ -1,6 +1,4 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dropdown.dart';
-import 'package:oneship_customer/core/base/components/primary_text_field.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/components/secondary_text_button.dart';
 

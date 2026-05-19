@@ -1,4 +1,5 @@
 import 'package:oneship_customer/core/base/base_repository.dart';
+import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_staff/data/models/request/add_shop_staff_request.dart';
 import 'package:oneship_customer/features/shop_staff/data/models/request/create_shop_staff_request.dart';
@@ -8,8 +9,8 @@ import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_
 abstract class ShopStaffRepository extends BaseRepository {
   Future<Resource<ShopStaffListEntity>> fetchShopStaffs({
     required String shopId,
-    int page = 1,
-    int limit = 10,
+    int page = Constants.defaultPage,
+    int limit = Constants.defaultLimitPerPage,
     String? displayName,
     String? userEmail,
     String? userStatus,

@@ -19,7 +19,6 @@ import 'package:oneship_customer/features/shop_home/presentation/views/create_sh
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
-import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_detail_entity.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop_to_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
@@ -72,10 +71,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: RouteName.addShopToStaffPage,
-      builder:
-          (context, state) => AddShopToStaffPage(
-            staff: state.extra as ShopStaffDetailEntity?,
-          ),
+      builder: (context, state) => const AddShopToStaffPage(),
     ),
     GoRoute(
       path: RouteName.shopPendingApprovalPage,

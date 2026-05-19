@@ -79,14 +79,7 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
             listenWhen:
                 (previous, current) =>
                     previous.currentShop != current.currentShop,
-            listener: (context, state) {
-              final currentShop = state.currentShop;
-              if (currentShop != null) {
-                _shopStaffBloc.init(currentShop);
-              } else {
-                _shopStaffBloc.refresh();
-              }
-            },
+            listener: _handleCurrentShopChanged,
           ),
           BlocListener<ShopStaffBloc, ShopStaffState>(
             bloc: _shopStaffBloc,
@@ -229,6 +222,15 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     if (shop == null) return;
     _isLoadingMore = false;
     _shopBloc.changeShop(shop);
+  }
+
+  void _handleCurrentShopChanged(BuildContext context, ShopState state) {
+    final currentShop = state.currentShop;
+    if (currentShop != null) {
+      _shopStaffBloc.init(currentShop);
+    } else {
+      _shopStaffBloc.refresh();
+    }
   }
 
   void _openStaffDetail(BuildContext context, ShopStaffEntity staff) {
