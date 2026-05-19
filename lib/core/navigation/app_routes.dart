@@ -26,6 +26,8 @@ import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop
 import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -123,6 +125,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.ordersHistoryPage,
       builder: (context, state) => const OrdersHistoryPage(),
+    ),
+    GoRoute(
+      path: RouteName.complaintPage,
+      builder: (context, state) => const ComplaintPage(),
+    ),
+    GoRoute(
+      path: RouteName.createComplaintPage,
+      builder: (context, state) => const CreateComplaintPage(),
     ),
     GoRoute(
       path: RouteName.financeDetailByDayPage,

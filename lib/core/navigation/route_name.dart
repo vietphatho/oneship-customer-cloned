@@ -34,4 +34,6 @@ class RouteName {
   static const String changePasswordPage = '/change_password';
   static const String changeSecondaryPasswordPage = '/change_secondary_password';
   static const String ordersHistoryPage = '/shop_master/orders_history';
+  static const String complaintPage = '/complaints';
+  static const String createComplaintPage = '/complaints/create';
 }

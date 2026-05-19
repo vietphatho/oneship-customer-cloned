@@ -102,4 +102,24 @@ class Validators {
     }
     return null;
   }
+
+  static String? validateComplaintSubject(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'complaints.validation_required'.tr();
+    }
+    if (value.trim().length < 5) {
+      return 'complaints.validation_subject_min'.tr();
+    }
+    return null;
+  }
+
+  static String? validateComplaintDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'complaints.validation_required'.tr();
+    }
+    if (value.trim().length < 10) {
+      return 'complaints.validation_description_min'.tr();
+    }
+    return null;
+  }
 }
