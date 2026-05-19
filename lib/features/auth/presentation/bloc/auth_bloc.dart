@@ -6,6 +6,9 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/create_second_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
@@ -125,15 +128,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthUpdatedPasswordState(response));
   }
 
-  void updatePassword(dynamic body) {
+  void updatePassword(UpdatePasswordRequest body) {
     add(AuthUpdatePasswordEvent(body));
   }
 
-  void createSecondPassword(dynamic body) {
+  void createSecondPassword(CreateSecondPasswordRequest body) {
     add(AuthCreateSecondPasswordEvent(body));
   }
 
-  void updateSecondPassword(dynamic body) {
+  void updateSecondPassword(UpdateSecondPasswordRequest body) {
     add(AuthUpdateSecondPasswordEvent(body));
   }
 
