@@ -40,7 +40,7 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
             List<OrderInfo> _orders = state.processingOrdersList;
 
             if (_orders.isEmpty) {
-              return Center(child: const PrimaryEmptyData());
+              return Expanded(child: const PrimaryEmptyData());
             }
 
             return Expanded(

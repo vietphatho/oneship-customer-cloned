@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -10,6 +11,7 @@ import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.d
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class PendingOrdersListView extends StatefulWidget {
   const PendingOrdersListView({super.key});
@@ -22,10 +24,18 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _pkgsBloc = getIt.get();
 
+  final RefreshController _refreshController = RefreshController();
+
   @override
   void initState() {
     super.initState();
     _ordersBloc.fetchOrdersByStatus();
+  }
+
+  @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,6 +48,13 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
               (previous, current) =>
                   previous.deleteOrderResource != current.deleteOrderResource,
           listener: _listenDeleteOrderState,
+        ),
+        BlocListener<OrdersBloc, OrdersState>(
+          bloc: _ordersBloc,
+          listenWhen:
+              (previous, current) =>
+                  previous.pendingOrdersList != current.pendingOrdersList,
+          listener: _listenOrdsListChanged,
         ),
       ],
       child: Column(
@@ -55,7 +72,11 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                   return SafeArea(top: false, child: const PrimaryEmptyData());
                 }
 
-                return ListView.separated(
+                return PrimaryRefreshabelListView(
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  onLoading: _onLoading,
+                  enablePullUp: true,
                   padding: EdgeInsets.symmetric(
                     vertical: AppDimensions.smallSpacing,
                     horizontal: AppDimensions.smallSpacing,
@@ -101,6 +122,34 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
         );
     }
   }
+
+  void _onRefresh() {
+    _ordersBloc.fetchOrdersByStatus();
+  }
+
+  void _onLoading() {
+    if (!_ordersBloc.state.hasData) {
+      _refreshController.loadNoData();
+      return;
+    }
+
+    _ordersBloc.loadMoreOrders();
+  }
+
+  void _listenOrdsListChanged(BuildContext context, OrdersState state) {
+    switch (state.orderListByStatusResource.state) {
+      case Result.success:
+        _refreshController
+          ..refreshCompleted()
+          ..loadComplete();
+        break;
+      case Result.error:
+        _refreshController
+          ..refreshFailed()
+          ..loadFailed();
+      default:
+    }
+  }
 }
 
 class _TopActionButtons extends StatelessWidget {
@@ -125,15 +174,15 @@ class _TopActionButtons extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Expanded(
-                child: PrimaryButton.iconOutlined(
-                  label: "print_all".tr(),
-                  icon: Icon(Icons.print, color: AppColors.primary),
-                  height: AppDimensions.smallHeightButton,
-                  onPressed: () {},
-                ),
-              ),
-              AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+              // Expanded(
+              //   child: PrimaryButton.iconOutlined(
+              //     label: "print_all".tr(),
+              //     icon: Icon(Icons.print, color: AppColors.primary),
+              //     height: AppDimensions.smallHeightButton,
+              //     onPressed: () {},
+              //   ),
+              // ),
+              // AppSpacing.horizontal(AppDimensions.xSmallSpacing),
               Expanded(
                 child: SecondaryButton.iconOutlined(
                   label: "find_shipper".tr(),

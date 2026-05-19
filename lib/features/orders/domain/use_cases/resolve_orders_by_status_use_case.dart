@@ -29,4 +29,43 @@ class ResolveOrdersByStatusUseCase {
         return current;
     }
   }
+
+  OrdersByStatusLists append({
+    required OrderStatus status,
+    required List<OrderInfo> orders,
+    required OrdersByStatusLists current,
+  }) {
+    switch (status) {
+      case OrderStatus.pending:
+        return current.copyWith(
+          pendingOrdersList: [...current.pendingOrdersList, ...orders],
+        );
+      case OrderStatus.processing:
+        return current.copyWith(
+          pendingOrdersList: [...current.processingOrdersList, ...orders],
+        );
+      case OrderStatus.batched:
+        return current.copyWith(
+          pendingOrdersList: [...current.batchedOrdersList, ...orders],
+        );
+      case OrderStatus.shipping:
+        return current.copyWith(
+          pendingOrdersList: [...current.deliveringOrdersList, ...orders],
+        );
+      case OrderStatus.delayed:
+        return current.copyWith(
+          pendingOrdersList: [...current.delayedOrdersList, ...orders],
+        );
+      case OrderStatus.cancelled:
+        return current.copyWith(
+          pendingOrdersList: [...current.cancelledOrdersList, ...orders],
+        );
+      case OrderStatus.returned:
+        return current.copyWith(
+          pendingOrdersList: [...current.returnedOrdersList, ...orders],
+        );
+      default:
+        return current;
+    }
+  }
 }
