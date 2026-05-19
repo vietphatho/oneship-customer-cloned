@@ -1,5 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_refreshable_list_viewdart';
+import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_item.dart';
@@ -11,12 +11,14 @@ class OrdersHistoryListCard extends StatefulWidget {
     required this.status,
     required this.orders,
     required this.onRefresh,
+    this.onOrderTap,
     this.isLoading = false,
   });
 
   final OrderStatus status;
   final List<OrderHistoryInfoEntity> orders;
   final VoidCallback onRefresh;
+  final ValueChanged<OrderHistoryInfoEntity>? onOrderTap;
   final bool isLoading;
 
   @override
@@ -48,7 +50,13 @@ class _OrdersHistoryListCardState extends State<OrdersHistoryListCard> {
       },
       itemBuilder: (context, index) {
         final order = widget.orders[index];
-        return OrdersHistoryListItem(index: index + 1, order: order);
+        return OrdersHistoryListItem(
+          index: index + 1,
+          order: order,
+          onTap: widget.onOrderTap != null
+              ? () => widget.onOrderTap!(order)
+              : null,
+        );
       },
       separatorBuilder:
           (_, __) => AppSpacing.vertical(AppDimensions.smallSpacing),

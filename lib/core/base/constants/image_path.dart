@@ -5,9 +5,13 @@ class ImagePath {
   //image
   static const String logo = 'assets/images/logo_app.png';
   static const String logoBreak = 'assets/images/logo_break.png';
+  static const String shopOnboarding = 'assets/images/shop_onboarding.png';
+  static const String shopPendingApproval =
+      'assets/images/shop_pending_approval.png';
   static String onboarding_1 = 'assets/images/onboarding_1.png';
   static String onboarding_2 = 'assets/images/onboarding_2.png';
   static String onboarding_3 = 'assets/images/onboarding_3.png';
+  static String homeBackground = 'assets/images/home_background.png';
   static String iconApprovalProcess = 'assets/images/icon_approval_process.png';
 
   static const String iconMap = 'assets/images/icon_map.png';
@@ -30,6 +34,7 @@ class ImagePath {
   static const String imageDelivery = 'assets/images/image_delivery.png';
   static const arrow = 'assets/images/arrow.png';
   static const String iconWarehouse = 'assets/images/icon_warehouse.png';
+
 
   //icon
   static const String iconCall = 'assets/icons/icon_call.svg';

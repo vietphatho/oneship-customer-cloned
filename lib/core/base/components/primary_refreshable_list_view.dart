@@ -14,12 +14,14 @@ class PrimaryRefreshabelListView extends StatelessWidget {
     this.onRefresh,
     this.onLoading,
     this.separatorBuilder,
+    this.padding = AppDimensions.smallPaddingAll,
   });
 
   final RefreshController controller;
   final Widget? Function(BuildContext context, int index) itemBuilder;
   final Widget Function(BuildContext context, int index)? separatorBuilder;
   final int itemCount;
+  final EdgeInsetsGeometry padding;
 
   final bool enablePullDown;
   final bool enablePullUp;
@@ -87,7 +89,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
           itemCount == 0
               ? const SizedBox.expand(child: Center(child: PrimaryEmptyData()))
               : ListView.separated(
-                padding: AppDimensions.mediumPaddingAll,
+                padding: padding,
                 itemBuilder: itemBuilder,
                 itemCount: itemCount,
                 separatorBuilder:
@@ -96,7 +98,6 @@ class PrimaryRefreshabelListView extends StatelessWidget {
     );
   }
 }
-
 
 class _CustomFooter extends StatelessWidget {
   const _CustomFooter({super.key, required this.mode});

@@ -40,7 +40,7 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
             List<OrderInfo> _orders = state.processingOrdersList;
 
             if (_orders.isEmpty) {
-              return Center(child: const PrimaryEmptyData());
+              return Expanded(child: const PrimaryEmptyData());
             }
 
             return Expanded(
@@ -51,8 +51,11 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
                 ),
                 itemCount: _orders.length,
                 itemBuilder:
-                    (context, index) =>
-                        OrderInfoItem(index: index + 1, order: _orders[index]),
+                    (context, index) => OrderInfoItem(
+                      index: index + 1,
+                      order: _orders[index],
+                      onTap: _ordersBloc.openOrderDetail,
+                    ),
                 separatorBuilder:
                     (context, index) =>
                         AppSpacing.vertical(AppDimensions.xSmallSpacing),

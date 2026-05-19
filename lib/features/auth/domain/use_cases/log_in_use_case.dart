@@ -16,7 +16,7 @@ class LogInUseCase {
 
   Future<Resource<LoginResponse>> call(LoginRequest request) async {
     final response = await _repository.login(request);
-    if (response.state == Result.success) {
+    if (response.state == Result.success && response.data?.refreshToken != null) {
       _tokenManager.saveTokens(
         accessToken: response.data?.accessToken ?? "",
         refreshToken: response.data?.refreshToken ?? "",

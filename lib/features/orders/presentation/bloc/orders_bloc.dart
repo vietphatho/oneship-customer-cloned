@@ -9,11 +9,12 @@ import 'package:oneship_customer/features/orders/data/models/response/orders_lis
 import 'package:oneship_customer/features/orders/domain/entities/orders_by_status_lists.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_history_view_data_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_detail_from_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_history_view_data_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -36,7 +37,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         ),
       ) {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
+    on<OrdersLoadMoreByStatusEvent>(_onLoadMoreOrdsEvent);
     on<OrderFetchDetailEvent>(_onFetchDetailEvent);
+    on<OrderHistoryOpenDetailEvent>(_onOpenHistoryDetailEvent);
     on<OrderDeleteEvent>(_onDeleteOrderEvent);
     on<OrdersHistoryFetchingByStatusEvent>(_onFetchOrderHistoryEvent);
     on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
@@ -48,8 +51,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final FetchOrderHistoryUseCase _fetchOrderHistoryUseCase;
   final FetchOrderDetailUseCase _fetchOrderDetailUseCase;
   final DeleteOrderUseCase _deleteOrderUseCase;
-  final ResolveOrdersHistoryViewDataUseCase _resolveOrdersHistoryViewDataUseCase;
+  final ResolveOrdersHistoryViewDataUseCase
+  _resolveOrdersHistoryViewDataUseCase;
   final ResolveOrdersByStatusUseCase _resolveOrdersByStatusUseCase;
+  final ResolveOrderDetailFromHistoryUseCase
+  _resolveOrderDetailFromHistoryUseCase =
+      const ResolveOrderDetailFromHistoryUseCase();
 
   late String _shopId;
   set shopId(String id) {
@@ -161,8 +168,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     Emitter<OrdersState> emit,
   ) {
     final nextState = state.copyWith(
-        ordersHistoryFilters: event.filters,
-        showOrdersHistoryFilters: false,
+      ordersHistoryFilters: event.filters,
+      showOrdersHistoryFilters: false,
     );
     emit(_resolveOrdersHistoryViewData(nextState));
   }
@@ -172,10 +179,51 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     Emitter<OrdersState> emit,
   ) {
     final nextState = state.copyWith(
-        ordersHistoryFilters: OrdersHistoryFilters.empty(),
-        showOrdersHistoryFilters: false,
+      ordersHistoryFilters: OrdersHistoryFilters.empty(),
+      showOrdersHistoryFilters: false,
     );
     emit(_resolveOrdersHistoryViewData(nextState));
+  }
+
+  FutureOr<void> _onLoadMoreOrdsEvent(
+    OrdersLoadMoreByStatusEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    if (_ordersMeta?.hasNext != true) return null;
+
+    final response = await _fetchOrdersByStatusUseCase.call(
+      status: _currentOrderStatus,
+      shopId: _shopId,
+      page: (_ordersMeta?.page ?? 0) + 1,
+    );
+    _ordersMeta = response.data?.meta;
+
+    final ordersByStatus = _resolveOrdersByStatusUseCase.append(
+      status: _currentOrderStatus,
+      orders: response.data?.data ?? [],
+      current: OrdersByStatusLists(
+        pendingOrdersList: state.pendingOrdersList,
+        processingOrdersList: state.processingOrdersList,
+        batchedOrdersList: state.batchedOrdersList,
+        deliveringOrdersList: state.deliveringOrdersList,
+        delayedOrdersList: state.delayedOrdersList,
+        cancelledOrdersList: state.cancelledOrdersList,
+        returnedOrdersList: state.returnedOrdersList,
+      ),
+    );
+
+    emit(
+      state.copyWith(
+        orderListByStatusResource: response,
+        pendingOrdersList: ordersByStatus.pendingOrdersList,
+        processingOrdersList: ordersByStatus.processingOrdersList,
+        batchedOrdersList: ordersByStatus.batchedOrdersList,
+        deliveringOrdersList: ordersByStatus.deliveringOrdersList,
+        delayedOrdersList: ordersByStatus.delayedOrdersList,
+        cancelledOrdersList: ordersByStatus.cancelledOrdersList,
+        returnedOrdersList: ordersByStatus.returnedOrdersList,
+      ),
+    );
   }
 
   OrdersState _resolveOrdersHistoryViewData(OrdersState source) {
@@ -204,8 +252,38 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     add(OrdersFetchingByStatusEvent(_currentOrderStatus));
   }
 
+  void loadMoreOrders() {
+    add(OrdersLoadMoreByStatusEvent(_currentOrderStatus));
+  }
+
   void fetchOrderDetail({required String shopId, required String orderId}) {
     add(OrderFetchDetailEvent(shopId: shopId, orderId: orderId));
+  }
+
+  void openOrderDetail(OrderInfo order) {
+    final shopId = order.shopId;
+    final orderId = order.id;
+    if ((shopId?.isNotEmpty ?? false) && (orderId?.isNotEmpty ?? false)) {
+      add(OrderFetchDetailEvent(shopId: shopId!, orderId: orderId!));
+    }
+  }
+
+  FutureOr<void> _onOpenHistoryDetailEvent(
+    OrderHistoryOpenDetailEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    emit(state.copyWith(orderDetailResource: Resource.loading()));
+    emit(
+      state.copyWith(
+        orderDetailResource: Resource.success(
+          _resolveOrderDetailFromHistoryUseCase.call(event.order),
+        ),
+      ),
+    );
+  }
+
+  void openOrderHistoryDetail(OrderHistoryInfoEntity order) {
+    add(OrderHistoryOpenDetailEvent(order));
   }
 
   void deleteOrder(OrderInfo order) {

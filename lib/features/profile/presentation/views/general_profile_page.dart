@@ -10,6 +10,7 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class GeneralProfilePage extends StatefulWidget {
   const GeneralProfilePage({super.key});
@@ -35,6 +36,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
               _UtilitiesContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               _SupportsContainer(),
+              AppSpacing.vertical(AppDimensions.bottomNavBarHeight),
             ],
           ),
         ),
@@ -85,6 +87,7 @@ class _SupportsContainer extends StatelessWidget {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          getIt.resetLazySingleton<ShopMasterBloc>();
           context.pushReplacement(RouteName.loginPage);
           break;
         case Result.error:
@@ -117,21 +120,31 @@ class _SettingsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProfile = getIt.get<AuthBloc>().userProfile;
     return Column(
       children: [
         _ProfileTitleItem(icon: SvgPath.iconSettings, label: "settings".tr()),
         _ProfileSelectedItem(
-          label: 'account_info'.tr(),
+          label: 'account_info.page_title'.tr(),
           onTap: () {
             context.push(RouteName.profileDetailPage);
           },
         ),
         Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(label: 'change_password'.tr(), onTap: () {}),
+        _ProfileSelectedItem(
+          label: 'change_password.page_title'.tr(),
+          onTap: () {
+            context.push(RouteName.changePasswordPage);
+          },
+        ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(
-          label: 'change_secondary_password'.tr(),
-          onTap: () {},
+          label: (userProfile.hasSecondPassword ?? false)
+              ? 'secondary_password.change_page_title'.tr()
+              : 'secondary_password.create_page_title'.tr(),
+          onTap: () {
+            context.push(RouteName.changeSecondaryPasswordPage);
+          },
         ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(label: 'activity_history'.tr(), onTap: () {}),

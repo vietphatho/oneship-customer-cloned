@@ -30,6 +30,17 @@ class DateTimeUtils {
     }
   }
 
+  static String? formatTimeFromDT(DateTime? value) {
+    try {
+      if (value == null) return null;
+
+      final inputFormat = DateFormat(Constants.defaultTimeFormat);
+      return inputFormat.format(value);
+    } catch (e) {
+      return null;
+    }
+  }
+
   static String? formatDateTime(
     DateTime? dateTime, {
     String format = Constants.defaultDateTimeFormat,

@@ -19,7 +19,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/update_product
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
@@ -36,7 +36,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         CreateOrderRequestChangedState(
           request: CreateOrderRequestEntity.empty(),
           draftRequest: CreateOrderRequestEntity.empty(),
-          shopInfo: const ShopEntity(),
+          shopInfo: const BriefShopEntity(),
           routingToShopResource: Resource.loading(),
           productEntitySelected: [],
         ),
@@ -335,7 +335,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderChangeProductEvent(newProduct));
   }
 
-  void setShop(ShopEntity shop) {
+  void setShop(BriefShopEntity shop) {
     add(CreateOrderInitShopEvent(shop));
   }
 

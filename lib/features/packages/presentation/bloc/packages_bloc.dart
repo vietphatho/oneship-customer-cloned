@@ -7,14 +7,14 @@ import 'package:oneship_customer/features/packages/data/models/response/packages
 import 'package:oneship_customer/features/packages/domain/repositories/packages_repository.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_event.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 @lazySingleton
 class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
   PackagesBloc(this._repository)
     : super(
         PackagesState(
-          currentShop: ShopEntity(),
+          currentShop: BriefShopEntity(),
           pkgsData: Resource.loading(),
           currentPkg: Resource.loading(),
           findingShipperResult: Resource.loading(),
@@ -77,7 +77,7 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     emit(state.copyWith(cancelFindingShipperResult: response));
   }
 
-  void init(ShopEntity shop) {
+  void init(BriefShopEntity shop) {
     add(PackagesFetchingEvent());
     add(PackageInitEvent(shop));
   }

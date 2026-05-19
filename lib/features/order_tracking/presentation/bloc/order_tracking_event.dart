@@ -7,3 +7,7 @@ class OrderTrackingSearchEvent extends OrderTrackingEvent {
 
   OrderTrackingSearchEvent(this.trackingNumber);
 }
+
+class OrderTrackingResetDataEvent extends OrderTrackingEvent {
+  OrderTrackingResetDataEvent();
+}

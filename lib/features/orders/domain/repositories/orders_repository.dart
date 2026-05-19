@@ -1,4 +1,5 @@
 import 'package:oneship_customer/core/base/base_repository.dart';
+import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/lat_long.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -14,6 +15,8 @@ abstract class OrdersRepository extends BaseRepository {
   Future<Resource<OrdersListResponse>> fetchOrdersByStatus({
     required OrderStatus status,
     required String shopId,
+    int page = 1,
+    int limit = Constants.defaultLimitPerPage,
   });
 
   Future<Resource<OrderDetailEntity>> fetchOrderDetail({

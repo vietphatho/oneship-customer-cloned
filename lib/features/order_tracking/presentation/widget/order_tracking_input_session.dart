@@ -16,11 +16,19 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
   final TextEditingController _trackingNumberCtrl = TextEditingController();
 
   @override
+  void initState() {
+    _trackingNumberCtrl.text =
+        _orderTrackingBloc.state.trackingResult!.data?.orderNumber ?? "";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.mediumSpacing,
-        vertical: AppDimensions.mediumSpacing,
+      padding: const EdgeInsets.only(
+        left: AppDimensions.mediumSpacing,
+        right: AppDimensions.mediumSpacing,
+        bottom: AppDimensions.mediumSpacing,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -50,6 +58,8 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
   }
 
   void _onSearch() {
-    _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
+    if (_trackingNumberCtrl.text.isNotEmpty) {
+      _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
+    }
   }
 }

@@ -23,10 +23,16 @@ class OrdersRepositoryImpl extends OrdersRepository {
   Future<Resource<OrdersListResponse>> fetchOrdersByStatus({
     required OrderStatus status,
     required String shopId,
+    int page = 1,
+    int limit = Constants.defaultLimitPerPage,
   }) {
     return request(
-      () =>
-          _ordersApi.fetchOrdersByStatus(status: status.value, shopId: shopId),
+      () => _ordersApi.fetchOrdersByStatus(
+        status: status.value,
+        shopId: shopId,
+        page: page,
+        limit: limit,
+      ),
     );
   }
 
@@ -88,10 +94,7 @@ class OrdersRepositoryImpl extends OrdersRepository {
     required String shopId,
   }) async {
     final response = await request(
-      () => _ordersApi.fetchOrderHistory(
-        status: status.value,
-        shopId: shopId,
-      ),
+      () => _ordersApi.fetchOrderHistory(status: status.value, shopId: shopId),
     );
     return response.parse((dto) => OrdersHistoryEntity.from(dto));
   }

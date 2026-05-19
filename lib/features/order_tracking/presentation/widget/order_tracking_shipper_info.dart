@@ -31,6 +31,11 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              PrimaryText(
+                state.trackingResult!.data?.trackingCode,
+                style: AppTextStyles.labelLarge,
+              ),
+              AppSpacing.vertical(AppDimensions.smallSpacing),
               Row(
                 children: [
                   Icon(
@@ -43,12 +48,12 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PrimaryText(
-                        state.trackingResult.data?.shipper?.name,
+                        state.trackingResult!.data?.shipper?.name,
                         style: AppTextStyles.labelLarge,
                         color: AppColors.primary,
                       ),
                       PrimaryText(
-                        state.trackingResult.data?.shipper?.phone,
+                        state.trackingResult!.data?.shipper?.phone,
                         // style: AppTextStyles.labelLarge,
                       ),
                     ],
@@ -60,7 +65,7 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
                 children: [
                   PrimaryText("${"service_type".tr()}: "),
                   PrimaryText(
-                    state.trackingResult.data?.serviceCode,
+                    state.trackingResult!.data?.serviceCode,
                     style: AppTextStyles.labelLarge,
                   ),
                 ],
@@ -70,7 +75,7 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
                   PrimaryText("${"weight".tr()}: "),
                   PrimaryText(
                     Utils.formatWeightWithUnit(
-                      state.trackingResult.data?.weight,
+                      state.trackingResult!.data?.weight,
                     ),
                     style: AppTextStyles.labelLarge,
                   ),

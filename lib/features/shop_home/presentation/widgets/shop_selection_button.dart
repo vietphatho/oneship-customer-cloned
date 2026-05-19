@@ -1,8 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -11,45 +10,34 @@ class ShopSelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ShopBloc _shopBloc = getIt.get();
+    final shopBloc = getIt.get<ShopBloc>();
 
     return BlocBuilder<ShopBloc, ShopState>(
-      bloc: _shopBloc,
+      bloc: shopBloc,
+      buildWhen:
+          (previous, current) =>
+              previous.briefShopsResource != current.briefShopsResource ||
+              previous.currentShop != current.currentShop,
       builder: (context, state) {
-        final _shopLogoUrl = state.currentShop?.shopLogo;
+        final shops = state.briefShopsResource.data?.data ?? const [];
+        if (shops.isEmpty || state.currentShop == null) {
+          return const SizedBox.shrink();
+        }
 
-        return _ShopDropdownButton<ShopEntity>(
-          items: state.shopsResource.data?.data ?? [],
-          value: state.currentShop,
+        final selectedShop =
+            shops.contains(state.currentShop) ? state.currentShop : null;
+
+        return _ShopDropdownButton<BriefShopEntity>(
+          items: shops,
+          value: selectedShop,
           labelBuilder: (shop) => shop.shopName,
           onChanged: (value) {
             if (value != null) {
-              _shopBloc.changeShop(value);
+              shopBloc.changeShop(value);
             }
           },
         );
       },
-    );
-  }
-}
-
-class _ShopAvatar extends StatelessWidget {
-  const _ShopAvatar({super.key, required this.url});
-
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: AppDimensions.smallIconSize,
-      height: AppDimensions.smallIconSize,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(url),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: AppDimensions.xSmallBorderRadius,
-      ),
     );
   }
 }
