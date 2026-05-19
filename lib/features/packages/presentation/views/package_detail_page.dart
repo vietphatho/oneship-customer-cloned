@@ -77,7 +77,7 @@ class _PackageDetailPageState extends State<PackageDetailPage> {
                       ),
                       _buildInfoField(
                         title: "pkg_status".tr(),
-                        value: pkg.status,
+                        value: pkg.status?.tr(),
                       ),
                       _buildInfoField(
                         title: "distance".tr(),

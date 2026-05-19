@@ -17,7 +17,7 @@ class OrderStatusTag extends StatelessWidget {
         horizontal: AppDimensions.xSmallSpacing,
       ),
       child: PrimaryText(
-        status,
+        status.tr(),
         style: AppTextStyles.labelXSmall,
         color: Colors.white,
       ),
