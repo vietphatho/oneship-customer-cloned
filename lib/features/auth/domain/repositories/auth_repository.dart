@@ -5,6 +5,9 @@ import 'package:oneship_customer/features/auth/data/models/request/register_requ
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
@@ -28,6 +31,9 @@ abstract class AuthRepository extends BaseRepository {
     required UpdateUserProfileRequest body,
   });
 
+  Future<Resource> updatePassword(UpdatePasswordRequest body);
+  Future<Resource> createSecondPassword(CreateSecondPasswordRequest body);
+  Future<Resource> updateSecondPassword(UpdateSecondPasswordRequest body);
   Future<Resource<VerifySecondaryPasswordResponse>> verifySecondaryPassword(
     VerifySecondaryPasswordRequest body,
   );
