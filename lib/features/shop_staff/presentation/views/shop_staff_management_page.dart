@@ -62,15 +62,15 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
       appBar: PrimaryAppBar(
         title: "shop_management.staff_title".tr(),
         canPop: false,
-        actions: [
-          IconButton(
-            onPressed: () => setState(() => _showFilters = !_showFilters),
-            icon: const Icon(
-              Icons.filter_alt,
-              color: AppColors.secondary,
-            ),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () => setState(() => _showFilters = !_showFilters),
+        //     icon: const Icon(
+        //       Icons.filter_alt,
+        //       color: AppColors.secondary,
+        //     ),
+        //   ),
+        // ],
       ),
       body: MultiBlocListener(
         listeners: [
@@ -187,7 +187,8 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                             ),
                   ),
                   ShopStaffAddFooter(
-                    onPressed: () => context.push(RouteName.createShopStaffPage),
+                    onPressed:
+                        () => context.push(RouteName.createShopStaffPage),
                   ),
                 ],
               );
@@ -268,10 +269,7 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     }
   }
 
-  void _handleToggleDisableChanged(
-    BuildContext context,
-    ShopStaffState state,
-  ) {
+  void _handleToggleDisableChanged(BuildContext context, ShopStaffState state) {
     switch (state.toggleDisableResource.state) {
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);

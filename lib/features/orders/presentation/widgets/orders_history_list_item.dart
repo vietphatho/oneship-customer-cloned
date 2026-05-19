@@ -1,5 +1,6 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
@@ -19,23 +20,18 @@ class OrdersHistoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final address = order.fullAddress ?? order.address ?? "--";
-    final createdAt = DateTimeUtils.formatDateFromDT(order.createdAt) ?? "--";
+    final createdAt = DateTimeUtils.formatDateTime(order.createdAt) ?? "--";
     final cod = Utils.formatCurrencyWithUnit(order.codAmount);
-    final statusLabel = switch (order.status) {
-      "delivered" => "Đã giao",
-      "returned" => "Đã trả",
-      _ => order.status ?? "--",
-    };
+    // final statusLabel = switch (order.status) {
+    //   "delivered" => "Đã giao",
+    //   "returned" => "Đã trả",
+    //   _ => order.status ?? "--",
+    // };
 
     return PrimaryAnimatedPressableWidget(
       onTap: onTap,
-      child: Container(
+      child: PrimaryFrame(
         padding: const EdgeInsets.all(AppDimensions.smallSpacing),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: AppDimensions.xSmallBorderRadius,
-          border: Border.all(color: AppColors.neutral8),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -49,23 +45,27 @@ class OrdersHistoryListItem extends StatelessWidget {
                         color: AppColors.neutral5,
                       ),
                       children: [
-                        TextSpan(text: index.toString().padLeft(2, "0")),
-                        const TextSpan(text: " | "),
+                        TextSpan(
+                          text: "#$index. ",
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.accentColor1,
+                          ),
+                        ),
                         TextSpan(
                           text: order.orderNumber ?? "--",
-                          style: const TextStyle(
-                            color: AppColors.neutral1,
-                            fontWeight: FontWeight.w700,
+                          style: AppTextStyles.titleMedium.copyWith(
+                            color: AppColors.neutral2,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                _OrdersHistoryStatusChip(label: statusLabel),
+                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                _OrdersHistoryStatusChip(label: order.status ?? ""),
               ],
             ),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
+            AppSpacing.vertical(AppDimensions.smallSpacing),
             _OrdersHistoryInfoLine(
               icon: Icons.person,
               value: order.customerName,
@@ -92,18 +92,23 @@ class _OrdersHistoryInfoLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppDimensions.smallSpacing),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.xxxSmallSpacing,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 16, color: AppColors.neutral1),
+          Icon(
+            icon,
+            size: AppDimensions.smallIconSize,
+            color: AppColors.accentColor1,
+          ),
           AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(
             child: PrimaryText(
               value?.trim().isNotEmpty == true ? value! : "--",
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.neutral1,
-                fontWeight: FontWeight.w500,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.neutral2,
               ),
             ),
           ),
@@ -122,19 +127,18 @@ class _OrdersHistoryStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.mediumSpacing,
+        horizontal: AppDimensions.xSmallSpacing,
         vertical: AppDimensions.xxSmallSpacing,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.secondary,
         borderRadius: AppDimensions.xLargeBorderRadius,
-        border: Border.all(color: AppColors.secondary),
       ),
       child: PrimaryText(
         label,
-        style: AppTextStyles.labelSmall.copyWith(
-          color: AppColors.secondary,
-          fontWeight: FontWeight.w500,
+        style: AppTextStyles.labelXSmall.copyWith(
+          color: Colors.white,
+          // fontWeight: FontWeight.w500,
         ),
       ),
     );

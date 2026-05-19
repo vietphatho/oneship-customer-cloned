@@ -1,4 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
@@ -7,33 +9,36 @@ import 'package:oneship_customer/features/orders/presentation/widgets/orders_his
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_filter_panel.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_card.dart';
 
-class OrdersHistoryContent extends StatelessWidget {
+class OrdersHistoryContent extends StatefulWidget {
   const OrdersHistoryContent({
     super.key,
     required this.controller,
-    required this.ordersBloc,
-    required this.state,
     required this.isLoadingFor,
   });
 
   final TabController controller;
-  final OrdersBloc ordersBloc;
-  final OrdersState state;
   final bool Function(OrderStatus status, OrdersState state) isLoadingFor;
 
   @override
+  State<OrdersHistoryContent> createState() => _OrdersHistoryContentState();
+}
+
+class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
+  final OrdersBloc _ordersBloc = getIt.get();
+
+  @override
   Widget build(BuildContext context) {
-    final isFilterExpanded = state.showOrdersHistoryFilters;
+    final isFilterExpanded = _ordersBloc.state.showOrdersHistoryFilters;
 
     if (isFilterExpanded) {
       return SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: AppDimensions.mediumSpacing),
         child: Column(
           children: [
-            _OrdersHistoryListHeader(
-              isExpanded: true,
-              onToggle: ordersBloc.toggleOrdersHistoryFilters,
-            ),
+            // _OrdersHistoryListHeader(
+            //   isExpanded: true,
+            //   onToggle: ordersBloc.toggleOrdersHistoryFilters,
+            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppDimensions.mediumSpacing,
@@ -42,10 +47,10 @@ class OrdersHistoryContent extends StatelessWidget {
                 AppDimensions.smallSpacing,
               ),
               child: OrdersHistoryFilterPanel(
-                initialFilters: state.ordersHistoryFilters,
-                maxCodAmount: state.ordersHistoryMaxCodAmount,
-                onApply: ordersBloc.applyOrdersHistoryFilters,
-                onClear: ordersBloc.clearOrdersHistoryFilters,
+                initialFilters: _ordersBloc.state.ordersHistoryFilters,
+                maxCodAmount: _ordersBloc.state.ordersHistoryMaxCodAmount,
+                onApply: _ordersBloc.applyOrdersHistoryFilters,
+                onClear: _ordersBloc.clearOrdersHistoryFilters,
               ),
             ),
           ],
@@ -53,41 +58,52 @@ class OrdersHistoryContent extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        _OrdersHistoryListHeader(
-          isExpanded: false,
-          onToggle: ordersBloc.toggleOrdersHistoryFilters,
-        ),
-        Expanded(
-          child: TabBarView(
-            controller: controller,
-            children: [
-              OrdersHistoryListCard(
-                status: OrderStatus.delivered,
-                orders: state.visibleDeliveredOrdersHistoryList,
-                onRefresh:
-                    () => ordersBloc.fetchOrderHistory(OrderStatus.delivered),
-                onOrderTap: _onOrderTap,
-                isLoading: isLoadingFor(OrderStatus.delivered, state),
+    return BlocBuilder<OrdersBloc, OrdersState>(
+      bloc: _ordersBloc,
+      builder: (context, state) {
+        return Column(
+          children: [
+            // _OrdersHistoryListHeader(
+            //   isExpanded: false,
+            //   onToggle: ordersBloc.toggleOrdersHistoryFilters,
+            // ),
+            Expanded(
+              child: TabBarView(
+                controller: widget.controller,
+                children: [
+                  OrdersHistoryListCard(
+                    status: OrderStatus.delivered,
+                    orders: state.visibleDeliveredOrdersHistoryList,
+                    onRefresh:
+                        () => _ordersBloc.fetchOrderHistory(
+                          OrderStatus.delivered,
+                        ),
+                    onOrderTap: _onOrderTap,
+                    isLoading: widget.isLoadingFor(
+                      OrderStatus.delivered,
+                      state,
+                    ),
+                  ),
+                  OrdersHistoryListCard(
+                    status: OrderStatus.returned,
+                    orders: state.visibleReturnedOrdersHistoryList,
+                    onRefresh:
+                        () =>
+                            _ordersBloc.fetchOrderHistory(OrderStatus.returned),
+                    onOrderTap: _onOrderTap,
+                    isLoading: widget.isLoadingFor(OrderStatus.returned, state),
+                  ),
+                ],
               ),
-              OrdersHistoryListCard(
-                status: OrderStatus.returned,
-                orders: state.visibleReturnedOrdersHistoryList,
-                onRefresh:
-                    () => ordersBloc.fetchOrderHistory(OrderStatus.returned),
-                onOrderTap: _onOrderTap,
-                isLoading: isLoadingFor(OrderStatus.returned, state),
-              ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 
   void _onOrderTap(OrderHistoryInfoEntity order) {
-    ordersBloc.openOrderHistoryDetail(order);
+    _ordersBloc.openOrderHistoryDetail(order);
   }
 }
 
