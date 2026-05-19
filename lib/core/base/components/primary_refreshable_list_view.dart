@@ -153,8 +153,8 @@ class _FooterFailed extends StatelessWidget {
           ),
         ),
         AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        const PrimaryText(
-          "Tải thất bại, kéo lên để thử lại",
+        PrimaryText(
+          "load_failed_pull_up".tr(),
           style: AppTextStyles.bodySmall,
           color: AppColors.expenseRed,
         ),
@@ -178,8 +178,8 @@ class _FooterNoMore extends StatelessWidget {
           ),
         ),
         AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        const PrimaryText(
-          "Không còn dữ liệu",
+        PrimaryText(
+          "no_more_data".tr(),
           style: AppTextStyles.bodySmall,
           color: AppColors.neutral6,
         ),
