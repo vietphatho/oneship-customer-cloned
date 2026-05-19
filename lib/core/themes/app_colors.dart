@@ -23,6 +23,11 @@ class AppColors {
   static const Color error = Color(0xFFF44336);
   static const Color info = Color(0xFF2196F3);
 
+  static const Color open = Color(0xFFFF9800);
+  static const Color locked = Color(0xFF2196F3);
+  static const Color approved = Color(0xFF4CAF50);
+  static const Color cancelled = Color(0xFFF44336);
+
   // Light Scheme Colors
   static const Color background = Color(0xFFFFFFFF);
   static const Color dialogBarrierColor = Color(0x50000000);

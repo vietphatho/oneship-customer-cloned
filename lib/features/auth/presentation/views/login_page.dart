@@ -18,6 +18,9 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
+import 'package:oneship_customer/features/finance/enum.dart';
+import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
+import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -275,6 +278,15 @@ class _LoginPageState extends State<LoginPage> {
         } else if (!state.hasApprovedShop) {
           context.pushReplacement(RouteName.shopPendingApprovalPage);
         } else {
+          final FinanceOverviewBloc financeOverviewBloc = getIt.get();
+          final FinanceReconciliationBloc financeReconciliationBloc =
+              getIt.get();
+          final String shopId = state.currentShop?.shopId ?? "";
+          financeOverviewBloc.init(
+            shopId: shopId,
+            requestSource: FinanceRequestSource.page,
+          );
+          financeReconciliationBloc.initPeriods(shopId: shopId);
           context.pushReplacement(RouteName.shopMasterPage);
         }
       case Result.error:
