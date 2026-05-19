@@ -9,6 +9,7 @@ import 'package:oneship_customer/features/auth/data/models/request/update_user_p
 import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/create_second_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
@@ -17,6 +18,7 @@ import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case
 import 'package:oneship_customer/features/auth/domain/use_cases/update_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_second_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_user_profile_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/verify_secondary_password_use_case.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 
@@ -30,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._updatePasswordUseCase,
     this._createSecondPasswordUseCase,
     this._updateSecondPasswordUseCase,
+    this._verifySecondaryPasswordUseCase,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
     on<AuthFetchingUserProfileEvent>(_onProfileFetchedEvent);
@@ -38,6 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthUpdatePasswordEvent>(_onPasswordUpdatedEvent);
     on<AuthCreateSecondPasswordEvent>(_onSecondPasswordCreatedEvent);
     on<AuthUpdateSecondPasswordEvent>(_onSecondPasswordUpdatedEvent);
+    on<AuthVerifySecondaryPasswordEvent>(_onVerifySecondaryPassword);
   }
 
   final LogInUseCase _logInUseCase;
@@ -47,6 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UpdatePasswordUseCase _updatePasswordUseCase;
   final CreateSecondPasswordUseCase _createSecondPasswordUseCase;
   final UpdateSecondPasswordUseCase _updateSecondPasswordUseCase;
+  final VerifySecondaryPasswordUseCase _verifySecondaryPasswordUseCase;
 
   late UserProfileResponse _userProfile;
   UserProfileResponse get userProfile => _userProfile;
@@ -138,6 +143,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void updateSecondPassword(UpdateSecondPasswordRequest body) {
     add(AuthUpdateSecondPasswordEvent(body));
+  }
+
+  Future<void> _onVerifySecondaryPassword(
+    AuthVerifySecondaryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthVerifySecondaryPasswordState(Resource.loading()));
+
+    final response = await _verifySecondaryPasswordUseCase.call(event.request);
+
+    emit(AuthVerifySecondaryPasswordState(response));
+  }
+
+  void verifySecondaryPassword({required String secondPassword}){
+    add(AuthVerifySecondaryPasswordEvent(VerifySecondaryPasswordRequest(secondPassword: secondPassword)));
   }
 
   void updateUserProfile({String? displayName, String? userPhone}) {

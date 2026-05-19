@@ -10,8 +10,10 @@ import 'package:oneship_customer/features/auth/data/models/request/update_second
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_customer/features/auth/data/models/response/verify_secondary_password_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'auth_api.g.dart';
@@ -59,6 +61,9 @@ abstract class AuthApi {
   @PATCH("/api/v1/users/second-password")
   Future<BaseResponse> updateSecondPassword(@Body() UpdateSecondPasswordRequest body);
 
+  @POST("/api/v1/auth/verify-second-password")
+  Future<BaseResponse<VerifySecondaryPasswordResponse, BaseError>>
+  verifySecondaryPassword(@Body() VerifySecondaryPasswordRequest body);
 
   // //gen otp code
   // @POST("/api/v1/auth/shipper/register-otp")
