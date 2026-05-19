@@ -1,5 +1,6 @@
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 
 abstract class AuthEvent {
   const AuthEvent();
@@ -30,6 +31,12 @@ class AuthUpdateUserProfileEvent extends AuthEvent {
   final UpdateUserProfileRequest request;
 
   AuthUpdateUserProfileEvent(this.request);
+}
+
+class AuthVerifySecondaryPasswordEvent extends AuthEvent {
+  final VerifySecondaryPasswordRequest request;
+
+  AuthVerifySecondaryPasswordEvent(this.request);
 }
 
 // class GenOtpCodeEvent extends AuthEvent {

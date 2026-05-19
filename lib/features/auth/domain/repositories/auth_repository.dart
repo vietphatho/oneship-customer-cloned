@@ -5,8 +5,10 @@ import 'package:oneship_customer/features/auth/data/models/request/register_requ
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_customer/features/auth/data/models/response/verify_secondary_password_response.dart';
 
 abstract class AuthRepository extends BaseRepository {
   Future<Resource<LoginResponse>> login(LoginRequest body);
@@ -25,6 +27,10 @@ abstract class AuthRepository extends BaseRepository {
     required String id,
     required UpdateUserProfileRequest body,
   });
+
+  Future<Resource<VerifySecondaryPasswordResponse>> verifySecondaryPassword(
+    VerifySecondaryPasswordRequest body,
+  );
 
   // Future<Resource<OtpResult>> genOtpCode(String phoneNumber);
 

@@ -24,8 +24,10 @@ class ApiInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final token = await tokenManager.getAccessToken();
+    final secondPasswordToken = await tokenManager.getSecondPasswordToken();
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
+      options.headers['Second-Password-Token'] = secondPasswordToken;
     }
     handler.next(options);
   }

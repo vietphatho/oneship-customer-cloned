@@ -16,6 +16,8 @@ enum ErrorCodeEnum {
   auth013,
   auth014,
   auth015,
+  auth016,
+  auth020,
   auth021,
   auth023,
 
@@ -140,6 +142,8 @@ extension ErrorCodeEnumExt on ErrorCodeEnum {
     ErrorCodeEnum.auth013: 'AUTH_013',
     ErrorCodeEnum.auth014: 'AUTH_014',
     ErrorCodeEnum.auth015: 'AUTH_015',
+    ErrorCodeEnum.auth016: 'AUTH_016',
+    ErrorCodeEnum.auth020: 'AUTH_020',
     ErrorCodeEnum.auth021: 'AUTH_021',
     ErrorCodeEnum.auth023: 'AUTH_023',
 
