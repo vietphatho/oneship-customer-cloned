@@ -1,10 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tab_bar.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
@@ -70,6 +73,14 @@ class _OrdersPageState extends State<OrdersPage>
                     pre.cancelFindingShipperResult !=
                     cur.cancelFindingShipperResult,
             listener: _handleCancelFindingShipperChanged,
+          ),
+          BlocListener<OrdersBloc, OrdersState>(
+            bloc: _ordersBloc,
+            listenWhen:
+                (previous, current) =>
+                    previous.orderDetailResource !=
+                    current.orderDetailResource,
+            listener: _listenLoadDetailOrder,
           ),
         ],
         child: Column(
@@ -164,5 +175,23 @@ class _OrdersPageState extends State<OrdersPage>
 
   void _onTabChanged(int tabIndex) {
     _ordersBloc.currentOrderStatus = _tabList[tabIndex];
+  }
+
+  void _listenLoadDetailOrder(BuildContext context, OrdersState state) {
+    switch (state.orderDetailResource.state) {
+      case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
+        break;
+      case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
+        context.push(RouteName.orderDetailPage);
+        break;
+      case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.orderDetailResource.message,
+        );
+    }
   }
 }

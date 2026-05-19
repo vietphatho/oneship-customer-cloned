@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/register_page.dart';
+import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_customer/features/auth/presentation/views/verify_email_page.dart';
 import 'package:oneship_customer/features/home/presentation/view/home_page.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
@@ -14,6 +15,8 @@ import 'package:oneship_customer/features/orders/presentation/views/orders_histo
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
+import 'package:oneship_customer/features/profile/presentation/views/change_password_page.dart';
+import 'package:oneship_customer/features/profile/presentation/views/change_secondary_password_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
@@ -110,8 +113,20 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const ProfileDetailPage(),
     ),
     GoRoute(
+      path: RouteName.changePasswordPage,
+      builder: (context, state) => const ChangePasswordPage(),
+    ),
+    GoRoute(
+      path: RouteName.changeSecondaryPasswordPage,
+      builder: (context, state) => const ChangeSecondaryPasswordPage(),
+    ),
+    GoRoute(
       path: RouteName.ordersHistoryPage,
       builder: (context, state) => const OrdersHistoryPage(),
+    ),
+    GoRoute(
+      path: RouteName.financeDetailByDayPage,
+      builder: (context, state) => const FinanceDetailByDay(),
     ),
   ],
 );

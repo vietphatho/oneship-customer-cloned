@@ -28,6 +28,10 @@ class RouteName {
 
   static const String orderTrackingPage = '/home/order_tracking_page';
 
+  static const String financeDetailByDayPage = '/finance_detail_by_day';
+
   static const String profileDetailPage = '/profile_detail';
+  static const String changePasswordPage = '/change_password';
+  static const String changeSecondaryPasswordPage = '/change_secondary_password';
   static const String ordersHistoryPage = '/shop_master/orders_history';
 }
