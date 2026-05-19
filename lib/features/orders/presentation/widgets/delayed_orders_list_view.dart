@@ -33,8 +33,11 @@ class _DelayedOrdersListViewState extends State<DelayedOrdersListView> {
         return ListView.separated(
           itemCount: _orders.length,
           itemBuilder:
-              (context, index) =>
-                  OrderInfoItem(index: index + 1, order: _orders[index]),
+              (context, index) => OrderInfoItem(
+                index: index + 1,
+                order: _orders[index],
+                onTap: _ordersBloc.openOrderDetail,
+              ),
           separatorBuilder: (context, index) => const Divider(),
         );
       },

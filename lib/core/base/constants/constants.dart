@@ -61,7 +61,10 @@ class Constants {
   static const int maxReceivingAssignedPkgs = 50;
   static const double minDistanceToSnapRoute = 10;
 
+  static const int defaultPage = 1;
   static const int defaultLimitPerPage = 10;
+  static const String defaultSortByCreatedAt = "createdAt";
+  static const String defaultSortOrderDesc = "desc";
 
   static const tpSwitchBoard = "0981191608";
 

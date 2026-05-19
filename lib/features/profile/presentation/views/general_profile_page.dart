@@ -120,21 +120,31 @@ class _SettingsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProfile = getIt.get<AuthBloc>().userProfile;
     return Column(
       children: [
         _ProfileTitleItem(icon: SvgPath.iconSettings, label: "settings".tr()),
         _ProfileSelectedItem(
-          label: 'account_info'.tr(),
+          label: 'account_info.page_title'.tr(),
           onTap: () {
             context.push(RouteName.profileDetailPage);
           },
         ),
         Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(label: 'change_password'.tr(), onTap: () {}),
+        _ProfileSelectedItem(
+          label: 'change_password.page_title'.tr(),
+          onTap: () {
+            context.push(RouteName.changePasswordPage);
+          },
+        ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(
-          label: 'change_secondary_password'.tr(),
-          onTap: () {},
+          label: (userProfile.hasSecondPassword ?? false)
+              ? 'secondary_password.change_page_title'.tr()
+              : 'secondary_password.create_page_title'.tr(),
+          onTap: () {
+            context.push(RouteName.changeSecondaryPasswordPage);
+          },
         ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(label: 'activity_history'.tr(), onTap: () {}),

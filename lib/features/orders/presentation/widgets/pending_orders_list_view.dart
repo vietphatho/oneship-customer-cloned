@@ -1,11 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
@@ -34,13 +32,6 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<OrdersBloc, OrdersState>(
-          bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.orderDetailResource != current.orderDetailResource,
-          listener: _listenLoadDetailOrder,
-        ),
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
           listenWhen:
@@ -74,7 +65,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                       (context, index) => OrderInfoItem(
                         index: index + 1,
                         order: _orders[index],
-                        onTap: onTap,
+                        onTap: _ordersBloc.openOrderDetail,
                         onRemoved: _onRemoved,
                       ),
                   separatorBuilder:
@@ -89,30 +80,8 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
     );
   }
 
-  void onTap(OrderInfo order) {
-    _ordersBloc.fetchOrderDetail(shopId: order.shopId!, orderId: order.id!);
-  }
-
   void _onRemoved(OrderInfo order) {
     _ordersBloc.deleteOrder(order);
-  }
-
-  void _listenLoadDetailOrder(BuildContext context, OrdersState state) {
-    switch (state.orderDetailResource.state) {
-      case Result.loading:
-        PrimaryDialog.showLoadingDialog(context);
-        break;
-      case Result.success:
-        PrimaryDialog.hideLoadingDialog(context);
-        context.push(RouteName.orderDetailPage);
-        break;
-      case Result.error:
-        PrimaryDialog.hideLoadingDialog(context);
-        PrimaryDialog.showErrorDialog(
-          context,
-          message: state.orderDetailResource.message,
-        );
-    }
   }
 
   void _listenDeleteOrderState(BuildContext context, OrdersState state) {
