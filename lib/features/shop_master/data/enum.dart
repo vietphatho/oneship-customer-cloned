@@ -3,6 +3,7 @@ import 'package:oneship_customer/features/finance/presentation/views/finance_pag
 import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_management_page.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_management_page.dart';
 
 enum BottomNavigationItem {
   home,
@@ -24,7 +25,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
   static const _mapPage = {
     BottomNavigationItem.home: ShopHome(),
     BottomNavigationItem.finance: FinancePage(),
-    BottomNavigationItem.staffManagement: Placeholder(),
+    BottomNavigationItem.staffManagement: ShopStaffManagementPage(),
     BottomNavigationItem.shopManagement: ShopManagementPage(),
     BottomNavigationItem.menu: GeneralProfilePage(),
   };
