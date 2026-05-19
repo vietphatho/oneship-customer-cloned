@@ -48,7 +48,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PrimaryAppBar(title: "processed_orders".tr()),
+      appBar: PrimaryAppBar(title: "completed_orders".tr()),
       body: BlocListener<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         listenWhen:
@@ -60,30 +60,19 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
             Expanded(
               child: DefaultTabController(
                 length: _tabList.length,
-                child: BlocBuilder<OrdersBloc, OrdersState>(
-                  bloc: _ordersBloc,
-                  builder: (context, state) {
-                    return Column(
-                      children: [
-                        OrdersHistoryTabBar(
-                          controller: _tabCtrl,
-                          deliveredCount:
-                              state.filteredDeliveredOrdersHistoryList.length,
-                          returnedCount:
-                              state.filteredReturnedOrdersHistoryList.length,
-                          onTap: _onTabChanged,
-                        ),
-                        Expanded(
-                          child: OrdersHistoryContent(
-                            controller: _tabCtrl,
-                            ordersBloc: _ordersBloc,
-                            state: state,
-                            isLoadingFor: _isLoadingFor,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                child: Column(
+                  children: [
+                    OrdersHistoryTabBar(
+                      controller: _tabCtrl,
+                      onTap: _onTabChanged,
+                    ),
+                    Expanded(
+                      child: OrdersHistoryContent(
+                        controller: _tabCtrl,
+                        isLoadingFor: _isLoadingFor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

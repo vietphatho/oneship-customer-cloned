@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
-import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
@@ -97,27 +96,27 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                             ),
                       ),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
-                      PrimaryRadioGroup<ReceiverAddressOption>(
-                        title: "address_type".tr(),
-                        isRequired: true,
-                        direction: Axis.horizontal,
-                        options: ReceiverAddressOption.values,
-                        value:
-                            (state.draftRequest.isNewAddress ?? true)
-                                ? ReceiverAddressOption.newAddress
-                                : ReceiverAddressOption.oldAddress,
-                        displayLabel:
-                            (item) =>
-                                item == ReceiverAddressOption.newAddress
-                                    ? "new_address".tr()
-                                    : "old_address".tr(),
-                        onChanged:
-                            (value) => _createOrderBloc.changeCustomerInfo(
-                              isNewAddress:
-                                  value == ReceiverAddressOption.newAddress,
-                            ),
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
+                      // PrimaryRadioGroup<ReceiverAddressOption>(
+                      //   title: "address_type".tr(),
+                      //   isRequired: true,
+                      //   direction: Axis.horizontal,
+                      //   options: ReceiverAddressOption.values,
+                      //   value:
+                      //       (state.draftRequest.isNewAddress ?? true)
+                      //           ? ReceiverAddressOption.newAddress
+                      //           : ReceiverAddressOption.oldAddress,
+                      //   displayLabel:
+                      //       (item) =>
+                      //           item == ReceiverAddressOption.newAddress
+                      //               ? "new_address".tr()
+                      //               : "old_address".tr(),
+                      //   onChanged:
+                      //       (value) => _createOrderBloc.changeCustomerInfo(
+                      //         isNewAddress:
+                      //             value == ReceiverAddressOption.newAddress,
+                      //       ),
+                      // ),
+                      // AppSpacing.vertical(AppDimensions.smallSpacing),
                       const CustomerInfoProvinceSelector(),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       const CustomerInfoWardSelector(),
@@ -143,7 +142,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                             ),
                       ),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
-                      Container(height: 200, color: Colors.green),
+                      // Container(height: 200, color: Colors.green),
                     ],
                   ),
                 ),
