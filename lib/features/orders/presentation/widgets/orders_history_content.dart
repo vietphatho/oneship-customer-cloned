@@ -113,7 +113,7 @@ class _OrdersHistoryListHeader extends StatelessWidget {
         children: [
           Expanded(
             child: PrimaryText(
-              "Danh sách đơn hàng đã xử lý",
+              "processed_orders_list".tr(),
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.neutral1,
                 fontSize: 12,

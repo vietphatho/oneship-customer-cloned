@@ -48,7 +48,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PrimaryAppBar(title: "Đơn hàng đã xử lý"),
+      appBar: PrimaryAppBar(title: "processed_orders".tr()),
       body: BlocListener<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         listenWhen:
