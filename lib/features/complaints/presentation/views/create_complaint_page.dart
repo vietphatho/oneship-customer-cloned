@@ -12,6 +12,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/features/complaints/presentation/widgets/submit_complaint_button.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
@@ -29,7 +30,8 @@ class CreateComplaintPage extends StatefulWidget {
 
 class _CreateComplaintPageState extends State<CreateComplaintPage> {
   final _formKey = GlobalKey<FormState>();
-  final _createComplaintBloc = getIt<CreateComplaintBloc>();
+  final CreateComplaintBloc _createComplaintBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   String _selectedCategory = _kCategories.first;
   String _selectedPriority = _kPriorities.first;
@@ -123,23 +125,27 @@ class _CreateComplaintPageState extends State<CreateComplaintPage> {
   void _onStateChanged(BuildContext context, CreateComplaintState state) {
     if (state.createResource.state == Result.success && state.createResource.data != null) {
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('complaints.create_success'.tr())),
+      PrimaryDialog.showSuccessDialog(
+        context,
+        message: 'complaints.create_success'.tr(),
+        onClosed: () {
+          if (mounted) context.pop(true);
+        },
       );
-      context.pop(true);
     } else if (state.createResource.state == Result.error) {
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.createResource.message.isNotEmpty
+      PrimaryDialog.showErrorDialog(
+        context,
+        message: state.createResource.message.isNotEmpty
             ? state.createResource.message
-            : 'complaints.create_error'.tr())),
+            : 'complaints.create_error'.tr(),
       );
     }
   }
 
   void _onSubmit(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
-    final shopId = getIt<ShopBloc>().state.currentShop?.shopId;
+    final shopId = _shopBloc.state.currentShop?.shopId;
     if (shopId == null) return;
 
     setState(() => _isSubmitting = true);
