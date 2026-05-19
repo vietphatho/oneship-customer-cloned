@@ -9,11 +9,13 @@ abstract class ComplaintState with _$ComplaintState {
   const factory ComplaintState({
     required Resource<List<ComplaintEntity>> complaintsResource,
     required String selectedCategory,
-    Resource<bool>? deleteResource,
-  }) = ComplaintStateData;
+    required Resource<bool> deleteResource,
+    String? shopId,
+  }) = _ComplaintState;
 
   factory ComplaintState.initial() => ComplaintState(
         complaintsResource: Resource.loading(),
         selectedCategory: 'complaints.order_issues',
+        deleteResource: Resource.loading(),
       );
 }

@@ -13,6 +13,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+
 class ComplaintPage extends StatefulWidget {
   const ComplaintPage({super.key});
 
@@ -25,7 +27,7 @@ class _ComplaintPageState extends State<ComplaintPage> with SingleTickerProvider
   static const List<String> _tabs = ['complaints.order_issue', 'complaints.delivery_issue'];
   static const List<String> _serverCategories = ['order_issue', 'delivery_issue'];
 
-  // Mỗi tab có RefreshController riêng
+
   final List<RefreshController> _refreshControllers = [
     RefreshController(),
     RefreshController(),
@@ -65,9 +67,15 @@ class _ComplaintPageState extends State<ComplaintPage> with SingleTickerProvider
                 return BlocProvider(
                   key: ValueKey(_tabs[index]),
                   create: (_) => getIt<ComplaintBloc>()
-                    ..add(ComplaintEvent.started(category: _tabs[index])),
-                  child: ComplaintListView(
-                    refreshController: _refreshControllers[index],
+                    ..add(ComplaintStarted(
+                      category: _serverCategories[index],
+                      shopId: getIt<ShopBloc>().state.currentShop?.shopId,
+                    )),
+                  child: Builder(
+                    builder: (ctx) => ComplaintListView(
+                      bloc: ctx.read<ComplaintBloc>(),
+                      refreshController: _refreshControllers[index],
+                    ),
                   ),
                 );
               }),
@@ -85,11 +93,9 @@ class _ComplaintPageState extends State<ComplaintPage> with SingleTickerProvider
         IconButton(
           icon: const Icon(Icons.add, color: AppColors.secondary, size: 30),
           onPressed: () async {
-            final int currentTab = _tabController.index;
             final result = await context.push(RouteName.createComplaintPage);
             if (result == true && context.mounted) {
-              // Tìm BlocProvider của tab hiện tại để refresh
-              // Vì mỗi tab có Bloc riêng, chỉ cần setState để trigger rebuild
+
               setState(() {});
             }
           },

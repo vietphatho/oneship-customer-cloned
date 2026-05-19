@@ -1,9 +1,16 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+abstract class ComplaintEvent {
+  const ComplaintEvent();
+}
 
-part 'complaint_event.freezed.dart';
+class ComplaintStarted extends ComplaintEvent {
+  final String category;
+  final String? shopId;
 
-@freezed
-abstract class ComplaintEvent with _$ComplaintEvent {
-  const factory ComplaintEvent.started({required String category}) = ComplaintStarted;
-  const factory ComplaintEvent.complaintDeleted({required String id}) = ComplaintDeleted;
+  const ComplaintStarted({required this.category, this.shopId});
+}
+
+class ComplaintDeleted extends ComplaintEvent {
+  final String id;
+
+  const ComplaintDeleted({required this.id});
 }

@@ -5,17 +5,13 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/complaints/domain/use_cases/create_complaint_use_case.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/create_complaint_event.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/create_complaint_state.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 @injectable
 class CreateComplaintBloc extends Bloc<CreateComplaintEvent, CreateComplaintState> {
   final CreateComplaintUseCase _createComplaintUseCase;
-  final ShopBloc _shopBloc;
 
   CreateComplaintBloc(
     this._createComplaintUseCase,
-    this._shopBloc,
   ) : super(CreateComplaintState.initial()) {
     on<CreateComplaintSubmitted>(_onSubmitted);
   }
@@ -24,11 +20,8 @@ class CreateComplaintBloc extends Bloc<CreateComplaintEvent, CreateComplaintStat
     CreateComplaintSubmitted event,
     Emitter<CreateComplaintState> emit,
   ) async {
-    final shopId = _shopBloc.state.currentShop?.shopId;
-    if (shopId == null) return;
-
     emit(state.copyWith(createResource: Resource.loading()));
-    
+
     final response = await _createComplaintUseCase.call(
       category: event.category,
       priority: event.priority,
@@ -36,9 +29,29 @@ class CreateComplaintBloc extends Bloc<CreateComplaintEvent, CreateComplaintStat
       description: event.description,
       referenceType: event.referenceType,
       referenceId: event.referenceId,
-      shopId: shopId,
+      shopId: event.shopId,
     );
 
     emit(state.copyWith(createResource: response));
+  }
+
+  void submit({
+    required String category,
+    required String priority,
+    required String subject,
+    required String description,
+    required String referenceType,
+    required String referenceId,
+    required String shopId,
+  }) {
+    add(CreateComplaintSubmitted(
+      category: category,
+      priority: priority,
+      subject: subject,
+      description: description,
+      referenceType: referenceType,
+      referenceId: referenceId,
+      shopId: shopId,
+    ));
   }
 }

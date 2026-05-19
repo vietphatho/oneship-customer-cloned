@@ -57,7 +57,7 @@ class ComplaintCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: _getStatusColor(complaint.status).withOpacity(0.1),
+                  color: _getStatusColor(complaint.status).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

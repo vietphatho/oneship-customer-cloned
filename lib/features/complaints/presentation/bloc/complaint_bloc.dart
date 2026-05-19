@@ -6,18 +6,15 @@ import 'package:oneship_customer/features/complaints/domain/use_cases/delete_com
 import 'package:oneship_customer/features/complaints/domain/use_cases/get_complaints_use_case.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_event.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 @injectable
 class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
   final GetComplaintsUseCase _getComplaintsUseCase;
   final DeleteComplaintUseCase _deleteComplaintUseCase;
-  final ShopBloc _shopBloc;
 
   ComplaintBloc(
     this._getComplaintsUseCase,
     this._deleteComplaintUseCase,
-    this._shopBloc,
   ) : super(ComplaintState.initial()) {
     on<ComplaintStarted>(_onStarted);
     on<ComplaintDeleted>(_onComplaintDeleted);
@@ -26,9 +23,10 @@ class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
   FutureOr<void> _onStarted(ComplaintStarted event, Emitter<ComplaintState> emit) async {
     emit(state.copyWith(
       selectedCategory: event.category,
+      shopId: event.shopId,
       complaintsResource: Resource.loading(),
     ));
-    await _fetchComplaints(event.category, emit);
+    await _fetchComplaints(event.category, event.shopId, emit);
   }
 
   FutureOr<void> _onComplaintDeleted(
@@ -40,12 +38,11 @@ class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
     emit(state.copyWith(deleteResource: response));
 
     if (response.data == true) {
-      await _fetchComplaints(state.selectedCategory, emit);
+      await _fetchComplaints(state.selectedCategory, state.shopId, emit);
     }
   }
 
-  Future<void> _fetchComplaints(String category, Emitter<ComplaintState> emit) async {
-    final shopId = _shopBloc.state.currentShop?.shopId;
+  Future<void> _fetchComplaints(String category, String? shopId, Emitter<ComplaintState> emit) async {
     final response = await _getComplaintsUseCase.call(
       category: category,
       shopId: shopId,
@@ -53,12 +50,15 @@ class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
     emit(state.copyWith(complaintsResource: response));
   }
 
-  // Public helper methods
+
   void fetchComplaints() {
-    add(ComplaintEvent.started(category: state.selectedCategory));
+    add(ComplaintStarted(
+      category: state.selectedCategory,
+      shopId: state.shopId,
+    ));
   }
 
   void deleteComplaint(String id) {
-    add(ComplaintEvent.complaintDeleted(id: id));
+    add(ComplaintDeleted(id: id));
   }
 }

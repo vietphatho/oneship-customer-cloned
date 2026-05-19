@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/complaints/data/models/complaint_model.dart';
 import 'package:oneship_customer/features/complaints/data/models/response/complaint_list_response.dart';
+import 'package:oneship_customer/features/complaints/data/models/request/create_complaint_request.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'complaint_api.g.dart';
@@ -22,7 +23,7 @@ abstract class ComplaintApi {
 
   @POST("/api/v1/support-tickets")
   Future<BaseResponse<ComplaintModel, BaseError>> createComplaint({
-    @Body() required Map<String, dynamic> body,
+    @Body() required CreateComplaintRequest body,
   });
 
   @DELETE("/api/v1/support-tickets/{id}")

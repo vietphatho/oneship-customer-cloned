@@ -5,6 +5,7 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/complaints/data/datasources/complaint_api.dart';
 import 'package:oneship_customer/features/complaints/data/models/complaint_model.dart';
 import 'package:oneship_customer/features/complaints/data/models/response/complaint_list_response.dart';
+import 'package:oneship_customer/features/complaints/data/models/request/create_complaint_request.dart';
 import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
 import 'package:oneship_customer/features/complaints/domain/repositories/complaint_repository.dart';
 
@@ -19,20 +20,11 @@ class ComplaintRepositoryImpl extends BaseRepository implements ComplaintReposit
     required String category,
     String? shopId,
   }) async {
-    // Map localization key -> server value
-    const categoryMap = {
-      'complaints.order_issue': 'order_issue',
-      'complaints.delivery_issue': 'delivery_issue',
-      'order_issue': 'order_issue',
-      'delivery_issue': 'delivery_issue',
-    };
-    final serverCategory = categoryMap[category] ?? 'order_issue';
-
     final response = await request<ComplaintListResponse, BaseError>(
-      () => _api.getComplaints(category: serverCategory, shopId: shopId),
+      () => _api.getComplaints(category: category, shopId: shopId),
     );
 
-    return response.parse((listResponse) => (listResponse?.data ?? listResponse?.items ?? []).map((e) => e.toEntity()).toList());
+    return response.parse((listResponse) => (listResponse.data ?? listResponse.items ?? []).map((e) => e.toEntity()).toList());
   }
 
   @override
@@ -45,18 +37,18 @@ class ComplaintRepositoryImpl extends BaseRepository implements ComplaintReposit
     required String referenceId,
     String? shopId,
   }) async {
-    final body = {
-      'category': category,
-      'priority': priority,
-      'subject': subject,
-      'description': description,
-      'referenceType': referenceType,
-      'referenceId': referenceId,
-      'shopId': shopId,
-    };
+    final requestBody = CreateComplaintRequest(
+      category: category,
+      priority: priority,
+      subject: subject,
+      description: description,
+      referenceType: referenceType,
+      referenceId: referenceId,
+      shopId: shopId,
+    );
 
     final response = await request<ComplaintModel, BaseError>(
-      () => _api.createComplaint(body: body),
+      () => _api.createComplaint(body: requestBody),
     );
 
     return response.parse((model) => model.toEntity());

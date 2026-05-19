@@ -7,10 +7,10 @@ part 'create_complaint_state.freezed.dart';
 @freezed
 abstract class CreateComplaintState with _$CreateComplaintState {
   const factory CreateComplaintState({
-    required Resource<ComplaintEntity?> createResource,
-  }) = CreateComplaintStateData;
+    required Resource<ComplaintEntity> createResource,
+  }) = _CreateComplaintState;
 
   factory CreateComplaintState.initial() => CreateComplaintState(
-        createResource: Resource.success(null),
+        createResource: Resource.loading(),
       );
 }
