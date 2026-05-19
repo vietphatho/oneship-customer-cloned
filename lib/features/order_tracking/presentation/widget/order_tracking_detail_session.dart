@@ -102,33 +102,45 @@ class OrderTrackingDetailSession extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         PrimaryText(
                           stage.statusName.tr(),
                           style: AppTextStyles.labelLarge,
                         ),
-                        PrimaryText(
-                          _getTime(stage: stage, result: deliveryHistory),
-                          style: AppTextStyles.titleMedium,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            PrimaryText(
+                              _getTime(stage: stage, result: deliveryHistory),
+                              style: AppTextStyles.bodySmall,
+                              color: AppColors.neutral6,
+                            ),
+                            PrimaryText(
+                              _getDate(stage: stage, result: deliveryHistory),
+                              style: AppTextStyles.bodySmall,
+                              color: AppColors.neutral6,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        PrimaryText(
-                          stage.description,
-                          style: AppTextStyles.bodySmall,
-                          color: AppColors.neutral6,
-                        ),
-                        PrimaryText(
-                          _getDate(stage: stage, result: deliveryHistory),
-                          style: AppTextStyles.bodySmall,
-                          color: AppColors.neutral6,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     PrimaryText(
+                    //       stage.description.tr(),
+                    //       style: AppTextStyles.bodySmall,
+                    //       color: AppColors.neutral6,
+                    //     ),
+                    //     PrimaryText(
+                    //       _getDate(stage: stage, result: deliveryHistory),
+                    //       style: AppTextStyles.bodySmall,
+                    //       color: AppColors.neutral6,
+                    //     ),
+                    //   ],
+                    // ),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     if (stage == OrderTrackingStatus.pickedUp &&
                         (deliveryHistory.pickupImages?.isNotEmpty ??

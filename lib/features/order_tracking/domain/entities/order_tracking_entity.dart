@@ -55,27 +55,27 @@ abstract class ShipperEntity with _$ShipperEntity {
 abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
   const factory DeliveryHistoryEntity({
     String? status,
-    List<String>? confirmationImages,
+    @Default([]) List<String> confirmationImages,
     DateTime? arrivedAtDelivery,
     DateTime? deliveredAt,
     DateTime? addedToPackageAt,
     DateTime? scannedAt,
     DateTime? pickupConfirmedAt,
     DateTime? quantityConfirmedAt,
-    List<String>? pickupImages,
+    @Default([]) List<String> pickupImages,
   }) = _DeliveryHistoryEntity;
 
   factory DeliveryHistoryEntity.from(DeliveryHistory dto) {
     return DeliveryHistoryEntity(
       status: dto.status,
-      confirmationImages: dto.confirmationImages,
+      confirmationImages: dto.confirmationImages ?? [],
       arrivedAtDelivery: dto.arrivedAtDelivery,
       deliveredAt: dto.deliveredAt,
       addedToPackageAt: dto.addedToPackageAt,
       scannedAt: dto.scannedAt,
       pickupConfirmedAt: dto.pickupConfirmedAt,
       quantityConfirmedAt: dto.quantityConfirmedAt,
-      pickupImages: dto.pickupImages,
+      pickupImages: dto.pickupImages ?? [],
     );
   }
 }

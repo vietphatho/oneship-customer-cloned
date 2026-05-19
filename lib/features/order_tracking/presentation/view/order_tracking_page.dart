@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
@@ -43,19 +42,12 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
+          appBar: PrimaryAppBar(
+            backgroundColor: Colors.transparent,
+            title: "order_tracking".tr(),
+          ),
           body: Column(
             children: [
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    icon: Icon(Icons.arrow_back, color: AppColors.primary),
-                  ),
-                ),
-              ),
               const OrderTrackingInputSession(),
               AppSpacing.horizontal(AppDimensions.mediumSpacing),
               Expanded(
@@ -86,7 +78,8 @@ class _OrderTrackingSession extends StatelessWidget {
         var trackingResult = state.trackingResult;
         var orderNumber = trackingResult?.data?.orderNumber;
 
-        if (trackingResult?.state != Result.success && (orderNumber?.isEmpty ?? true)) {
+        if (trackingResult?.state != Result.success &&
+            (orderNumber?.isEmpty ?? true)) {
           return const PrimaryEmptyData();
         }
 

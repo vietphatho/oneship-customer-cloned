@@ -1,17 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/liquid_glass_view.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_text_button.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/core/navigation/route_observer_page.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_customer/features/home/presentation/widgets/order_tracking_input_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -108,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                           height: AppDimensions.smallHeightButton,
                         ),
                         AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                        _OrderTrackingInputContainer(),
+                        const OrderTrackingInputContainer(),
                         AppSpacing.vertical(AppDimensions.xxLargeSpacing),
                         _AuthActionButtons(),
                         AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
@@ -160,84 +153,5 @@ class _AuthActionButtons extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _OrderTrackingInputContainer extends StatefulWidget {
-  const _OrderTrackingInputContainer();
-
-  @override
-  State<_OrderTrackingInputContainer> createState() =>
-      _OrderTrackingInputContainerState();
-}
-
-class _OrderTrackingInputContainerState
-    extends State<_OrderTrackingInputContainer> {
-  final OrderTrackingBloc _orderTrackingBloc = getIt.get();
-
-  final TextEditingController _trackingNumberCtrl = TextEditingController();
-
-  @override
-  void dispose() {
-    _trackingNumberCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Material(
-            color: Colors.transparent,
-            child: PrimaryTextField(
-              controller: _trackingNumberCtrl,
-              textInputAction: TextInputAction.done,
-              hintText: 'input'.tr(),
-            ),
-          ),
-        ),
-        AppSpacing.horizontal(AppDimensions.smallSpacing),
-        Expanded(
-          child: BlocListener<OrderTrackingBloc, OrderTrackingState>(
-            bloc: _orderTrackingBloc,
-            listener: _handleOrderTrackingListener,
-            child: PrimaryButton.filled(
-              label: 'search'.tr(),
-              onPressed: () {
-                if (_trackingNumberCtrl.text.isNotEmpty) {
-                  _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
-                }
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _handleOrderTrackingListener(
-    BuildContext context,
-    OrderTrackingState state,
-  ) {
-    var currentRoute = RouteObserverPage.currentRoute;
-    if (currentRoute == RouteName.homePage) {
-      switch (state.trackingResult!.state) {
-        case Result.loading:
-          PrimaryDialog.showLoadingDialog(context);
-          break;
-        case Result.success:
-          PrimaryDialog.hideLoadingDialog(context);
-          if (!(state.trackingResult?.data?.isEmpty ?? true)) {
-            context.push(RouteName.orderTrackingPage);
-          }
-          break;
-        case Result.error:
-          PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
-          break;
-      }
-    }
   }
 }
