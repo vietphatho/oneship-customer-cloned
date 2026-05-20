@@ -161,16 +161,21 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
           model.items
               .map(
                 (e) => SelectedProductEntity(
-                  id: e.id ?? "",
-                  name: e.productName ?? "",
-                  sku: e.productSku ?? "",
-                  price: e.unitPrice,
-                  quantity: e.quantity,
+                  id: e.productId ?? e.id,
+                  name: e.productName,
+                  sku: e.productSku,
+                  price: e.unitPrice ?? 0,
+                  qty: e.quantity ?? 0,
                 ),
               )
               .toList(),
 
-      router: const RoutingEntity(),
+      router: RoutingEntity(
+        distance: model.distance != null ? double.tryParse(model.distance!) : null,
+        orderCoordinates: (model.coordinates?.coordinates?.length ?? 0) >= 2
+            ? model.coordinates!.coordinates!
+            : [],
+      ),
     );
   }
 }
@@ -214,4 +219,36 @@ abstract class DetailEntity with _$DetailEntity {
       note: note,
     );
   }
+}
+
+@freezed
+abstract class SelectedProductEntity with _$SelectedProductEntity {
+  const SelectedProductEntity._();
+
+  const factory SelectedProductEntity({
+    String? id,
+    String? name,
+    String? sku,
+    @Default(0) int price,
+    @Default(0) int qty,
+  }) = _SelectedProductEntity;
+
+  SelectedProduct toDto() {
+    return SelectedProduct(
+      id: id,
+      name: name,
+      sku: sku,
+      price: price,
+      qty: qty,
+    );
+  }
+
+  factory SelectedProductEntity.fromModel(ProductEntitySelected model) =>
+      SelectedProductEntity(
+        id: null,
+        name: model.product.productName,
+        sku: model.product.skuCode,
+        price: model.product.price,
+        qty: model.quantity,
+      );
 }

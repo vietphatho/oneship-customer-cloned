@@ -52,18 +52,28 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               pre.request != cur.request ||
               cur is CreateOrderErrorState,
       listener: _handleListener,
-      child: Scaffold(
-        appBar: PrimaryAppBar(title: "create_order_title".tr(), confirmPop: true),
-        body: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            const PickUpTimePageView(),
-            const ReceiverInfoPageView(),
-            const OrderInfoPageView(),
-            const ConfirmationInfoPageView(),
-          ],
-        ),
+      child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
+        bloc: _createOrderBloc,
+        buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
+        builder: (context, state) {
+          final isUpdate = state.updateOrdId != null;
+          return Scaffold(
+            appBar: PrimaryAppBar(
+              title: isUpdate ? "update_order_title".tr() : "create_order_title".tr(),
+              confirmPop: true,
+            ),
+            body: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                const PickUpTimePageView(),
+                const ReceiverInfoPageView(),
+                const OrderInfoPageView(),
+                const ConfirmationInfoPageView(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

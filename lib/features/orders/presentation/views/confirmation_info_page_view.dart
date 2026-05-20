@@ -210,7 +210,9 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showSuccessDialog(
             context,
-            message: "create_order_successfully".tr(),
+            message: state.updateOrdId != null 
+                ? "update_order_successfully".tr() 
+                : "create_order_successfully".tr(),
             onClosed: () {
               context.pop();
             },
@@ -251,9 +253,15 @@ class _BottomActionButtons extends StatelessWidget {
           ),
           AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(
-            child: SecondaryButton.filled(
-              label: "create_order".tr(),
-              onPressed: _createOrderBloc.createOrder,
+            child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
+              bloc: _createOrderBloc,
+              buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
+              builder: (context, state) {
+                return SecondaryButton.filled(
+                  label: state.updateOrdId != null ? "update_order".tr() : "create_order".tr(),
+                  onPressed: _createOrderBloc.createOrder,
+                );
+              },
             ),
           ),
         ],
@@ -318,7 +326,7 @@ class _FeeSession extends StatelessWidget {
               _InfoField(
                 label: "distance".tr(),
                 value:
-                    "${Utils.mToKm(state.routingToShopResource.data?.distance)?.toStringAsFixed(1)}"
+                    "${Utils.mToKm(state.routingToShopResource.data?.distance ?? request.router?.distance)?.toStringAsFixed(1)}"
                     " km",
               ),
               _InfoField(
@@ -332,7 +340,7 @@ class _FeeSession extends StatelessWidget {
                 ),
               ),
               _InfoField(
-                label: "VAT (${fee?.baseFee?.vatRate})".tr(),
+                label: "VAT (${fee?.baseFee?.vatRate ?? 0}%)",
                 value: Utils.formatCurrencyWithUnit(fee?.baseFee?.vatAmount),
               ),
               _InfoField(
