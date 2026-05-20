@@ -93,7 +93,7 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
               ?.map((dto) => OrderDetailProductEntity.from(dto))
               .toList() ??
           [],
-      shop: dto.shop != null ? OrderDetailShopEntity.from(dto.shop!) : null,
+      shop: dto.shop != null ? OrderDetailShopEntity.fromDto(dto.shop!) : null,
       orderFees:
           dto.orderFees?.map((e) => OrderFeeEntity.from(e)).toList() ?? [],
       totalProductAmount: dto.totalProductAmount ?? 0,
@@ -191,33 +191,23 @@ abstract class OrderFeeEntity with _$OrderFeeEntity {
 
 @freezed
 abstract class OrderDetailShopEntity with _$OrderDetailShopEntity {
-  const OrderDetailShopEntity._();
-
   const factory OrderDetailShopEntity({
-    String? id,
-    String? shopName,
-    ProfileEntity? profile,
+    @JsonKey(name: "id") String? id,
+    @JsonKey(name: "shopName") @Default("") String shopName,
+    @JsonKey(name: "phone") @Default("") String phone,
+    @JsonKey(name: "fullAddress") @Default("") String fullAddress,
+    @JsonKey(name: "shopCode") String? shopCode,
+    @JsonKey(name: "shopType") String? shopType,
   }) = _OrderDetailShopEntity;
 
-  factory OrderDetailShopEntity.from(Shop dto) {
-    return OrderDetailShopEntity(
-      id: dto.id,
-      shopName: dto.shopName,
-      profile: dto.profile != null ? ProfileEntity.from(dto.profile!) : null,
-    );
-  }
-}
-
-@freezed
-abstract class ProfileEntity with _$ProfileEntity {
-  const ProfileEntity._();
-
-  const factory ProfileEntity({String? phone, String? fullAddress}) =
-      _ProfileEntity;
-
-  factory ProfileEntity.from(Profile dto) {
-    return ProfileEntity(phone: dto.phone, fullAddress: dto.fullAddress);
-  }
+  factory OrderDetailShopEntity.fromDto(Shop dto) => OrderDetailShopEntity(
+    id: dto.id,
+    shopName: dto.shopName ?? "",
+    shopCode: dto.shopCode,
+    phone: dto.phone ?? "",
+    fullAddress: dto.fullAddress ?? "",
+    shopType: dto.shopType,
+  );
 }
 
 @freezed

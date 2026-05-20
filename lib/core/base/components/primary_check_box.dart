@@ -15,17 +15,18 @@ class PrimaryCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Checkbox(
           value: value,
           onChanged: onChanged,
           shape: CircleBorder(),
-          activeColor: AppColors.savingsBlue,
+          activeColor: AppColors.secondary,
           visualDensity: VisualDensity.compact,
         ),
         if (label != null) ...[
           AppSpacing.horizontal(AppDimensions.smallSpacing),
-          PrimaryText(label),
+          Expanded(child: PrimaryText(label, style: AppTextStyles.bodyMedium)),
         ],
       ],
     );

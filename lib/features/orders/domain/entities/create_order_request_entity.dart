@@ -3,6 +3,7 @@ import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 
 part 'create_order_request_entity.freezed.dart';
@@ -143,4 +144,13 @@ abstract class SelectedProductEntity with _$SelectedProductEntity {
       qty: qty,
     );
   }
+
+  factory SelectedProductEntity.fromModel(ProductEntitySelected model) =>
+      SelectedProductEntity(
+        id: "",
+        name: model.product.productName,
+        sku: model.product.skuCode,
+        price: model.product.price,
+        qty: model.quantity,
+      );
 }

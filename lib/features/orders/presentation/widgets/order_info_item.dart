@@ -2,6 +2,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/base/components/primary_dismissible.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 
@@ -68,11 +69,11 @@ class OrderInfoItem extends StatelessWidget {
               PrimaryText(
                 "${"cod".tr()}: ${order.codAmount}",
                 style: AppTextStyles.bodySmall,
-                color: AppColors.neutral2,
+                color: AppColors.neutral4,
               ),
               AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
               PrimaryText(
-                "${"created_at".tr()}: ${order.createdAt}",
+                "${"created_at".tr()}: ${DateTimeUtils.formatDateTime(order.createdAt?.toLocal())}",
                 style: AppTextStyles.bodySmall,
                 color: AppColors.neutral4,
               ),

@@ -263,10 +263,12 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     CreateOrderChangeProductEvent event,
     Emitter<CreateOrderState> emit,
   ) {
+    var products =
+        event.products.map((e) => SelectedProductEntity.fromModel(e)).toList();
     emit(
       CreateOrderProductChangedState(
-        request: state.request,
-        draftRequest: state.draftRequest,
+        request: state.request.copyWith(selectedProducts: products),
+        draftRequest: state.draftRequest.copyWith(selectedProducts: products),
         shopInfo: state.shopInfo,
         routingToShopResource: state.routingToShopResource,
         productEntitySelected: event.products,
