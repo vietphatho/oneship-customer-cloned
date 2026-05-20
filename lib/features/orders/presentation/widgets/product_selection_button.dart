@@ -9,9 +9,9 @@ import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 enum ProductOverlayType { create, select }
 
@@ -24,12 +24,19 @@ class ProductSelectionButton extends StatefulWidget {
 
 class _ProductSelectionButtonState extends State<ProductSelectionButton> {
   final ProductBloc _productBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   final LayerLink _layerLink = LayerLink();
 
   OverlayEntry? _overlayEntry;
 
   ProductOverlayType currentOverlay = ProductOverlayType.select;
+
+  @override
+  void initState() {
+    _productBloc.fetchProductsList(_shopBloc.state.currentShop?.shopId ?? "");
+    super.initState();
+  }
 
   OverlayEntry _createProductOverlay() {
     return OverlayEntry(
@@ -110,13 +117,20 @@ class _ProductSelectionButtonState extends State<ProductSelectionButton> {
       child: GestureDetector(
         onTap: _openProductOverlay,
         child: AbsorbPointer(
-          child: PrimaryTextField(
-            label: "product".tr(),
-            suffixIcon: Icon(
-              Icons.add_circle,
-              size: 24,
-              color: AppColors.primary,
-            ),
+          child: BlocSelector<ProductBloc, ProductState, int>(
+            bloc: _productBloc,
+            selector: (state) => state.selectedCount,
+            builder: (context, state) {
+              return PrimaryTextField(
+                label: "product".tr(),
+                hintText: "$state ${"product_selected".tr()}",
+                suffixIcon: Icon(
+                  Icons.add_circle,
+                  size: 24,
+                  color: AppColors.primary,
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -140,7 +154,6 @@ class _SelectProductContainer extends StatefulWidget {
 
 class _SelectProductContainerState extends State<_SelectProductContainer> {
   final ProductBloc _productBloc = getIt.get();
-  final CreateOrderBloc _createOrderBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
@@ -172,22 +185,23 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
           BlocConsumer<ProductBloc, ProductState>(
             bloc: _productBloc,
             listener: (context, state) {
-              switch (state.products!.state) {
-                case Result.loading:
-                  PrimaryDialog.showLoadingDialog(context);
-                  break;
-                case Result.success:
-                  PrimaryDialog.hideLoadingDialog(context);
-                  break;
-                case Result.error:
-                  PrimaryDialog.hideLoadingDialog(context);
-                  PrimaryDialog.showErrorDialog(context);
-                  break;
-              }
+              // switch (state.products!.state) {
+              //   case Result.loading:
+              //     PrimaryDialog.showLoadingDialog(context);
+              //     break;
+              //   case Result.success:
+              //     PrimaryDialog.hideLoadingDialog(context);
+              //     break;
+              //   case Result.error:
+              //     PrimaryDialog.hideLoadingDialog(context);
+              //     PrimaryDialog.showErrorDialog(context);
+              //     break;
+              // }
             },
+            buildWhen: (pre, cur) => pre.productsList != cur.productsList,
             builder: (context, state) {
-              if (state.products?.data != null) {
-                if (state.products!.data!.isNotEmpty) {
+              if (state.productsList.data != null) {
+                if (state.productsList.data!.items!.isNotEmpty) {
                   return Column(
                     children: [
                       PrimaryTextField(),
@@ -225,9 +239,10 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
                         child: ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
-                          itemCount: state.products!.data!.length,
+                          itemCount: state.productsList.data!.items!.length,
                           itemBuilder: (context, index) {
-                            final product = state.products!.data![index];
+                            final product =
+                                state.productsList.data!.items![index];
                             return _productSelectionItem(product);
                           },
                         ),
@@ -282,10 +297,6 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
                 width: 72,
                 child: SecondaryButton.filled(
                   onPressed: () {
-                    _createOrderBloc.addProductToOrder(
-                      _productBloc.state.getSelectedProducts(),
-                    );
-                    _productBloc.resetProductSelected();
                     widget.onClose();
                   },
                   label: "done".tr(),
@@ -307,8 +318,8 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PrimaryText(product.productName, style: AppTextStyles.bodyMedium),
-              PrimaryText(product.skuCode, style: AppTextStyles.bodySmall),
+              PrimaryText(product.name, style: AppTextStyles.bodyMedium),
+              PrimaryText(product.sku, style: AppTextStyles.bodySmall),
             ],
           ),
         ),
@@ -322,10 +333,22 @@ class _SelectProductContainerState extends State<_SelectProductContainer> {
         Expanded(
           flex: 1,
           child: Center(
-            child: PrimaryCheckBox(
-              value: product.isSelected,
-              onChanged: (value) {
-                _productBloc.toggleProductSelection(product.skuCode);
+            child: BlocBuilder<ProductBloc, ProductState>(
+              bloc: _productBloc,
+              buildWhen:
+                  (pre, cur) =>
+                      pre.productsListSelected != cur.productsListSelected,
+              builder: (context, state) {
+                return PrimaryCheckBox(
+                  value: state.isSelected(product.sku),
+                  onChanged: (value) {
+                    if (value!) {
+                      _productBloc.addToSelectedList(product);
+                    } else {
+                      _productBloc.removeFromSelectedList(product);
+                    }
+                  },
+                );
               },
             ),
           ),
@@ -350,6 +373,7 @@ class _CreateProductContainer extends StatefulWidget {
 
 class _CreateProductContainerState extends State<_CreateProductContainer> {
   final ProductBloc _productBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   final TextEditingController _proNameCtrl = TextEditingController();
   final TextEditingController _skuCodeCtrl = TextEditingController();
@@ -361,18 +385,29 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
   Widget build(BuildContext context) {
     return BlocListener<ProductBloc, ProductState>(
       bloc: _productBloc,
+      listenWhen:
+          (pre, cur) =>
+              pre.createProductResource.state !=
+              cur.createProductResource.state,
       listener: (context, state) {
-        switch (state.products!.state) {
+        switch (state.createProductResource.state) {
           case Result.loading:
             PrimaryDialog.showLoadingDialog(context);
             break;
           case Result.success:
             PrimaryDialog.hideLoadingDialog(context);
+            _productBloc.fetchProductsList(
+              _shopBloc.state.currentShop?.shopId ?? "",
+            );
+            _productBloc.addToSelectedList(state.createProductResource.data!);
             widget.onSwitch();
             break;
           case Result.error:
             PrimaryDialog.hideLoadingDialog(context);
-            PrimaryDialog.showErrorDialog(context);
+            PrimaryDialog.showErrorDialog(
+              context,
+              message: state.createProductResource.message,
+            );
             break;
         }
       },
@@ -435,13 +470,11 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
               PrimaryButton.filled(
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
-                    _productBloc.createNewProduct(
-                      ProductEntity(
-                        productName: _proNameCtrl.text.trim(),
-                        skuCode: _skuCodeCtrl.text.trim(),
-                        price: int.parse(_priceCtrl.text.trim()),
-                        isSelected: true,
-                      ),
+                    _productBloc.createProduct(
+                      shopId: _shopBloc.state.currentShop?.shopId ?? "",
+                      name: _proNameCtrl.text.trim(),
+                      sku: _skuCodeCtrl.text.trim(),
+                      price: int.parse(_priceCtrl.text.trim()),
                     );
                   }
                 },

@@ -11,6 +11,8 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_state.dart';
 
 class ProductSelectedContainer extends StatefulWidget {
   const ProductSelectedContainer({super.key});
@@ -22,6 +24,7 @@ class ProductSelectedContainer extends StatefulWidget {
 
 class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final ProductBloc _productBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
@@ -69,19 +72,33 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
 
         AppSpacing.vertical(AppDimensions.xxSmallSpacing),
 
-        BlocBuilder<CreateOrderBloc, CreateOrderState>(
-          bloc: _createOrderBloc,
-          buildWhen: (_, current) => current is CreateOrderProductChangedState,
+        BlocBuilder<ProductBloc, ProductState>(
+          bloc: _productBloc,
+          buildWhen:
+              (pre, cur) =>
+                  pre.productsListSelected != cur.productsListSelected,
           builder: (context, state) {
             return Column(
               children:
-                  state.productEntitySelected
+                  state.productsListSelected
                       .map((product) => _productSelectedItem(product))
                       .toList(),
             );
           },
         ),
 
+        // BlocBuilder<CreateOrderBloc, CreateOrderState>(
+        //   bloc: _createOrderBloc,
+        //   buildWhen: (_, current) => current is CreateOrderProductChangedState,
+        //   builder: (context, state) {
+        //     return Column(
+        //       children:
+        //           state.productEntitySelected
+        //               .map((product) => _productSelectedItem(product))
+        //               .toList(),
+        //     );
+        //   },
+        // ),
         AppSpacing.vertical(AppDimensions.smallSpacing),
 
         Divider(height: 1.5, color: AppColors.neutral8),
@@ -110,10 +127,11 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                 ),
               ),
             ),
-            BlocBuilder<CreateOrderBloc, CreateOrderState>(
-              bloc: _createOrderBloc,
+            BlocBuilder<ProductBloc, ProductState>(
+              bloc: _productBloc,
               buildWhen:
-                  (_, current) => current is CreateOrderProductChangedState,
+                  (pre, cur) =>
+                      pre.productsListSelected != cur.productsListSelected,
               builder: (context, state) {
                 return Expanded(
                   flex: 3,
@@ -129,10 +147,11 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
               },
             ),
 
-            BlocBuilder<CreateOrderBloc, CreateOrderState>(
-              bloc: _createOrderBloc,
+            BlocBuilder<ProductBloc, ProductState>(
+              bloc: _productBloc,
               buildWhen:
-                  (_, current) => current is CreateOrderProductChangedState,
+                  (pre, cur) =>
+                      pre.productsListSelected != cur.productsListSelected,
               builder: (context, state) {
                 return Expanded(
                   flex: 2,
@@ -164,13 +183,10 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PrimaryText(
-                product.product.productName,
+                product.product.name,
                 style: AppTextStyles.bodyMedium,
               ),
-              PrimaryText(
-                product.product.skuCode,
-                style: AppTextStyles.bodySmall,
-              ),
+              PrimaryText(product.product.sku, style: AppTextStyles.bodySmall),
             ],
           ),
         ),
@@ -196,16 +212,16 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                         context,
                         title: 'delete_this_product',
                         onPositiveTapped: () {
-                          _createOrderBloc.updateProductQuantity(
-                            product.product.skuCode,
-                            CreateOrderProductAction.decrement,
+                          _productBloc.updateProductSelectedQty(
+                            sku: product.product.sku,
+                            actionType: CreateOrderProductAction.decrement,
                           );
                         },
                       );
                     } else {
-                      _createOrderBloc.updateProductQuantity(
-                        product.product.skuCode,
-                        CreateOrderProductAction.decrement,
+                      _productBloc.updateProductSelectedQty(
+                        sku: product.product.sku,
+                        actionType: CreateOrderProductAction.decrement,
                       );
                     }
                   },
@@ -227,9 +243,9 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                 AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                 InkWell(
                   onTap: () {
-                    _createOrderBloc.updateProductQuantity(
-                      product.product.skuCode,
-                      CreateOrderProductAction.increment,
+                    _productBloc.updateProductSelectedQty(
+                      sku: product.product.sku,
+                      actionType: CreateOrderProductAction.increment,
                     );
                   },
                   child: Container(

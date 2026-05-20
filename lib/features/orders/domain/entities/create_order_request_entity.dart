@@ -148,8 +148,8 @@ abstract class SelectedProductEntity with _$SelectedProductEntity {
   factory SelectedProductEntity.fromModel(ProductEntitySelected model) =>
       SelectedProductEntity(
         id: "",
-        name: model.product.productName,
-        sku: model.product.skuCode,
+        name: model.product.name,
+        sku: model.product.sku,
         price: model.product.price,
         qty: model.quantity,
       );

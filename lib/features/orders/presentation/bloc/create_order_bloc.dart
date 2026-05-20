@@ -389,6 +389,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     String? note,
     String? externalOrderId,
     String? orderSource,
+    required List<SelectedProductEntity> selectedProducts
   }) {
     var currentReq = state.request;
     var draftReq = state.draftRequest;
@@ -405,6 +406,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         note: note,
         orderSource: orderSource,
       ),
+      selectedProducts: selectedProducts
     );
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),

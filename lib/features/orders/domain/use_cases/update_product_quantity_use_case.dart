@@ -12,7 +12,7 @@ class UpdateProductQuantityUseCase {
     required CreateOrderProductAction actionType,
   }) async {
     final Map<String, ProductEntitySelected> currentMap = {
-      for (final item in currentProduct) item.product.skuCode: item,
+      for (final item in currentProduct) item.product.sku: item,
     };
     final current = currentMap[sku]!;
 

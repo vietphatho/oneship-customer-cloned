@@ -11,7 +11,7 @@ class AddProductToOrderUseCase {
     required Map<String, ProductEntity> selectedMap,
   }) async {
     final Map<String, ProductEntitySelected> currentMap = {
-      for (final item in currentProduct) item.product.skuCode: item,
+      for (final item in currentProduct) item.product.sku: item,
     };
 
     for (final entry in selectedMap.entries) {
