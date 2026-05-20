@@ -22,11 +22,6 @@ class OrdersHistoryListItem extends StatelessWidget {
     final address = order.fullAddress ?? order.address ?? "--";
     final createdAt = DateTimeUtils.formatDateTime(order.createdAt) ?? "--";
     final cod = Utils.formatCurrencyWithUnit(order.codAmount);
-    // final statusLabel = switch (order.status) {
-    //   "delivered" => "Đã giao",
-    //   "returned" => "Đã trả",
-    //   _ => order.status ?? "--",
-    // };
 
     return PrimaryAnimatedPressableWidget(
       onTap: onTap,
