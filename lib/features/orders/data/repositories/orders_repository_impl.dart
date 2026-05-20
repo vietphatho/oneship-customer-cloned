@@ -124,11 +124,17 @@ class OrdersRepositoryImpl extends OrdersRepository {
     required CreateProductRequest body,
   }) async {
     final response = await request(
-      () => _ordersApi.createProduct(
-        shopId: shopId,
-        body: body
-      ),
+      () => _ordersApi.createProduct(shopId: shopId, body: body),
     );
     return response.parse((dto) => ProductEntity.from(dto));
+  }
+
+  Future<Resource> updateOrder({
+    required String ordId,
+    required CreateOrderRequest requestBody,
+  }) {
+    return request(
+      () => _ordersApi.updateOrder(ordId: ordId, body: requestBody),
+    );
   }
 }

@@ -38,6 +38,11 @@ abstract class OrdersRepository extends BaseRepository {
 
   Future<Resource> createOrder(CreateOrderRequest requestBody);
 
+  Future<Resource> updateOrder({
+    required String ordId,
+    required CreateOrderRequest requestBody,
+  });
+
   Future<Resource> deleteOrder({
     required String orderId,
     required String shopId,

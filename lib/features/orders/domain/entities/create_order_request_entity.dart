@@ -3,6 +3,7 @@ import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 
@@ -80,6 +81,98 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
       ),
     );
   }
+
+  factory CreateOrderRequestEntity.fromResponseModel(OrderDetailEntity model) {
+    return CreateOrderRequestEntity(
+      externalOrderId: model.externalOrderId,
+
+      serviceCode: DeliveryServiceType.values.firstWhere(
+        (e) => e.requestValue == model.serviceCode,
+        orElse: () => DeliveryServiceType.standard,
+      ),
+
+      orderNumber: model.orderNumber,
+
+      codAmount: model.codAmount,
+
+      status: model.status,
+
+      fullAddress: model.fullAddress,
+      fullAddressOld: model.fullAddressOld,
+
+      ward:
+          model.wardCode != null
+              ? Ward(
+                code: model.wardCode!,
+                name: model.wardName ?? "",
+                provinceCode: model.provinceCode!,
+              )
+              : null,
+
+      province:
+          model.provinceCode != null
+              ? Province(
+                code: model.provinceCode!,
+                name: model.provinceName ?? "",
+              )
+              : null,
+
+      isNewAddress: false,
+
+      phone: model.phone,
+      customerName: model.customerName,
+      email: model.email,
+
+      paymentStatus: model.paymentStatus,
+      paymentMethod: model.paymentMethod,
+
+      packageType: model.packageType,
+
+      shopId: model.shopId,
+
+      payer: Payer.values.firstWhere(
+        (e) => e.requestValue == model.payer,
+        orElse: () => Payer.recipient,
+      ),
+
+      agreeTerms: true,
+
+      detail: DetailEntity(
+        pickupDate: model.pickupDate,
+        pickupSession:
+            model.pickupTimeSlot != null
+                ? OrderPickUpSession.values.firstWhere(
+                  (e) => e.requestValue == model.pickupTimeSlot,
+                  orElse: () => OrderPickUpSession.morning,
+                )
+                : null,
+        deliveryTimeSlot: model.deliveryTimeSlot,
+        weight: model.weight,
+        length: model.length,
+        width: model.width,
+        height: model.height,
+        isFragile: model.isFragile,
+        isLiquid: model.isLiquid,
+        hasBattery: model.hasBattery,
+        note: model.note,
+      ),
+
+      selectedProducts:
+          model.items
+              .map(
+                (e) => SelectedProductEntity(
+                  id: e.id,
+                  name: e.productName,
+                  sku: e.productSku,
+                  price: e.unitPrice ?? 0,
+                  qty: e.quantity ?? 0,
+                ),
+              )
+              .toList(),
+
+      router: const RoutingEntity(),
+    );
+  }
 }
 
 @freezed
@@ -107,17 +200,17 @@ abstract class DetailEntity with _$DetailEntity {
     return Detail(
       pickupDate: pickupDate,
       pickupTimeSlot: pickupSession?.requestValue,
-      deliveryTimeSlot: deliveryTimeSlot,
+      // deliveryTimeSlot: deliveryTimeSlot,
       weight: weight,
-      isHighValueGoods: isHighValueGoods,
-      isFragile: isFragile,
-      isOnePiece: isOnePiece,
-      isLiquid: isLiquid,
-      hasBattery: hasBattery,
+      // isHighValueGoods: isHighValueGoods,
+      // isFragile: isFragile,
+      // isOnePiece: isOnePiece,
+      // isLiquid: isLiquid,
+      // hasBattery: hasBattery,
       length: length ?? 0,
       width: width ?? 0,
       height: height ?? 0,
-      orderSource: orderSource,
+      // orderSource: orderSource,
       note: note,
     );
   }

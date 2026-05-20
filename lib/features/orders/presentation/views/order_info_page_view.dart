@@ -32,6 +32,20 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
   // DeliveryServiceType _deliveryServiceType = DeliveryServiceType.standard;
 
   @override
+  void initState() {
+    super.initState();
+    var request = _createOrderBloc.state.request;
+    _codCtrl.text = request.codAmount?.toString() ?? "";
+    _weightCtrl.text = request.detail?.weight?.toInt().toString() ?? "";
+    _lengthCtrl.text = request.detail?.length?.toString() ?? "";
+    _widthCtrl.text = request.detail?.width?.toString() ?? "";
+    _heightCtrl.text = request.detail?.height?.toString() ?? "";
+    _noteCtrl.text = request.detail?.note ?? "";
+    _externalOrderIdCtrl.text = request.externalOrderId ?? "";
+    // _orderSourceCtrl.text = request.o
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override

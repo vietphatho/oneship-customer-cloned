@@ -55,6 +55,12 @@ abstract class OrdersApi {
   @POST("/api/v1/orders")
   Future<BaseResponse> createOrder(@Body() CreateOrderRequest body);
 
+  @PATCH("/api/v1/orders/{ordId}")
+  Future<BaseResponse> updateOrder({
+    @Path("ordId") required String ordId,
+    @Body() required CreateOrderRequest body,
+  });
+
   @DELETE("/api/v1/orders/{orderId}")
   Future<BaseResponse> deleteOrder({
     @Path("orderId") required String orderId,

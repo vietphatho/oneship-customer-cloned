@@ -1,11 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/themes/app_box_shadows.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_info_tab_view.dart';
@@ -145,14 +148,18 @@ class _Header extends StatelessWidget {
             ),
           ),
           AppSpacing.horizontal(AppDimensions.mediumSpacing),
+          // IconButton(
+          //   visualDensity: VisualDensity.compact,
+          //   onPressed: () {},
+          //   icon: Icon(Icons.print, color: AppColors.secondary),
+          // ),
           IconButton(
             visualDensity: VisualDensity.compact,
-            onPressed: () {},
-            icon: Icon(Icons.print, color: AppColors.secondary),
-          ),
-          IconButton(
-            visualDensity: VisualDensity.compact,
-            onPressed: () {},
+            onPressed: () {
+              final CreateOrderBloc _createOrderBloc = getIt.get();
+              _createOrderBloc.initUpdateOrdData(ordDtl);
+              context.push(RouteName.createOrderPage);
+            },
             icon: Icon(Icons.edit_document, color: AppColors.secondary),
           ),
         ],
