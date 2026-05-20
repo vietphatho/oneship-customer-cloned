@@ -135,7 +135,7 @@ class _OrdersHistoryStatusChip extends StatelessWidget {
         borderRadius: AppDimensions.xLargeBorderRadius,
       ),
       child: PrimaryText(
-        label,
+        label.tr(),
         style: AppTextStyles.labelXSmall.copyWith(
           color: Colors.white,
           // fontWeight: FontWeight.w500,
