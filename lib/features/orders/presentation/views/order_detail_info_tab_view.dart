@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -19,6 +20,9 @@ class OrderDetailInfoTabView extends StatelessWidget {
       bloc: _ordersBloc,
       builder: (context, state) {
         var ordDtl = state.orderDetailResource.data;
+        final shouldShowShipperInfo =
+            ordDtl?.status != OrderStatus.pending.value &&
+            ordDtl?.status != OrderStatus.processing.value;
 
         return SingleChildScrollView(
           child: Padding(
@@ -189,45 +193,50 @@ class OrderDetailInfoTabView extends StatelessWidget {
                     ],
                   ),
                 ),
-                AppSpacing.vertical(AppDimensions.smallSpacing),
-                PrimaryFrame(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.delivery_dining_rounded),
-                          AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                          PrimaryText(
-                            "shipper_info".tr(),
-                            style: AppTextStyles.labelLarge,
-                          ),
-                        ],
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      Row(
-                        children: [
-                          CircleAvatar(),
-                          AppSpacing.horizontal(AppDimensions.mediumSpacing),
-                          Column(
-                            children: [PrimaryText("--"), PrimaryText("--")],
-                          ),
-                        ],
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      _buildInfoField(
-                        label: "shipper_id".tr(),
-                        value: ordDtl?.shipperCodes.firstOrNull,
-                      ),
-                      _buildInfoField(label: "phone_number".tr(), value: null),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      SecondaryButton.iconFilled(
-                        label: "call_right_now".tr(),
-                        icon: Icon(Icons.call_rounded, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                    ],
+                if (shouldShowShipperInfo) ...[
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  PrimaryFrame(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.delivery_dining_rounded),
+                            AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                            PrimaryText(
+                              "shipper_info".tr(),
+                              style: AppTextStyles.labelLarge,
+                            ),
+                          ],
+                        ),
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        Row(
+                          children: [
+                            CircleAvatar(),
+                            AppSpacing.horizontal(AppDimensions.mediumSpacing),
+                            Column(
+                              children: [PrimaryText("--"), PrimaryText("--")],
+                            ),
+                          ],
+                        ),
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        _buildInfoField(
+                          label: "shipper_id".tr(),
+                          value: ordDtl?.shipperCodes.firstOrNull,
+                        ),
+                        _buildInfoField(
+                          label: "phone_number".tr(),
+                          value: null,
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        SecondaryButton.iconFilled(
+                          label: "call_right_now".tr(),
+                          icon: Icon(Icons.call_rounded, color: Colors.white),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
                 AppSpacing.vertical(AppDimensions.mediumSpacing),
               ],
             ),
