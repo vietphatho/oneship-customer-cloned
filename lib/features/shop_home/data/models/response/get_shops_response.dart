@@ -21,6 +21,7 @@ abstract class Shop with _$Shop {
   const factory Shop({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "shopName") String? shopName,
+    @JsonKey(name: "phone") String? phone,
     @JsonKey(name: "coordinates") BaseCoordinates? coordinates,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "createdAt") DateTime? createdAt,
@@ -38,7 +39,6 @@ abstract class ShopProfile with _$ShopProfile {
     @JsonKey(name: "description") String? description,
     @JsonKey(name: "logo") String? logo,
     @JsonKey(name: "banner") String? banner,
-    @JsonKey(name: "phone") String? phone,
     @JsonKey(name: "email") String? email,
     @JsonKey(name: "ownerName") String? ownerName,
     @JsonKey(name: "fullAddress") String? fullAddress,

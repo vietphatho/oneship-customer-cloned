@@ -44,3 +44,15 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
 
   String get title => _mapTitle[this]!;
 }
+
+enum ShopStatus { active, inactive, unknown }
+
+extension ShopStatusX on ShopStatus {
+  static const _mapRawValue = {
+    ShopStatus.active: "active",
+    ShopStatus.inactive: "inactive",
+    ShopStatus.unknown: "",
+  };
+
+  String get rawValue => _mapRawValue[this]!;
+}

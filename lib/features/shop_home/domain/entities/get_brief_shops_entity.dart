@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
 
 part 'get_brief_shops_entity.freezed.dart';
@@ -29,7 +31,7 @@ abstract class BriefShopEntity with _$BriefShopEntity {
     String? userId,
     String? shopId,
     @Default("") String shopName,
-    String? shopStatus,
+    @Default(ShopStatus.unknown) ShopStatus status,
     BaseCoordinates? shopCoordinates,
     String? shopLogo,
     String? staffRole,
@@ -42,7 +44,7 @@ abstract class BriefShopEntity with _$BriefShopEntity {
     DateTime? createdAt,
   }) = _BriefShopEntity;
 
-  bool get isActive => shopStatus?.trim().toLowerCase() == 'active';
+  bool get isActive => status == ShopStatus.active;
 
   factory BriefShopEntity.from(ShopInfo dto) {
     return BriefShopEntity(
@@ -50,7 +52,7 @@ abstract class BriefShopEntity with _$BriefShopEntity {
       userId: dto.userId,
       shopId: dto.shopId,
       shopName: dto.shopName ?? "",
-      shopStatus: dto.shopStatus,
+      status: _getStatus(dto.shopStatus),
       shopCoordinates: dto.shopCoordinates,
       shopLogo: dto.shopLogo,
       staffRole: dto.staffRole,
@@ -66,6 +68,11 @@ abstract class BriefShopEntity with _$BriefShopEntity {
       address: dto.profile?.fullAddress,
       createdAt: dto.createdAt,
     );
+  }
+
+  static ShopStatus _getStatus(String? rawValue) {
+    return ShopStatus.values.firstWhereOrNull((e) => e.rawValue == rawValue) ??
+        ShopStatus.unknown;
   }
 }
 

@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
 
 part 'get_shops_entity.freezed.dart';
@@ -34,8 +36,9 @@ abstract class ShopEntity with _$ShopEntity {
   const factory ShopEntity({
     String? id,
     String? shopName,
+    String? phone,
     BaseCoordinates? coordinates,
-    String? status,
+    @Default(ShopStatus.unknown) ShopStatus status,
     DateTime? createdAt,
     DateTime? updatedAt,
     ShopProfileEntity? profile,
@@ -45,13 +48,19 @@ abstract class ShopEntity with _$ShopEntity {
     return ShopEntity(
       id: dto.id,
       shopName: dto.shopName,
+      phone: dto.phone,
       coordinates: dto.coordinates,
-      status: dto.status,
+      status: _getStatus(dto.status),
       createdAt: dto.createdAt,
       updatedAt: dto.updatedAt,
       profile:
           dto.profile != null ? ShopProfileEntity.from(dto.profile!) : null,
     );
+  }
+
+  static ShopStatus _getStatus(String? rawValue) {
+    return ShopStatus.values.firstWhereOrNull((e) => e.rawValue == rawValue) ??
+        ShopStatus.unknown;
   }
 }
 
@@ -64,7 +73,7 @@ abstract class ShopProfileEntity with _$ShopProfileEntity {
     String? description,
     String? logo,
     String? banner,
-    String? phone,
+
     String? email,
     String? ownerName,
     String? fullAddress,
@@ -80,7 +89,6 @@ abstract class ShopProfileEntity with _$ShopProfileEntity {
       description: dto.description,
       logo: dto.logo,
       banner: dto.banner,
-      phone: dto.phone,
       email: dto.email,
       ownerName: dto.ownerName,
       fullAddress: dto.fullAddress,
