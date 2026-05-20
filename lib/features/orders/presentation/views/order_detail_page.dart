@@ -99,12 +99,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
   void _selectInitialTab(OrderDetailEntity ordDtl) {
     if (_didSelectInitialTab) return;
 
-    final shouldOpenTransportHistory =
-        ordDtl.status == OrderStatus.delivered.value ||
-        ordDtl.status == OrderStatus.returned.value;
-    if (shouldOpenTransportHistory) {
-      _tabCtrl.index = _tabList.indexOf(OrderDetailTab.transHistory);
-    }
+    _tabCtrl.index = _tabList.indexOf(OrderDetailTab.transHistory);
     _didSelectInitialTab = true;
   }
 }
