@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -56,7 +58,7 @@ class _ShopManagementPageState extends State<ShopManagementPage> {
               canPop: false,
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: _onAddShop,
                   icon: Icon(CupertinoIcons.add_circled_solid),
                 ),
               ],
@@ -101,7 +103,7 @@ class _ShopManagementPageState extends State<ShopManagementPage> {
   }
 
   void _onAddShop() {
-    // TODO: navigate to create shop page
+    context.push(RouteName.createShopPage);
   }
 
   void _onRefresh() {
