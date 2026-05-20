@@ -138,7 +138,9 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                   flex: 2,
                   child: Center(
                     child: PrimaryText(
-                      Utils.formatCurrencyWithUnit(state.getCalculatedTotalAmount()),
+                      Utils.formatCurrencyWithUnit(
+                        state.getCalculatedTotalAmount(),
+                      ),
                       style: AppTextStyles.titleSmall.copyWith(
                         color: AppColors.primary,
                       ),

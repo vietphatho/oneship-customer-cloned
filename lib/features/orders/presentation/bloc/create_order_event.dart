@@ -23,6 +23,13 @@ class CreateOrderInitShopEvent extends CreateOrderEvent {
   CreateOrderInitShopEvent(this.shop);
 }
 
+class UpdateOrderInitEvent extends CreateOrderEvent {
+  final String ordId;
+  final CreateOrderRequestEntity request;
+
+  const UpdateOrderInitEvent({required this.ordId, required this.request});
+}
+
 class CreateOrderChangeRequestEvent extends CreateOrderEvent {
   final CreateOrderStep step;
   final CreateOrderRequestEntity request;

@@ -101,21 +101,13 @@ abstract class Shop with _$Shop {
   const factory Shop({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "shopName") String? shopName,
-    @JsonKey(name: "profile") Profile? profile,
+    @JsonKey(name: "phone") String? phone,
+    @JsonKey(name: "fullAddress") String? fullAddress,
+    @JsonKey(name: "shopCode") dynamic shopCode,
+    @JsonKey(name: "shopType") String? shopType,
   }) = _Shop;
 
   factory Shop.fromJson(Map<String, dynamic> json) => _$ShopFromJson(json);
-}
-
-@freezed
-abstract class Profile with _$Profile {
-  const factory Profile({
-    @JsonKey(name: "phone") String? phone,
-    @JsonKey(name: "fullAddress") String? fullAddress,
-  }) = _Profile;
-
-  factory Profile.fromJson(Map<String, dynamic> json) =>
-      _$ProfileFromJson(json);
 }
 
 @freezed

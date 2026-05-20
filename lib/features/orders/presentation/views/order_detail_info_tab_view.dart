@@ -2,8 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -19,6 +21,9 @@ class OrderDetailInfoTabView extends StatelessWidget {
       bloc: _ordersBloc,
       builder: (context, state) {
         var ordDtl = state.orderDetailResource.data;
+        final shouldShowShipperInfo =
+            ordDtl?.status != OrderStatus.pending.value &&
+            ordDtl?.status != OrderStatus.processing.value;
 
         return SingleChildScrollView(
           child: Padding(
@@ -46,11 +51,19 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         label: "shop_name".tr(),
                         value: ordDtl?.shop?.shopName,
                       ),
-                      _buildInfoField(label: "phone_number".tr(), value: null),
-                      _buildInfoField(label: "pick_up_date".tr(), value: null),
+                      _buildInfoField(
+                        label: "phone_number".tr(),
+                        value: ordDtl?.shop?.phone,
+                      ),
+                      _buildInfoField(
+                        label: "pick_up_date".tr(),
+                        value: DateTimeUtils.formatDateFromDT(
+                          ordDtl?.pickupDate,
+                        ),
+                      ),
                       _buildInfoField(
                         label: "pick_up_session".tr(),
-                        value: null,
+                        value: ordDtl?.pickupTimeSlot,
                       ),
                     ],
                   ),
@@ -103,15 +116,15 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       _buildInfoField(
                         label: "weight".tr(),
                         value: Utils.formatWeightWithUnit(
-                          ordDtl?.detail?.weight,
+                          ordDtl?.weight,
                         ),
                       ),
                       _buildInfoField(
                         label: "dimensions".tr(),
                         value: Utils.formatDimensionWithUnit(
-                          length: ordDtl?.detail?.length,
-                          width: ordDtl?.detail?.width,
-                          height: ordDtl?.detail?.height,
+                          length: ordDtl?.length,
+                          width: ordDtl?.width,
+                          height: ordDtl?.height,
                         ),
                       ),
                       _buildInfoField(
@@ -125,23 +138,28 @@ class OrderDetailInfoTabView extends StatelessWidget {
                     ],
                   ),
                 ),
-                AppSpacing.vertical(AppDimensions.smallSpacing),
-                PrimaryFrame(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PrimaryText("note".tr(), style: AppTextStyles.labelLarge),
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: PrimaryText(
-                          ordDtl?.detail?.note,
-                          style: AppTextStyles.bodyMedium,
-                          color: AppColors.neutral1,
+                if (ordDtl?.note?.isEmpty != true) ...[
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  PrimaryFrame(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        PrimaryText(
+                          "note".tr(),
+                          style: AppTextStyles.labelLarge,
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          width: double.maxFinite,
+                          child: PrimaryText(
+                            ordDtl?.note,
+                            style: AppTextStyles.bodyMedium,
+                            color: AppColors.neutral1,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
                 AppSpacing.vertical(AppDimensions.smallSpacing),
                 PrimaryFrame(
                   child: Column(
@@ -164,7 +182,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       _buildInfoField(
                         label: "weight".tr(),
                         value: Utils.formatWeightWithUnit(
-                          ordDtl?.detail?.weight,
+                          ordDtl?.weight,
                         ),
                       ),
                       _buildInfoField(
@@ -189,45 +207,50 @@ class OrderDetailInfoTabView extends StatelessWidget {
                     ],
                   ),
                 ),
-                AppSpacing.vertical(AppDimensions.smallSpacing),
-                PrimaryFrame(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.delivery_dining_rounded),
-                          AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                          PrimaryText(
-                            "shipper_info".tr(),
-                            style: AppTextStyles.labelLarge,
-                          ),
-                        ],
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      Row(
-                        children: [
-                          CircleAvatar(),
-                          AppSpacing.horizontal(AppDimensions.mediumSpacing),
-                          Column(
-                            children: [PrimaryText("--"), PrimaryText("--")],
-                          ),
-                        ],
-                      ),
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      _buildInfoField(
-                        label: "shipper_id".tr(),
-                        value: ordDtl?.shipperCodes.firstOrNull,
-                      ),
-                      _buildInfoField(label: "phone_number".tr(), value: null),
-                      AppSpacing.vertical(AppDimensions.mediumSpacing),
-                      SecondaryButton.iconFilled(
-                        label: "call_right_now".tr(),
-                        icon: Icon(Icons.call_rounded, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                    ],
+                if (shouldShowShipperInfo) ...[
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  PrimaryFrame(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.delivery_dining_rounded),
+                            AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                            PrimaryText(
+                              "shipper_info".tr(),
+                              style: AppTextStyles.labelLarge,
+                            ),
+                          ],
+                        ),
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        Row(
+                          children: [
+                            CircleAvatar(),
+                            AppSpacing.horizontal(AppDimensions.mediumSpacing),
+                            Column(
+                              children: [PrimaryText("--"), PrimaryText("--")],
+                            ),
+                          ],
+                        ),
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        _buildInfoField(
+                          label: "shipper_id".tr(),
+                          value: ordDtl?.shipperCodes.firstOrNull,
+                        ),
+                        _buildInfoField(
+                          label: "phone_number".tr(),
+                          value: null,
+                        ),
+                        AppSpacing.vertical(AppDimensions.mediumSpacing),
+                        SecondaryButton.iconFilled(
+                          label: "call_right_now".tr(),
+                          icon: Icon(Icons.call_rounded, color: Colors.white),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
                 AppSpacing.vertical(AppDimensions.mediumSpacing),
               ],
             ),

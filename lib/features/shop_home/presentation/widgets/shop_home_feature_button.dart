@@ -35,7 +35,7 @@ class ShopHomeFeatureButton extends StatelessWidget {
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           PrimaryText(
-            feature.title,
+            feature.title.tr(),
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.labelSmall,
           ),

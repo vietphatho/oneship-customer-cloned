@@ -1,7 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 
 enum ShopStatusEnum {
   active,
@@ -54,13 +52,13 @@ enum ShopStatusEnum {
 }
 
 class ShopStatusBadge extends StatelessWidget {
-  final BriefShopEntity shop;
+  final ShopStatus status;
 
-  const ShopStatusBadge({super.key, required this.shop});
+  const ShopStatusBadge({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
-    final statusEnum = ShopStatusEnum.fromString(shop.shopStatus);
+    final statusEnum = ShopStatusEnum.fromString(status.rawValue);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -68,13 +66,10 @@ class ShopStatusBadge extends StatelessWidget {
         color: statusEnum.bgColor,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
+      child: PrimaryText(
         statusEnum.label,
-        style: TextStyle(
-          color: statusEnum.textColor,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
+        style: AppTextStyles.labelXSmall,
+        color: statusEnum.textColor,
       ),
     );
   }

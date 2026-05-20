@@ -1,14 +1,20 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
+import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
+import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
+import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_state.dart';
 import 'package:oneship_customer/features/finance/presentation/widgets/finance_overview_card.dart';
 import 'package:oneship_customer/features/finance/presentation/widgets/finance_text_row.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class FinanceOverviewTabView extends StatefulWidget {
   const FinanceOverviewTabView({super.key});
@@ -17,112 +23,141 @@ class FinanceOverviewTabView extends StatefulWidget {
   State<FinanceOverviewTabView> createState() => _FinanceOverviewTabViewState();
 }
 
-class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView>
-    with SingleTickerProviderStateMixin {
+class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView> {
   final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
-    final FinanceEntity financeEntity =
-        _financeOverviewBloc.state.shopFinancialData.data ?? FinanceEntity();
-    return SingleChildScrollView(
-      child: Container(
-        width: AppDimensions.getSize(context).width,
-        padding: EdgeInsets.symmetric(horizontal: AppDimensions.mediumSpacing),
-        child: Column(
-          children: [
-            AppSpacing.vertical(AppDimensions.xxLargeSpacing),
-            PrimaryText(
-              'financial_overview'.tr(),
-              style: AppTextStyles.titleXLarge,
+    return BlocBuilder<FinanceOverviewBloc, FinanceOverviewState>(
+      bloc: _financeOverviewBloc,
+      buildWhen:
+          (pre, cur) =>
+              pre.shopFinancialData.state != cur.shopFinancialData.state &&
+              (cur.shopFinancialData.state != Result.loading),
+      builder: (context, state) {
+        if (state.shopFinancialData.state == Result.error) {
+          return PrimaryEmptyData(
+            onRetry: () {
+              _financeOverviewBloc.fetchFinancialData(
+                filter: state.financeFilter,
+                startDate: state.startDate,
+                endDate: state.endDate,
+                shopId: _shopBloc.state.currentShop?.shopId ?? "",
+                requestSource: FinanceRequestSource.page,
+              );
+            },
+          );
+        }
+
+        final FinanceEntity financeEntity =
+            state.shopFinancialData.data ?? FinanceEntity();
+
+        return SingleChildScrollView(
+          child: Container(
+            width: AppDimensions.getSize(context).width,
+            padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.mediumSpacing,
             ),
-            AppSpacing.vertical(AppDimensions.smallSpacing),
-            PrimaryText(
-              '${DateTimeUtils.formatDateFromDT(_financeOverviewBloc.state.startDate)} - ${DateTimeUtils.formatDateFromDT(_financeOverviewBloc.state.endDate)}',
-              style: AppTextStyles.labelMedium,
-            ),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            Row(
+            child: Column(
               children: [
-                Expanded(
-                  child: FinanceOverviewCard(
-                    label: "balance_after".tr(),
-                    value: Utils.formatCurrencyWithUnit(
-                      financeEntity.netAmount,
-                    ),
-                    icon: Icons.account_balance_wallet_rounded,
-                  ),
+                AppSpacing.vertical(AppDimensions.xxLargeSpacing),
+                PrimaryText(
+                  'financial_overview'.tr(),
+                  style: AppTextStyles.titleXLarge,
                 ),
-                AppSpacing.horizontal(AppDimensions.smallSpacing),
-                Expanded(
-                  child: FinanceOverviewCard(
-                    label: "cod".tr(),
-                    value: Utils.formatCurrencyWithUnit(
-                      financeEntity.codCollected,
-                    ),
-                    icon: Icons.attach_money_rounded,
-                  ),
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                PrimaryText(
+                  '${DateTimeUtils.formatDateFromDT(_financeOverviewBloc.state.startDate)} - ${DateTimeUtils.formatDateFromDT(_financeOverviewBloc.state.endDate)}',
+                  style: AppTextStyles.labelMedium,
                 ),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FinanceOverviewCard(
+                        label: "balance_after".tr(),
+                        value: Utils.formatCurrencyWithUnit(
+                          financeEntity.netAmount,
+                        ),
+                        icon: Icons.account_balance_wallet_rounded,
+                      ),
+                    ),
+                    AppSpacing.horizontal(AppDimensions.smallSpacing),
+                    Expanded(
+                      child: FinanceOverviewCard(
+                        label: "cod".tr(),
+                        value: Utils.formatCurrencyWithUnit(
+                          financeEntity.codCollected,
+                        ),
+                        icon: Icons.attach_money_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FinanceOverviewCard(
+                        label: "total_expense".tr(),
+                        value: Utils.formatCurrencyWithUnit(
+                          financeEntity.totalOut,
+                        ),
+                        icon: Icons.attach_money_rounded,
+                      ),
+                    ),
+                    AppSpacing.horizontal(AppDimensions.smallSpacing),
+                    Expanded(
+                      child: FinanceOverviewCard(
+                        label: "discount_1".tr(),
+                        value: Utils.formatCurrencyWithUnit(
+                          financeEntity.discountAmount,
+                        ),
+                        icon: Icons.discount_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: FinanceOverviewCard(
+                        label: "total_complete_orders".tr(),
+                        value: financeEntity.orderCount.toString(),
+                        icon: Icons.category_rounded,
+                      ),
+                    ),
+                    AppSpacing.horizontal(AppDimensions.smallSpacing),
+                    Expanded(
+                      child: FinanceOverviewCard(
+                        label: "total_returned_orders".tr(),
+                        value: financeEntity.returnedOrderCount.toString(),
+                        icon: Icons.category_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _buildFeeOrderSuccess(financeEntity),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _buildFeeOrderReturned(financeEntity),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _buildDiscountsAndCashback(financeEntity),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                PrimaryButton.outlined(
+                  label: 'detail_by_day'.tr(),
+                  onPressed:
+                      () => context.push(RouteName.financeDetailByDayPage),
+                ),
+                AppSpacing.vertical(AppDimensions.safeBottomSpacing),
               ],
             ),
-            AppSpacing.vertical(AppDimensions.smallSpacing),
-            Row(
-              children: [
-                Expanded(
-                  child: FinanceOverviewCard(
-                    label: "total_expense".tr(),
-                    value: Utils.formatCurrencyWithUnit(financeEntity.totalOut),
-                    icon: Icons.attach_money_rounded,
-                  ),
-                ),
-                AppSpacing.horizontal(AppDimensions.smallSpacing),
-                Expanded(
-                  child: FinanceOverviewCard(
-                    label: "discount_1".tr(),
-                    value: Utils.formatCurrencyWithUnit(
-                      financeEntity.discountAmount,
-                    ),
-                    icon: Icons.discount_rounded,
-                  ),
-                ),
-              ],
-            ),
-            AppSpacing.vertical(AppDimensions.smallSpacing),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: FinanceOverviewCard(
-                    label: "total_complete_orders".tr(),
-                    value: financeEntity.orderCount.toString(),
-                    icon: Icons.category_rounded,
-                  ),
-                ),
-                AppSpacing.horizontal(AppDimensions.smallSpacing),
-                Expanded(
-                  child: FinanceOverviewCard(
-                    label: "total_returned_orders".tr(),
-                    value: financeEntity.returnedOrderCount.toString(),
-                    icon: Icons.category_rounded,
-                  ),
-                ),
-              ],
-            ),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildFeeOrderSuccess(financeEntity),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildFeeOrderReturned(financeEntity),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            _buildDiscountsAndCashback(financeEntity),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            PrimaryButton.outlined(
-              label: 'detail_by_day'.tr(),
-              onPressed: () => context.push(RouteName.financeDetailByDayPage),
-            ),
-            AppSpacing.vertical(AppDimensions.safeBottomSpacing),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

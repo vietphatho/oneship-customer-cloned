@@ -62,7 +62,7 @@ class Constants {
   static const double minDistanceToSnapRoute = 10;
 
   static const int defaultPage = 1;
-  static const int defaultLimitPerPage = 10;
+  static const int defaultLimitPerPage = 20;
   static const String defaultSortByCreatedAt = "createdAt";
   static const String defaultSortOrderDesc = "desc";
 

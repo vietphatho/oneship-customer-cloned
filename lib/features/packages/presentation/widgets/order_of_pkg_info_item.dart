@@ -45,7 +45,17 @@ class OrderOfPkgInfoItem extends StatelessWidget {
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+<<<<<<< HEAD
         PrimaryText("Dịch vụ: ${order.payer}", style: AppTextStyles.bodyMedium),
+            PrimaryText(
+              "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+              style: AppTextStyles.bodyMedium,
+            ),
+        PrimaryText(
+          "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+          style: AppTextStyles.bodyMedium,
+        ),
+>>>>>>> origin/main
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"address".tr()}: ${order.fullAddress}",
@@ -58,5 +68,13 @@ class OrderOfPkgInfoItem extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _translatePayer(String? payer) {
+    return switch (payer) {
+      "SENDER" => "sender".tr(),
+      "RECEIVER" => "recipient".tr(),
+      _ => payer ?? "",
+    };
   }
 }

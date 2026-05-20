@@ -210,7 +210,7 @@ class _CompletedTag extends StatelessWidget {
         vertical: AppDimensions.xxSmallSpacing,
       ),
       child: PrimaryText(
-        'Đã hoàn thành',
+        'completed'.tr(),
         style: AppTextStyles.labelXSmall,
         color: AppColors.green,
       ),

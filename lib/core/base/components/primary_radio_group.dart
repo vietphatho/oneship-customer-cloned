@@ -37,6 +37,7 @@ class PrimaryRadioGroup<T> extends StatelessWidget {
           return RadioListTile<T>(
             value: option,
             groupValue: value,
+            activeColor: AppColors.secondary,
             onChanged: (val) {
               if (val != null) onChanged(val);
             },

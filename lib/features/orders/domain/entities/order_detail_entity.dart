@@ -43,7 +43,17 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
     @Default(false) bool isReturnOrder,
     String? createdByUserId,
     @Default([]) List<String> shipperCodes,
-    DetailEntity? detail,
+    DateTime? pickupDate,
+    String? pickupTimeSlot,
+    String? deliveryTimeSlot,
+    double? weight,
+    int? length,
+    int? width,
+    int? height,
+    @Default(false) bool isFragile,
+    @Default(false) bool isLiquid,
+    @Default(false) bool hasBattery,
+    String? note,
     @Default([]) List<OrderDetailProductEntity> items,
     OrderDetailShopEntity? shop,
     @Default([]) List<OrderFeeEntity> orderFees,
@@ -87,13 +97,26 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       isReturnOrder: dto.isReturnOrder ?? false,
       createdByUserId: dto.createdByUserId,
       shipperCodes: dto.shipperCodes?.map((e) => e.toString()).toList() ?? [],
-      detail: dto.detail != null ? DetailEntity.from(dto.detail!) : null,
+      pickupDate: dto.detail?.pickupDate,
+      pickupTimeSlot: dto.detail?.pickupTimeSlot,
+      deliveryTimeSlot: dto.detail?.deliveryTimeSlot?.toString(),
+      weight:
+          dto.detail != null ? double.tryParse(dto.detail!.weight ?? "") : null,
+      length:
+          dto.detail != null ? int.tryParse(dto.detail!.length ?? "0") : null,
+      width: dto.detail != null ? int.tryParse(dto.detail!.width ?? "0") : null,
+      height:
+          dto.detail != null ? int.tryParse(dto.detail!.height ?? "0") : null,
+      isFragile: dto.detail?.isFragile ?? false,
+      isLiquid: dto.detail?.isLiquid ?? false,
+      hasBattery: dto.detail?.hasBattery ?? false,
+      note: dto.detail?.note?.toString(),
       items:
           dto.items
               ?.map((dto) => OrderDetailProductEntity.from(dto))
               .toList() ??
           [],
-      shop: dto.shop != null ? OrderDetailShopEntity.from(dto.shop!) : null,
+      shop: dto.shop != null ? OrderDetailShopEntity.fromDto(dto.shop!) : null,
       orderFees:
           dto.orderFees?.map((e) => OrderFeeEntity.from(e)).toList() ?? [],
       totalProductAmount: dto.totalProductAmount ?? 0,
@@ -111,48 +134,48 @@ extension OrderDetailEntityExt on OrderDetailEntity {
   );
 }
 
-@freezed
-abstract class DetailEntity with _$DetailEntity {
-  const DetailEntity._();
+// @freezed
+// abstract class DetailEntity with _$DetailEntity {
+//   const DetailEntity._();
 
-  const factory DetailEntity({
-    String? id,
-    String? orderId,
-    DateTime? pickupDate,
-    String? pickupTimeSlot,
-    String? deliveryTimeSlot,
-    double? weight,
-    double? length,
-    double? width,
-    double? height,
-    @Default(false) bool isFragile,
-    @Default(false) bool isLiquid,
-    @Default(false) bool hasBattery,
-    String? note,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) = _DetailEntity;
+//   const factory DetailEntity({
+//     String? id,
+//     String? orderId,
+//     DateTime? pickupDate,
+//     String? pickupTimeSlot,
+//     String? deliveryTimeSlot,
+//     double? weight,
+//     double? length,
+//     double? width,
+//     double? height,
+//     @Default(false) bool isFragile,
+//     @Default(false) bool isLiquid,
+//     @Default(false) bool hasBattery,
+//     String? note,
+//     DateTime? createdAt,
+//     DateTime? updatedAt,
+//   }) = _DetailEntity;
 
-  factory DetailEntity.from(Detail dto) {
-    return DetailEntity(
-      id: dto.id,
-      orderId: dto.orderId,
-      pickupDate: dto.pickupDate,
-      pickupTimeSlot: dto.pickupTimeSlot,
-      deliveryTimeSlot: dto.deliveryTimeSlot?.toString(),
-      weight: double.tryParse(dto.weight ?? ""),
-      length: double.tryParse(dto.length ?? ""),
-      width: double.tryParse(dto.width ?? ""),
-      height: double.tryParse(dto.height ?? ""),
-      isFragile: dto.isFragile ?? false,
-      isLiquid: dto.isLiquid ?? false,
-      hasBattery: dto.hasBattery ?? false,
-      note: dto.note?.toString(),
-      createdAt: dto.createdAt,
-      updatedAt: dto.updatedAt,
-    );
-  }
-}
+//   factory DetailEntity.from(Detail dto) {
+//     return DetailEntity(
+//       id: dto.id,
+//       orderId: dto.orderId,
+//       pickupDate: dto.pickupDate,
+//       pickupTimeSlot: dto.pickupTimeSlot,
+//       deliveryTimeSlot: dto.deliveryTimeSlot?.toString(),
+//       weight: double.tryParse(dto.weight ?? ""),
+//       length: double.tryParse(dto.length ?? ""),
+//       width: double.tryParse(dto.width ?? ""),
+//       height: double.tryParse(dto.height ?? ""),
+//       isFragile: dto.isFragile ?? false,
+//       isLiquid: dto.isLiquid ?? false,
+//       hasBattery: dto.hasBattery ?? false,
+//       note: dto.note?.toString(),
+//       createdAt: dto.createdAt,
+//       updatedAt: dto.updatedAt,
+//     );
+//   }
+// }
 
 @freezed
 abstract class OrderFeeEntity with _$OrderFeeEntity {
@@ -191,33 +214,23 @@ abstract class OrderFeeEntity with _$OrderFeeEntity {
 
 @freezed
 abstract class OrderDetailShopEntity with _$OrderDetailShopEntity {
-  const OrderDetailShopEntity._();
-
   const factory OrderDetailShopEntity({
-    String? id,
-    String? shopName,
-    ProfileEntity? profile,
+    @JsonKey(name: "id") String? id,
+    @JsonKey(name: "shopName") @Default("") String shopName,
+    @JsonKey(name: "phone") @Default("") String phone,
+    @JsonKey(name: "fullAddress") @Default("") String fullAddress,
+    @JsonKey(name: "shopCode") String? shopCode,
+    @JsonKey(name: "shopType") String? shopType,
   }) = _OrderDetailShopEntity;
 
-  factory OrderDetailShopEntity.from(Shop dto) {
-    return OrderDetailShopEntity(
-      id: dto.id,
-      shopName: dto.shopName,
-      profile: dto.profile != null ? ProfileEntity.from(dto.profile!) : null,
-    );
-  }
-}
-
-@freezed
-abstract class ProfileEntity with _$ProfileEntity {
-  const ProfileEntity._();
-
-  const factory ProfileEntity({String? phone, String? fullAddress}) =
-      _ProfileEntity;
-
-  factory ProfileEntity.from(Profile dto) {
-    return ProfileEntity(phone: dto.phone, fullAddress: dto.fullAddress);
-  }
+  factory OrderDetailShopEntity.fromDto(Shop dto) => OrderDetailShopEntity(
+    id: dto.id,
+    shopName: dto.shopName ?? "",
+    shopCode: dto.shopCode,
+    phone: dto.phone ?? "",
+    fullAddress: dto.fullAddress ?? "",
+    shopType: dto.shopType,
+  );
 }
 
 @freezed
