@@ -45,7 +45,6 @@ class OrderOfPkgInfoItem extends StatelessWidget {
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-<<<<<<< HEAD
         PrimaryText("Dịch vụ: ${order.payer}", style: AppTextStyles.bodyMedium),
             PrimaryText(
               "${"service_type".tr()}: ${_translatePayer(order.payer)}",
@@ -55,7 +54,6 @@ class OrderOfPkgInfoItem extends StatelessWidget {
           "${"service_type".tr()}: ${_translatePayer(order.payer)}",
           style: AppTextStyles.bodyMedium,
         ),
->>>>>>> origin/main
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"address".tr()}: ${order.fullAddress}",
