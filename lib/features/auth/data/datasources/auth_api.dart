@@ -56,10 +56,14 @@ abstract class AuthApi {
   Future<BaseResponse> updatePassword(@Body() UpdatePasswordRequest body);
 
   @POST("/api/v1/users/second-password")
-  Future<BaseResponse> createSecondPassword(@Body() CreateSecondPasswordRequest body);
+  Future<BaseResponse> createSecondPassword(
+    @Body() CreateSecondPasswordRequest body,
+  );
 
   @PATCH("/api/v1/users/second-password")
-  Future<BaseResponse> updateSecondPassword(@Body() UpdateSecondPasswordRequest body);
+  Future<BaseResponse> updateSecondPassword(
+    @Body() UpdateSecondPasswordRequest body,
+  );
 
   @POST("/api/v1/auth/verify-second-password")
   Future<BaseResponse<VerifySecondaryPasswordResponse, BaseError>>

@@ -1,4 +1,4 @@
-enum FinanceRequestSource {  page, filterDialog }
+enum FinanceRequestSource { page, filterDialog }
 
 enum FinanceFilter { oneDay, sevenDay, thirtyDay, selectDate }
 
@@ -25,4 +25,30 @@ extension FinanceFilterX on FinanceFilter {
         return null;
     }
   }
+}
+
+enum ReconciliationFilter { periods, payouts, config }
+
+extension ReconciliationFilterX on ReconciliationFilter {
+  static const _mapName = {
+    ReconciliationFilter.periods: 'periods',
+    ReconciliationFilter.payouts: 'payouts',
+    ReconciliationFilter.config: 'config',
+  };
+
+  String get name => _mapName[this]!;
+}
+
+enum Status { all, open, locked, approved, cancelled }
+
+extension StatusX on Status {
+  static const _mapName = {
+    Status.all: 'all',
+    Status.open: 'open',
+    Status.locked: 'locked',
+    Status.approved: 'approved',
+    Status.cancelled: 'cancelled',
+  };
+
+  String get name => _mapName[this]!;
 }

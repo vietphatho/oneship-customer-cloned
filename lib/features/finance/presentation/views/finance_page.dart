@@ -14,7 +14,9 @@ import 'package:oneship_customer/features/finance/data/enum.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_state.dart';
+import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_overview_tab_view.dart';
+import 'package:oneship_customer/features/finance/presentation/views/finance_reconciliation_tab_view.dart';
 import 'package:oneship_customer/features/finance/presentation/widgets/finance_tab_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
@@ -50,7 +52,7 @@ class _FinancePageState extends State<FinancePage>
               if (state.isSecondPasswordRequired) {
                 return Container();
               }
-              return _FinanceFilterWidget();
+              return _FinanceFilterWidget(controller: controller);
             },
           ),
         ],
@@ -100,7 +102,10 @@ class _FinancePageState extends State<FinancePage>
                   Expanded(
                     child: TabBarView(
                       controller: controller,
-                      children: [FinanceOverviewTabView(), Container()],
+                      children: [
+                        FinanceOverviewTabView(),
+                        FinanceReconciliationTabView(),
+                      ],
                     ),
                   ),
                 ],
@@ -144,19 +149,95 @@ class _FinancePageState extends State<FinancePage>
 }
 
 class _FinanceFilterWidget extends StatelessWidget {
-  const _FinanceFilterWidget();
+  const _FinanceFilterWidget({required this.controller});
+  final TabController controller;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        PrimaryDialog.showCustomDialog(
-          context,
-          child: _SelectDateFilterSession(),
-        );
+        if (controller.index == 0) {
+          PrimaryDialog.showCustomDialog(
+            context,
+            child: _SelectDateFilterSession(),
+          );
+        } else {
+          PrimaryDialog.showCustomDialog(
+            context,
+            child: _SelectReconciliationFilter(),
+          );
+        }
       },
       icon: Icon(Icons.filter_alt),
     );
+  }
+}
+
+class _SelectReconciliationFilter extends StatefulWidget {
+  const _SelectReconciliationFilter({super.key});
+
+  @override
+  State<_SelectReconciliationFilter> createState() =>
+      __SelectReconciliationFilterState();
+}
+
+class __SelectReconciliationFilterState
+    extends State<_SelectReconciliationFilter> {
+  final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
+  late ReconciliationFilter currentFilter;
+
+  @override
+  void initState() {
+    currentFilter = _financeReconciliationBloc.state.reconciliationFilter;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PrimaryText('filter'.tr(), style: AppTextStyles.titleXLarge),
+        PrimaryRadioGroup<ReconciliationFilter>(
+          options: ReconciliationFilter.values,
+          value: currentFilter,
+          displayLabel: (item) {
+            return item.name.tr();
+          },
+          onChanged: (value) => _onChangedReconciliationFilter(value),
+        ),
+        AppSpacing.vertical(AppDimensions.mediumSpacing),
+        Row(
+          children: [
+            Expanded(
+              child: SecondaryButton.outlined(
+                label: 'cancel'.tr(),
+                onPressed: () {
+                  context.pop();
+                },
+              ),
+            ),
+            AppSpacing.horizontal(AppDimensions.smallSpacing),
+            Expanded(
+              child: SecondaryButton.filled(
+                label: 'confirm'.tr(),
+                onPressed: () => _confirmChangedReconciliationFilter(),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _onChangedReconciliationFilter(ReconciliationFilter value) {
+    setState(() {
+      currentFilter = value;
+    });
+  }
+
+  void _confirmChangedReconciliationFilter() {
+    _financeReconciliationBloc.changedFilter(currentFilter);
   }
 }
 
