@@ -58,12 +58,12 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       _buildInfoField(
                         label: "pick_up_date".tr(),
                         value: DateTimeUtils.formatDateFromDT(
-                          ordDtl?.detail?.pickupDate,
+                          ordDtl?.pickupDate,
                         ),
                       ),
                       _buildInfoField(
                         label: "pick_up_session".tr(),
-                        value: ordDtl?.detail?.pickupTimeSlot,
+                        value: ordDtl?.pickupTimeSlot,
                       ),
                     ],
                   ),
@@ -116,15 +116,15 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       _buildInfoField(
                         label: "weight".tr(),
                         value: Utils.formatWeightWithUnit(
-                          ordDtl?.detail?.weight,
+                          ordDtl?.weight,
                         ),
                       ),
                       _buildInfoField(
                         label: "dimensions".tr(),
                         value: Utils.formatDimensionWithUnit(
-                          length: ordDtl?.detail?.length,
-                          width: ordDtl?.detail?.width,
-                          height: ordDtl?.detail?.height,
+                          length: ordDtl?.length,
+                          width: ordDtl?.width,
+                          height: ordDtl?.height,
                         ),
                       ),
                       _buildInfoField(
@@ -138,7 +138,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (ordDtl?.detail?.note?.isEmpty != true) ...[
+                if (ordDtl?.note?.isEmpty != true) ...[
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   PrimaryFrame(
                     child: Column(
@@ -151,7 +151,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         SizedBox(
                           width: double.maxFinite,
                           child: PrimaryText(
-                            ordDtl?.detail?.note,
+                            ordDtl?.note,
                             style: AppTextStyles.bodyMedium,
                             color: AppColors.neutral1,
                           ),
@@ -182,7 +182,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       _buildInfoField(
                         label: "weight".tr(),
                         value: Utils.formatWeightWithUnit(
-                          ordDtl?.detail?.weight,
+                          ordDtl?.weight,
                         ),
                       ),
                       _buildInfoField(

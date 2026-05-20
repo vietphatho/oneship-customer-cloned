@@ -98,4 +98,14 @@ class OrdersRepositoryImpl extends OrdersRepository {
     );
     return response.parse((dto) => OrdersHistoryEntity.from(dto));
   }
+
+  @override
+  Future<Resource> updateOrder({
+    required String ordId,
+    required CreateOrderRequest requestBody,
+  }) {
+    return request(
+      () => _ordersApi.updateOrder(ordId: ordId, body: requestBody),
+    );
+  }
 }

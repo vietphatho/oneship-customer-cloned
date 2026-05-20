@@ -16,6 +16,7 @@ abstract class CreateOrderState {
     required this.routingToShopResource,
     this.acceptTerms = true,
     this.errorMessage,
+    this.updateOrdId,
   });
 
   final CreateOrderStep step;
@@ -26,6 +27,7 @@ abstract class CreateOrderState {
   final Resource<GetRoutingToShopResponse> routingToShopResource;
   final bool acceptTerms;
   final String? errorMessage;
+  final String? updateOrdId;
 
   bool get isEnableAddressField =>
       draftRequest.province != null && draftRequest.ward != null;
@@ -39,6 +41,7 @@ class CreateOrderProductChangedState extends CreateOrderState {
     required super.routingToShopResource,
     super.step,
     required super.productEntitySelected,
+    super.updateOrdId,
   });
 }
 
@@ -51,6 +54,7 @@ class CreateOrderRequestChangedState extends CreateOrderState {
     super.acceptTerms,
     super.step,
     required super.productEntitySelected,
+    super.updateOrdId,
   });
 }
 
@@ -66,6 +70,7 @@ class CreateOrderPickUpTimeChangedState extends CreateOrderState {
     this.pickUpDate,
     this.pickUpSession,
     required super.productEntitySelected,
+    super.updateOrdId,
   });
 }
 
@@ -77,6 +82,7 @@ class CreateOrderCustomerInfoChangedState extends CreateOrderState {
     required super.routingToShopResource,
     super.step = CreateOrderStep.receiverInfo,
     required super.productEntitySelected,
+    super.updateOrdId,
   });
 }
 
@@ -88,6 +94,7 @@ class CreateOrderInfoChangedState extends CreateOrderState {
     required super.routingToShopResource,
     super.step = CreateOrderStep.orderInfo,
     required super.productEntitySelected,
+    super.updateOrdId,
   });
 }
 
@@ -101,6 +108,7 @@ class CreateOrderCalculatedFeeState extends CreateOrderState {
     required super.shopInfo,
     required super.routingToShopResource,
     required super.productEntitySelected,
+    super.updateOrdId,
   });
 }
 
@@ -115,6 +123,7 @@ class CreateOrderCreatedState extends CreateOrderState {
     required super.routingToShopResource,
     required super.productEntitySelected,
     super.acceptTerms,
+    super.updateOrdId,
   });
 }
 
@@ -126,6 +135,7 @@ class CreateOrderGetRoutingToShopState extends CreateOrderState {
     required super.routingToShopResource,
     required super.productEntitySelected,
     super.acceptTerms,
+    super.updateOrdId,
   });
 }
 
@@ -139,6 +149,7 @@ class CreateOrderErrorState extends CreateOrderState {
     required super.productEntitySelected,
     super.acceptTerms,
     super.step,
+    super.updateOrdId,
   }) : super(errorMessage: errorMessage);
 }
 

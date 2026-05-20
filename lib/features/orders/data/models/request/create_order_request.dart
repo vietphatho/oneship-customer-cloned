@@ -43,17 +43,17 @@ abstract class Detail with _$Detail {
   const factory Detail({
     @JsonKey(name: "pickupDate") DateTime? pickupDate,
     @JsonKey(name: "pickupTimeSlot") String? pickupTimeSlot,
-    @JsonKey(name: "deliveryTimeSlot") String? deliveryTimeSlot,
+    // @JsonKey(name: "deliveryTimeSlot") String? deliveryTimeSlot,
     @JsonKey(name: "weight") double? weight,
-    @JsonKey(name: "isHighValueGoods") bool? isHighValueGoods,
-    @JsonKey(name: "isFragile") bool? isFragile,
-    @JsonKey(name: "isOnePiece") bool? isOnePiece,
-    @JsonKey(name: "isLiquid") bool? isLiquid,
-    @JsonKey(name: "hasBattery") bool? hasBattery,
+    // @JsonKey(name: "isHighValueGoods") bool? isHighValueGoods,
+    // @JsonKey(name: "isFragile") bool? isFragile,
+    // @JsonKey(name: "isOnePiece") bool? isOnePiece,
+    // @JsonKey(name: "isLiquid") bool? isLiquid,
+    // @JsonKey(name: "hasBattery") bool? hasBattery,
     @JsonKey(name: "length") @Default(0) int length,
     @JsonKey(name: "width") @Default(0) int width,
     @JsonKey(name: "height") @Default(0) int height,
-    @JsonKey(name: "orderSource") String? orderSource,
+    // @JsonKey(name: "orderSource") String? orderSource,
     @JsonKey(name: "note") String? note,
   }) = _Detail;
 
@@ -86,11 +86,12 @@ abstract class FullRouteData with _$FullRouteData {
 @freezed
 abstract class SelectedProduct with _$SelectedProduct {
   const factory SelectedProduct({
-    @JsonKey(name: "id") String? id,
-    @JsonKey(name: "name") String? name,
-    @JsonKey(name: "sku") String? sku,
-    @JsonKey(name: "price") int? price,
-    @JsonKey(name: "qty") int? qty,
+    @JsonKey(name: "productId") String? id,
+    @JsonKey(name: "productName") String? name,
+    @JsonKey(name: "productSku") String? sku,
+    @JsonKey(name: "unitPrice") int? price,
+    @JsonKey(name: "quantity") int? qty,
+    @JsonKey(name: "discountAmount") int? discountAmount,
   }) = _SelectedProduct;
 
   factory SelectedProduct.fromJson(Map<String, dynamic> json) =>
