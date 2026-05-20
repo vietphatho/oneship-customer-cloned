@@ -1,18 +1,18 @@
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 
 @lazySingleton
 class UpdateProductQuantityUseCase {
   UpdateProductQuantityUseCase();
 
-  Future<List<ProductEntitySelected>> call({
-    required List<ProductEntitySelected> currentProduct,
+  Future<List<SelectedProductEntity>> call({
+    required List<SelectedProductEntity> currentProduct,
     required String sku,
     required CreateOrderProductAction actionType,
   }) async {
-    final Map<String, ProductEntitySelected> currentMap = {
-      for (final item in currentProduct) item.product.sku: item,
+    final Map<String, SelectedProductEntity> currentMap = {
+      for (final item in currentProduct) item.sku: item,
     };
     final current = currentMap[sku]!;
 

@@ -1,4 +1,5 @@
 import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 
 abstract class ProductEvent {
@@ -9,6 +10,12 @@ class FetchProductsListEvent extends ProductEvent {
   final String shopId;
 
   const FetchProductsListEvent(this.shopId);
+}
+
+class InitUpdateSelectedProductEvent extends ProductEvent {
+  final List<OrderDetailProductEntity> product;
+
+  const InitUpdateSelectedProductEvent(this.product);
 }
 
 class CreateNewProductEvent extends ProductEvent {

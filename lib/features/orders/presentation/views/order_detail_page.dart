@@ -11,6 +11,7 @@ import 'package:oneship_customer/features/orders/domain/entities/order_detail_en
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_info_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_products_list_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_transportation_history_tab_view.dart';
@@ -157,7 +158,11 @@ class _Header extends StatelessWidget {
             visualDensity: VisualDensity.compact,
             onPressed: () {
               final CreateOrderBloc _createOrderBloc = getIt.get();
+              final ProductBloc _productBloc = getIt.get();
               _createOrderBloc.initUpdateOrdData(ordDtl);
+              print(_createOrderBloc.state.productEntitySelected.toString());
+              _productBloc.initUpdateSelectedProduct(ordDtl.items);
+              print(ordDtl.items.toString());
               context.push(RouteName.createOrderPage);
             },
             icon: Icon(Icons.edit_document, color: AppColors.secondary),

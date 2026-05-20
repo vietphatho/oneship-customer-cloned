@@ -4,7 +4,7 @@ import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 
 part 'create_order_request_entity.freezed.dart';
@@ -161,11 +161,11 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
           model.items
               .map(
                 (e) => SelectedProductEntity(
-                  id: e.id,
-                  name: e.productName,
-                  sku: e.productSku,
-                  price: e.unitPrice ?? 0,
-                  qty: e.quantity ?? 0,
+                  id: e.id ?? "",
+                  name: e.productName ?? "",
+                  sku: e.productSku ?? "",
+                  price: e.unitPrice,
+                  quantity: e.quantity,
                 ),
               )
               .toList(),
@@ -214,36 +214,4 @@ abstract class DetailEntity with _$DetailEntity {
       note: note,
     );
   }
-}
-
-@freezed
-abstract class SelectedProductEntity with _$SelectedProductEntity {
-  const SelectedProductEntity._();
-
-  const factory SelectedProductEntity({
-    String? id,
-    String? name,
-    String? sku,
-    @Default(0) int price,
-    @Default(0) int qty,
-  }) = _SelectedProductEntity;
-
-  SelectedProduct toDto() {
-    return SelectedProduct(
-      id: id,
-      name: name,
-      sku: sku,
-      price: price,
-      qty: qty,
-    );
-  }
-
-  factory SelectedProductEntity.fromModel(ProductEntitySelected model) =>
-      SelectedProductEntity(
-        id: "",
-        name: model.product.name,
-        sku: model.product.sku,
-        price: model.product.price,
-        qty: model.quantity,
-      );
 }

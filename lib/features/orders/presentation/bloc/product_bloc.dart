@@ -5,8 +5,9 @@ import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/create_new_product_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_products_list_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/update_product_quantity_use_case.dart';
@@ -34,6 +35,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<AddProductToSelectedListEvent>(_onAddToSelectedList);
     on<RemoveProductFromSelectedListEvent>(_onRemoveFromSelectedList);
     on<UpdateProductSelectedQtyEvent>(_onUpdateProductQty);
+    on<InitUpdateSelectedProductEvent>(_onInitUpdateSelectedProduct);
   }
 
   FutureOr<void> _onFetchProductList(
@@ -76,7 +78,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       state.copyWith(
         productsListSelected: [
           ...state.productsListSelected,
-          ProductEntitySelected(product: event.product),
+          SelectedProductEntity.fromProductEntity(event.product),
         ],
         selectedCount: state.selectedCount + 1,
       ),
@@ -87,11 +89,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     RemoveProductFromSelectedListEvent event,
     Emitter<ProductState> emit,
   ) {
-    final selectedList = List<ProductEntitySelected>.from(
+    final selectedList = List<SelectedProductEntity>.from(
       state.productsListSelected,
     );
 
-    selectedList.removeWhere((e) => e.product.sku == event.product.sku);
+    selectedList.removeWhere((e) => e.sku == event.product.sku);
 
     emit(
       state.copyWith(
@@ -113,6 +115,31 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
     emit(
       state.copyWith(productsListSelected: newa, selectedCount: newa.length),
+    );
+  }
+
+  FutureOr<void> _onInitUpdateSelectedProduct(
+    InitUpdateSelectedProductEvent event,
+    Emitter<ProductState> emit,
+  ) {
+    List<SelectedProductEntity> selectedProducts =
+        event.product
+            .map(
+              (e) => SelectedProductEntity(
+                id: e.id ?? "",
+                name: e.productName ?? "",
+                sku: e.productSku ?? "",
+                price: e.unitPrice,
+                quantity: e.quantity,
+              ),
+            )
+            .toList();
+
+    emit(
+      state.copyWith(
+        productsListSelected: selectedProducts,
+        selectedCount: selectedProducts.length,
+      ),
     );
   }
 
@@ -144,5 +171,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     required CreateOrderProductAction actionType,
   }) {
     add(UpdateProductSelectedQtyEvent(skuCode: sku, actionType: actionType));
+  }
+
+  void initUpdateSelectedProduct(List<OrderDetailProductEntity> products) {
+    add(InitUpdateSelectedProductEvent(products));
   }
 }
