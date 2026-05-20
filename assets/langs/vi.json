@@ -827,5 +827,24 @@
     "forgot_password": "Quên mật khẩu?",
     "button_update": "Cập nhật"
   },
-  "password_not_match": "Mật khẩu không khớp"
+  "password_not_match": "Mật khẩu không khớp",
+  "package_detail": "Chi tiết túi hàng",
+  "pkg_info": "Thông tin túi hàng",
+  "pkg_code": "Mã túi hàng",
+  "shipper_code": "Mã tài xế",
+  "created_at": "Ngày tạo",
+  "updated_at": "Ngày cập nhật",
+  "pkg_status": "Trạng thái",
+  "distance": "Khoảng cách",
+  "est_time": "Thời gian dự kiến",
+  "shop_info": "Thông tin cửa hàng",
+  "orders_list": "Danh sách đơn hàng",
+  "in_transit": "Đang vận chuyển",
+  "batched": "Đã gom đơn",
+  "total_orders": "Tổng số đơn",
+  "total_cod": "Tổng tiền thu hộ (COD)",
+  "total_fee": "Tổng phí giao hàng",
+  "drop": "Đã hủy",
+  "returning": "Đang trả hàng",
+  "waiting_hub_verify": "Chờ bưu cục xác nhận"
 }

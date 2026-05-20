@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 
 class OrderStatusTag extends StatelessWidget {
@@ -17,7 +18,7 @@ class OrderStatusTag extends StatelessWidget {
         horizontal: AppDimensions.xSmallSpacing,
       ),
       child: PrimaryText(
-        status,
+        status.tr(),
         style: AppTextStyles.labelXSmall,
         color: Colors.white,
       ),

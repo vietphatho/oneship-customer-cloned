@@ -3,6 +3,56 @@ import 'package:flutter/material.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
+enum ShopStatusEnum {
+  active,
+  pending,
+  inactive;
+
+  Color get bgColor {
+    switch (this) {
+      case ShopStatusEnum.active:
+        return const Color(0xFFE8F5E9);
+      case ShopStatusEnum.pending:
+        return const Color(0xFFFFF3E0);
+      case ShopStatusEnum.inactive:
+        return const Color(0xFFEEEEEE);
+    }
+  }
+
+  Color get textColor {
+    switch (this) {
+      case ShopStatusEnum.active:
+        return const Color(0xFF2E7D32);
+      case ShopStatusEnum.pending:
+        return const Color(0xFFE65100);
+      case ShopStatusEnum.inactive:
+        return AppColors.neutral4;
+    }
+  }
+
+  String get label {
+    switch (this) {
+      case ShopStatusEnum.active:
+        return 'shop_management.status_active'.tr();
+      case ShopStatusEnum.pending:
+        return 'shop_management.status_pending'.tr();
+      case ShopStatusEnum.inactive:
+        return 'shop_management.status_inactive'.tr();
+    }
+  }
+
+  static ShopStatusEnum fromString(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return ShopStatusEnum.active;
+      case 'pending':
+        return ShopStatusEnum.pending;
+      default:
+        return ShopStatusEnum.inactive;
+    }
+  }
+}
+
 class ShopStatusBadge extends StatelessWidget {
   final BriefShopEntity shop;
 
@@ -10,38 +60,18 @@ class ShopStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = shop.shopStatus?.toLowerCase() ?? '';
-    final bool isActive = status == 'active';
-    final bool isPending = status == 'pending';
-
-    final Color bgColor;
-    final Color textColor;
-    final String label;
-
-    if (isActive) {
-      bgColor = const Color(0xFFE8F5E9);
-      textColor = const Color(0xFF2E7D32);
-      label = 'shop_management.status_active'.tr();
-    } else if (isPending) {
-      bgColor = const Color(0xFFFFF3E0);
-      textColor = const Color(0xFFE65100);
-      label = 'shop_management.status_pending'.tr();
-    } else {
-      bgColor = const Color(0xFFEEEEEE);
-      textColor = AppColors.neutral4;
-      label = 'shop_management.status_inactive'.tr();
-    }
+    final statusEnum = ShopStatusEnum.fromString(shop.shopStatus);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
-        color: bgColor,
+        color: statusEnum.bgColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        label,
+        statusEnum.label,
         style: TextStyle(
-          color: textColor,
+          color: statusEnum.textColor,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
