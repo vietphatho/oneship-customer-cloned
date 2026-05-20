@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/order_tracking/data/models/response/order_tracking_response.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 
 part 'order_tracking_entity.freezed.dart';
 
@@ -54,7 +56,7 @@ abstract class ShipperEntity with _$ShipperEntity {
 @freezed
 abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
   const factory DeliveryHistoryEntity({
-    String? status,
+    @Default(OrderStatus.allProcessing) OrderStatus status,
     @Default([]) List<String> confirmationImages,
     DateTime? arrivedAtDelivery,
     DateTime? deliveredAt,
@@ -67,7 +69,7 @@ abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
 
   factory DeliveryHistoryEntity.from(DeliveryHistory dto) {
     return DeliveryHistoryEntity(
-      status: dto.status,
+      status: _getStatus(dto.status),
       confirmationImages: dto.confirmationImages ?? [],
       arrivedAtDelivery: dto.arrivedAtDelivery,
       deliveredAt: dto.deliveredAt,
@@ -77,5 +79,10 @@ abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
       quantityConfirmedAt: dto.quantityConfirmedAt,
       pickupImages: dto.pickupImages ?? [],
     );
+  }
+
+  static OrderStatus _getStatus(String? rawValue) {
+    return OrderStatus.values.firstWhereOrNull((e) => e.value == rawValue) ??
+        OrderStatus.allProcessing;
   }
 }

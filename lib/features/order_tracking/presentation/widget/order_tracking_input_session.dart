@@ -39,6 +39,7 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
               label: "input_tracking_number".tr(),
               controller: _trackingNumberCtrl,
               textInputAction: TextInputAction.done,
+              textCapitalization: TextCapitalization.characters,
               onFieldSubmitted: (value) {
                 _onSearch();
               },

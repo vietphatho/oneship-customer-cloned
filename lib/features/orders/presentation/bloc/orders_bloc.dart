@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_u
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_detail_from_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_history_view_data_use_case.dart';
@@ -28,6 +29,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     this._deleteOrderUseCase,
     this._resolveOrdersHistoryViewDataUseCase,
     this._resolveOrdersByStatusUseCase,
+    this._getShipperInfoUseCase,
   ) : super(
         OrdersState(
           orderListByStatusResource: Resource.loading(),
@@ -57,6 +59,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final ResolveOrderDetailFromHistoryUseCase
   _resolveOrderDetailFromHistoryUseCase =
       const ResolveOrderDetailFromHistoryUseCase();
+  final GetShipperInfoUseCase _getShipperInfoUseCase;
 
   late String _shopId;
   set shopId(String id) {
@@ -116,6 +119,18 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       shopId: event.shopId,
       orderId: event.orderId,
     );
+
+    if (response.data?.shipperCodes.firstOrNull != null) {
+      final shipperResponse = await _getShipperInfoUseCase.call(
+        response.data!.shipperCodes.first,
+      );
+
+      var data = response.data?.copyWith(shipper: shipperResponse.data);
+      var ordDtl = response.copyWith(data: data);
+      emit(state.copyWith(orderDetailResource: ordDtl));
+      return;
+    }
+
     emit(state.copyWith(orderDetailResource: response));
   }
 

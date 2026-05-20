@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
+import 'package:oneship_customer/features/orders/domain/entities/shipper_info_entity.dart';
 
 part 'order_detail_entity.freezed.dart';
 
@@ -43,6 +44,7 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
     @Default(false) bool isReturnOrder,
     String? createdByUserId,
     @Default([]) List<String> shipperCodes,
+    ShipperInfoEntity? shipper,
     DateTime? pickupDate,
     String? pickupTimeSlot,
     String? deliveryTimeSlot,

@@ -77,6 +77,10 @@ class OrderTrackingDetailSession extends StatelessWidget {
             },
             contentsBuilder: (context, index) {
               OrderTrackingStatus stage = OrderTrackingStatus.values[index];
+              String? time = _getTime(stage: stage, result: deliveryHistory);
+              String? date = _getDate(stage: stage, result: deliveryHistory);
+
+              if (time == null) return SizedBox();
 
               return Container(
                 decoration: BoxDecoration(
@@ -106,19 +110,21 @@ class OrderTrackingDetailSession extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         PrimaryText(
-                          stage.statusName.tr(),
+                          stage == OrderTrackingStatus.delivered
+                              ? deliveryHistory.status.name.tr()
+                              : stage.statusName.tr(),
                           style: AppTextStyles.labelLarge,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             PrimaryText(
-                              _getTime(stage: stage, result: deliveryHistory),
+                              time,
                               style: AppTextStyles.bodySmall,
                               color: AppColors.neutral6,
                             ),
                             PrimaryText(
-                              _getDate(stage: stage, result: deliveryHistory),
+                              date,
                               style: AppTextStyles.bodySmall,
                               color: AppColors.neutral6,
                             ),

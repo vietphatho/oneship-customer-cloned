@@ -50,6 +50,7 @@ class _OrdersPageState extends State<OrdersPage>
   @override
   void dispose() {
     _tabCtrl.dispose();
+    _ordersBloc.currentOrderStatus = OrderStatus.pending;
     super.dispose();
   }
 
@@ -78,8 +79,7 @@ class _OrdersPageState extends State<OrdersPage>
             bloc: _ordersBloc,
             listenWhen:
                 (previous, current) =>
-                    previous.orderDetailResource !=
-                    current.orderDetailResource,
+                    previous.orderDetailResource != current.orderDetailResource,
             listener: _listenLoadDetailOrder,
           ),
         ],

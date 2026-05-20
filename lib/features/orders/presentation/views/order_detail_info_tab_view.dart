@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/string_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -115,9 +117,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       AppSpacing.vertical(AppDimensions.xSmallSpacing),
                       _buildInfoField(
                         label: "weight".tr(),
-                        value: Utils.formatWeightWithUnit(
-                          ordDtl?.weight,
-                        ),
+                        value: Utils.formatWeightWithUnit(ordDtl?.weight),
                       ),
                       _buildInfoField(
                         label: "dimensions".tr(),
@@ -181,9 +181,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       ),
                       _buildInfoField(
                         label: "weight".tr(),
-                        value: Utils.formatWeightWithUnit(
-                          ordDtl?.weight,
-                        ),
+                        value: Utils.formatWeightWithUnit(ordDtl?.weight),
                       ),
                       _buildInfoField(
                         label: "shipping_fee".tr(),
@@ -225,22 +223,39 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         AppSpacing.vertical(AppDimensions.smallSpacing),
                         Row(
                           children: [
-                            CircleAvatar(),
+                            // CircleAvatar(
+                            //   backgroundImage: NetworkImage(
+                            //     StringUtils.getImgUrl(
+                            //           ordDtl?.shipper?.avatarUrl,
+                            //         ) ??
+                            //         "",
+                            //   ),
+                            // ),
+                            PrimaryAvatar(
+                              url: StringUtils.getImgUrl(
+                                ordDtl?.shipper?.avatarUrl,
+                              ),
+                            ),
+
                             AppSpacing.horizontal(AppDimensions.mediumSpacing),
                             Column(
-                              children: [PrimaryText("--"), PrimaryText("--")],
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PrimaryText(ordDtl?.shipper?.name),
+                                PrimaryText(ordDtl?.shipper?.phone),
+                              ],
                             ),
                           ],
                         ),
                         AppSpacing.vertical(AppDimensions.smallSpacing),
-                        _buildInfoField(
-                          label: "shipper_id".tr(),
-                          value: ordDtl?.shipperCodes.firstOrNull,
-                        ),
-                        _buildInfoField(
-                          label: "phone_number".tr(),
-                          value: null,
-                        ),
+                        // _buildInfoField(
+                        //   label: "shipper_id".tr(),
+                        //   value: ordDtl?.shipperCodes.firstOrNull,
+                        // ),
+                        // _buildInfoField(
+                        //   label: "phone_number".tr(),
+                        //   value: null,
+                        // ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
                         SecondaryButton.iconFilled(
                           label: "call_right_now".tr(),

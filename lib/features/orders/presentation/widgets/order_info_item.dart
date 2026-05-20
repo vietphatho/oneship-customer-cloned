@@ -49,7 +49,7 @@ class OrderInfoItem extends StatelessWidget {
                         Expanded(
                           child: PrimaryText(
                             order.orderNumber,
-                            style: AppTextStyles.labelSmall,
+                            style: AppTextStyles.labelMedium,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
