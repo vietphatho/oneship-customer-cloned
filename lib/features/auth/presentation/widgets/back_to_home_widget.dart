@@ -15,7 +15,7 @@ class BackToHomeWidget extends StatelessWidget {
             if (context.canPop()) {
               context.pop();
             } else {
-              context.pushReplacement(RouteName.homePage);
+              context.go(RouteName.homePage);
             }
           },
           child: Padding(

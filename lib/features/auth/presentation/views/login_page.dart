@@ -274,9 +274,9 @@ class _LoginPageState extends State<LoginPage> {
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
         if (state.hasNoShops) {
-          context.pushReplacement(RouteName.shopEmptyPage);
+          context.go(RouteName.shopEmptyPage);
         } else if (!state.hasApprovedShop) {
-          context.pushReplacement(RouteName.shopPendingApprovalPage);
+          context.go(RouteName.shopPendingApprovalPage);
         } else {
           final FinanceOverviewBloc financeOverviewBloc = getIt.get();
           final FinanceReconciliationBloc financeReconciliationBloc =
@@ -287,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
             requestSource: FinanceRequestSource.page,
           );
           financeReconciliationBloc.initPeriods(shopId: shopId);
-          context.pushReplacement(RouteName.shopMasterPage);
+          context.go(RouteName.shopMasterPage);
         }
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
