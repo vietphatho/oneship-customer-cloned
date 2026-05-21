@@ -61,6 +61,20 @@ extension OrderStatusExt on OrderStatus {
   Widget get view => _mapView[this]!;
 }
 
+extension OrderStatusValueExt on String? {
+  static const _editableValues = {
+    "pending",
+    "processing",
+    "batched",
+    "shipping",
+  };
+
+  bool get canEditOrder {
+    final status = this?.trim().toLowerCase();
+    return status != null && _editableValues.contains(status);
+  }
+}
+
 enum OrderTrackingStatus {
   delivered,
   arrivedAtDelivery,
