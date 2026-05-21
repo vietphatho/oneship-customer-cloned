@@ -3,6 +3,7 @@ import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/product_selected_container.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/product_selection_button.dart';
@@ -197,6 +198,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
   }
 
   void _onNext() {
+    final ProductBloc productBloc = getIt.get();
     _createOrderBloc.completeOrderInfoStep(
       codAmount: int.tryParse(_codCtrl.text) ?? 0,
       weight: int.tryParse(_weightCtrl.text) ?? 0,
@@ -206,6 +208,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
       note: _noteCtrl.text,
       externalOrderId: _externalOrderIdCtrl.text,
       orderSource: _orderSourceCtrl.text,
+      selectedProducts:
+          productBloc.state.productsListSelected,
     );
   }
 }

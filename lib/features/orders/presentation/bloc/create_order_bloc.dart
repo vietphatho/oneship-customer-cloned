@@ -12,12 +12,10 @@ import 'package:oneship_customer/features/orders/data/models/response/get_routin
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/add_product_to_order_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/update_ord_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/update_product_quantity_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
@@ -25,15 +23,15 @@ import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_sh
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
-  final AddProductToOrderUseCase _addProductToOrderUseCase;
-  final UpdateProductQuantityUseCase _updateProductQuantityUseCase;
+  // final AddProductToOrderUseCase _addProductToOrderUseCase;
+  // final UpdateProductQuantityUseCase _updateProductQuantityUseCase;
   final ValidateCreateOrderInfoUseCase _validateCreateOrderInfoUseCase;
   final UpdateOrdUseCase _updateOrdUseCase;
 
   CreateOrderBloc(
     this._repository,
-    this._addProductToOrderUseCase,
-    this._updateProductQuantityUseCase,
+    // this._addProductToOrderUseCase,
+    // this._updateProductQuantityUseCase,
     this._validateCreateOrderInfoUseCase,
     this._updateOrdUseCase,
   ) : super(
@@ -54,7 +52,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     on<CreateOrderCalculateFeeEvent>(_onCalculateDeliveryFeeEvent);
     on<CreateOrderGetRoutingToShopEvent>(_onGetRoutingEvent);
     on<CreateOrderCreateEvent>(_onCreateOrderEvent);
-    on<CreateOrderChangeProductEvent>(_onProductChangedEvent);
+    // on<CreateOrderChangeProductEvent>(_onProductChangedEvent);
     on<CreateOrderErrorEvent>(_onErrorEvent);
     on<UpdateOrderInitEvent>(_onInitUpdateOrdEvent);
   }
@@ -285,23 +283,23 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     );
   }
 
-  FutureOr<void> _onProductChangedEvent(
-    CreateOrderChangeProductEvent event,
-    Emitter<CreateOrderState> emit,
-  ) {
-    var products =
-        event.products.map((e) => SelectedProductEntity.fromModel(e)).toList();
-    emit(
-      CreateOrderProductChangedState(
-        request: state.request.copyWith(selectedProducts: products),
-        draftRequest: state.draftRequest.copyWith(selectedProducts: products),
-        shopInfo: state.shopInfo,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: event.products,
-        updateOrdId: state.updateOrdId,
-      ),
-    );
-  }
+  // FutureOr<void> _onProductChangedEvent(
+  //   CreateOrderChangeProductEvent event,
+  //   Emitter<CreateOrderState> emit,
+  // ) {
+  //   // var products =
+  //   //     event.products.map((e) => SelectedProductEntity).toList();
+  //   emit(
+  //     CreateOrderProductChangedState(
+  //       request: state.request.copyWith(selectedProducts: event.products),
+  //       draftRequest: state.draftRequest.copyWith(selectedProducts: event.products),
+  //       shopInfo: state.shopInfo,
+  //       routingToShopResource: state.routingToShopResource,
+  //       productEntitySelected: event.products,
+  //       updateOrdId: state.updateOrdId,
+  //     ),
+  //   );
+  // }
 
   FutureOr<void> _onChangedAcceptTerms(
     CreateOrderChangeAcceptTermsEvent event,
@@ -360,27 +358,27 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderErrorEvent(message));
   }
 
-  void addProductToOrder(Map<String, ProductEntity> selectedMap) async {
-    final newProduct = await _addProductToOrderUseCase.call(
-      currentProduct: state.productEntitySelected,
-      selectedMap: selectedMap,
-    );
+  // void addProductToOrder(Map<String, ProductEntity> selectedMap) async {
+  //   final newProduct = await _addProductToOrderUseCase.call(
+  //     currentProduct: state.productEntitySelected,
+  //     selectedMap: selectedMap,
+  //   );
 
-    add(CreateOrderChangeProductEvent(newProduct));
-  }
+  //   add(CreateOrderChangeProductEvent(newProduct));
+  // }
 
-  void updateProductQuantity(
-    String sku,
-    CreateOrderProductAction actionType,
-  ) async {
-    final newProduct = await _updateProductQuantityUseCase.call(
-      currentProduct: state.productEntitySelected,
-      sku: sku,
-      actionType: actionType,
-    );
+  // void updateProductQuantity(
+  //   String sku,
+  //   CreateOrderProductAction actionType,
+  // ) async {
+  //   final newProduct = await _updateProductQuantityUseCase.call(
+  //     currentProduct: state.productEntitySelected,
+  //     sku: sku,
+  //     actionType: actionType,
+  //   );
 
-    add(CreateOrderChangeProductEvent(newProduct));
-  }
+  //   add(CreateOrderChangeProductEvent(newProduct));
+  // }
 
   void setShop(BriefShopEntity shop) {
     add(CreateOrderInitShopEvent(shop));
@@ -434,6 +432,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     String? note,
     String? externalOrderId,
     String? orderSource,
+    required List<SelectedProductEntity> selectedProducts
   }) {
     var currentReq = state.request;
     var draftReq = state.draftRequest;
@@ -450,6 +449,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         note: note,
         orderSource: orderSource,
       ),
+      selectedProducts: selectedProducts
     );
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),

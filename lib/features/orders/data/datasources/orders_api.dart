@@ -5,10 +5,12 @@ import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
+import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_customer/features/orders/data/models/response/products_list_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'orders_api.g.dart';
@@ -64,5 +66,18 @@ abstract class OrdersApi {
     @Path("orderId") required String orderId,
     @Query("shopId") required String shopId,
     @Query("status") required String status,
+  });
+
+  @GET("/api/v1/shops/{shopId}/products/infinite-scroll")
+  Future<BaseResponse<ProductsListResponse, BaseError>> fetchProductsList({
+    @Path("shopId") required String shopId,
+    @Query("cursor") String? cursor,
+    @Query("limit") int? limit,
+  });
+
+  @POST("/api/v1/shops/{shopId}/products")
+  Future<BaseResponse<ProductResponse, BaseError>> createProduct({
+    @Path("shopId") required String shopId,
+    @Body() required CreateProductRequest body,
   });
 }

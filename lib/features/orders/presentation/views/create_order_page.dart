@@ -5,6 +5,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/views/confirmation_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/pick_up_time_page_view.dart';
@@ -36,6 +37,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   @override
   void dispose() {
     getIt.resetLazySingleton<CreateOrderBloc>();
+    getIt.resetLazySingleton<ProductBloc>();
     _locationServiceBloc.reset();
     super.dispose();
   }

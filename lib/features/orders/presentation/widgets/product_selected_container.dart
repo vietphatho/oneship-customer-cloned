@@ -1,16 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/product_state.dart';
 
 class ProductSelectedContainer extends StatefulWidget {
   const ProductSelectedContainer({super.key});
@@ -21,7 +17,7 @@ class ProductSelectedContainer extends StatefulWidget {
 }
 
 class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
-  final CreateOrderBloc _createOrderBloc = getIt.get();
+  final ProductBloc _productBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +65,15 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
 
         AppSpacing.vertical(AppDimensions.xxSmallSpacing),
 
-        BlocBuilder<CreateOrderBloc, CreateOrderState>(
-          bloc: _createOrderBloc,
-          buildWhen: (_, current) => current is CreateOrderProductChangedState,
+        BlocBuilder<ProductBloc, ProductState>(
+          bloc: _productBloc,
+          buildWhen:
+              (pre, cur) =>
+                  pre.productsListSelected != cur.productsListSelected,
           builder: (context, state) {
             return Column(
               children:
-                  state.productEntitySelected
+                  state.productsListSelected
                       .map((product) => _productSelectedItem(product))
                       .toList(),
             );
@@ -110,10 +108,11 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                 ),
               ),
             ),
-            BlocBuilder<CreateOrderBloc, CreateOrderState>(
-              bloc: _createOrderBloc,
+            BlocBuilder<ProductBloc, ProductState>(
+              bloc: _productBloc,
               buildWhen:
-                  (_, current) => current is CreateOrderProductChangedState,
+                  (pre, cur) =>
+                      pre.productsListSelected != cur.productsListSelected,
               builder: (context, state) {
                 return Expanded(
                   flex: 3,
@@ -129,10 +128,11 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
               },
             ),
 
-            BlocBuilder<CreateOrderBloc, CreateOrderState>(
-              bloc: _createOrderBloc,
+            BlocBuilder<ProductBloc, ProductState>(
+              bloc: _productBloc,
               buildWhen:
-                  (_, current) => current is CreateOrderProductChangedState,
+                  (pre, cur) =>
+                      pre.productsListSelected != cur.productsListSelected,
               builder: (context, state) {
                 return Expanded(
                   flex: 2,
@@ -155,7 +155,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
     );
   }
 
-  Widget _productSelectedItem(ProductEntitySelected product) {
+  Widget _productSelectedItem(SelectedProductEntity product) {
     return Row(
       children: [
         Expanded(
@@ -164,13 +164,10 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PrimaryText(
-                product.product.productName,
+                product.name,
                 style: AppTextStyles.bodyMedium,
               ),
-              PrimaryText(
-                product.product.skuCode,
-                style: AppTextStyles.bodySmall,
-              ),
+              PrimaryText(product.sku, style: AppTextStyles.bodySmall),
             ],
           ),
         ),
@@ -178,7 +175,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
           flex: 2,
           child: Center(
             child: PrimaryText(
-              Utils.formatCurrencyWithUnit(product.product.price),
+              Utils.formatCurrencyWithUnit(product.price),
               style: AppTextStyles.bodyMedium,
             ),
           ),
@@ -196,16 +193,16 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                         context,
                         title: 'delete_this_product',
                         onPositiveTapped: () {
-                          _createOrderBloc.updateProductQuantity(
-                            product.product.skuCode,
-                            CreateOrderProductAction.decrement,
+                          _productBloc.updateProductSelectedQty(
+                            sku: product.sku,
+                            actionType: CreateOrderProductAction.decrement,
                           );
                         },
                       );
                     } else {
-                      _createOrderBloc.updateProductQuantity(
-                        product.product.skuCode,
-                        CreateOrderProductAction.decrement,
+                      _productBloc.updateProductSelectedQty(
+                        sku: product.sku,
+                        actionType: CreateOrderProductAction.decrement,
                       );
                     }
                   },
@@ -227,9 +224,9 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                 AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                 InkWell(
                   onTap: () {
-                    _createOrderBloc.updateProductQuantity(
-                      product.product.skuCode,
-                      CreateOrderProductAction.increment,
+                    _productBloc.updateProductSelectedQty(
+                      sku: product.sku,
+                      actionType: CreateOrderProductAction.increment,
                     );
                   },
                   child: Container(

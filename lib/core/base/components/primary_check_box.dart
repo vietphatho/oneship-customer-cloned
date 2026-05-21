@@ -16,6 +16,8 @@ class PrimaryCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment:
+          label != null ? MainAxisAlignment.start : MainAxisAlignment.center,
       children: [
         Checkbox(
           value: value,

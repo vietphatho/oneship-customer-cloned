@@ -1,23 +1,20 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_new_product_response_entity.dart';
+import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
 
 @lazySingleton
 class CreateNewProductUseCase {
-  CreateNewProductUseCase();
+  final OrdersRepository _ordersRepository;
+  CreateNewProductUseCase(this._ordersRepository);
 
-  Future<CreateNewProductResponseEntity> call({
-    required ProductEntity newProduct,
-    required List<ProductEntity> currentProducts,
-    required int currentSelectedCount,
+  Future<Resource<ProductEntity>> call({
+    required String shopId,
+    required CreateProductRequest request,
   }) async {
-    List<ProductEntity> updatedProducts = List.from(currentProducts)
-      ..add(newProduct);
-    final newSelectedCount = currentSelectedCount + 1;
+    final response = await _ordersRepository.createProduct(shopId: shopId, body: request);
 
-    return CreateNewProductResponseEntity(
-      newSelectedCount: newSelectedCount,
-      updatedProducts: updatedProducts,
-    );
+    return response;
   }
 }

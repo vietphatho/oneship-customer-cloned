@@ -6,11 +6,14 @@ import 'package:oneship_customer/features/orders/data/datasources/orders_api.dar
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
+import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/products_list_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
 
 @LazySingleton(as: OrdersRepository)
@@ -100,6 +103,32 @@ class OrdersRepositoryImpl extends OrdersRepository {
   }
 
   @override
+  Future<Resource<ProductsListEntity>> fetchProductsList({
+    required String shopId,
+    String? cursor,
+    int? limit,
+  }) async {
+    final response = await request(
+      () => _ordersApi.fetchProductsList(
+        shopId: shopId,
+        cursor: cursor,
+        limit: limit,
+      ),
+    );
+    return response.parse((dto) => ProductsListEntity.from(dto));
+  }
+
+  @override
+  Future<Resource<ProductEntity>> createProduct({
+    required String shopId,
+    required CreateProductRequest body,
+  }) async {
+    final response = await request(
+      () => _ordersApi.createProduct(shopId: shopId, body: body),
+    );
+    return response.parse((dto) => ProductEntity.from(dto));
+  }
+
   Future<Resource> updateOrder({
     required String ordId,
     required CreateOrderRequest requestBody,

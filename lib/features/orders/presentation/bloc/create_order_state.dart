@@ -3,7 +3,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_selected_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 abstract class CreateOrderState {
@@ -22,7 +22,7 @@ abstract class CreateOrderState {
   final CreateOrderStep step;
   final CreateOrderRequestEntity request;
   final CreateOrderRequestEntity draftRequest;
-  final List<ProductEntitySelected> productEntitySelected;
+  final List<SelectedProductEntity> productEntitySelected;
   final BriefShopEntity shopInfo;
   final Resource<GetRoutingToShopResponse> routingToShopResource;
   final bool acceptTerms;
@@ -153,24 +153,24 @@ class CreateOrderErrorState extends CreateOrderState {
   }) : super(errorMessage: errorMessage);
 }
 
-extension CreateOrderStateX on CreateOrderState {
-  int getCalculatedTotalQuantity() {
-    int totalQuantity = 0;
+// extension CreateOrderStateX on CreateOrderState {
+//   int getCalculatedTotalQuantity() {
+//     int totalQuantity = 0;
 
-    for (var pro in productEntitySelected) {
-      totalQuantity += pro.quantity;
-    }
+//     for (var pro in productEntitySelected) {
+//       totalQuantity += pro.quantity;
+//     }
 
-    return totalQuantity;
-  }
+//     return totalQuantity;
+//   }
 
-  int getCalculatedTotalAmount() {
-    int totalAmount = 0;
+//   int getCalculatedTotalAmount() {
+//     int totalAmount = 0;
 
-    for (var pro in productEntitySelected) {
-      totalAmount += pro.calculatedTotalAmount;
-    }
+//     for (var pro in productEntitySelected) {
+//       totalAmount += pro.calculatedTotalAmount;
+//     }
 
-    return totalAmount;
-  }
-}
+//     return totalAmount;
+//   }
+// }
