@@ -16,8 +16,9 @@ class PackagesRepositoryImpl extends PackagesRepository {
   @override
   Future<Resource<PackagesListResponse>> fetchPackages({
     required String shopId,
+    int? page
   }) {
-    return request(() => _packagesApi.fetchPackages(shopId: shopId));
+    return request(() => _packagesApi.fetchPackages(shopId: shopId, page: page));
   }
 
   @override
