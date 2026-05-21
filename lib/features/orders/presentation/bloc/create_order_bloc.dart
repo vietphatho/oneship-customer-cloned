@@ -63,11 +63,13 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     CreateOrderInitShopEvent event,
     Emitter<CreateOrderState> emit,
   ) {
+    // Preserve existing request data, only inject shopId if not already set
+    final shopId = state.request.shopId ?? event.shop.shopId;
     emit(
       CreateOrderRequestChangedState(
         shopInfo: event.shop,
-        request: state.request.copyWith(shopId: event.shop.shopId),
-        draftRequest: state.draftRequest.copyWith(shopId: event.shop.shopId),
+        request: state.request.copyWith(shopId: shopId),
+        draftRequest: state.draftRequest.copyWith(shopId: shopId),
         step: state.step,
         routingToShopResource: state.routingToShopResource,
         productEntitySelected: state.productEntitySelected,
@@ -241,25 +243,39 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     CreateOrderCreateEvent event,
     Emitter<CreateOrderState> emit,
   ) async {
+    // Capture before emit changes state
+    final updateOrdId = state.updateOrdId;
+    final currentRequest = state.request;
+
     emit(
       CreateOrderCreatedState(
         Resource.loading(),
         shopInfo: state.shopInfo,
-        request: state.request,
+        request: currentRequest,
         draftRequest: state.draftRequest,
         routingToShopResource: state.routingToShopResource,
         productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+        updateOrdId: updateOrdId,
       ),
     );
 
     late final Resource response;
-    if (state.updateOrdId == null) {
-      response = await _repository.createOrder(state.request.toDto());
+    if (updateOrdId == null) {
+      response = await _repository.createOrder(currentRequest.toDto());
     } else {
+      // Strip system-managed fields that server rejects on update
+      // and filter products with invalid productId (empty string or null)
+      final cleanRequest = currentRequest.copyWith(
+        paymentStatus: null,
+        paymentMethod: null,
+        status: null,
+        selectedProducts: currentRequest.selectedProducts
+            .where((p) => p.id != null && p.id!.isNotEmpty)
+            .toList(),
+      );
       response = await _updateOrdUseCase.call(
-        ordId: state.updateOrdId!,
-        request: state.request,
+        ordId: updateOrdId,
+        request: cleanRequest,
       );
     }
 
@@ -271,7 +287,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         draftRequest: state.draftRequest,
         routingToShopResource: state.routingToShopResource,
         productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+        updateOrdId: updateOrdId,
       ),
     );
   }

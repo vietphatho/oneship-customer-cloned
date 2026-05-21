@@ -161,7 +161,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
           model.items
               .map(
                 (e) => SelectedProductEntity(
-                  id: e.id ?? "",
+                  id: e.productId ?? e.id ?? "",
                   name: e.productName ?? "",
                   sku: e.productSku ?? "",
                   price: e.unitPrice,
@@ -171,8 +171,10 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
               .toList(),
 
       router: RoutingEntity(
-        distance: double.tryParse(model.distance ?? ""),
-        orderCoordinates: model.coordinates?.coordinates ?? [],
+        distance: model.distance != null ? double.tryParse(model.distance!) : null,
+        orderCoordinates: (model.coordinates?.coordinates?.length ?? 0) >= 2
+            ? model.coordinates!.coordinates!
+            : [],
       ),
     );
   }
