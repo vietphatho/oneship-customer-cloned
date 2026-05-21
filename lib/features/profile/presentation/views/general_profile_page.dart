@@ -34,8 +34,8 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
               _SettingsContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _UtilitiesContainer(),
-              AppSpacing.vertical(AppDimensions.mediumSpacing),
+              // _UtilitiesContainer(),
+              // AppSpacing.vertical(AppDimensions.mediumSpacing),
               _SupportsContainer(),
               AppSpacing.vertical(AppDimensions.bottomNavBarHeight),
             ],
@@ -221,6 +221,7 @@ class _Header extends StatelessWidget {
           child: Row(
             children: [
               PrimaryAvatar(
+                url: userProfile.avatarUrl,
                 radius: AppDimensions.defaultAvatarRadius,
                 isOnline: true,
               ),

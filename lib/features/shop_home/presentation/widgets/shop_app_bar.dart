@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
@@ -37,13 +37,10 @@ class ShopAppBar extends StatelessWidget {
                   flex: 4,
                   child: Row(
                     children: [
-                      CircleAvatar(
+                      PrimaryAvatar(
+                        url: avatarUrl,
                         radius: AppDimensions.homeAvatarRadius,
-                        foregroundImage:
-                            avatarUrl != null && avatarUrl.isNotEmpty
-                                ? CachedNetworkImageProvider(avatarUrl)
-                                : null,
-                        backgroundColor: AppColors.neutral7,
+                        showStatusIndicator: false,
                       ),
                       AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                       Expanded(
