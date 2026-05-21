@@ -13,6 +13,7 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShopPendingApprovalPage extends StatelessWidget {
   const ShopPendingApprovalPage({super.key});
@@ -34,12 +35,9 @@ class ShopPendingApprovalPage extends StatelessWidget {
         bloc: shopBloc,
         buildWhen:
             (previous, current) =>
-                previous.createShopResource != current.createShopResource ||
-                previous.briefShopsResource != current.briefShopsResource,
+                previous.createShopResource != current.createShopResource,
         builder: (context, state) {
-          final shopName =
-              state.createShopResource.data?.shopName ??
-              state.currentShop?.shopName;
+          final shopName = state.createShopResource.data?.shopName ?? '';
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -67,7 +65,9 @@ class ShopPendingApprovalPage extends StatelessWidget {
                           Image.asset(ImagePath.logo, width: size.width * 0.48),
                           AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                           PrimaryText(
-                            shopName,
+                            shopName.isEmpty
+                                ? "shop_name_placeholder".tr()
+                                : shopName,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.headlineSmall,
                             color: AppColors.primary,
@@ -172,23 +172,35 @@ class _SupportCard extends StatelessWidget {
             color: AppColors.primary,
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.primary,
-                child: Icon(Icons.phone, color: Colors.white, size: 22),
-              ),
-              AppSpacing.horizontal(AppDimensions.smallSpacing),
-              PrimaryText(
-                hotline,
-                style: AppTextStyles.headlineSmall.copyWith(
-                  color: AppColors.secondary,
-                  fontWeight: FontWeight.w800,
+          GestureDetector(
+            onTap: () async {
+              final Uri launchUri = Uri(scheme: 'tel', path: hotline);
+              if (await canLaunchUrl(launchUri)) {
+                await launchUrl(launchUri);
+              } else {
+                onCopy();
+              }
+            },
+            onLongPress: onCopy,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundColor: AppColors.primary,
+                  child: Icon(Icons.phone, color: Colors.white, size: 22),
                 ),
-              ),
-            ],
+                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                PrimaryText(
+                  hotline,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: AppColors.secondary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
           ),
           AppSpacing.vertical(AppDimensions.largeSpacing),
           PrimaryText(
