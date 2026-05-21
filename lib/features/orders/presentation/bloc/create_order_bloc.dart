@@ -128,15 +128,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         draftRequest: state.draftRequest.copyWith(
           customerName: event.customerName,
           phone: event.phoneNumber,
-          province: Province(
-            name: event.province?.name ?? "",
-            code: event.province?.code ?? 0,
-          ),
-          ward: Ward(
-            name: event.ward?.name ?? "",
-            code: event.ward?.code ?? 0,
-            provinceCode: event.province?.code ?? 0,
-          ),
+          province: event.province,
+          ward: event.ward,
           fullAddress: event.address,
           isNewAddress: event.isNewAddress ?? false,
         ),

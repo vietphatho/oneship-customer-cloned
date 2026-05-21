@@ -11,7 +11,7 @@ import 'package:oneship_customer/features/orders/data/models/response/calculate_
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/products_list_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
@@ -92,7 +92,7 @@ class OrdersRepositoryImpl extends OrdersRepository {
   }
 
   @override
-  Future<Resource<OrdersHistoryEntity>> fetchOrderHistory({
+  Future<Resource<OrdersHistoryResponseEntity>> fetchOrderHistory({
     required OrderStatus status,
     required String shopId,
     int page = Constants.defaultPage,
@@ -106,7 +106,7 @@ class OrdersRepositoryImpl extends OrdersRepository {
         limit: limit,
       ),
     );
-    return response.parse((dto) => OrdersHistoryEntity.from(dto));
+    return response.parse((dto) => OrdersHistoryResponseEntity.fromDto(dto));
   }
 
   @override

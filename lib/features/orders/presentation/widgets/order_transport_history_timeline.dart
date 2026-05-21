@@ -1,5 +1,4 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_image_thumbnail.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/string_utils.dart';
@@ -137,11 +136,11 @@ class _TimelineItemView extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final imageUrl =
                               StringUtils.getImgUrl(item.images[index]) ?? '';
-                          return GestureDetector(
-                            onTap: () => _showImagePreview(context, imageUrl),
-                            child: SizedBox(
-                              width: 56,
-                              child: PrimaryImageThumbnail.network(imageUrl),
+                          return SizedBox(
+                            width: 56,
+                            child: PrimaryImageThumbnail.network(
+                              imageUrl,
+                              canPreview: true,
                             ),
                           );
                         },
@@ -153,42 +152,6 @@ class _TimelineItemView extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showImagePreview(BuildContext context, String imageUrl) {
-    if (imageUrl.isEmpty) return;
-
-    PrimaryDialog.showDefaultDialog(
-      context,
-      child: GestureDetector(
-        onTap: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: Material(
-          color: Colors.black.withOpacity(0.85),
-          child: SafeArea(
-            child: Stack(
-              children: [
-                Center(
-                  child: InteractiveViewer(
-                    minScale: 0.8,
-                    maxScale: 4,
-                    child: Image.network(imageUrl, fit: BoxFit.contain),
-                  ),
-                ),
-                Positioned(
-                  top: AppDimensions.mediumSpacing,
-                  right: AppDimensions.mediumSpacing,
-                  child: IconButton(
-                    onPressed:
-                        () => Navigator.of(context, rootNavigator: true).pop(),
-                    icon: const Icon(Icons.close, color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

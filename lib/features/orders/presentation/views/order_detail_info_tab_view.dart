@@ -8,9 +8,10 @@ import 'package:oneship_customer/core/utils/string_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {
   const OrderDetailInfoTabView({super.key});
@@ -18,6 +19,9 @@ class OrderDetailInfoTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrdersBloc _ordersBloc = getIt.get();
+    final ShopBloc _shopBloc = getIt.get();
+
+    var currentShop = _shopBloc.state.currentShop;
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: _ordersBloc,
@@ -51,11 +55,11 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       AppSpacing.vertical(AppDimensions.xSmallSpacing),
                       _buildInfoField(
                         label: "shop_name".tr(),
-                        value: ordDtl?.shop?.shopName,
+                        value: ordDtl?.shop?.shopName ?? currentShop?.shopName,
                       ),
                       _buildInfoField(
                         label: "phone_number".tr(),
-                        value: ordDtl?.shop?.phone,
+                        value: ordDtl?.shop?.phone ?? currentShop?.phone,
                       ),
                       _buildInfoField(
                         label: "pick_up_date".tr(),

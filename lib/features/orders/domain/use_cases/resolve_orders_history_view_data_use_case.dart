@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 
 class OrdersHistoryViewData {
   const OrdersHistoryViewData({
@@ -10,10 +10,10 @@ class OrdersHistoryViewData {
     required this.maxCodAmount,
   });
 
-  final List<OrderHistoryInfoEntity> filteredDeliveredOrders;
-  final List<OrderHistoryInfoEntity> filteredReturnedOrders;
-  final List<OrderHistoryInfoEntity> visibleDeliveredOrders;
-  final List<OrderHistoryInfoEntity> visibleReturnedOrders;
+  final List<OrdersHistoryEntity> filteredDeliveredOrders;
+  final List<OrdersHistoryEntity> filteredReturnedOrders;
+  final List<OrdersHistoryEntity> visibleDeliveredOrders;
+  final List<OrdersHistoryEntity> visibleReturnedOrders;
   final double maxCodAmount;
 }
 
@@ -22,8 +22,8 @@ class ResolveOrdersHistoryViewDataUseCase {
   static const double _defaultMaxCodAmount = 1000000;
 
   OrdersHistoryViewData call({
-    required List<OrderHistoryInfoEntity> deliveredOrders,
-    required List<OrderHistoryInfoEntity> returnedOrders,
+    required List<OrdersHistoryEntity> deliveredOrders,
+    required List<OrdersHistoryEntity> returnedOrders,
     int? provinceCode,
     int? wardCode,
     DateTime? createdDate,
@@ -62,8 +62,8 @@ class ResolveOrdersHistoryViewDataUseCase {
     );
   }
 
-  List<OrderHistoryInfoEntity> _applyFilters({
-    required List<OrderHistoryInfoEntity> orders,
+  List<OrdersHistoryEntity> _applyFilters({
+    required List<OrdersHistoryEntity> orders,
     int? provinceCode,
     int? wardCode,
     DateTime? createdDate,
@@ -72,43 +72,44 @@ class ResolveOrdersHistoryViewDataUseCase {
     double minCodAmount = 0,
     double maxCodAmount = _defaultMaxCodAmount,
   }) {
-    return orders.where((order) {
-      final orderProvinceCode = order.city ?? order.provinceCode;
-      if (provinceCode != null && orderProvinceCode != provinceCode) {
-        return false;
-      }
+    return orders;
+    // return orders.where((order) {
+    //   final orderProvinceCode = order.city ?? order.provinceCode;
+    //   if (provinceCode != null && orderProvinceCode != provinceCode) {
+    //     return false;
+    //   }
 
-      final orderWardCode = order.ward ?? order.wardCode;
-      if (wardCode != null && orderWardCode != wardCode) {
-        return false;
-      }
+    //   final orderWardCode = order.ward ?? order.wardCode;
+    //   if (wardCode != null && orderWardCode != wardCode) {
+    //     return false;
+    //   }
 
-      if (phone.isNotEmpty &&
-          !(order.phone ?? "").toLowerCase().contains(phone.toLowerCase())) {
-        return false;
-      }
+    //   if (phone.isNotEmpty &&
+    //       !(order.phone ?? "").toLowerCase().contains(phone.toLowerCase())) {
+    //     return false;
+    //   }
 
-      if (orderCode.isNotEmpty &&
-          !(order.orderNumber ?? "")
-              .toLowerCase()
-              .contains(orderCode.toLowerCase())) {
-        return false;
-      }
+    //   if (orderCode.isNotEmpty &&
+    //       !(order.orderNumber ?? "").toLowerCase().contains(
+    //         orderCode.toLowerCase(),
+    //       )) {
+    //     return false;
+    //   }
 
-      if (createdDate != null && !_isSameDate(order.createdAt, createdDate)) {
-        return false;
-      }
+    //   if (createdDate != null && !_isSameDate(order.createdAt, createdDate)) {
+    //     return false;
+    //   }
 
-      final codAmount = (order.codAmount ?? 0).toDouble();
-      if (codAmount < minCodAmount || codAmount > maxCodAmount) {
-        return false;
-      }
+    //   final codAmount = (order.codAmount ?? 0).toDouble();
+    //   if (codAmount < minCodAmount || codAmount > maxCodAmount) {
+    //     return false;
+    //   }
 
-      return true;
-    }).toList();
+    //   return true;
+    // }).toList();
   }
 
-  double _maxCodAmount(List<OrderHistoryInfoEntity> orders) {
+  double _maxCodAmount(List<OrdersHistoryEntity> orders) {
     if (orders.isEmpty) return _defaultMaxCodAmount;
 
     final maxCod = orders

@@ -3,7 +3,7 @@ import 'package:oneship_customer/core/base/components/primary_animated_pressable
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 
 class OrdersHistoryListItem extends StatelessWidget {
   const OrdersHistoryListItem({
@@ -14,12 +14,12 @@ class OrdersHistoryListItem extends StatelessWidget {
   });
 
   final int index;
-  final OrderHistoryInfoEntity order;
+  final OrdersHistoryEntity order;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final address = order.fullAddress ?? order.address ?? "--";
+    final address = order.fullAddress ?? order.fullAddressOld ?? "--";
     final createdAt = DateTimeUtils.formatDateTime(order.createdAt) ?? "--";
     final cod = Utils.formatCurrencyWithUnit(order.codAmount);
 

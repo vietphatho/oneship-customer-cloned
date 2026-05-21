@@ -4,7 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_refreshable_list_v
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_item.dart';
@@ -22,10 +22,10 @@ class OrdersHistoryListCard extends StatefulWidget {
   });
 
   final OrderStatus status;
-  final List<OrderHistoryInfoEntity> orders;
+  final List<OrdersHistoryEntity> orders;
   final VoidCallback onRefresh;
   final VoidCallback onLoadMore;
-  final ValueChanged<OrderHistoryInfoEntity>? onOrderTap;
+  final ValueChanged<OrdersHistoryEntity>? onOrderTap;
   final bool isLoading;
 
   @override
