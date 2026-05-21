@@ -109,9 +109,32 @@ extension OrderPickUpSessionExt on OrderPickUpSession {
     OrderPickUpSession.afternoon: "Chiều (14:00-18:00)",
   };
 
+  static const _deadlineHour = {
+    OrderPickUpSession.morning: 12,
+    OrderPickUpSession.afternoon: 18,
+  };
+
   String get requestValue => _mapValue[this]!;
 
   String get label => _mapLabel[this]!;
+
+  bool isAvailableForDate(DateTime? date) {
+    if (date == null) return true;
+    final now = DateTime.now();
+    final isToday =
+        date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+    if (!isToday) return true;
+    final deadline = _deadlineHour[this]!;
+    return now.hour < deadline;
+  }
+
+  static List<OrderPickUpSession> availableSessionsForDate(DateTime? date) {
+    return OrderPickUpSession.values
+        .where((s) => s.isAvailableForDate(date))
+        .toList();
+  }
 }
 
 enum CreateOrderPayer { sender, recipient }

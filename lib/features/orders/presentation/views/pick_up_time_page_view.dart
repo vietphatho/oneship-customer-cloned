@@ -35,9 +35,19 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
       listener: _handleListener,
       builder: (context, state) {
         final CreateOrderRequestEntity request = state.draftRequest;
+        final selectedDate = request.detail?.pickupDate;
+        final selectedSession = request.detail?.pickupSession;
+        final availableSessions =
+            OrderPickUpSessionExt.availableSessionsForDate(selectedDate);
+        final effectiveSession =
+            (selectedSession != null &&
+                    availableSessions.contains(selectedSession))
+                ? selectedSession
+                : null;
         final isStepValid =
-            request.detail?.pickupDate != null &&
-            request.detail?.pickupSession != null;
+            selectedDate != null &&
+            effectiveSession != null &&
+            availableSessions.isNotEmpty;
         _shopNameController.text = state.shopInfo.shopName;
 
         return Container(
@@ -50,8 +60,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
             children: [
               PrimaryText(
                 "sender_info".tr(),
-                style: AppTextStyles.labelLarge,
-                color: AppColors.secondary,
+                style: AppTextStyles.headlineSmall,
               ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               PrimaryText("shop_name".tr(), style: AppTextStyles.labelMedium),
@@ -63,15 +72,27 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
                 isRequired: true,
                 initialDateTime: request.detail?.pickupDate,
                 firstDate: DateTime.now(),
-                onChanged:
-                    (date) => _createOrderBloc.changePickUpDate(date: date),
+                onChanged: (date) {
+                  // Kiểm tra nếu session hiện tại không còn hợp lệ sau khi đổi ngày
+                  final currentSession = request.detail?.pickupSession;
+                  final sessions =
+                      OrderPickUpSessionExt.availableSessionsForDate(date);
+                  final sessionStillValid =
+                      currentSession != null &&
+                      sessions.contains(currentSession);
+                  _createOrderBloc.changePickUpDate(
+                    date: date,
+                    // Nếu session không còn hợp lệ, đặt về null để buộc user chọn lại
+                    session: sessionStillValid ? currentSession : null,
+                  );
+                },
               ),
               AppSpacing.vertical(AppDimensions.smallSpacing),
               PrimaryDropdown(
                 label: "pick_up_time".tr(),
                 isRequired: true,
-                initialValue: request.detail?.pickupSession,
-                menu: OrderPickUpSession.values,
+                initialValue: effectiveSession,
+                menu: availableSessions,
                 hintText: "select_time".tr(),
                 toLabel: (item) => item.label.tr(),
                 onSelected:
