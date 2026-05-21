@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/orders/domain/entities/order_fee_entit
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {
   const OrderDetailInfoTabView({super.key});
@@ -30,6 +31,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
         final shouldShowShipperInfo =
             ordDtl?.status != OrderStatus.pending.value &&
             ordDtl?.status != OrderStatus.processing.value;
+        final shipperPhone = ordDtl?.shipper?.phone?.trim();
 
         return SingleChildScrollView(
           child: Padding(
@@ -264,7 +266,10 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         SecondaryButton.iconFilled(
                           label: "call_right_now".tr(),
                           icon: Icon(Icons.call_rounded, color: Colors.white),
-                          onPressed: () {},
+                          onPressed:
+                              shipperPhone?.isNotEmpty == true
+                                  ? () => _callShipper(context, shipperPhone!)
+                                  : null,
                         ),
                       ],
                     ),
@@ -277,6 +282,18 @@ class OrderDetailInfoTabView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _callShipper(BuildContext context, String phone) async {
+    final phoneNumber = phone.replaceAll(RegExp(r'[^\d+]'), '');
+    final uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (phoneNumber.isEmpty || !await launchUrl(uri)) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('network_error_mess'.tr())),
+      );
+    }
   }
 
   Widget _buildInfoField({required String label, required String? value}) {
