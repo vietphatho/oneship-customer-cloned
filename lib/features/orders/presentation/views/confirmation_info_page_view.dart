@@ -14,6 +14,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 
 class ConfirmationInfoPageView extends StatefulWidget {
   const ConfirmationInfoPageView({super.key});
@@ -212,6 +213,7 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
             context,
             message: "create_order_successfully".tr(),
             onClosed: () {
+              getIt.get<OrdersBloc>().fetchOrdersByStatus();
               context.pop();
             },
           );
