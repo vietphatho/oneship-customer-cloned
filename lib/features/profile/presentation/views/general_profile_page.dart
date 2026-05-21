@@ -141,9 +141,10 @@ class _SettingsContainer extends StatelessWidget {
         ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(
-          label: (userProfile.hasSecondPassword ?? false)
-              ? 'secondary_password.change_page_title'.tr()
-              : 'secondary_password.create_page_title'.tr(),
+          label:
+              (userProfile.hasSecondPassword ?? false)
+                  ? 'secondary_password.change_page_title'.tr()
+                  : 'secondary_password.create_page_title'.tr(),
           onTap: () {
             context.push(RouteName.changeSecondaryPasswordPage);
           },
@@ -166,10 +167,10 @@ class _ProfileTitleItem extends StatelessWidget {
     return Row(
       children: [
         SvgPicture.asset(icon, height: AppDimensions.smallIconSize),
-        AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+        AppSpacing.horizontal(AppDimensions.smallSpacing),
         PrimaryText(
           label,
-          style: AppTextStyles.titleXXLarge,
+          style: AppTextStyles.titleXLarge,
           color: AppColors.primary,
         ),
       ],
@@ -196,7 +197,7 @@ class _ProfileSelectedItem extends StatelessWidget {
         padding: AppDimensions.smallPaddingVertical,
         child: PrimaryText(
           label,
-          style: AppTextStyles.labelLarge,
+          style: AppTextStyles.labelMedium,
           color: textColor,
         ),
       ),

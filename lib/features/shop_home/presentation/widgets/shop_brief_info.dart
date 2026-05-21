@@ -94,7 +94,11 @@ class _InfoField extends StatelessWidget {
               ),
             ),
             AppSpacing.horizontal(AppDimensions.smallSpacing),
-            PrimaryText(label, style: AppTextStyles.bodySmall),
+            PrimaryText(
+              label,
+              style: AppTextStyles.bodyMedium,
+              color: AppColors.neutral2,
+            ),
           ],
         ),
         PrimaryText(

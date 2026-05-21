@@ -733,14 +733,6 @@
     "confirm_password_required": "Vui lòng nhập lại mật khẩu",
     "confirm_password_mismatch": "Mật khẩu nhập lại không khớp"
   },
-  "error_code": {
-    "server_error": "Lỗi máy chủ. Vui lòng thử lại sau",
-    "user": {
-      "second_password_not_found": "Mật khẩu cấp 2 chưa được thiết lập",
-      "current_password_incorrect": "Mật khẩu hiện tại không đúng",
-      "second_password_incorrect": "Mật khẩu cấp 2 không đúng"
-    }
-  },
   "please_input_shop_name": "Vui lòng nhập tên cửa hàng",
   "shop_name_min_length": "Tên cửa hàng phải có ít nhất 3 ký tự",
   "please_input_email": "Vui lòng nhập email liên hệ",
@@ -756,7 +748,7 @@
   "please_enter_at_least_7_characters_for_address": "Vui lòng nhập ít nhất 7 ký tự cho địa chỉ",
   "shop_name_placeholder": "Tên shop",
   "pending_approval": "đang chờ phê duyệt",
-  "pending_approval_description": "Cửa hàng của bạn đang được đội ngũ OneShip xem xét. Quá trình thường mất 1-2 ngày làm việc. Nếu cần hỗ trợ ngay, hãy liên hệ trực tiếp với chúng tôi.",
+  "pending_approval_description": "Cửa hàng của bạn đang được xem xét. Quá trình thường mất 1-2 ngày làm việc. Nếu cần hỗ trợ ngay, hãy liên hệ trực tiếp với chúng tôi.",
   "hotline_copied": "Đã sao chép hotline OneShip",
   "support_working_hours": "Thứ Hai - Thứ Sáu : 8:00 - 17:30",
   "contact_support": "Liên hệ hỗ trợ",
@@ -917,7 +909,6 @@
   "est_time": "Thời gian dự kiến",
   "shop_info": "Thông tin cửa hàng",
   "orders_list": "Danh sách đơn hàng",
-  "in_transit": "Đang vận chuyển",
   "info_confirmation": "Xác nhận thông tin",
   "print_all": "In đơn hàng loạt",
   "are_you_want_to_delete_order": "Bạn có chắc muốn xoá đơn hàng này?",

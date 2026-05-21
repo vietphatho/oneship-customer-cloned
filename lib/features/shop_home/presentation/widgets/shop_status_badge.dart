@@ -12,10 +12,12 @@ class ShopStatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
+        color: AppColors.accentColor1,
       ),
       child: PrimaryText(
         status.label,
         style: AppTextStyles.labelXSmall,
+        color: Colors.white,
       ),
     );
   }

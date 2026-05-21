@@ -34,9 +34,12 @@ class ShopPendingApprovalPage extends StatelessWidget {
         bloc: shopBloc,
         buildWhen:
             (previous, current) =>
-                previous.createShopResource != current.createShopResource,
+                previous.createShopResource != current.createShopResource ||
+                previous.briefShopsResource != current.briefShopsResource,
         builder: (context, state) {
-          final shopName = state.createShopResource.data?.shopName ?? '';
+          final shopName =
+              state.createShopResource.data?.shopName ??
+              state.currentShop?.shopName;
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -64,9 +67,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                           Image.asset(ImagePath.logo, width: size.width * 0.48),
                           AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                           PrimaryText(
-                            shopName.isEmpty
-                                ? "shop_name_placeholder".tr()
-                                : shopName,
+                            shopName,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.headlineSmall,
                             color: AppColors.primary,

@@ -34,7 +34,7 @@ class ShopAppBar extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Row(
                     children: [
                       CircleAvatar(
@@ -48,7 +48,7 @@ class ShopAppBar extends StatelessWidget {
                       AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                       Expanded(
                         child: PrimaryText(
-                          "${"hello".tr()} ${userProfile.displayName}",
+                          "${"hello".tr()}\n${userProfile.displayName}",
                           overflow: TextOverflow.ellipsis,
                           color: contentColor,
                           style: AppTextStyles.labelMedium,
@@ -58,7 +58,7 @@ class ShopAppBar extends StatelessWidget {
                   ),
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
-                const Expanded(flex: 2, child: ShopSelectionButton()),
+                const Expanded(flex: 3, child: ShopSelectionButton()),
               ],
             ),
           ),

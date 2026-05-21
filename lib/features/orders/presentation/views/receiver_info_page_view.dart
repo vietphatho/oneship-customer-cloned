@@ -67,7 +67,11 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      PrimaryText("recipient_info".tr()),
+                      PrimaryText(
+                        "recipient_info".tr(),
+                        style: AppTextStyles.labelLarge,
+                        color: AppColors.secondary,
+                      ),
                       AppSpacing.vertical(AppDimensions.mediumSpacing),
                       PrimaryTextField(
                         label: "recipient_name".tr(),
