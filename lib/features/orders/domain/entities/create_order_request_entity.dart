@@ -170,7 +170,10 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
               )
               .toList(),
 
-      router: const RoutingEntity(),
+      router: RoutingEntity(
+        distance: double.tryParse(model.distance ?? ""),
+        orderCoordinates: model.coordinates?.coordinates ?? [],
+      ),
     );
   }
 }

@@ -314,14 +314,15 @@ class _FeeSession extends StatelessWidget {
         if (state is! CreateOrderCalculatedFeeState) return SizedBox();
 
         CalculatedDeliveryFeeEntity? fee = state.resource.data;
+        final distance =
+            state.routingToShopResource.data?.distance ??
+            request.router?.distance;
         return PrimaryCard(
           child: Column(
             children: [
               _InfoField(
                 label: "distance".tr(),
-                value:
-                    "${Utils.mToKm(state.routingToShopResource.data?.distance)?.toStringAsFixed(1)}"
-                    " km",
+                value: "${Utils.mToKm(distance)?.toStringAsFixed(1)} km",
               ),
               _InfoField(
                 label: "cod".tr(),

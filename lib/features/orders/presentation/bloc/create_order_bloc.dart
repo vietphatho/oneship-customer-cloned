@@ -425,7 +425,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     String? note,
     String? externalOrderId,
     String? orderSource,
-    required List<SelectedProductEntity> selectedProducts
+    required List<SelectedProductEntity> selectedProducts,
   }) {
     var currentReq = state.request;
     var draftReq = state.draftRequest;
@@ -442,15 +442,17 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         note: note,
         orderSource: orderSource,
       ),
-      selectedProducts: selectedProducts
+      selectedProducts: selectedProducts,
     );
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),
     );
 
+    final routingDistance =
+        state.routingToShopResource.data?.distance ?? newReq.router?.distance;
     final calculateFeeRequest = CalculateDeliveryFeeRequest(
-      shopId: state.shopInfo.shopId,
-      distance: state.routingToShopResource.data?.distance,
+      shopId: state.shopInfo.shopId ?? newReq.shopId,
+      distance: routingDistance,
       serviceCode: newReq.serviceCode?.requestValue,
       weight: newReq.detail?.weight?.toInt(),
     );
