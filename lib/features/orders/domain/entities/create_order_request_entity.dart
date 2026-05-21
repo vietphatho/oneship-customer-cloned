@@ -161,11 +161,11 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
           model.items
               .map(
                 (e) => SelectedProductEntity(
-                  id: e.productId ?? e.id,
-                  name: e.productName,
-                  sku: e.productSku,
-                  price: e.unitPrice ?? 0,
-                  qty: e.quantity ?? 0,
+                  id: e.productId ?? e.id ?? "",
+                  name: e.productName ?? "",
+                  sku: e.productSku ?? "",
+                  price: e.unitPrice,
+                  quantity: e.quantity,
                 ),
               )
               .toList(),
@@ -219,36 +219,4 @@ abstract class DetailEntity with _$DetailEntity {
       note: note,
     );
   }
-}
-
-@freezed
-abstract class SelectedProductEntity with _$SelectedProductEntity {
-  const SelectedProductEntity._();
-
-  const factory SelectedProductEntity({
-    String? id,
-    String? name,
-    String? sku,
-    @Default(0) int price,
-    @Default(0) int qty,
-  }) = _SelectedProductEntity;
-
-  SelectedProduct toDto() {
-    return SelectedProduct(
-      id: id,
-      name: name,
-      sku: sku,
-      price: price,
-      qty: qty,
-    );
-  }
-
-  factory SelectedProductEntity.fromModel(ProductEntitySelected model) =>
-      SelectedProductEntity(
-        id: null,
-        name: model.product.productName,
-        sku: model.product.skuCode,
-        price: model.product.price,
-        qty: model.quantity,
-      );
 }
