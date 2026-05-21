@@ -31,10 +31,16 @@ class _CustomerInfoWardSelectorState extends State<CustomerInfoWardSelector> {
         final wards = state.wardsByProvince[_hcmProvinceCode] ?? [];
         if (wards.isEmpty) return const SizedBox();
 
+        final draftWard = _createOrderBloc.state.draftRequest.ward;
+        final selectedWard =
+            draftWard != null
+                ? wards.firstWhereOrNull((ward) => ward.code == draftWard.code)
+                : null;
+
         return PrimaryDropdown(
           label: "ward".tr(),
           isRequired: true,
-          initialValue: _createOrderBloc.state.draftRequest.ward,
+          initialValue: selectedWard,
           menu: wards,
           toLabel: (item) => item.name,
           onSelected: (value) {

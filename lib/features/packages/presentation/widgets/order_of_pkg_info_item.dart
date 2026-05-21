@@ -1,5 +1,7 @@
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 
 class OrderOfPkgInfoItem extends StatelessWidget {
   const OrderOfPkgInfoItem({
@@ -34,21 +36,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
               ),
             ),
             AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.accentColor1,
-                borderRadius: AppDimensions.mediumBorderRadius,
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: AppDimensions.xxxSmallSpacing,
-                horizontal: AppDimensions.xSmallSpacing,
-              ),
-              child: PrimaryText(
-                order.status,
-                style: AppTextStyles.bodySmall,
-                color: Colors.white,
-              ),
-            ),
+            OrderStatusTag(status: order.status ?? ""),
           ],
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
@@ -57,6 +45,11 @@ class OrderOfPkgInfoItem extends StatelessWidget {
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+        PrimaryText("Dịch vụ: ${order.payer}", style: AppTextStyles.bodyMedium),
+            PrimaryText(
+              "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+              style: AppTextStyles.bodyMedium,
+            ),
         PrimaryText(
           "${"service_type".tr()}: ${_translatePayer(order.payer)}",
           style: AppTextStyles.bodyMedium,
@@ -68,7 +61,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
-          "${"created_at".tr()}: ${order.createdAt}",
+          "${"created_at".tr()}: ${DateTimeUtils.formatDateFromDT(order.createdAt) ?? '--'}",
           style: AppTextStyles.bodyMedium,
         ),
       ],

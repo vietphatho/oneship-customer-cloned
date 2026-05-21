@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 
@@ -54,5 +55,24 @@ extension ShopStatusX on ShopStatus {
     ShopStatus.unknown: "",
   };
 
+  static const _mapLabel = {
+    ShopStatus.active: 'shop_management.status_active',
+    ShopStatus.inactive: 'shop_management.status_inactive',
+    ShopStatus.unknown: 'shop_management.status_inactive',
+  };
+
   String get rawValue => _mapRawValue[this]!;
+
+  String get label => _mapLabel[this]!.tr();
+
+  static ShopStatus fromString(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return ShopStatus.active;
+      case 'inactive':
+        return ShopStatus.inactive;
+      default:
+        return ShopStatus.unknown;
+    }
+  }
 }
