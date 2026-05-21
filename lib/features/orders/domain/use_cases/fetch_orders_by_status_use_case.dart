@@ -14,7 +14,7 @@ class FetchOrdersByStatusUseCase {
   Future<Resource<OrdersListResponse>> call({
     required OrderStatus status,
     required String shopId,
-    int page = 1,
+    int page = Constants.defaultPage,
     int limit = Constants.defaultLimitPerPage,
   }) {
     return _repository.fetchOrdersByStatus(

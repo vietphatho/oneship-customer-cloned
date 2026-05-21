@@ -65,7 +65,11 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PrimaryText("order_info".tr()),
+                  PrimaryText(
+                    "order_info".tr(),
+                    style: AppTextStyles.labelLarge,
+                    color: AppColors.secondary,
+                  ),
                   AppSpacing.vertical(AppDimensions.mediumSpacing),
                   //
                   const ProductSelectionButton(),
@@ -208,8 +212,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
       note: _noteCtrl.text,
       externalOrderId: _externalOrderIdCtrl.text,
       orderSource: _orderSourceCtrl.text,
-      selectedProducts:
-          productBloc.state.productsListSelected,
+      selectedProducts: productBloc.state.productsListSelected,
     );
   }
 }

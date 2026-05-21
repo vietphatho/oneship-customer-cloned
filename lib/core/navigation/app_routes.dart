@@ -4,9 +4,12 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/register_page.dart';
-import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_customer/features/auth/presentation/views/verify_email_page.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_period_detail_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
+import 'package:oneship_customer/features/customer_home/presentation/views/customer_home_page.dart';
+import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_customer/features/home/presentation/view/home_page.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_multi_orders_page.dart';
@@ -27,8 +30,6 @@ import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop
 import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
-import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
-import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -62,6 +63,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopEmptyPage,
       builder: (context, state) => const EmptyShopPage(),
+    ),
+    GoRoute(
+      path: RouteName.customerHomePage,
+      builder: (context, state) => const CustomerHomePage(),
     ),
     GoRoute(
       path: RouteName.createShopPage,

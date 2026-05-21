@@ -8,6 +8,7 @@ class RouteName {
   static const String loginPage = '/login';
   static const String verifyEmailPage = '/verify_email';
   static const String shopMasterPage = '/shop_master';
+  static const String customerHomePage = '/customer_home';
   static const String registerPage = '/register';
 
   static const String shopEmptyPage = '/shop_empty';
@@ -33,7 +34,8 @@ class RouteName {
 
   static const String profileDetailPage = '/profile_detail';
   static const String changePasswordPage = '/change_password';
-  static const String changeSecondaryPasswordPage = '/change_secondary_password';
+  static const String changeSecondaryPasswordPage =
+      '/change_secondary_password';
   static const String ordersHistoryPage = '/shop_master/orders_history';
   static const String complaintPage = '/complaints';
   static const String createComplaintPage = '/complaints/create';

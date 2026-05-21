@@ -10,7 +10,9 @@ part 'packages_state.freezed.dart';
 abstract class PackagesState with _$PackagesState {
   const factory PackagesState({
     required BriefShopEntity currentShop,
-    required Resource<List<Package>> pkgsData,
+    required Resource<PackagesListResponse> pkgsDataResource,
+    @Default([]) List<Package> pkgsData,
+    
     required Resource<PackageDetail> currentPkg,
     required Resource findingShipperResult,
     required Resource cancelFindingShipperResult,

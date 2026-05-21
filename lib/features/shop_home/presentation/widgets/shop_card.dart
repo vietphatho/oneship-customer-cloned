@@ -24,7 +24,7 @@ class ShopCard extends StatelessWidget {
                   children: [
                     PrimaryText(
                       "#$index. ",
-                      style: AppTextStyles.bodySmall,
+                      style: AppTextStyles.bodyMedium,
                       color: AppColors.secondary,
                     ),
                     PrimaryText(shop.shopName, style: AppTextStyles.titleLarge),

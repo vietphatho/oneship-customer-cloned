@@ -10,6 +10,7 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class GeneralProfilePage extends StatefulWidget {
@@ -33,8 +34,8 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
               _SettingsContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _UtilitiesContainer(),
-              AppSpacing.vertical(AppDimensions.mediumSpacing),
+              // _UtilitiesContainer(),
+              // AppSpacing.vertical(AppDimensions.mediumSpacing),
               _SupportsContainer(),
               AppSpacing.vertical(AppDimensions.bottomNavBarHeight),
             ],
@@ -88,7 +89,8 @@ class _SupportsContainer extends StatelessWidget {
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
           getIt.resetLazySingleton<ShopMasterBloc>();
-          context.pushReplacement(RouteName.loginPage);
+          getIt.resetLazySingleton<PackagesBloc>();
+          context.go(RouteName.homePage);
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
@@ -139,9 +141,10 @@ class _SettingsContainer extends StatelessWidget {
         ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(
-          label: (userProfile.hasSecondPassword ?? false)
-              ? 'secondary_password.change_page_title'.tr()
-              : 'secondary_password.create_page_title'.tr(),
+          label:
+              (userProfile.hasSecondPassword ?? false)
+                  ? 'secondary_password.change_page_title'.tr()
+                  : 'secondary_password.create_page_title'.tr(),
           onTap: () {
             context.push(RouteName.changeSecondaryPasswordPage);
           },
@@ -164,10 +167,10 @@ class _ProfileTitleItem extends StatelessWidget {
     return Row(
       children: [
         SvgPicture.asset(icon, height: AppDimensions.smallIconSize),
-        AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+        AppSpacing.horizontal(AppDimensions.smallSpacing),
         PrimaryText(
           label,
-          style: AppTextStyles.titleXXLarge,
+          style: AppTextStyles.titleXLarge,
           color: AppColors.primary,
         ),
       ],
@@ -194,7 +197,7 @@ class _ProfileSelectedItem extends StatelessWidget {
         padding: AppDimensions.smallPaddingVertical,
         child: PrimaryText(
           label,
-          style: AppTextStyles.labelLarge,
+          style: AppTextStyles.labelMedium,
           color: textColor,
         ),
       ),
@@ -218,6 +221,7 @@ class _Header extends StatelessWidget {
           child: Row(
             children: [
               PrimaryAvatar(
+                url: userProfile.avatarUrl,
                 radius: AppDimensions.defaultAvatarRadius,
                 isOnline: true,
               ),

@@ -6,6 +6,7 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/enum.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_state.dart';
 
@@ -28,6 +29,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController phoneNumberController;
   late final TextEditingController passwordController;
   late final TextEditingController confirmPasswordController;
+
+  UserRole _userRole = UserRole.customer;
 
   @override
   void initState() {
@@ -73,6 +76,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        PrimaryDropdown<UserRole>(
+                          label: "user_role".tr(),
+                          isRequired: true,
+                          menu: UserRole.values,
+                          initialValue: UserRole.customer,
+                          toLabel: (item) => item.roleName.tr(),
+                          requestFocusOnTap: false,
+                          onSelected: (value) {
+                            if (value != null) _userRole = value;
+                          },
+                        ),
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
                         PrimaryTextField(
                           controller: usernameController,
                           label: "user_name".tr(),
@@ -120,6 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 passwordController.text,
                               ),
                         ),
+                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                       ],
                     ),
                   ),
@@ -149,7 +165,11 @@ class _RegisterPageState extends State<RegisterPage> {
         break;
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
-        context.push(RouteName.verifyEmailPage);
+        if (_userRole == UserRole.shop) {
+          context.push(RouteName.verifyEmailPage);
+        } else {
+          context.go(RouteName.loginPage);
+        }
         break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
@@ -159,13 +179,13 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _onRegisterPressed() {
-    _registerBloc.registerRequest(
+    _registerBloc.register(
       userLogin: usernameController.text.trim(),
       displayName: fullNameController.text.trim(),
       userEmail: emailController.text.trim(),
       userPhone: phoneNumberController.text.trim(),
       userPass: passwordController.text.trim(),
-      roleName: "shop",
+      userRole: _userRole,
     );
   }
 }

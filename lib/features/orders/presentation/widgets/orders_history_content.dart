@@ -2,12 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_filter_button.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_filter_panel.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_card.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrdersHistoryContent extends StatefulWidget {
   const OrdersHistoryContent({
@@ -25,6 +26,7 @@ class OrdersHistoryContent extends StatefulWidget {
 
 class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
   final OrdersBloc _ordersBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +75,13 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                 children: [
                   OrdersHistoryListCard(
                     status: OrderStatus.delivered,
-                    orders: state.visibleDeliveredOrdersHistoryList,
+                    orders: state.deliveredOrdersHistoryList,
                     onRefresh:
                         () => _ordersBloc.fetchOrderHistory(
+                          OrderStatus.delivered,
+                        ),
+                    onLoadMore:
+                        () => _ordersBloc.loadMoreOrderHistory(
                           OrderStatus.delivered,
                         ),
                     onOrderTap: _onOrderTap,
@@ -86,10 +92,14 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                   ),
                   OrdersHistoryListCard(
                     status: OrderStatus.returned,
-                    orders: state.visibleReturnedOrdersHistoryList,
+                    orders: state.returnedOrdersHistoryList,
                     onRefresh:
                         () =>
                             _ordersBloc.fetchOrderHistory(OrderStatus.returned),
+                    onLoadMore:
+                        () => _ordersBloc.loadMoreOrderHistory(
+                          OrderStatus.returned,
+                        ),
                     onOrderTap: _onOrderTap,
                     isLoading: widget.isLoadingFor(OrderStatus.returned, state),
                   ),
@@ -102,7 +112,7 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
     );
   }
 
-  void _onOrderTap(OrderHistoryInfoEntity order) {
+  void _onOrderTap(OrdersHistoryEntity order) {
     _ordersBloc.openOrderHistoryDetail(order);
   }
 }
