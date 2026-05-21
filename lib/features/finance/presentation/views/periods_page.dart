@@ -65,6 +65,17 @@ class PeriodsPage extends StatelessWidget {
 
               buildWhen: (pre, cur) => pre.periodsData != cur.periodsData,
               builder: (context, state) {
+                if (state.settlementPeriodsResource.state == Result.error) {
+                  return Expanded(
+                    child: PrimaryEmptyData(
+                      onRetry:
+                          () =>
+                              financeReconciliationBloc
+                                  .fetchSettlementPeriods(),
+                    ),
+                  );
+                }
+
                 final periods = state.periodsData;
 
                 if (periods.isEmpty) return Expanded(child: PrimaryEmptyData());

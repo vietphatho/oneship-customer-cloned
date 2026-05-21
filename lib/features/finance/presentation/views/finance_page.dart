@@ -102,6 +102,7 @@ class _FinancePageState extends State<FinancePage>
                   Expanded(
                     child: TabBarView(
                       controller: controller,
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         FinanceOverviewTabView(),
                         FinanceReconciliationTabView(),
