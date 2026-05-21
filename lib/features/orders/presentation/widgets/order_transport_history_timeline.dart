@@ -92,11 +92,11 @@ class _TimelineItemView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             PrimaryText(
-                              item.title,
+                              item.title.tr(),
                               style: AppTextStyles.labelLarge,
                             ),
                             PrimaryText(
-                              item.description,
+                              item.description.tr(),
                               style: AppTextStyles.bodyMedium,
                             ),
                             if (item.showCompletedTag) ...[

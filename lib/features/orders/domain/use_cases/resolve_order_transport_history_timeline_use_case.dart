@@ -12,26 +12,26 @@ class ResolveOrderTransportHistoryTimelineUseCase {
 
     final items = <OrderTransportHistoryTimelineEntity?>[
       _buildItem(
-        title: 'Đã giao thành công',
-        description: 'Địa chỉ người nhận',
+        title: 'delivery_successfully',
+        description: 'recipient_address',
         time: history.deliveredAt,
         images: history.confirmationImages ?? [],
         showCompletedTag: true,
       ),
       _buildItem(
-        title: 'Đang giao hàng',
-        description: 'Trên đường giao hàng',
+        title: 'shipping',
+        description: 'arrived_at_delivery_desc',
         time: history.arrivedAtDelivery,
       ),
       _buildItem(
-        title: 'Xác nhận lấy hàng',
-        description: 'Tại cửa hàng',
+        title: 'picked_up',
+        description: 'at_shop',
         time: history.pickupConfirmedAt,
         images: history.pickupImages ?? [],
       ),
       _buildItem(
-        title: 'Bắt đầu xử lý',
-        description: 'Tại cửa hàng',
+        title: 'start_processing',
+        description: 'at_shop',
         time: history.scannedAt ?? history.addedToPackageAt ?? fallbackStartedAt,
       ),
     ];
@@ -68,8 +68,8 @@ class ResolveOrderTransportHistoryTimelineUseCase {
 
     return [
       OrderTransportHistoryTimelineEntity(
-        title: 'Bắt đầu xử lý',
-        description: 'Tại cửa hàng',
+        title: 'start_processing',
+        description: 'at_shop',
         time: fallbackStartedAt,
       ),
     ];
