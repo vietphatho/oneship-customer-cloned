@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/auth/data/enum.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
@@ -80,13 +81,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(state.copyWith(email: event.userEmail));
   }
 
-  void registerRequest({
+  void register({
     required String userLogin,
     required String displayName,
     required String userEmail,
     required String userPhone,
     required String userPass,
-    required String roleName,
+    required UserRole userRole,
   }) {
     final request = RegisterRequest(
       userLogin: userLogin,
@@ -94,7 +95,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       userEmail: userEmail,
       userPhone: userPhone,
       userPass: userPass,
-      roleName: roleName,
+      roleName: userRole.value,
     );
     add(RegisterRequestEvent(request));
   }
@@ -103,7 +104,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     add(RegisterSetUserEmailEvent(userEmail));
   }
 
-  void resendVerificationEmail(){
+  void resendVerificationEmail() {
     add(RegisterResendVerificationEmailEvent());
   }
 }

@@ -957,9 +957,12 @@
   "back_to_log_in": "Quay lại đăng nhập",
   "exit": "Thoát",
   "shop": "Cửa hàng",
+  "vi": "Chủ cửa hàng",
   "processed_orders": "Đơn hàng đã xử lý",
   "hcm_city": "Thành phố Hồ Chí Minh",
   "load_failed_pull_up": "Tải thất bại, kéo lên để thử lại",
   "no_more_data": "Không còn dữ liệu",
-  "filter_result": "Lọc kết quả"
+  "filter_result": "Lọc kết quả",
+  "customer": "Khách hàng",
+  "user_role": "Vai trò"
 }

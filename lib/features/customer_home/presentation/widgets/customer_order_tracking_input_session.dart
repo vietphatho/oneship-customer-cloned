@@ -1,24 +1,19 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 
-class OrderTrackingInputSession extends StatefulWidget {
-  const OrderTrackingInputSession({super.key});
+class CustomerOrderTrackingInputSession extends StatefulWidget {
+  const CustomerOrderTrackingInputSession({super.key});
 
   @override
-  State<OrderTrackingInputSession> createState() =>
-      _OrderTrackingInputSessionState();
+  State<CustomerOrderTrackingInputSession> createState() =>
+      _CustomerOrderTrackingInputSessionState();
 }
 
-class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
-  final OrderTrackingBloc _orderTrackingBloc = getIt.get();
-
+class _CustomerOrderTrackingInputSessionState
+    extends State<CustomerOrderTrackingInputSession> {
   final TextEditingController _trackingNumberCtrl = TextEditingController();
 
   @override
   void initState() {
-    _trackingNumberCtrl.text =
-        _orderTrackingBloc.state.trackingResult.data?.orderNumber ?? "";
     super.initState();
   }
 
@@ -58,9 +53,5 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
     );
   }
 
-  void _onSearch() {
-    if (_trackingNumberCtrl.text.isNotEmpty) {
-      _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
-    }
-  }
+  void _onSearch() {}
 }
