@@ -34,3 +34,9 @@ class FinanceReconciliationFetchPeriodsEvent
   final String shopId;
   FinanceReconciliationFetchPeriodsEvent({required this.shopId});
 }
+
+class FinanceReconciliationFetchConfigEvent
+    extends FinanceReconciliationEvent {
+  final String shopId;
+  FinanceReconciliationFetchConfigEvent({required this.shopId});
+}

@@ -4,9 +4,11 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/finance/data/datasources/finance_api.dart';
 import 'package:oneship_customer/features/finance/data/models/response/finance_response.dart';
 import 'package:oneship_customer/features/finance/data/models/response/period_detail_response.dart';
+import 'package:oneship_customer/features/finance/data/models/response/settlement_config_response.dart';
 import 'package:oneship_customer/features/finance/data/models/response/settlement_periods_response.dart';
 import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
 import 'package:oneship_customer/features/finance/domain/entities/period_detail_entity.dart';
+import 'package:oneship_customer/features/finance/domain/entities/settlement_config_entity.dart';
 import 'package:oneship_customer/features/finance/domain/entities/settlement_periods_entity.dart';
 import 'package:oneship_customer/features/finance/domain/repositories/finance_repository.dart';
 
@@ -64,6 +66,19 @@ class FinanceRepositoryImpl extends FinanceRepository {
 
     return response.parse<PeriodDetailEntity>(
       (dto) => PeriodDetailEntity.from(dto),
+    );
+  }
+  
+  @override
+  Future<Resource<SettlementConfigEntity>> fetchSettlementConfig({required String shopId}) async {
+    final response = await request<SettlementConfigResponse, BaseError>(
+      () => _financeApi.fetchSettlementConfig(
+        shopId: shopId,
+      ),
+    );
+
+    return response.parse<SettlementConfigEntity>(
+      (dto) => SettlementConfigEntity.from(dto),
     );
   }
 }
