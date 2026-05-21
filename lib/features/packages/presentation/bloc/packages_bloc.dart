@@ -47,7 +47,6 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
       emit(
         state.copyWith(
           pkgsData: response.data?.data ?? [],
-          meta: response.data?.meta,
         ),
       );
     }
@@ -89,20 +88,21 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     PackagesLoadMoreEvent event,
     Emitter<PackagesState> emit,
   ) async {
-    if (state.meta == null || state.meta?.hasNext == false) return;
+    final meta = state.pkgsDataResource.data?.meta;
+
+    if (meta == null || meta.hasNext == false) return;
 
     emit(state.copyWith(pkgsDataResource: Resource.loading()));
 
     final response = await _repository.fetchPackages(
       shopId: state.shopId,
-      page: (state.meta?.page ?? 0) + 1,
+      page: (meta.page ?? 0) + 1,
     );
 
     if (response.state == Result.success) {
       emit(
         state.copyWith(
           pkgsData: [...state.pkgsData, ...(response.data?.data ?? [])],
-          meta: response.data?.meta,
         ),
       );
     }

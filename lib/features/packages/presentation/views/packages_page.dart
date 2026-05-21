@@ -136,7 +136,7 @@ class _PackagesPageState extends State<PackagesPage> {
   }
 
   void _onLoading() {
-    if (_packagesBloc.state.meta?.hasNext == false) {
+    if (_packagesBloc.state.pkgsDataResource.data?.meta?.hasNext == false) {
       _refreshController.loadNoData();
       return;
     }
