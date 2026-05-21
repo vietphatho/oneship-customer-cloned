@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:oneship_customer/core/themes/app_colors.dart';
+
 enum FinanceRequestSource { page, filterDialog }
 
 enum FinanceFilter { oneDay, sevenDay, thirtyDay, selectDate }
@@ -27,28 +31,43 @@ extension FinanceFilterX on FinanceFilter {
   }
 }
 
-enum ReconciliationFilter { periods, payouts, config }
+enum ReconciliationFilter { period, payout, config }
 
 extension ReconciliationFilterX on ReconciliationFilter {
   static const _mapName = {
-    ReconciliationFilter.periods: 'periods',
-    ReconciliationFilter.payouts: 'payouts',
-    ReconciliationFilter.config: 'config',
+    ReconciliationFilter.period: 'period',
+    ReconciliationFilter.payout: 'payout',
+    ReconciliationFilter.config: 'reconciliation_cycle',
   };
 
   String get name => _mapName[this]!;
 }
 
-enum Status { all, open, locked, approved, cancelled }
+enum PeriodStatus { all, open, locked, approved, cancelled }
 
-extension StatusX on Status {
+extension PeriodStatusX on PeriodStatus {
   static const _mapName = {
-    Status.all: 'all',
-    Status.open: 'open',
-    Status.locked: 'locked',
-    Status.approved: 'approved',
-    Status.cancelled: 'cancelled',
+    PeriodStatus.all: 'all',
+    PeriodStatus.open: 'open',
+    PeriodStatus.locked: 'locked',
+    PeriodStatus.approved: 'approved',
+    PeriodStatus.cancelled: 'cancelled',
   };
 
   String get name => _mapName[this]!;
+
+  Color? getStatusColor() {
+    switch (this) {
+      case PeriodStatus.open:
+        return AppColors.open;
+      case PeriodStatus.locked:
+        return AppColors.locked;
+      case PeriodStatus.approved:
+        return AppColors.approved;
+      case PeriodStatus.cancelled:
+        return AppColors.cancelled;
+      default:
+        return AppColors.primary;
+    }
+  }
 }

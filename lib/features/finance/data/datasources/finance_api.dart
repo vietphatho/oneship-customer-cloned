@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/finance/data/models/response/finance_response.dart';
+import 'package:oneship_customer/features/finance/data/models/response/period_detail_response.dart';
 import 'package:oneship_customer/features/finance/data/models/response/settlement_periods_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -25,16 +26,15 @@ abstract class FinanceApi {
   Future<BaseResponse<SettlementPeriodsResponse, BaseError>>
   fetchSettlementPeriods({
     @Path("shopId") required String shopId,
-    @Query("page") required int page,
-    @Query("limit") required int limit,
+    @Query("page") int? page,
+    @Query("limit") int? limit,
+    @Query("status") String? status,
   });
 
-  @GET("/api/v1/financial/settlement/shops/{shopId}/periods")
-  Future<BaseResponse<SettlementPeriodsResponse, BaseError>>
-  fetchSettlementPeriodsWithStatus({
+  @GET("/api/v1/financial/settlement/shops/{shopId}/periods/{id}")
+  Future<BaseResponse<PeriodDetailResponse, BaseError>>
+  fetchPeriodsDetail({
     @Path("shopId") required String shopId,
-    @Query("page") required int page,
-    @Query("limit") required int limit,
-    @Query("status") required String status,
+    @Path("id") required String id,
   });
 }

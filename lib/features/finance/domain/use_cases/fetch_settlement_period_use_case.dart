@@ -11,15 +11,17 @@ class FetchSettlementPeriodUseCase {
 
   Future<Resource<SettlementPeriodsEntity>> call({
     required String shopId,
-    required int page,
-    required int limit,
+    int? page,
+    int? limit,
+    String? status
   }) async {
     final response = await _financeRepository.fetchSettlementPeriods(
       shopId: shopId,
       page: page,
       limit: limit,
+      status: status
     );
-    
+
     return response;
   }
 }
