@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
 import 'package:oneship_customer/features/packages/domain/repositories/packages_repository.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_event.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
@@ -15,7 +15,7 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     : super(
         PackagesState(
           currentShop: BriefShopEntity(),
-          pkgsData: Resource.loading(),
+          pkgsDataResource: Resource.loading(),
           currentPkg: Resource.loading(),
           findingShipperResult: Resource.loading(),
           cancelFindingShipperResult: Resource.loading(),
@@ -26,12 +26,10 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     on<PackagesViewDetailEvent>(_onViewDetailEvent);
     on<PackagesFindShipperEvent>(_onFindShipperEvent);
     on<PackagesCancelFindingShipperEvent>(_onCancelFindingShipperEvent);
+    on<PackagesLoadMoreEvent>(_onLoadMorePackages);
   }
 
   final PackagesRepository _repository;
-
-  List<Package> _packages = [];
-  List<Package> get packages => _packages;
 
   FutureOr<void> _onInit(PackageInitEvent event, Emitter<PackagesState> emit) {
     emit(state.copyWith(currentShop: event.shop));
@@ -41,10 +39,20 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     PackagesFetchingEvent event,
     Emitter<PackagesState> emit,
   ) async {
-    emit(state.copyWith(pkgsData: Resource.loading()));
+    emit(state.copyWith(pkgsDataResource: Resource.loading()));
+
     final response = await _repository.fetchPackages(shopId: state.shopId);
-    _packages = response.data?.data ?? [];
-    emit(state.copyWith(pkgsData: response.parse((e) => e.data ?? [])));
+
+    if (response.state == Result.success) {
+      emit(
+        state.copyWith(
+          pkgsData: response.data?.data ?? [],
+          meta: response.data?.meta,
+        ),
+      );
+    }
+
+    emit(state.copyWith(pkgsDataResource: response));
   }
 
   FutureOr<void> _onViewDetailEvent(
@@ -77,9 +85,42 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     emit(state.copyWith(cancelFindingShipperResult: response));
   }
 
+  FutureOr<void> _onLoadMorePackages(
+    PackagesLoadMoreEvent event,
+    Emitter<PackagesState> emit,
+  ) async {
+    if (state.meta == null || state.meta?.hasNext == false) return;
+
+    emit(state.copyWith(pkgsDataResource: Resource.loading()));
+
+    final response = await _repository.fetchPackages(
+      shopId: state.shopId,
+      page: (state.meta?.page ?? 0) + 1,
+    );
+
+    if (response.state == Result.success) {
+      emit(
+        state.copyWith(
+          pkgsData: [...state.pkgsData, ...(response.data?.data ?? [])],
+          meta: response.data?.meta,
+        ),
+      );
+    }
+
+    emit(state.copyWith(pkgsDataResource: response));
+  }
+
   void init(BriefShopEntity shop) {
-    add(PackagesFetchingEvent());
     add(PackageInitEvent(shop));
+    add(PackagesFetchingEvent());
+  }
+
+  void fetchPackages() {
+    add(PackagesFetchingEvent());
+  }
+
+  void loadMorePackages() {
+    add(PackagesLoadMoreEvent());
   }
 
   void viewPkg(String pkgId) {

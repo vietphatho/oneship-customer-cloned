@@ -10,6 +10,7 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class GeneralProfilePage extends StatefulWidget {
@@ -88,7 +89,8 @@ class _SupportsContainer extends StatelessWidget {
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
           getIt.resetLazySingleton<ShopMasterBloc>();
-          context.pushReplacement(RouteName.loginPage);
+          getIt.resetLazySingleton<PackagesBloc>();
+          context.go(RouteName.homePage);
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
