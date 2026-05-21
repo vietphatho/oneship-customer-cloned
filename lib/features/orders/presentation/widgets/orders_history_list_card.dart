@@ -1,7 +1,7 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_item.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -16,9 +16,9 @@ class OrdersHistoryListCard extends StatefulWidget {
   });
 
   final OrderStatus status;
-  final List<OrderHistoryInfoEntity> orders;
+  final List<OrdersHistoryEntity> orders;
   final VoidCallback onRefresh;
-  final ValueChanged<OrderHistoryInfoEntity>? onOrderTap;
+  final ValueChanged<OrdersHistoryEntity>? onOrderTap;
   final bool isLoading;
 
   @override
@@ -53,9 +53,10 @@ class _OrdersHistoryListCardState extends State<OrdersHistoryListCard> {
         return OrdersHistoryListItem(
           index: index + 1,
           order: order,
-          onTap: widget.onOrderTap != null
-              ? () => widget.onOrderTap!(order)
-              : null,
+          onTap:
+              widget.onOrderTap != null
+                  ? () => widget.onOrderTap!(order)
+                  : null,
         );
       },
       separatorBuilder:
