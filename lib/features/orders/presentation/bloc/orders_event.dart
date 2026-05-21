@@ -1,6 +1,6 @@
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
 
 abstract class OrdersEvent {
@@ -27,7 +27,7 @@ class OrderFetchDetailEvent extends OrdersEvent {
 }
 
 class OrderHistoryOpenDetailEvent extends OrdersEvent {
-  final OrderHistoryInfoEntity order;
+  final OrdersHistoryEntity order;
 
   const OrderHistoryOpenDetailEvent(this.order);
 }
@@ -42,6 +42,12 @@ class OrdersHistoryFetchingByStatusEvent extends OrdersEvent {
   final OrderStatus status;
 
   const OrdersHistoryFetchingByStatusEvent(this.status);
+}
+
+class OrdersHistoryLoadMoreEvent extends OrdersEvent {
+  final OrderStatus status;
+
+  const OrdersHistoryLoadMoreEvent(this.status);
 }
 
 class OrdersHistoryFilterToggledEvent extends OrdersEvent {

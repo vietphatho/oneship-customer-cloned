@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -33,6 +34,7 @@ class ShopSelectionButton extends StatelessWidget {
           labelBuilder: (shop) => shop.shopName,
           onChanged: (value) {
             if (value != null) {
+              HapticFeedback.heavyImpact();
               shopBloc.changeShop(value);
             }
           },

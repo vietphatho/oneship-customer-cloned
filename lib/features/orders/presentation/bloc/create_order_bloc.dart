@@ -130,15 +130,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         draftRequest: state.draftRequest.copyWith(
           customerName: event.customerName,
           phone: event.phoneNumber,
-          province: Province(
-            name: event.province?.name ?? "",
-            code: event.province?.code ?? 0,
-          ),
-          ward: Ward(
-            name: event.ward?.name ?? "",
-            code: event.ward?.code ?? 0,
-            provinceCode: event.province?.code ?? 0,
-          ),
+          province: event.province,
+          ward: event.ward,
           fullAddress: event.address,
           isNewAddress: event.isNewAddress ?? false,
         ),
@@ -448,7 +441,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     String? note,
     String? externalOrderId,
     String? orderSource,
-    required List<SelectedProductEntity> selectedProducts
+    required List<SelectedProductEntity> selectedProducts,
   }) {
     var currentReq = state.request;
     var draftReq = state.draftRequest;
@@ -465,15 +458,17 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         note: note,
         orderSource: orderSource,
       ),
-      selectedProducts: selectedProducts
+      selectedProducts: selectedProducts,
     );
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),
     );
 
+    final routingDistance =
+        state.routingToShopResource.data?.distance ?? newReq.router?.distance;
     final calculateFeeRequest = CalculateDeliveryFeeRequest(
-      shopId: state.shopInfo.shopId,
-      distance: state.routingToShopResource.data?.distance ?? newReq.router?.distance,
+      shopId: state.shopInfo.shopId ?? newReq.shopId,
+      distance: routingDistance,
       serviceCode: newReq.serviceCode?.requestValue,
       weight: newReq.detail?.weight?.toInt(),
     );

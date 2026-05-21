@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
 
 part 'orders_list_response.freezed.dart';
 part 'orders_list_response.g.dart';
@@ -64,26 +65,6 @@ abstract class OrderInfo with _$OrderInfo {
 
   factory OrderInfo.fromJson(Map<String, dynamic> json) =>
       _$OrderInfoFromJson(json);
-}
-
-@freezed
-abstract class OrderFee with _$OrderFee {
-  const factory OrderFee({
-    @JsonKey(name: "id") String? id,
-    @JsonKey(name: "shopId") String? shopId,
-    @JsonKey(name: "orderId") String? orderId,
-    @JsonKey(name: "feeGroup") String? feeGroup,
-    @JsonKey(name: "feeSubtype") String? feeSubtype,
-    @JsonKey(name: "baseAmount") int? baseAmount,
-    @JsonKey(name: "vatRate") int? vatRate,
-    @JsonKey(name: "vatAmount") int? vatAmount,
-    @JsonKey(name: "totalAmount") int? totalAmount,
-    @JsonKey(name: "snapshot") dynamic snapshot,
-    @JsonKey(name: "createdAt") DateTime? createdAt,
-  }) = _OrderFee;
-
-  factory OrderFee.fromJson(Map<String, dynamic> json) =>
-      _$OrderFeeFromJson(json);
 }
 
 @freezed

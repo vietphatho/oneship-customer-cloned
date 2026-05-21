@@ -14,6 +14,10 @@ class PackagesFetchingEvent extends PackagesEvent {
   const PackagesFetchingEvent();
 }
 
+class PackagesLoadMoreEvent extends PackagesEvent {
+  const PackagesLoadMoreEvent();
+}
+
 class PackagesViewDetailEvent extends PackagesEvent {
   final String pkgId;
 

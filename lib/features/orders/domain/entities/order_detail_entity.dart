@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/shipper_info_entity.dart';
 
 part 'order_detail_entity.freezed.dart';
@@ -125,6 +127,48 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       totalDeliveryFee: dto.totalDeliveryFee ?? 0,
     );
   }
+
+  factory OrderDetailEntity.fromHistoryModel(OrdersHistoryEntity model) {
+    return OrderDetailEntity(
+      id: model.id,
+      orderNumber: model.orderNumber,
+      externalOrderId: model.externalOrderId,
+      serviceCode: model.serviceCode,
+      trackingCode: model.trackingCode,
+      sequenceDate: model.sequenceDate,
+      dailySequence: model.dailySequence,
+      totalDiscountAmount: model.totalDiscountAmount,
+      totalFeeAmount: model.totalFeeAmount,
+      codAmount: model.codAmount,
+      collectAmount: model.collectAmount,
+      status: model.status,
+      statusUpdateTime: model.statusUpdateTime,
+      fullAddress: model.fullAddress,
+      fullAddressOld: model.fullAddressOld,
+      wardCode: model.wardCode,
+      wardName: model.wardName,
+      provinceCode: model.provinceCode,
+      provinceName: model.provinceName,
+      phone: model.phone,
+      customerName: model.customerName,
+      email: model.email,
+      packageType: model.packageType,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+      paymentStatus: model.paymentStatus,
+      paymentMethod: model.paymentMethod,
+      coordinates: model.coordinates,
+      distance: model.distance,
+      shopId: model.shopId,
+      payer: model.payer,
+      isReturnOrder: model.isReturnOrder,
+      createdByUserId: model.createdByUserId,
+      shipperCodes: model.userCodes,
+      orderFees: model.orderFees,
+      totalProductAmount: model.totalProductAmount,
+      totalDeliveryFee: model.totalDeliveryFee,
+    );
+  }
 }
 
 extension OrderDetailEntityExt on OrderDetailEntity {
@@ -178,41 +222,6 @@ extension OrderDetailEntityExt on OrderDetailEntity {
 //     );
 //   }
 // }
-
-@freezed
-abstract class OrderFeeEntity with _$OrderFeeEntity {
-  const OrderFeeEntity._();
-
-  const factory OrderFeeEntity({
-    String? id,
-    String? shopId,
-    String? orderId,
-    String? feeGroup,
-    String? feeSubtype,
-    @Default(0) int baseAmount,
-    @Default(0) int vatRate,
-    @Default(0) int vatAmount,
-    @Default(0) int totalAmount,
-    dynamic snapshot,
-    DateTime? createdAt,
-  }) = _OrderFeeEntity;
-
-  factory OrderFeeEntity.from(OrderFee dto) {
-    return OrderFeeEntity(
-      id: dto.id,
-      shopId: dto.shopId,
-      orderId: dto.orderId,
-      feeGroup: dto.feeGroup,
-      feeSubtype: dto.feeSubtype?.toString(),
-      baseAmount: dto.baseAmount ?? 0,
-      vatRate: dto.vatRate ?? 0,
-      vatAmount: dto.vatAmount ?? 0,
-      totalAmount: dto.totalAmount ?? 0,
-      snapshot: dto.snapshot,
-      createdAt: dto.createdAt,
-    );
-  }
-}
 
 @freezed
 abstract class OrderDetailShopEntity with _$OrderDetailShopEntity {

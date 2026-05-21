@@ -50,7 +50,8 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
             children: [
               PrimaryText(
                 "sender_info".tr(),
-                style: AppTextStyles.headlineSmall,
+                style: AppTextStyles.labelLarge,
+                color: AppColors.secondary,
               ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
               PrimaryText("shop_name".tr(), style: AppTextStyles.labelMedium),

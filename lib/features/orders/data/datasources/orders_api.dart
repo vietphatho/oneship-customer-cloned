@@ -25,7 +25,7 @@ abstract class OrdersApi {
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrdersByStatus({
     @Query("status") required String status,
     @Query("shopId") required String shopId,
-    @Query("page") int page = 1,
+    @Query("page") int page = Constants.defaultPage,
     @Query("limit") int limit = Constants.defaultLimitPerPage,
   });
 
@@ -39,6 +39,8 @@ abstract class OrdersApi {
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
     @Query("status") required String status,
     @Query("shopId") required String shopId,
+    @Query("page") int page = Constants.defaultPage,
+    @Query("limit") int limit = Constants.defaultLimitPerPage,
   });
 
   @GET("/api/v1/onexmaps/place-and-route")

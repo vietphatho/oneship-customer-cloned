@@ -104,13 +104,13 @@ class _PackageDetailPageState extends State<PackageDetailPage> {
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       _buildInfoField(
                         title: "shop_name".tr(),
-                        value: pkg.shopId,
+                        value: pkg.shopName ?? pkg.shopId,
                       ),
                       _buildInfoField(
                         title: "phone_number".tr(),
                         value: pkg.shopPhone,
                       ),
-                      _buildInfoField(title: "address".tr(), value: null),
+                      _buildInfoField(title: "address".tr(), value: pkg.shopAddress),
                     ],
                   ),
                 ),
