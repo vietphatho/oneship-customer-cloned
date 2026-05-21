@@ -103,7 +103,7 @@ class _ShopManagementPageState extends State<ShopManagementPage> {
   }
 
   void _onAddShop() {
-    context.push(RouteName.createShopPage);
+    context.push(RouteName.createShopFromManagementPage);
   }
 
   void _onRefresh() {

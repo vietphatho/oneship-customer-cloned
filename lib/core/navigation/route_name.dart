@@ -13,6 +13,7 @@ class RouteName {
 
   static const String shopEmptyPage = '/shop_empty';
   static const String createShopPage = '/shop_master/create_shop';
+  static const String createShopFromManagementPage = '/shop_master/create_shop_from_management';
   static const String createShopStaffPage = '/shop_master/create_shop_staff';
   static const String shopStaffDetailPage = '/shop_master/shop_staff_detail';
   static const String addShopToStaffPage = '/shop_master/add_shop_to_staff';
