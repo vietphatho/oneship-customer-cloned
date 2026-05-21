@@ -78,6 +78,10 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                         () => _ordersBloc.fetchOrderHistory(
                           OrderStatus.delivered,
                         ),
+                    onLoadMore:
+                        () => _ordersBloc.loadMoreOrderHistory(
+                          OrderStatus.delivered,
+                        ),
                     onOrderTap: _onOrderTap,
                     isLoading: widget.isLoadingFor(
                       OrderStatus.delivered,
@@ -90,6 +94,10 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                     onRefresh:
                         () =>
                             _ordersBloc.fetchOrderHistory(OrderStatus.returned),
+                    onLoadMore:
+                        () => _ordersBloc.loadMoreOrderHistory(
+                          OrderStatus.returned,
+                        ),
                     onOrderTap: _onOrderTap,
                     isLoading: widget.isLoadingFor(OrderStatus.returned, state),
                   ),

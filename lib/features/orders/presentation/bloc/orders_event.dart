@@ -44,6 +44,12 @@ class OrdersHistoryFetchingByStatusEvent extends OrdersEvent {
   const OrdersHistoryFetchingByStatusEvent(this.status);
 }
 
+class OrdersHistoryLoadMoreEvent extends OrdersEvent {
+  final OrderStatus status;
+
+  const OrdersHistoryLoadMoreEvent(this.status);
+}
+
 class OrdersHistoryFilterToggledEvent extends OrdersEvent {
   const OrdersHistoryFilterToggledEvent();
 }

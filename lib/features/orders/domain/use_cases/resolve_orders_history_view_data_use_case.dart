@@ -19,7 +19,6 @@ class OrdersHistoryViewData {
 
 @lazySingleton
 class ResolveOrdersHistoryViewDataUseCase {
-  static const int _pageSize = 10;
   static const double _defaultMaxCodAmount = 1000000;
 
   OrdersHistoryViewData call({
@@ -57,8 +56,8 @@ class ResolveOrdersHistoryViewDataUseCase {
     return OrdersHistoryViewData(
       filteredDeliveredOrders: filteredDeliveredOrders,
       filteredReturnedOrders: filteredReturnedOrders,
-      visibleDeliveredOrders: _limit(filteredDeliveredOrders),
-      visibleReturnedOrders: _limit(filteredReturnedOrders),
+      visibleDeliveredOrders: filteredDeliveredOrders,
+      visibleReturnedOrders: filteredReturnedOrders,
       maxCodAmount: _maxCodAmount([...deliveredOrders, ...returnedOrders]),
     );
   }
@@ -107,11 +106,6 @@ class ResolveOrdersHistoryViewDataUseCase {
 
       return true;
     }).toList();
-  }
-
-  List<OrderHistoryInfoEntity> _limit(List<OrderHistoryInfoEntity> orders) {
-    if (orders.length <= _pageSize) return orders;
-    return orders.take(_pageSize).toList();
   }
 
   double _maxCodAmount(List<OrderHistoryInfoEntity> orders) {

@@ -18,7 +18,7 @@ abstract class OrdersRepository extends BaseRepository {
   Future<Resource<OrdersListResponse>> fetchOrdersByStatus({
     required OrderStatus status,
     required String shopId,
-    int page = 1,
+    int page = Constants.defaultPage,
     int limit = Constants.defaultLimitPerPage,
   });
 
@@ -52,6 +52,8 @@ abstract class OrdersRepository extends BaseRepository {
   Future<Resource<OrdersHistoryEntity>> fetchOrderHistory({
     required OrderStatus status,
     required String shopId,
+    int page = Constants.defaultPage,
+    int limit = Constants.defaultLimitPerPage,
   });
 
   Future<Resource<ProductsListEntity>> fetchProductsList({
