@@ -11,6 +11,11 @@ class FinanceReconciliationSelectFilterEvent
   FinanceReconciliationSelectFilterEvent({required this.filter});
 }
 
+class FinanceReconciliationAddShopIdEvent extends FinanceReconciliationEvent {
+  final String shopId;
+  FinanceReconciliationAddShopIdEvent({required this.shopId});
+}
+
 class FinanceReconciliationChangePeriodStatusEvent
     extends FinanceReconciliationEvent {
   final PeriodStatus status;
@@ -31,12 +36,14 @@ class FinanceReconciliationFetchPeriodDetailEvent
 
 class FinanceReconciliationFetchPeriodsEvent
     extends FinanceReconciliationEvent {
-  final String shopId;
-  FinanceReconciliationFetchPeriodsEvent({required this.shopId});
+  FinanceReconciliationFetchPeriodsEvent();
 }
 
-class FinanceReconciliationFetchConfigEvent
+class FinanceReconciliationFetchPayoutsEvent
     extends FinanceReconciliationEvent {
-  final String shopId;
-  FinanceReconciliationFetchConfigEvent({required this.shopId});
+  FinanceReconciliationFetchPayoutsEvent();
+}
+
+class FinanceReconciliationFetchConfigEvent extends FinanceReconciliationEvent {
+  FinanceReconciliationFetchConfigEvent();
 }

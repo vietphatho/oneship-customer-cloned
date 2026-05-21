@@ -71,3 +71,18 @@ extension PeriodStatusX on PeriodStatus {
     }
   }
 }
+
+enum PayoutStatus { all, pending, processing, completed, failed, cancelled }
+
+extension PayoutStatusX on PayoutStatus {
+  static const _mapName = {
+    PayoutStatus.all: 'all',
+    PayoutStatus.pending: 'pending',
+    PayoutStatus.processing: 'processing',
+    PayoutStatus.completed: 'completed',
+    PayoutStatus.failed: 'failed',
+    PayoutStatus.cancelled: 'cancelled',
+  };
+
+  String get name => _mapName[this]!;
+}

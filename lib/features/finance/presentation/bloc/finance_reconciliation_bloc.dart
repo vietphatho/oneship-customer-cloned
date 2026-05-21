@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/finance/domain/use_cases/fetch_settlement_config_use_case.dart';
+import 'package:oneship_customer/features/finance/domain/use_cases/fetch_settlement_payouts_use_case.dart';
 import 'package:oneship_customer/features/finance/domain/use_cases/fetch_settlement_period_use_case.dart';
 import 'package:oneship_customer/features/finance/domain/use_cases/fetch_period_detail_use_case.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
@@ -17,25 +18,30 @@ class FinanceReconciliationBloc
   final FetchPeriodDetailUseCase _fetchPeriodDetailUseCase;
 
   final FetchSettlementConfigUseCase _fetchSettlementConfigUseCase;
+  final FetchSettlementPayoutsUseCase _fetchSettlementPayoutsUseCase;
 
   FinanceReconciliationBloc(
     this._fetchSettlementPeriodUseCase,
     this._fetchPeriodDetailUseCase,
     this._fetchSettlementConfigUseCase,
+    this._fetchSettlementPayoutsUseCase,
   ) : super(
         FinanceReconciliationState(
           settlementPeriodsResource: Resource.success(null),
           periodDetailEntity: Resource.success(null),
           settlementConfigResource: Resource.success(null),
+          settlementPayoutsResource: Resource.success(null),
         ),
       ) {
     on<FinanceReconciliationSelectFilterEvent>(_onSelectedFilter);
+    on<FinanceReconciliationAddShopIdEvent>(_onAddShopId);
 
     on<FinanceReconciliationFetchPeriodsEvent>(_onFetchPeriods);
     on<FinanceReconciliationFetchPeriodDetailEvent>(_onFetchPeriodDetail);
     on<FinanceReconciliationChangePeriodStatusEvent>(_onChangePeriodStatus);
 
     on<FinanceReconciliationFetchConfigEvent>(_onFetchConfig);
+    on<FinanceReconciliationFetchPayoutsEvent>(_onFetchPayouts);
   }
 
   FutureOr<void> _onSelectedFilter(
@@ -45,6 +51,13 @@ class FinanceReconciliationBloc
     emit(state.copyWith(reconciliationFilter: event.filter));
   }
 
+  FutureOr<void> _onAddShopId(
+    FinanceReconciliationAddShopIdEvent event,
+    Emitter<FinanceReconciliationState> emit,
+  ) {
+    emit(state.copyWith(currentShopId: event.shopId));
+  }
+
   FutureOr<void> _onFetchPeriods(
     FinanceReconciliationFetchPeriodsEvent event,
     Emitter<FinanceReconciliationState> emit,
@@ -52,13 +65,12 @@ class FinanceReconciliationBloc
     emit(state.copyWith(settlementPeriodsResource: Resource.loading()));
 
     final response = await _fetchSettlementPeriodUseCase.call(
-      shopId: event.shopId,
+      shopId: state.currentShopId,
     );
 
     emit(
       state.copyWith(
         settlementPeriodsResource: response,
-        currentShopId: event.shopId,
         periodsData: response.data?.items ?? [],
       ),
     );
@@ -108,15 +120,30 @@ class FinanceReconciliationBloc
     emit(state.copyWith(settlementConfigResource: Resource.loading()));
 
     final response = await _fetchSettlementConfigUseCase.call(
-      shopId: event.shopId,
+      shopId: state.currentShopId,
     );
 
     emit(state.copyWith(settlementConfigResource: response));
   }
 
+  FutureOr<void> _onFetchPayouts(
+    FinanceReconciliationFetchPayoutsEvent event,
+    Emitter<FinanceReconciliationState> emit,
+  ) async {
+    emit(state.copyWith(settlementPayoutsResource: Resource.loading()));
+
+    final response = await _fetchSettlementPayoutsUseCase.call(
+      shopId: state.currentShopId,
+    );
+
+    emit(state.copyWith(settlementPayoutsResource: response));
+  }
+
   void initPeriods({required String shopId}) {
-    add(FinanceReconciliationFetchPeriodsEvent(shopId: shopId));
-    add(FinanceReconciliationFetchConfigEvent(shopId: shopId));
+    add(FinanceReconciliationAddShopIdEvent(shopId: shopId));
+    add(FinanceReconciliationFetchPeriodsEvent());
+    add(FinanceReconciliationFetchConfigEvent());
+    add(FinanceReconciliationFetchPayoutsEvent());
   }
 
   void changedFilter(ReconciliationFilter filter) {
@@ -129,5 +156,9 @@ class FinanceReconciliationBloc
 
   void fetchPeriodDetail({required String shopId, required String id}) {
     add(FinanceReconciliationFetchPeriodDetailEvent(shopId: shopId, id: id));
+  }
+
+  void fetchSettlementConfig() {
+    add(FinanceReconciliationFetchConfigEvent());
   }
 }

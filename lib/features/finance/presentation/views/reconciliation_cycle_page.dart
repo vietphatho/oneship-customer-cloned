@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/domain/entities/settlement_config_entity.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
@@ -35,6 +36,14 @@ class ReconciliationCyclePage extends StatelessWidget {
                     pre.settlementConfigResource !=
                     cur.settlementConfigResource,
             builder: (context, state) {
+              if (state.settlementConfigResource.state == Result.error) {
+                return PrimaryEmptyData(
+                  onRetry: () {
+                    financeReconciliationBloc.fetchSettlementConfig();
+                  },
+                );
+              }
+
               return Column(
                 children: [
                   _buildPeriodInformation(state.settlementConfigResource.data),
