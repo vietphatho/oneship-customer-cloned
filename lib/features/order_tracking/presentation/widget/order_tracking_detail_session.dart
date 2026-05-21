@@ -252,10 +252,10 @@ class _ImageSession extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
-        itemBuilder:
-            (context, index) => PrimaryImageThumbnail.network(
-              StringUtils.getImgUrl(imgs[index]) ?? "",
-            ),
+        itemBuilder: (context, index) {
+          final imageUrl = StringUtils.getImgUrl(imgs[index]) ?? "";
+          return PrimaryImageThumbnail.network(imageUrl, canPreview: true);
+        },
       ),
     );
   }
