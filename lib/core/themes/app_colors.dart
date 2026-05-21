@@ -28,6 +28,9 @@ class AppColors {
   static const Color approved = Color(0xFF4CAF50);
   static const Color cancelled = Color(0xFFF44336);
 
+  static const Color active = Color(0xFFD5FFD1);
+  static const Color inactive = Color(0xFFFFDD79);
+
   // Light Scheme Colors
   static const Color background = Color(0xFFFFFFFF);
   static const Color dialogBarrierColor = Color(0x50000000);

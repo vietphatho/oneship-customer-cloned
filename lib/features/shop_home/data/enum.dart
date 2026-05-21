@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/themes/app_colors.dart';
 
 enum ShopHomeFeature {
   createSingleOrder,
@@ -46,31 +49,39 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
   String get title => _mapTitle[this]!;
 }
 
-enum ShopStatus { active, inactive, unknown }
+enum ShopStatus { active, pending, unknown }
 
 extension ShopStatusX on ShopStatus {
   static const _mapRawValue = {
     ShopStatus.active: "active",
-    ShopStatus.inactive: "inactive",
+    ShopStatus.pending: "pending",
     ShopStatus.unknown: "",
   };
 
   static const _mapLabel = {
     ShopStatus.active: 'shop_management.status_active',
-    ShopStatus.inactive: 'shop_management.status_inactive',
+    ShopStatus.pending: 'shop_management.status_pending',
     ShopStatus.unknown: 'shop_management.status_inactive',
+  };
+
+  static const _mapBgColorStatus = {
+    ShopStatus.active: AppColors.active,
+    ShopStatus.pending: AppColors.inactive,
+    ShopStatus.unknown: AppColors.neutral8,
   };
 
   String get rawValue => _mapRawValue[this]!;
 
   String get label => _mapLabel[this]!.tr();
 
+  Color get bgColor => _mapBgColorStatus[this]!;
+
   static ShopStatus fromString(String? status) {
     switch (status?.toLowerCase()) {
       case 'active':
         return ShopStatus.active;
-      case 'inactive':
-        return ShopStatus.inactive;
+      case 'pending':
+        return ShopStatus.pending;
       default:
         return ShopStatus.unknown;
     }
