@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_image_thumbnail.dart';
+import 'package:oneship_customer/core/base/components/primary_image_preview_thumbnail.dart';
 import 'package:oneship_customer/core/themes/app_theme.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/string_utils.dart';
@@ -252,10 +252,10 @@ class _ImageSession extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
-        itemBuilder:
-            (context, index) => PrimaryImageThumbnail.network(
-              StringUtils.getImgUrl(imgs[index]) ?? "",
-            ),
+        itemBuilder: (context, index) {
+          final imageUrl = StringUtils.getImgUrl(imgs[index]) ?? "";
+          return PrimaryImagePreviewThumbnail(imageUrl: imageUrl);
+        },
       ),
     );
   }
