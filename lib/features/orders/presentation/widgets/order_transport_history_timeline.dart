@@ -1,5 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_image_preview_thumbnail.dart';
+import 'package:oneship_customer/core/base/components/primary_image_thumbnail.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/string_utils.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_transport_history_timeline_entity.dart';
@@ -136,9 +136,12 @@ class _TimelineItemView extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final imageUrl =
                               StringUtils.getImgUrl(item.images[index]) ?? '';
-                          return PrimaryImagePreviewThumbnail(
-                            imageUrl: imageUrl,
+                          return SizedBox(
                             width: 56,
+                            child: PrimaryImageThumbnail.network(
+                              imageUrl,
+                              canPreview: true,
+                            ),
                           );
                         },
                       ),
