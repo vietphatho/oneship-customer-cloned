@@ -108,11 +108,14 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     final getShopsResponse = await _fetchShopsUseCase.getBriefShops(
       event.userId,
     );
+    final approvedShops =
+        getShopsResponse.data?.data.where((shop) => shop.isActive).toList() ??
+        [];
     emit(
       state.copyWith(
         briefShopsResource: getShopsResponse,
-        filteredShops: getShopsResponse.data?.data ?? [],
-        currentShop: getShopsResponse.data?.data.firstOrNull,
+        filteredShops: approvedShops,
+        currentShop: approvedShops.firstOrNull,
       ),
     );
 
