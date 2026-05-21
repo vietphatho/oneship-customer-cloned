@@ -34,8 +34,6 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
               _SettingsContainer(),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _UtilitiesContainer(),
-              AppSpacing.vertical(AppDimensions.mediumSpacing),
               _SupportsContainer(),
               AppSpacing.vertical(AppDimensions.bottomNavBarHeight),
             ],
@@ -141,9 +139,10 @@ class _SettingsContainer extends StatelessWidget {
         ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(
-          label: (userProfile.hasSecondPassword ?? false)
-              ? 'secondary_password.change_page_title'.tr()
-              : 'secondary_password.create_page_title'.tr(),
+          label:
+              (userProfile.hasSecondPassword ?? false)
+                  ? 'secondary_password.change_page_title'.tr()
+                  : 'secondary_password.create_page_title'.tr(),
           onTap: () {
             context.push(RouteName.changeSecondaryPasswordPage);
           },
@@ -220,6 +219,7 @@ class _Header extends StatelessWidget {
           child: Row(
             children: [
               PrimaryAvatar(
+                url: userProfile.avatarUrl,
                 radius: AppDimensions.defaultAvatarRadius,
                 isOnline: true,
               ),
