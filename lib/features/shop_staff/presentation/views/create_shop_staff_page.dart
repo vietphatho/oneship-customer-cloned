@@ -132,14 +132,6 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
                           textInputAction: TextInputAction.next,
                           validateMode: AutovalidateMode.onUserInteraction,
                           validator: _validatePassword,
-                          helper: Align(
-                            alignment: Alignment.centerRight,
-                            child: PrimaryText(
-                              "shop_management.staff_auto_password".tr(),
-                              style: AppTextStyles.bodyMedium,
-                              color: AppColors.neutral4,
-                            ),
-                          ),
                         ),
                         PasswordStrengthIndicator(
                           strength: _passwordStrength,
