@@ -7,6 +7,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
+import 'package:oneship_customer/features/orders/data/models/request/validate_ord_at_hub_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
@@ -136,6 +137,7 @@ class OrdersRepositoryImpl extends OrdersRepository {
     return response.parse((dto) => ProductEntity.from(dto));
   }
 
+  @override
   Future<Resource> updateOrder({
     required String ordId,
     required CreateOrderRequest requestBody,
@@ -143,5 +145,13 @@ class OrdersRepositoryImpl extends OrdersRepository {
     return request(
       () => _ordersApi.updateOrder(ordId: ordId, body: requestBody),
     );
+  }
+
+  @override
+  Future<Resource> validateOrdAtHub({
+    required String hubId,
+    required ValidateOrdAtHubRequest body,
+  }) {
+    return request(() => _ordersApi.validateOrdAtHub(hubId: hubId, body: body));
   }
 }

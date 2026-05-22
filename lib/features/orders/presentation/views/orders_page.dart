@@ -33,6 +33,7 @@ class _OrdersPageState extends State<OrdersPage>
   void initState() {
     super.initState();
     _tabList = const [
+      OrderStatus.atHub,
       OrderStatus.pending,
       OrderStatus.processing,
       OrderStatus.batched,

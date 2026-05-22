@@ -14,6 +14,8 @@ abstract class OrdersState with _$OrdersState {
     required Resource<OrdersHistoryResponseEntity> ordersHistoryResource,
     required Resource<OrderDetailEntity> orderDetailResource,
     required Resource deleteOrderResource,
+    required Resource validateOrdAtHubResource,
+    @Default([]) List<OrderInfo> atHubOrdersList,
     @Default([]) List<OrderInfo> pendingOrdersList,
     @Default([]) List<OrderInfo> processingOrdersList,
     @Default([]) List<OrderInfo> batchedOrdersList,

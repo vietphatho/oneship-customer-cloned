@@ -2,6 +2,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/base/components/primary_dismissible.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
@@ -13,12 +14,14 @@ class OrderInfoItem extends StatelessWidget {
     required this.index,
     this.onTap,
     this.onRemoved,
+    this.onConfirmOrdAtHub,
   });
 
   final int index;
   final OrderInfo order;
   final void Function(OrderInfo order)? onTap;
   final void Function(OrderInfo order)? onRemoved;
+  final void Function(OrderInfo order)? onConfirmOrdAtHub;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +80,14 @@ class OrderInfoItem extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
                 color: AppColors.neutral4,
               ),
+              if (onConfirmOrdAtHub != null) ...[
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                SecondaryButton.filled(
+                  label: "confirm".tr(),
+                  height: AppDimensions.smallHeightButton,
+                  onPressed: () => onConfirmOrdAtHub?.call(order),
+                ),
+              ],
             ],
           ),
         ),

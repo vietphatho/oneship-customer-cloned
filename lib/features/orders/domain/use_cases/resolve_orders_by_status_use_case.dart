@@ -11,6 +11,8 @@ class ResolveOrdersByStatusUseCase {
     required OrdersByStatusLists current,
   }) {
     switch (status) {
+      case OrderStatus.atHub:
+        return current.copyWith(atHubOrdersList: orders);
       case OrderStatus.pending:
         return current.copyWith(pendingOrdersList: orders);
       case OrderStatus.processing:
@@ -36,33 +38,37 @@ class ResolveOrdersByStatusUseCase {
     required OrdersByStatusLists current,
   }) {
     switch (status) {
+      case OrderStatus.atHub:
+        return current.copyWith(
+          atHubOrdersList: [...current.atHubOrdersList, ...orders],
+        );
       case OrderStatus.pending:
         return current.copyWith(
           pendingOrdersList: [...current.pendingOrdersList, ...orders],
         );
       case OrderStatus.processing:
         return current.copyWith(
-          pendingOrdersList: [...current.processingOrdersList, ...orders],
+          processingOrdersList: [...current.processingOrdersList, ...orders],
         );
       case OrderStatus.batched:
         return current.copyWith(
-          pendingOrdersList: [...current.batchedOrdersList, ...orders],
+          batchedOrdersList: [...current.batchedOrdersList, ...orders],
         );
       case OrderStatus.shipping:
         return current.copyWith(
-          pendingOrdersList: [...current.deliveringOrdersList, ...orders],
+          deliveringOrdersList: [...current.deliveringOrdersList, ...orders],
         );
       case OrderStatus.delayed:
         return current.copyWith(
-          pendingOrdersList: [...current.delayedOrdersList, ...orders],
+          delayedOrdersList: [...current.delayedOrdersList, ...orders],
         );
       case OrderStatus.cancelled:
         return current.copyWith(
-          pendingOrdersList: [...current.cancelledOrdersList, ...orders],
+          cancelledOrdersList: [...current.cancelledOrdersList, ...orders],
         );
       case OrderStatus.returned:
         return current.copyWith(
-          pendingOrdersList: [...current.returnedOrdersList, ...orders],
+          returnedOrdersList: [...current.returnedOrdersList, ...orders],
         );
       default:
         return current;

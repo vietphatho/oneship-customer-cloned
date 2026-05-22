@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -16,6 +17,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_b
 import 'package:oneship_customer/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_detail_from_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/validate_ord_at_hub_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -30,12 +32,14 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     // this._resolveOrdersHistoryViewDataUseCase,
     this._resolveOrdersByStatusUseCase,
     this._getShipperInfoUseCase,
+    this._validateOrdAtHubUseCase,
   ) : super(
         OrdersState(
           orderListByStatusResource: Resource.loading(),
           ordersHistoryResource: Resource.loading(),
           orderDetailResource: Resource.loading(),
           deleteOrderResource: Resource.loading(),
+          validateOrdAtHubResource: Resource.loading(),
         ),
       ) {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
@@ -45,6 +49,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrderDeleteEvent>(_onDeleteOrderEvent);
     on<OrdersHistoryFetchingByStatusEvent>(_onFetchOrderHistoryEvent);
     on<OrdersHistoryLoadMoreEvent>(_onLoadMoreOrderHistoryEvent);
+    on<ValidateOrdAtHubEvent>(_onValidateOrdAtHubEvent);
     // on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterAppliedEvent>(_onApplyOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterClearedEvent>(_onClearOrdersHistoryFilterEvent);
@@ -61,6 +66,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   _resolveOrderDetailFromHistoryUseCase =
       const ResolveOrderDetailFromHistoryUseCase();
   final GetShipperInfoUseCase _getShipperInfoUseCase;
+  final ValidateOrdAtHubUseCase _validateOrdAtHubUseCase;
 
   late String _shopId;
   set shopId(String id) {
@@ -89,6 +95,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       status: _currentOrderStatus,
       orders: response.data?.data ?? [],
       current: OrdersByStatusLists(
+        atHubOrdersList: state.atHubOrdersList,
         pendingOrdersList: state.pendingOrdersList,
         processingOrdersList: state.processingOrdersList,
         batchedOrdersList: state.batchedOrdersList,
@@ -102,6 +109,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(
       state.copyWith(
         orderListByStatusResource: response,
+        atHubOrdersList: ordersByStatus.atHubOrdersList,
         pendingOrdersList: ordersByStatus.pendingOrdersList,
         processingOrdersList: ordersByStatus.processingOrdersList,
         batchedOrdersList: ordersByStatus.batchedOrdersList,
@@ -268,6 +276,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       status: _currentOrderStatus,
       orders: response.data?.data ?? [],
       current: OrdersByStatusLists(
+        atHubOrdersList: state.atHubOrdersList,
         pendingOrdersList: state.pendingOrdersList,
         processingOrdersList: state.processingOrdersList,
         batchedOrdersList: state.batchedOrdersList,
@@ -281,6 +290,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(
       state.copyWith(
         orderListByStatusResource: response,
+        atHubOrdersList: ordersByStatus.atHubOrdersList,
         pendingOrdersList: ordersByStatus.pendingOrdersList,
         processingOrdersList: ordersByStatus.processingOrdersList,
         batchedOrdersList: ordersByStatus.batchedOrdersList,
@@ -313,6 +323,23 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   //     ordersHistoryMaxCodAmount: viewData.maxCodAmount,
   //   );
   // }
+
+  FutureOr<void> _onValidateOrdAtHubEvent(
+    ValidateOrdAtHubEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(state.copyWith(validateOrdAtHubResource: Resource.loading()));
+    final response = await _validateOrdAtHubUseCase.call(
+      hubId: event.hubId,
+      ordId: event.ordId,
+    );
+
+    if (response.state == Result.success) {
+      add(OrdersFetchingByStatusEvent(_currentOrderStatus));
+    }
+
+    emit(state.copyWith(validateOrdAtHubResource: response));
+  }
 
   BaseMetaResponse? _getOrdersHistoryMeta(OrderStatus status) {
     return status == OrderStatus.delivered
@@ -371,6 +398,10 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   void openOrderHistoryDetail(OrdersHistoryEntity order) {
     add(OrderHistoryOpenDetailEvent(order));
+  }
+
+  void validateOrdAtHub({required String ordId, required String hubId}) {
+    add(ValidateOrdAtHubEvent(hubId: hubId, ordId: ordId));
   }
 
   void deleteOrder(OrderInfo order) {

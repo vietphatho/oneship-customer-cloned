@@ -63,3 +63,10 @@ class OrdersHistoryFilterAppliedEvent extends OrdersEvent {
 class OrdersHistoryFilterClearedEvent extends OrdersEvent {
   const OrdersHistoryFilterClearedEvent();
 }
+
+class ValidateOrdAtHubEvent extends OrdersEvent {
+  final String hubId;
+  final String ordId;
+
+  ValidateOrdAtHubEvent({required this.hubId, required this.ordId});
+}

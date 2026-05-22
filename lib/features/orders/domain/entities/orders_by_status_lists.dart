@@ -2,6 +2,7 @@ import 'package:oneship_customer/features/orders/data/models/response/orders_lis
 
 class OrdersByStatusLists {
   const OrdersByStatusLists({
+    required this.atHubOrdersList,
     required this.pendingOrdersList,
     required this.processingOrdersList,
     required this.batchedOrdersList,
@@ -11,6 +12,7 @@ class OrdersByStatusLists {
     required this.returnedOrdersList,
   });
 
+  final List<OrderInfo> atHubOrdersList;
   final List<OrderInfo> pendingOrdersList;
   final List<OrderInfo> processingOrdersList;
   final List<OrderInfo> batchedOrdersList;
@@ -20,6 +22,7 @@ class OrdersByStatusLists {
   final List<OrderInfo> returnedOrdersList;
 
   OrdersByStatusLists copyWith({
+    List<OrderInfo>? atHubOrdersList,
     List<OrderInfo>? pendingOrdersList,
     List<OrderInfo>? processingOrdersList,
     List<OrderInfo>? batchedOrdersList,
@@ -29,6 +32,7 @@ class OrdersByStatusLists {
     List<OrderInfo>? returnedOrdersList,
   }) {
     return OrdersByStatusLists(
+      atHubOrdersList: atHubOrdersList ?? this.atHubOrdersList,
       pendingOrdersList: pendingOrdersList ?? this.pendingOrdersList,
       processingOrdersList: processingOrdersList ?? this.processingOrdersList,
       batchedOrdersList: batchedOrdersList ?? this.batchedOrdersList,
