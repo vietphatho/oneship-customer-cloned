@@ -23,8 +23,9 @@ import 'package:oneship_customer/features/profile/presentation/views/change_pass
 import 'package:oneship_customer/features/profile/presentation/views/change_secondary_password_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
-import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_from_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop_to_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
@@ -71,6 +72,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.createShopPage,
       builder: (context, state) => const CreateShopPage(),
+    ),
+    GoRoute(
+      path: RouteName.createShopFromManagementPage,
+      builder: (context, state) => const CreateShopFromManagementPage(),
     ),
     GoRoute(
       path: RouteName.createShopStaffPage,

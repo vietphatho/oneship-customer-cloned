@@ -19,7 +19,7 @@ class PrimaryDialog {
       barrierLabel: "CustomDialog",
       barrierDismissible: true,
       context: context,
-      pageBuilder: (_, aniamtion, __) {
+      pageBuilder: (dialogContext, animation, __) {
         return _CustomDialogView(
           headerIcon: Container(
             width: _headerIconSize,
@@ -55,7 +55,7 @@ class PrimaryDialog {
           bottomActions: PrimaryButton.filled(
             label: "close".tr(),
             onPressed: () {
-              Navigator.pop(context, true);
+              Navigator.pop(dialogContext, true);
               onClosed?.call();
             },
           ),
@@ -104,7 +104,7 @@ class PrimaryDialog {
     return showGeneralDialog<dynamic>(
       context: context,
       pageBuilder:
-          (_, n, m) => _CustomDialogView(
+          (dialogContext, n, m) => _CustomDialogView(
             headerIcon: Container(
               width: _headerIconSize,
               height: _headerIconSize,
@@ -138,7 +138,7 @@ class PrimaryDialog {
             bottomActions: PrimaryButton.filled(
               label: closeText?.tr() ?? "close".tr(),
               onPressed: () {
-                Navigator.pop(context, true);
+                Navigator.pop(dialogContext, true);
                 onClosed?.call();
               },
             ),
@@ -156,7 +156,7 @@ class PrimaryDialog {
     return showGeneralDialog<dynamic>(
       context: context,
       pageBuilder:
-          (_, n, m) => _CustomDialogView(
+          (dialogContext, n, m) => _CustomDialogView(
             headerIcon: Container(
               width: _headerIconSize,
               height: _headerIconSize,
@@ -189,7 +189,7 @@ class PrimaryDialog {
             bottomActions: PrimaryButton.filled(
               label: buttonText ?? "close".tr(),
               onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop(true);
+                Navigator.pop(dialogContext, true);
                 onClosed?.call();
               },
             ),
@@ -209,7 +209,7 @@ class PrimaryDialog {
     return showGeneralDialog<T?>(
       context: context,
       pageBuilder:
-          (_, n, m) => _CustomDialogView(
+          (dialogContext, n, m) => _CustomDialogView(
             headerIcon: Container(
               width: _headerIconSize,
               height: _headerIconSize,
@@ -247,7 +247,7 @@ class PrimaryDialog {
                   child: PrimaryButton.outlined(
                     label: negativeButtonText.tr(),
                     onPressed: () {
-                      Navigator.pop(context, true);
+                      Navigator.pop(dialogContext, true);
                       onNegativeTapped?.call();
                     },
                   ),
@@ -257,7 +257,7 @@ class PrimaryDialog {
                   child: PrimaryButton.filled(
                     label: positiveButtonText.tr(),
                     onPressed: () {
-                      Navigator.pop(context, true);
+                      Navigator.pop(dialogContext, true);
                       onPositiveTapped?.call();
                     },
                   ),
