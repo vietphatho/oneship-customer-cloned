@@ -140,19 +140,18 @@ class _Header extends StatelessWidget {
           //   onPressed: () {},
           //   icon: Icon(Icons.print, color: AppColors.secondary),
           // ),
-          IconButton(
-            visualDensity: VisualDensity.compact,
-            onPressed: () {
-              final CreateOrderBloc _createOrderBloc = getIt.get();
-              final ProductBloc _productBloc = getIt.get();
-              _createOrderBloc.initUpdateOrdData(ordDtl);
-              print(_createOrderBloc.state.productEntitySelected.toString());
-              _productBloc.initUpdateSelectedProduct(ordDtl.items);
-              print(ordDtl.items.toString());
-              context.push(RouteName.createOrderPage);
-            },
-            icon: Icon(Icons.edit_document, color: AppColors.secondary),
-          ),
+          if (ordDtl.status.canEditOrder)
+            IconButton(
+              visualDensity: VisualDensity.compact,
+              onPressed: () {
+                final CreateOrderBloc createOrderBloc = getIt.get();
+                final ProductBloc productBloc = getIt.get();
+                createOrderBloc.initUpdateOrdData(ordDtl);
+                productBloc.initUpdateSelectedProduct(ordDtl.items);
+                context.push(RouteName.createOrderPage);
+              },
+              icon: Icon(Icons.edit_document, color: AppColors.secondary),
+            ),
         ],
       ),
     );
