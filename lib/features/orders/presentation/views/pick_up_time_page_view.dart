@@ -37,8 +37,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
         final CreateOrderRequestEntity request = state.draftRequest;
         final selectedDate = request.detail?.pickupDate;
         final selectedSession = request.detail?.pickupSession;
-        final availableSessions =
-            OrderPickUpSessionExt.availableSessionsForDate(selectedDate);
+        final availableSessions = _getAvailableSessions(selectedDate);
         final effectiveSession =
             (selectedSession != null &&
                     availableSessions.contains(selectedSession))
@@ -75,8 +74,7 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
                 onChanged: (date) {
                   // Kiểm tra nếu session hiện tại không còn hợp lệ sau khi đổi ngày
                   final currentSession = request.detail?.pickupSession;
-                  final sessions =
-                      OrderPickUpSessionExt.availableSessionsForDate(date);
+                  final sessions = _getAvailableSessions(date);
                   final sessionStillValid =
                       currentSession != null &&
                       sessions.contains(currentSession);
@@ -116,5 +114,20 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
 
   void _handleListener(BuildContext context, CreateOrderState state) {
     if (state is CreateOrderPickUpTimeChangedState) {}
+  }
+
+  List<OrderPickUpSession> _getAvailableSessions(DateTime? date) {
+    if (date == null) return OrderPickUpSession.values;
+    final now = DateTime.now();
+    final isToday =
+        date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+    if (!isToday) return OrderPickUpSession.values;
+
+    return OrderPickUpSession.values.where((s) {
+      final deadline = s == OrderPickUpSession.morning ? 12 : 18;
+      return now.hour < deadline;
+    }).toList();
   }
 }
