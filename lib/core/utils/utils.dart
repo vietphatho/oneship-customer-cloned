@@ -18,6 +18,15 @@ class Utils {
     return formatter.format(value);
   }
 
+  static String formatCurrencyInput(num? value) {
+    if (value == null) return "";
+    return NumberFormat.decimalPattern('vi_VN').format(value);
+  }
+
+  static int parseCurrencyInput(String value) {
+    return int.tryParse(value.replaceAll(RegExp(r'\D'), '')) ?? 0;
+  }
+
   static String formatDimensionWithUnit({
     required num? length,
     required num? width,
