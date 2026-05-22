@@ -1,6 +1,7 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_customer/features/order_tracking/presentation/widget/order_tracking_scan_suffix_button.dart';
 
 class OrderTrackingInputSession extends StatefulWidget {
   const OrderTrackingInputSession({super.key});
@@ -12,7 +13,6 @@ class OrderTrackingInputSession extends StatefulWidget {
 
 class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
   final OrderTrackingBloc _orderTrackingBloc = getIt.get();
-
   final TextEditingController _trackingNumberCtrl = TextEditingController();
 
   @override
@@ -40,6 +40,9 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
               controller: _trackingNumberCtrl,
               textInputAction: TextInputAction.done,
               textCapitalization: TextCapitalization.characters,
+              suffixIcon: OrderTrackingScanSuffixButton(
+                onScanned: _setTrackingText,
+              ),
               onFieldSubmitted: (value) {
                 _onSearch();
               },
@@ -62,5 +65,12 @@ class _OrderTrackingInputSessionState extends State<OrderTrackingInputSession> {
     if (_trackingNumberCtrl.text.isNotEmpty) {
       _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
     }
+  }
+
+  void _setTrackingText(String scannedText) {
+    _trackingNumberCtrl.text = scannedText;
+    _trackingNumberCtrl.selection = TextSelection.collapsed(
+      offset: scannedText.length,
+    );
   }
 }
