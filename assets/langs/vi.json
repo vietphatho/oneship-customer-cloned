@@ -987,5 +987,7 @@
   "filter_result": "Lọc kết quả",
   "customer": "Khách hàng",
   "user_role": "Vai trò",
-  "at_hub": "Tại kho"
+  "at_hub": "Tại kho",
+  "in_progress_ords": "Đang xử lý",
+  "completed_ords": "Đã hoàn thành"
 }

@@ -1,4 +1,5 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 
 class CustomerOrderTrackingInputSession extends StatefulWidget {
   const CustomerOrderTrackingInputSession({super.key});
@@ -31,8 +32,8 @@ class _CustomerOrderTrackingInputSessionState
           Expanded(
             flex: 2,
             child: PrimaryTextField(
-              label: "input_tracking_number".tr(),
               controller: _trackingNumberCtrl,
+              hintText: "input_tracking_number".tr(),
               textInputAction: TextInputAction.done,
               textCapitalization: TextCapitalization.characters,
               onFieldSubmitted: (value) {
@@ -42,7 +43,7 @@ class _CustomerOrderTrackingInputSessionState
           ),
           AppSpacing.horizontal(AppDimensions.xSmallSpacing),
           Expanded(
-            child: PrimaryButton.filled(
+            child: SecondaryButton.filled(
               label: "search".tr(),
               height: AppDimensions.mediumHeightButton,
               onPressed: _onSearch,
