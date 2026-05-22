@@ -1,15 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_button.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/core/base/components/primary_text_button.dart';
-import 'package:oneship_customer/core/base/components/primary_text_field.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_spacing.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
@@ -42,48 +37,79 @@ class _VerifySecondaryPasswordPageState
         padding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.mediumSpacing,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PrimaryText(
-              'security_verification'.tr(),
-              style: AppTextStyles.displaySmall,
-            ),
-            AppSpacing.vertical(AppDimensions.smallSpacing),
-            PrimaryText(
-              'enter_secondary_password'.tr(),
-              style: AppTextStyles.labelLarge,
-            ),
-            AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-            PrimaryTextField(
-              label: 'second_password'.tr(),
-              obscureText: true,
-              controller: _secondPasswordCtrl,
-            ),
-            AppSpacing.vertical(AppDimensions.mediumSpacing),
-            BlocListener<AuthBloc, AuthState>(
-              bloc: _authBloc,
-              listener: _handleVerifySecondPasswordListener,
-              child: PrimaryButton.filled(
-                label: 'confirm'.tr(),
-                onPressed: () {
-                  if (_secondPasswordCtrl.text.isNotEmpty) {
-                    _authBloc.verifySecondaryPassword(
-                      secondPassword: _secondPasswordCtrl.text.trim(),
-                    );
-                  }
-                },
-              ),
-            ),
-            PrimaryTextButton(
-              label: 'forgot_secondary_password'.tr(),
-              onPressed: () {},
-            ),
-            PrimaryText(
-              'information_completely_secure'.tr(),
-              style: AppTextStyles.bodySmall,
-            ),
-          ],
+        child: BlocBuilder<AuthBloc, AuthState>(
+          bloc: _authBloc,
+          builder: (context, state) {
+            if (_authBloc.userProfile.hasSecondPassword == true) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PrimaryText(
+                    'security_verification'.tr(),
+                    style: AppTextStyles.displaySmall,
+                  ),
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  PrimaryText(
+                    'enter_secondary_password'.tr(),
+                    style: AppTextStyles.labelLarge,
+                  ),
+                  AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                  PrimaryTextField(
+                    label: 'second_password'.tr(),
+                    obscureText: true,
+                    controller: _secondPasswordCtrl,
+                  ),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  BlocListener<AuthBloc, AuthState>(
+                    bloc: _authBloc,
+                    listener: _handleVerifySecondPasswordListener,
+                    child: PrimaryButton.filled(
+                      label: 'confirm'.tr(),
+                      onPressed: () {
+                        if (_secondPasswordCtrl.text.isNotEmpty) {
+                          _authBloc.verifySecondaryPassword(
+                            secondPassword: _secondPasswordCtrl.text.trim(),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  PrimaryTextButton(
+                    label: 'forgot_secondary_password'.tr(),
+                    onPressed: () {},
+                  ),
+                  PrimaryText(
+                    'information_completely_secure'.tr(),
+                    style: AppTextStyles.bodySmall,
+                  ),
+                ],
+              );
+            }
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PrimaryText(
+                  'create_second_password'.tr(),
+                  style: AppTextStyles.titleXXLarge,
+                  textAlign: TextAlign.center,
+                ),
+                AppSpacing.vertical(AppDimensions.largeSpacing),
+                PrimaryText(
+                  'need_to_create_secondary_password'.tr(),
+                  style: AppTextStyles.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                PrimaryButton.filled(
+                  label: 'create_second_password'.tr(),
+                  onPressed: () {
+                    context.push(RouteName.changeSecondaryPasswordPage);
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
