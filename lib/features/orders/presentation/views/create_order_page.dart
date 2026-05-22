@@ -8,7 +8,6 @@ import 'package:oneship_customer/features/orders/presentation/bloc/create_order_
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/views/confirmation_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_info_page_view.dart';
-import 'package:oneship_customer/features/orders/presentation/views/pick_up_time_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/receiver_info_page_view.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
@@ -59,14 +58,17 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
           final isUpdate = state.updateOrdId != null;
           return Scaffold(
             appBar: PrimaryAppBar(
-              title: isUpdate ? "update_order_title".tr() : "create_order_title".tr(),
+              title:
+                  isUpdate
+                      ? "update_order_title".tr()
+                      : "create_order_title".tr(),
               confirmPop: true,
             ),
             body: PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                const PickUpTimePageView(),
+                // const PickUpTimePageView(),
                 const ReceiverInfoPageView(),
                 const OrderInfoPageView(),
                 const ConfirmationInfoPageView(),

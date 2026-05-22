@@ -5,7 +5,6 @@ import 'package:oneship_customer/core/base/components/primary_auto_complete_text
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_province_selector.dart';
@@ -161,13 +160,13 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
               SafeArea(
                 child: Row(
                   children: [
-                    Expanded(
-                      child: PrimaryButton.outlined(
-                        label: "previous".tr(),
-                        onPressed: _onPrevious,
-                      ),
-                    ),
-                    AppSpacing.horizontal(AppDimensions.smallSpacing),
+                    // Expanded(
+                    //   child: PrimaryButton.outlined(
+                    //     label: "previous".tr(),
+                    //     onPressed: _onPrevious,
+                    //   ),
+                    // ),
+                    // AppSpacing.horizontal(AppDimensions.smallSpacing),
                     Expanded(
                       child: SecondaryButton.filled(
                         label: "next".tr(),
@@ -184,10 +183,9 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
     );
   }
 
-  void _onPrevious() {
-    // _createOrderBloc.changeStep(CreateOrderStep.timeInfo);
-    _createOrderBloc.backToStep(CreateOrderStep.timeInfo);
-  }
+  // void _onPrevious() {
+  //   _createOrderBloc.backToStep(CreateOrderStep.timeInfo);
+  // }
 
   void _onNext() {
     // _createOrderBloc.changeStep(CreateOrderStep.orderInfo);

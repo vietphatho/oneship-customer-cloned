@@ -129,8 +129,9 @@ class AppColors {
   static const Color bottomNavBarBackground = neutral9;
 
   static const LinearGradient shopHomeGradBg = LinearGradient(
-    colors: [Color(0xFFFFB16F), AppColors.accentColor2],
+    colors: [Color(0xFFFFB16F), Colors.white],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
+    stops: [0.0, 0.3],
   );
 }

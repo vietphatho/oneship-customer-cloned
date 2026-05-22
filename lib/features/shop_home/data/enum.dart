@@ -7,7 +7,7 @@ import 'package:oneship_customer/core/themes/app_colors.dart';
 
 enum ShopHomeFeature {
   createSingleOrder,
-  createMultiOrder,
+  // createMultiOrder,
   package,
   orders,
   ordersHistory,
@@ -17,7 +17,7 @@ enum ShopHomeFeature {
 extension ShopHomeFeatureExt on ShopHomeFeature {
   static const _mapRouteName = {
     ShopHomeFeature.createSingleOrder: RouteName.createOrderPage,
-    ShopHomeFeature.createMultiOrder: RouteName.createMultiOrdersPage,
+    // ShopHomeFeature.createMultiOrder: RouteName.createMultiOrdersPage,
     ShopHomeFeature.orders: RouteName.ordersPage,
     ShopHomeFeature.ordersHistory: RouteName.ordersHistoryPage,
     ShopHomeFeature.package: RouteName.packagesPage,
@@ -26,7 +26,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
 
   static const _mapIcon = {
     ShopHomeFeature.createSingleOrder: SvgPath.icOrderSingle,
-    ShopHomeFeature.createMultiOrder: SvgPath.icOrderMultiple,
+    // ShopHomeFeature.createMultiOrder: SvgPath.icOrderMultiple,
     ShopHomeFeature.orders: SvgPath.icOrderProcessing,
     ShopHomeFeature.package: SvgPath.icOrderBag,
     ShopHomeFeature.ordersHistory: SvgPath.icOrderProcessed,
@@ -35,7 +35,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
 
   static const _mapTitle = {
     ShopHomeFeature.createSingleOrder: "create_order",
-    ShopHomeFeature.createMultiOrder: "create_multi_order",
+    // ShopHomeFeature.createMultiOrder: "create_multi_order",
     ShopHomeFeature.orders: "processing_orders",
     ShopHomeFeature.ordersHistory: "order_history",
     ShopHomeFeature.package: "packages",

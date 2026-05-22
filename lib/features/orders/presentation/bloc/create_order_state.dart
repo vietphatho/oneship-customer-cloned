@@ -8,7 +8,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_sh
 
 abstract class CreateOrderState {
   const CreateOrderState({
-    this.step = CreateOrderStep.timeInfo,
+    this.step = CreateOrderStep.receiverInfo,
     required this.request,
     required this.draftRequest,
     required this.productEntitySelected,

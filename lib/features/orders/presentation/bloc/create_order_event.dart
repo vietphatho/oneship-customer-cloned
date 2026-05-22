@@ -35,7 +35,7 @@ class CreateOrderChangeRequestEvent extends CreateOrderEvent {
 
   const CreateOrderChangeRequestEvent(
     this.request, {
-    this.step = CreateOrderStep.timeInfo,
+    this.step = CreateOrderStep.receiverInfo,
   });
 }
 

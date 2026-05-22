@@ -111,7 +111,12 @@ extension OrderTrackingStatusExt on OrderTrackingStatus {
   String get description => _mapDesc[this]!;
 }
 
-enum CreateOrderStep { timeInfo, receiverInfo, orderInfo, confirmation }
+enum CreateOrderStep {
+  // timeInfo,
+  receiverInfo,
+  orderInfo,
+  confirmation,
+}
 
 enum OrderPickUpSession { morning, afternoon }
 

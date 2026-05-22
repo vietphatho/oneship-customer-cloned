@@ -7,7 +7,6 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -58,7 +57,11 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PrimaryText("info_confirmation".tr()),
+                    PrimaryText(
+                      "info_confirmation".tr(),
+                      style: AppTextStyles.labelLarge,
+                      color: AppColors.secondary,
+                    ),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     PrimaryCard(
                       child: Column(
@@ -67,16 +70,16 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             label: "shop_name".tr(),
                             value: state.shopInfo.shopName,
                           ),
-                          _InfoField(
-                            label: "pick_up_time".tr(),
-                            value: DateTimeUtils.formatDateFromDT(
-                              request.detail?.pickupDate,
-                            ),
-                          ),
-                          _InfoField(
-                            label: "service_type".tr(),
-                            value: request.serviceCode?.name,
-                          ),
+                          // _InfoField(
+                          //   label: "pick_up_time".tr(),
+                          //   value: DateTimeUtils.formatDateFromDT(
+                          //     request.detail?.pickupDate,
+                          //   ),
+                          // ),
+                          // _InfoField(
+                          //   label: "service_type".tr(),
+                          //   value: request.serviceCode?.name,
+                          // ),
                         ],
                       ),
                     ),
@@ -211,9 +214,10 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showSuccessDialog(
             context,
-            message: state.updateOrdId != null 
-                ? "update_order_successfully".tr() 
-                : "create_order_successfully".tr(),
+            message:
+                state.updateOrdId != null
+                    ? "update_order_successfully".tr()
+                    : "create_order_successfully".tr(),
             onClosed: () {
               getIt.get<OrdersBloc>().fetchOrdersByStatus();
               context.pop();
@@ -260,7 +264,10 @@ class _BottomActionButtons extends StatelessWidget {
               buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
               builder: (context, state) {
                 return SecondaryButton.filled(
-                  label: state.updateOrdId != null ? "update_order".tr() : "create_order".tr(),
+                  label:
+                      state.updateOrdId != null
+                          ? "update_order".tr()
+                          : "create_order".tr(),
                   onPressed: _createOrderBloc.createOrder,
                 );
               },
