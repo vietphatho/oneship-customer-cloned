@@ -10,9 +10,9 @@ part 'product_state.freezed.dart';
 @freezed
 abstract class ProductState with _$ProductState {
   factory ProductState({
-    required Resource<ProductEntity> createProductResource,
+    required Resource<ProductEntity?> createProductResource,
 
-    required Resource<ProductsListEntity> productsList,
+    required Resource<ProductsListEntity?> productsList,
     @Default([]) List<SelectedProductEntity> productsListSelected,
 
     @Default(0) int selectedCount,
