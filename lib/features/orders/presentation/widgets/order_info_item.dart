@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_dismissible.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 
@@ -69,10 +70,20 @@ class OrderInfoItem extends StatelessWidget {
                 color: AppColors.neutral4,
               ),
               AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-              PrimaryText(
-                "${"cod".tr()}: ${order.codAmount}",
-                style: AppTextStyles.bodySmall,
-                color: AppColors.neutral4,
+              Row(
+                children: [
+                  PrimaryText(
+                    "${"cod".tr()}:",
+                    style: AppTextStyles.bodySmall,
+                    color: AppColors.neutral4,
+                  ),
+                  AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
+                  PrimaryText(
+                    Utils.formatCurrencyWithUnit(order.codAmount),
+                    style: AppTextStyles.bodySmall,
+                    color: AppColors.neutral4,
+                  ),
+                ],
               ),
               AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
               PrimaryText(
