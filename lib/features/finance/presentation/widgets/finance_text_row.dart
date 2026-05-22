@@ -6,12 +6,14 @@ class FinanceTextRow extends StatelessWidget {
   const FinanceTextRow({
     super.key,
     required this.label,
-    required this.value,
+    this.value,
+    this.widget,
     this.labelStyle,
     this.valueStyle,
   });
   final String label;
-  final String value;
+  final String? value;
+  final Widget? widget;
   final TextStyle? labelStyle;
   final TextStyle? valueStyle;
 
@@ -21,7 +23,9 @@ class FinanceTextRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         PrimaryText(label, style: labelStyle ?? AppTextStyles.bodyMedium),
-        PrimaryText(value, style: valueStyle ?? AppTextStyles.titleMedium),
+        value != null
+            ? PrimaryText(value, style: valueStyle ?? AppTextStyles.titleMedium)
+            : Container(child: widget,),
       ],
     );
   }

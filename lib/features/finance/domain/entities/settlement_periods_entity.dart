@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/models/base_meta_entity.dart';
 import 'package:oneship_customer/features/finance/data/models/response/settlement_periods_response.dart';
+import 'package:oneship_customer/features/finance/enum.dart';
 
 part 'settlement_periods_entity.freezed.dart';
 
@@ -7,13 +9,13 @@ part 'settlement_periods_entity.freezed.dart';
 abstract class SettlementPeriodsEntity with _$SettlementPeriodsEntity {
   factory SettlementPeriodsEntity({
     List<PeriodEntity>? items,
-    PaginationEntity? meta,
+    BaseMetaEntity? meta,
   }) = _SettlementPeriodsEntity;
 
   factory SettlementPeriodsEntity.from(SettlementPeriodsResponse dto) {
     return SettlementPeriodsEntity(
       items: dto.items?.map((e) => PeriodEntity.from(e)).toList(),
-      meta: PaginationEntity.from(dto.meta!),
+      meta: BaseMetaEntity.from(dto.meta!),
     );
   }
 }
@@ -75,25 +77,9 @@ abstract class PeriodEntity with _$PeriodEntity {
   }
 }
 
-@freezed
-abstract class PaginationEntity with _$PaginationEntity {
-  factory PaginationEntity({
-    int? page,
-    int? limit,
-    int? total,
-    int? totalPages,
-    bool? hasPrevious,
-    bool? hasNext,
-  }) = _PaginationEntity;
-
-  factory PaginationEntity.from(Pagination dto) {
-    return PaginationEntity(
-      page: dto.page,
-      limit: dto.limit,
-      total: dto.total,
-      totalPages: dto.totalPages,
-      hasPrevious: dto.hasPrevious,
-      hasNext: dto.hasNext,
-    );
-  }
+extension PeriodEntityX on PeriodEntity {
+  PeriodStatus get periodStatus => PeriodStatus.values.firstWhere(
+    (e) => e.name == status,
+    orElse: () => PeriodStatus.all,
+  );
 }

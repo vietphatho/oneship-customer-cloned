@@ -5,6 +5,7 @@ import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/register_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/verify_email_page.dart';
+import 'package:oneship_customer/features/finance/presentation/views/finance_period_detail_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
 import 'package:oneship_customer/features/customer_home/presentation/views/customer_home_page.dart';
@@ -142,6 +143,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.financeDetailByDayPage,
       builder: (context, state) => const FinanceDetailByDay(),
+    ),
+    GoRoute(
+      path: RouteName.financePeriodDetailPage,
+      builder: (context, state) => const FinancePeriodDetailPage(),
     ),
   ],
 );

@@ -102,6 +102,7 @@ class _FinancePageState extends State<FinancePage>
                   Expanded(
                     child: TabBarView(
                       controller: controller,
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         FinanceOverviewTabView(),
                         FinanceReconciliationTabView(),
@@ -174,14 +175,14 @@ class _FinanceFilterWidget extends StatelessWidget {
 }
 
 class _SelectReconciliationFilter extends StatefulWidget {
-  const _SelectReconciliationFilter({super.key});
+  const _SelectReconciliationFilter();
 
   @override
   State<_SelectReconciliationFilter> createState() =>
-      __SelectReconciliationFilterState();
+      _SelectReconciliationFilterState();
 }
 
-class __SelectReconciliationFilterState
+class _SelectReconciliationFilterState
     extends State<_SelectReconciliationFilter> {
   final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
   late ReconciliationFilter currentFilter;
@@ -221,7 +222,10 @@ class __SelectReconciliationFilterState
             Expanded(
               child: SecondaryButton.filled(
                 label: 'confirm'.tr(),
-                onPressed: () => _confirmChangedReconciliationFilter(),
+                onPressed: () {
+                  _confirmChangedReconciliationFilter();
+                  context.pop();
+                },
               ),
             ),
           ],

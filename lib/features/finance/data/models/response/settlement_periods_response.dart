@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 
 part 'settlement_periods_response.freezed.dart';
 part 'settlement_periods_response.g.dart';
@@ -7,7 +8,7 @@ part 'settlement_periods_response.g.dart';
 abstract class SettlementPeriodsResponse with _$SettlementPeriodsResponse {
   factory SettlementPeriodsResponse({
     @JsonKey(name: "items") List<Period>? items,
-    @JsonKey(name: "meta") Pagination? meta,
+    @JsonKey(name: "meta") BaseMetaResponse? meta,
   }) = _SettlementPeriodsResponse;
 
   factory SettlementPeriodsResponse.fromJson(Map<String, dynamic> json) =>
@@ -45,19 +46,4 @@ abstract class Period with _$Period {
 
   factory Period.fromJson(Map<String, dynamic> json) =>
       _$PeriodFromJson(json);
-}
-
-@freezed
-abstract class Pagination with _$Pagination {
-  factory Pagination({
-    @JsonKey(name: "page") int? page,
-    @JsonKey(name: "limit") int? limit,
-    @JsonKey(name: "total") int? total,
-    @JsonKey(name: "totalPages") int? totalPages,
-    @JsonKey(name: "hasPrevious") bool? hasPrevious,
-    @JsonKey(name: "hasNext") bool? hasNext,
-  }) = _Pagination;
-
-  factory Pagination.fromJson(Map<String, dynamic> json) =>
-      _$PaginationFromJson(json);
 }

@@ -1,25 +1,23 @@
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/finance/domain/entities/settlement_periods_entity.dart';
+import 'package:oneship_customer/features/finance/domain/entities/settlement_payouts_entity.dart';
 import 'package:oneship_customer/features/finance/domain/repositories/finance_repository.dart';
 
 @lazySingleton
-class FetchSettlementPeriodUseCase {
+class FetchSettlementPayoutsUseCase {
   final FinanceRepository _financeRepository;
 
-  FetchSettlementPeriodUseCase(this._financeRepository);
+  FetchSettlementPayoutsUseCase(this._financeRepository);
 
-  Future<Resource<SettlementPeriodsEntity>> call({
+  Future<Resource<SettlementPayoutsEntity>> call({
     required String shopId,
     int? page,
     int? limit,
-    String? status
   }) async {
-    final response = await _financeRepository.fetchSettlementPeriods(
+    final response = await _financeRepository.fetchSettlementPayouts(
       shopId: shopId,
       page: page,
       limit: limit,
-      status: status
     );
 
     return response;
