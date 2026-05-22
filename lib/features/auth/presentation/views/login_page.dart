@@ -278,6 +278,9 @@ class _LoginPageState extends State<LoginPage> {
         } else if (!state.hasApprovedShop) {
           context.go(RouteName.shopPendingApprovalPage);
         } else {
+          context.go(RouteName.customerHomePage);
+          return;
+
           final FinanceOverviewBloc financeOverviewBloc = getIt.get();
           final FinanceReconciliationBloc financeReconciliationBloc =
               getIt.get();
