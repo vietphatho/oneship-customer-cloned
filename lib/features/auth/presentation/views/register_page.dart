@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController passwordController;
   late final TextEditingController confirmPasswordController;
 
-  UserRole _userRole = UserRole.customer;
+  static const UserRole _userRole = UserRole.customer;
 
   @override
   void initState() {
@@ -79,13 +79,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         PrimaryDropdown<UserRole>(
                           label: "user_role".tr(),
                           isRequired: true,
-                          menu: UserRole.values,
+                          menu: const [UserRole.customer],
                           initialValue: UserRole.customer,
                           toLabel: (item) => item.roleName.tr(),
                           requestFocusOnTap: false,
-                          onSelected: (value) {
-                            if (value != null) _userRole = value;
-                          },
+                          enabled: false,
                         ),
                         AppSpacing.vertical(AppDimensions.smallSpacing),
                         PrimaryTextField(
