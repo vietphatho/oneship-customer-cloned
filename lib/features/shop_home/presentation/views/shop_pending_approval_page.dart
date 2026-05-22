@@ -35,9 +35,13 @@ class ShopPendingApprovalPage extends StatelessWidget {
         bloc: shopBloc,
         buildWhen:
             (previous, current) =>
-                previous.createShopResource != current.createShopResource,
+                previous.createShopResource != current.createShopResource ||
+                previous.briefShopsResource != current.briefShopsResource,
         builder: (context, state) {
-          final shopName = state.createShopResource.data?.shopName ?? '';
+          final shopName =
+              state.createShopResource.data?.shopName ??
+              state.currentShop?.shopName ??
+              '';
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -65,9 +69,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                           Image.asset(ImagePath.logo, width: size.width * 0.48),
                           AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                           PrimaryText(
-                            shopName.isEmpty
-                                ? "shop_name_placeholder".tr()
-                                : shopName,
+                            shopName,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.headlineSmall,
                             color: AppColors.primary,
@@ -172,35 +174,30 @@ class _SupportCard extends StatelessWidget {
             color: AppColors.primary,
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
-          GestureDetector(
-            onTap: () async {
-              final Uri launchUri = Uri(scheme: 'tel', path: hotline);
-              if (await canLaunchUrl(launchUri)) {
-                await launchUrl(launchUri);
-              } else {
-                onCopy();
-              }
-            },
-            onLongPress: onCopy,
-            behavior: HitTestBehavior.opaque,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColors.primary,
-                  child: Icon(Icons.phone, color: Colors.white, size: 22),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                style: IconButton.styleFrom(backgroundColor: AppColors.primary),
+                icon: const Icon(Icons.phone, color: Colors.white, size: 22),
+                onPressed: () async {
+                  final Uri launchUri = Uri(scheme: 'tel', path: hotline);
+                  if (await canLaunchUrl(launchUri)) {
+                    await launchUrl(launchUri);
+                  } else {
+                    onCopy();
+                  }
+                },
+              ),
+              AppSpacing.horizontal(AppDimensions.smallSpacing),
+              PrimaryText(
+                hotline,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: AppColors.secondary,
+                  fontWeight: FontWeight.w800,
                 ),
-                AppSpacing.horizontal(AppDimensions.smallSpacing),
-                PrimaryText(
-                  hotline,
-                  style: AppTextStyles.headlineSmall.copyWith(
-                    color: AppColors.secondary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           AppSpacing.vertical(AppDimensions.largeSpacing),
           PrimaryText(
