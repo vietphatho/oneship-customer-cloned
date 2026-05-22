@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:oneship_customer/core/base/models/lat_long.dart';
 
 part 'base_coordinates.freezed.dart';
@@ -20,4 +21,7 @@ abstract class BaseCoordinates with _$BaseCoordinates {
 extension BaseCoordinatesExt on BaseCoordinates {
   LatLong get latLong =>
       LatLong(lat: coordinates?.lastOrNull, long: coordinates?.firstOrNull);
+
+  LatLng get latLng =>
+      LatLng(coordinates?.lastOrNull ?? 0, coordinates?.firstOrNull ?? 0);
 }

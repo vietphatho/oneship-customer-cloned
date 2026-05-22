@@ -3,24 +3,29 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
+import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_event.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/location_service/data/repositories/location_service_repository.dart';
+import 'package:oneship_customer/features/location_service/domain/use_cases/get_current_location_use_case.dart';
 
 @lazySingleton
 class LocationServiceBloc
     extends Bloc<LocationServiceEvent, LocationServiceState> {
-  LocationServiceBloc(this._repository)
+  LocationServiceBloc(this._repository, this._getCurrentLocationUseCase)
     : super(LocationServiceProvincesChangedState(filteredProvinces: [])) {
     on<LocationServiceInitEvent>(_onInit);
     on<LocationServiceSearchProvincesEvent>(_onProvincesSearchEvent);
     on<LocationServiceSearchWardsEvent>(_onWardsSearchEvent);
     on<LocationServiceSearchAddressEvent>(_onSearchAddressEvent);
+    on<GetCurrentLocationEvent>(_onGetCurrentLocationEvent);
   }
 
   final LocationServiceRepository _repository;
+
+  final GetCurrentLocationUseCase _getCurrentLocationUseCase;
 
   FutureOr<void> _onInit(
     LocationServiceInitEvent event,
@@ -116,5 +121,32 @@ class LocationServiceBloc
     //   LocationServiceSearchAddressState(Resource.loading())
 
     // );
+  }
+
+  FutureOr<void> _onGetCurrentLocationEvent(
+    GetCurrentLocationEvent event,
+    Emitter<LocationServiceState> emit,
+  ) async {
+    emit(
+      GetCurrentLocationState(
+        provinces: state.provinces,
+        wardsByProvince: state.wardsByProvince,
+        resource: Resource.loading(),
+      ),
+    );
+    final result = await _getCurrentLocationUseCase.call();
+    emit(
+      GetCurrentLocationState(
+        provinces: state.provinces,
+        wardsByProvince: state.wardsByProvince,
+        resource: Resource.success(result),
+      ),
+    );
+  }
+
+  //
+
+  void getCurrentLocation() {
+    add(GetCurrentLocationEvent());
   }
 }

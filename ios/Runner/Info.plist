@@ -24,6 +24,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Cho phép ứng dụng sử dụng camera để thực hiện chức năng chụp ảnh</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Cho phép OneShip bật Dịch vụ Vị trí để sử dụng được tính năng dẫn đường</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Cho phép ứng dụng luôn bật Dịch vụ Vị trí</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Cho phép OneShip bật Dịch vụ Vị trí khi sử dụng để sử dụng được tính năng dẫn đường</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>Cho phép bật thông báo?</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

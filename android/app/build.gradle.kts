@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.onexway.oneship.customer.oneship_customer"
+    namespace = "com.onexway.oneship.customer"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
