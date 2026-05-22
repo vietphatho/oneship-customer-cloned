@@ -806,7 +806,6 @@
     "staff_info": "Thông tin nhân viên",
     "staff_username": "Tên tài khoản",
     "staff_password": "Mật khẩu",
-    "staff_auto_password": "Tạo password tự động",
     "staff_password_instruction": "Tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
     "staff_password_min_length": "Mật khẩu phải có ít nhất 8 ký tự",
     "staff_password_strength_weak": "Yếu",
