@@ -27,14 +27,26 @@ class _DeliveryServiceTypeRadioGroupState
         CreateOrderRequestEntity draftRequest =
             _createOrderBloc.state.draftRequest;
 
+        final availableServices = state.availableServices;
+        final options = availableServices.map((config) {
+          return DeliveryServiceType.values.firstWhere(
+            (e) => e.requestValue == config.serviceCode,
+            orElse: () => DeliveryServiceType.standard, // fallback
+          );
+        }).toSet().toList();
+        final displayOptions =
+            options.isNotEmpty ? options : DeliveryServiceType.values;
+
         return PrimaryRadioGroup(
           direction: Axis.horizontal,
           title: "delivery_service_type".tr(),
           isRequired: true,
-          options: DeliveryServiceType.values,
+          options: displayOptions,
           subTitle: (value) => value.description,
           value: draftRequest.serviceCode,
-          displayLabel: (value) => value.nameValue.tr(),
+          displayLabel: (value) {
+            return value.nameValue.tr();
+          },
           onChanged: _onChanged,
         );
       },

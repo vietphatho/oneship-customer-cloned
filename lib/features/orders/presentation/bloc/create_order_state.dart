@@ -5,6 +5,7 @@ import 'package:oneship_customer/features/orders/domain/entities/calculated_deli
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 
 abstract class CreateOrderState {
   const CreateOrderState({
@@ -17,6 +18,7 @@ abstract class CreateOrderState {
     this.acceptTerms = true,
     this.errorMessage,
     this.updateOrdId,
+    this.availableServices = const [],
   });
 
   final CreateOrderStep step;
@@ -28,6 +30,7 @@ abstract class CreateOrderState {
   final bool acceptTerms;
   final String? errorMessage;
   final String? updateOrdId;
+  final List<ShippingServiceConfigEntity> availableServices;
 
   bool get isEnableAddressField =>
       draftRequest.province != null && draftRequest.ward != null;
@@ -42,6 +45,7 @@ class CreateOrderProductChangedState extends CreateOrderState {
     super.step,
     required super.productEntitySelected,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -55,6 +59,7 @@ class CreateOrderRequestChangedState extends CreateOrderState {
     super.step,
     required super.productEntitySelected,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -71,6 +76,7 @@ class CreateOrderPickUpTimeChangedState extends CreateOrderState {
     this.pickUpSession,
     required super.productEntitySelected,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -83,6 +89,7 @@ class CreateOrderCustomerInfoChangedState extends CreateOrderState {
     super.step = CreateOrderStep.receiverInfo,
     required super.productEntitySelected,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -95,6 +102,7 @@ class CreateOrderInfoChangedState extends CreateOrderState {
     super.step = CreateOrderStep.orderInfo,
     required super.productEntitySelected,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -109,6 +117,7 @@ class CreateOrderCalculatedFeeState extends CreateOrderState {
     required super.routingToShopResource,
     required super.productEntitySelected,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -124,6 +133,7 @@ class CreateOrderCreatedState extends CreateOrderState {
     required super.productEntitySelected,
     super.acceptTerms,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -136,6 +146,7 @@ class CreateOrderGetRoutingToShopState extends CreateOrderState {
     required super.productEntitySelected,
     super.acceptTerms,
     super.updateOrdId,
+    super.availableServices,
   });
 }
 
@@ -150,6 +161,7 @@ class CreateOrderErrorState extends CreateOrderState {
     super.acceptTerms,
     super.step,
     super.updateOrdId,
+    super.availableServices,
   }) : super(errorMessage: errorMessage);
 }
 
