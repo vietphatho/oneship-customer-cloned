@@ -7,8 +7,10 @@ import 'package:oneship_customer/features/customer/home/data/enum.dart';
 import 'package:oneship_customer/features/customer/home/presentation/widgets/customer_app_bar.dart';
 import 'package:oneship_customer/features/customer/home/presentation/widgets/customer_drawer.dart';
 import 'package:oneship_customer/features/customer/home/presentation/widgets/customer_order_tracking_input_session.dart';
+import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_customer/features/order_tracking/presentation/widget/map_view.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/widget/order_tracking_detail_session.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/widget/order_tracking_shipper_info.dart';
 
@@ -22,6 +24,7 @@ class CustomerHomePage extends StatefulWidget {
 class _CustomerHomePageState extends State<CustomerHomePage>
     with SingleTickerProviderStateMixin {
   final OrderTrackingBloc _orderTrackingBloc = getIt.get();
+  final LocationServiceBloc _locationServiceBloc = getIt.get();
   late TabController _tabCtrl;
 
   @override
@@ -48,20 +51,27 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                 // CustomerOrdTabBar(tabController: _tabCtrl),
                 // Expanded(child: TabBarView(children: )),
                 Expanded(
-                  child: BlocListener<OrderTrackingBloc, OrderTrackingState>(
+                  child: BlocConsumer<OrderTrackingBloc, OrderTrackingState>(
                     bloc: _orderTrackingBloc,
                     listener: _handleOrderTrackingListener,
-                    child: SingleChildScrollView(
-                      padding: AppDimensions.mediumPaddingAll,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          OrderTrackingShipperInfoSession(),
-                          AppSpacing.vertical(AppDimensions.xLargeSpacing),
-                          OrderTrackingDetailSession(),
-                        ],
-                      ),
-                    ),
+                    builder: (context, state) {
+                      return SingleChildScrollView(
+                        padding: AppDimensions.mediumPaddingAll,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            OrderTrackingShipperInfoSession(),
+                            if (_orderTrackingBloc.state.trackingResult.data !=
+                                null) ...[
+                              AppSpacing.vertical(AppDimensions.xLargeSpacing),
+                              MapView(),
+                            ],
+                            AppSpacing.vertical(AppDimensions.xLargeSpacing),
+                            OrderTrackingDetailSession(),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -82,6 +92,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         break;
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
+        _locationServiceBloc.getCurrentLocation();
         break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);

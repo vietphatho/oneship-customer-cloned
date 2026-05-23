@@ -53,16 +53,15 @@ class CustomerDrawer extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    _drawerItem(
-                      icon: Icons.password,
-                      label: 'change_password_label'.tr(),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                    // _drawerItem(
+                    //   icon: Icons.password,
+                    //   label: 'change_password_label'.tr(),
+                    //   onTap: () {
+                    //     Navigator.pop(context);
+                    //   },
+                    // ),
 
-                    const Divider(),
-
+                    // const Divider(),
                     BlocListener<AuthBloc, AuthState>(
                       bloc: authBloc,
                       listener: _handleLogoutStateListener,
