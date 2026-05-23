@@ -173,7 +173,10 @@ class _RegisterPageState extends State<RegisterPage> {
         break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
-        PrimaryDialog.showErrorDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.registerResult!.message,
+        );
         break;
     }
   }

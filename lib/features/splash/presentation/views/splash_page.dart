@@ -6,6 +6,7 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/enum.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
@@ -86,7 +87,12 @@ class _SplashPageState extends State<SplashPage> {
         case Result.loading:
           break;
         case Result.success:
-          _shopBloc.init(state.resource.data?.id ?? "");
+          if (state.resource.data?.userRole == UserRole.shop.value) {
+            _shopBloc.init(state.resource.data?.id ?? "");
+            break;
+          } else if (state.resource.data?.userRole == UserRole.customer.value) {
+            context.go(RouteName.customerHomePage);
+          }
           break;
         case Result.error:
           context.pushReplacement(RouteName.homePage);
@@ -101,9 +107,9 @@ class _SplashPageState extends State<SplashPage> {
         break;
       case Result.success:
         if (state.hasNoShops) {
-          context.pushReplacement(RouteName.shopEmptyPage);
+          context.go(RouteName.shopEmptyPage);
         } else if (!state.hasApprovedShop) {
-          context.pushReplacement(RouteName.shopPendingApprovalPage);
+          context.go(RouteName.shopPendingApprovalPage);
         } else {
           final FinanceOverviewBloc financeOverviewBloc = getIt.get();
           final FinanceReconciliationBloc financeReconciliationBloc =
@@ -114,7 +120,7 @@ class _SplashPageState extends State<SplashPage> {
             requestSource: FinanceRequestSource.page,
           );
           financeReconciliationBloc.initPeriods(shopId: shopId);
-          context.pushReplacement(RouteName.shopMasterPage);
+          context.go(RouteName.shopMasterPage);
         }
       case Result.error:
         PrimaryDialog.showErrorDialog(

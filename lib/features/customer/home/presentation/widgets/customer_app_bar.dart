@@ -8,7 +8,9 @@ class CustomerAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
         icon: Icon(Icons.menu_rounded, color: AppColors.secondary),
       ),
       actions: [

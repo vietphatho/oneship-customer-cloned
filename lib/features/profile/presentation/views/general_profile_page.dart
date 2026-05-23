@@ -7,6 +7,7 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
@@ -88,8 +89,7 @@ class _SupportsContainer extends StatelessWidget {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          getIt.resetLazySingleton<ShopMasterBloc>();
-          getIt.resetLazySingleton<PackagesBloc>();
+          FunctionUtils.handleAfterLogout();
           context.go(RouteName.homePage);
           break;
         case Result.error:

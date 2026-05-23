@@ -30,7 +30,7 @@ class _OrderDetailTransportationHistoryTabViewState
     extends State<OrderDetailTransportationHistoryTabView> {
   final OrderTrackingBloc _orderTrackingBloc = getIt.get();
   final ResolveOrderTransportHistoryTimelineUseCase
-      _resolveTransportHistoryTimelineUseCase =
+  _resolveTransportHistoryTimelineUseCase =
       ResolveOrderTransportHistoryTimelineUseCase();
 
   @override
@@ -61,7 +61,7 @@ class _OrderDetailTransportationHistoryTabViewState
     );
   }
 
-  Widget _buildResult(Resource<OrderTrackingEntity> result) {
+  Widget _buildResult(Resource<OrderTrackingEntity?> result) {
     if (result.state == Result.loading) {
       return const Center(child: CircularProgressIndicator());
     }

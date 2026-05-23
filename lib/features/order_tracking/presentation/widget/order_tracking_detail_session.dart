@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/components/primary_image_thumbnail.dart';
 import 'package:oneship_customer/core/themes/app_theme.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
@@ -22,6 +23,9 @@ class OrderTrackingDetailSession extends StatelessWidget {
     return BlocBuilder<OrderTrackingBloc, OrderTrackingState>(
       bloc: _orderTrackingBloc,
       builder: (context, state) {
+        if (state.trackingResult.data == null) {
+          return PrimaryEmptyData();
+        }
         final DeliveryHistoryEntity deliveryHistory =
             _orderTrackingBloc
                 .state
