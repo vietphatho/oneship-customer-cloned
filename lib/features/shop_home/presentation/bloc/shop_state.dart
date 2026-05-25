@@ -23,9 +23,13 @@ abstract class ShopState with _$ShopState {
 }
 
 extension ShopStateX on ShopState {
-  bool get hasApprovedShop {
+  List<BriefShopEntity> get approvedBriefShops {
     final shops = briefShopsResource.data?.data ?? const [];
-    return shops.any((shop) => shop.isActive);
+    return shops.where((shop) => shop.isActive).toList();
+  }
+
+  bool get hasApprovedShop {
+    return approvedBriefShops.isNotEmpty;
   }
 
   bool get hasNoShops => briefShopsResource.data?.data.isEmpty ?? true;
