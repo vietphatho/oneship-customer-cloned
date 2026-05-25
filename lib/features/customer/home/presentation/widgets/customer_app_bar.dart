@@ -1,4 +1,6 @@
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 
 class CustomerAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomerAppBar({super.key});
@@ -9,9 +11,9 @@ class CustomerAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       leading: IconButton(
         onPressed: () {
-          Scaffold.of(context).openDrawer();
+          context.go(RouteName.homePage);
         },
-        icon: Icon(Icons.menu_rounded, color: AppColors.secondary),
+        icon: Icon(Icons.arrow_back_rounded, color: AppColors.secondary),
       ),
       actions: [
         IconButton(
