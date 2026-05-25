@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:oneship_shop/core/base/models/province.dart';
 import 'package:oneship_shop/core/base/models/resource.dart';
 import 'package:oneship_shop/core/base/models/ward.dart';
@@ -38,4 +39,14 @@ class LocationServiceSearchAddressState extends LocationServiceState {
   final Resource<List<SuggestedAddressResponse>> suggestedAdds;
 
   LocationServiceSearchAddressState(this.suggestedAdds);
+}
+
+class GetCurrentLocationState extends LocationServiceState {
+  final Resource<Position?> resource;
+
+  GetCurrentLocationState({
+    super.provinces,
+    super.wardsByProvince,
+    required this.resource,
+  });
 }

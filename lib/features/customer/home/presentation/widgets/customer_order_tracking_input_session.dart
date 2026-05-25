@@ -1,4 +1,7 @@
 import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 
 class CustomerOrderTrackingInputSession extends StatefulWidget {
   const CustomerOrderTrackingInputSession({super.key});
@@ -11,6 +14,7 @@ class CustomerOrderTrackingInputSession extends StatefulWidget {
 class _CustomerOrderTrackingInputSessionState
     extends State<CustomerOrderTrackingInputSession> {
   final TextEditingController _trackingNumberCtrl = TextEditingController();
+  final OrderTrackingBloc _orderTrackingBloc = getIt.get();
 
   @override
   void initState() {
@@ -31,8 +35,8 @@ class _CustomerOrderTrackingInputSessionState
           Expanded(
             flex: 2,
             child: PrimaryTextField(
-              label: "input_tracking_number".tr(),
               controller: _trackingNumberCtrl,
+              hintText: "input_tracking_number".tr(),
               textInputAction: TextInputAction.done,
               textCapitalization: TextCapitalization.characters,
               onFieldSubmitted: (value) {
@@ -42,7 +46,7 @@ class _CustomerOrderTrackingInputSessionState
           ),
           AppSpacing.horizontal(AppDimensions.xSmallSpacing),
           Expanded(
-            child: PrimaryButton.filled(
+            child: SecondaryButton.filled(
               label: "search".tr(),
               height: AppDimensions.mediumHeightButton,
               onPressed: _onSearch,
@@ -53,5 +57,9 @@ class _CustomerOrderTrackingInputSessionState
     );
   }
 
-  void _onSearch() {}
+  void _onSearch() {
+    if (_trackingNumberCtrl.text.isNotEmpty) {
+      _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
+    }
+  }
 }

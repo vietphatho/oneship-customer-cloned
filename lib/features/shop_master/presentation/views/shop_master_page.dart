@@ -4,6 +4,7 @@ import 'package:oneship_shop/core/base/base_import_components.dart';
 import 'package:oneship_shop/core/base/components/primary_dialog.dart';
 import 'package:oneship_shop/core/base/constants/enum.dart';
 import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/utils/function_utils.dart';
 import 'package:oneship_shop/di/injection_container.dart';
 import 'package:oneship_shop/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_shop/features/auth/presentation/bloc/auth_state.dart';
@@ -101,6 +102,7 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          FunctionUtils.handleAfterLogout();
           context.pushReplacement(RouteName.loginPage);
           break;
         case Result.error:

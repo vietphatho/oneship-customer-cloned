@@ -14,6 +14,7 @@ import 'package:oneship_shop/features/shop_home/domain/entities/get_shops_entity
 import 'package:oneship_shop/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_shop/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
 import 'package:oneship_shop/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
+import 'package:oneship_shop/features/shop_home/domain/use_cases/get_shipping_service_configs_use_case.dart';
 import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_event.dart';
 import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -24,12 +25,14 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     this._fetchShopsUseCase,
     this._createShopUseCase,
     this._searchAddressUseCase,
+    this._getShippingServiceConfigsUseCase,
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
           briefShopsResource: Resource.loading(),
           createShopResource: Resource.loading(),
           shopsResource: Resource.loading(),
+          shippingServiceTypesResource: Resource.loading(),
         ),
       ) {
     on<ShopFetchBriefListEvent>(_onFetchBriefShops);
@@ -46,6 +49,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final FetchShopsUseCase _fetchShopsUseCase;
   final CreateShopUseCase _createShopUseCase;
   final SearchAddressUseCase _searchAddressUseCase;
+  final GetShippingServiceConfigsUseCase _getShippingServiceConfigsUseCase;
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -99,6 +103,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     ShopInitDataEvent event,
     Emitter<ShopState> emit,
   ) async {
+    //
     emit(
       state.copyWith(
         userId: event.userId,
@@ -112,16 +117,23 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
       state.copyWith(
         briefShopsResource: getShopsResponse,
         filteredShops: getShopsResponse.data?.data ?? [],
-        currentShop: getShopsResponse.data?.data.firstOrNull,
       ),
     );
+    emit(state.copyWith(currentShop: state.approvedBriefShops.firstOrNull));
 
     String? shopId = state.currentShop?.shopId;
     if (shopId == null) return;
 
+    //
     emit(state.copyWith(dailySummaryResource: Resource.loading()));
     final dailySumResponse = await _fetchShopDailySummaryUseCase.call(shopId);
     emit(state.copyWith(dailySummaryResource: dailySumResponse));
+
+    //
+    final getShippingServices = await _getShippingServiceConfigsUseCase.call(
+      shopId: shopId,
+    );
+    emit(state.copyWith(shippingServiceTypesResource: getShippingServices));
   }
 
   FutureOr<void> _onCreateShop(
@@ -184,12 +196,11 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   FutureOr<void> _onSearch(ShopSearchEvent event, Emitter<ShopState> emit) {
     final allShops = state.briefShopsResource.data?.data ?? [];
     final query = event.query.trim().toLowerCase();
-    final filtered =
-        query.isEmpty
-            ? allShops
-            : allShops
-                .where((s) => s.shopName.toLowerCase().contains(query))
-                .toList();
+    final filtered = query.isEmpty
+        ? allShops
+        : allShops
+              .where((s) => s.shopName.toLowerCase().contains(query))
+              .toList();
     emit(state.copyWith(filteredShops: filtered));
   }
 

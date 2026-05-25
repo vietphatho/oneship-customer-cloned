@@ -5,6 +5,7 @@ import 'package:oneship_shop/features/orders/data/enum.dart';
 import 'package:oneship_shop/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_shop/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 
 abstract class CreateOrderEvent {
   const CreateOrderEvent();
@@ -71,7 +72,7 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
   final int? width;
   final int? height;
   final String? note;
-  final DeliveryServiceType? deliveryServiceType;
+  final ShippingServiceConfigEntity? serviceConfig;
 
   CreateOrderChangeOrderInfoEvent({
     this.cod,
@@ -80,7 +81,7 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
     this.width,
     this.height,
     this.note,
-    this.deliveryServiceType,
+    this.serviceConfig,
   });
 }
 

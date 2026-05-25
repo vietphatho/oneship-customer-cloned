@@ -147,30 +147,6 @@ extension CreateOrderPayerExt on CreateOrderPayer {
   String get requestValue => _mapValue[this]!;
 }
 
-enum DeliveryServiceType { express, standard }
-
-extension DeliveryServiceTypeExt on DeliveryServiceType {
-  static final _mapValue = {
-    DeliveryServiceType.express: "ht",
-    DeliveryServiceType.standard: "ts1",
-  };
-
-  static final _mapName = {
-    DeliveryServiceType.express: "express",
-    DeliveryServiceType.standard: "standard",
-  };
-
-  static final _mapDescription = {
-    DeliveryServiceType.express: "express_des",
-    DeliveryServiceType.standard: "standard_des",
-  };
-
-  String get requestValue => _mapValue[this]!;
-
-  String get nameValue => _mapName[this]!;
-
-  String get description => _mapDescription[this]!;
-}
 
 enum Payer { sender, recipient }
 

@@ -8,11 +8,13 @@ import 'package:oneship_shop/core/base/components/secondary_text_button.dart';
 import 'package:oneship_shop/core/base/constants/enum.dart';
 import 'package:oneship_shop/core/base/constants/image_path.dart';
 import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/utils/function_utils.dart';
 import 'package:oneship_shop/di/injection_container.dart';
 import 'package:oneship_shop/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_shop/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShopPendingApprovalPage extends StatelessWidget {
   const ShopPendingApprovalPage({super.key});
@@ -39,7 +41,8 @@ class ShopPendingApprovalPage extends StatelessWidget {
         builder: (context, state) {
           final shopName =
               state.createShopResource.data?.shopName ??
-              state.currentShop?.shopName;
+              state.currentShop?.shopName ??
+              '';
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -143,6 +146,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          FunctionUtils.handleAfterLogout();
           context.pushReplacement(RouteName.loginPage);
           break;
         case Result.error:
@@ -175,10 +179,17 @@ class _SupportCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.primary,
-                child: Icon(Icons.phone, color: Colors.white, size: 22),
+              IconButton(
+                style: IconButton.styleFrom(backgroundColor: AppColors.primary),
+                icon: const Icon(Icons.phone, color: Colors.white, size: 22),
+                onPressed: () async {
+                  final Uri launchUri = Uri(scheme: 'tel', path: hotline);
+                  if (await canLaunchUrl(launchUri)) {
+                    await launchUrl(launchUri);
+                  } else {
+                    onCopy();
+                  }
+                },
               ),
               AppSpacing.horizontal(AppDimensions.smallSpacing),
               PrimaryText(

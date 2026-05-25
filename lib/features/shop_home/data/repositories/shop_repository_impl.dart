@@ -7,6 +7,7 @@ import 'package:oneship_shop/features/shop_home/domain/entities/create_shop_enti
 import 'package:oneship_shop/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/repositories/shop_repository.dart';
 
@@ -49,5 +50,18 @@ class ShopRepositoryImpl extends ShopRepository {
       ),
     );
     return response.parse<GetShopsEntity>((dto) => GetShopsEntity.from(dto));
+  }
+
+  @override
+  Future<Resource<List<ShippingServiceConfigEntity>>>
+  getShippingServiceConfigs({required String shopId}) async {
+    final response = await request(
+      () => _api.getShippingServiceConfigs(shopId: shopId),
+    );
+    return response.parse(
+      (dto) =>
+          dto.data?.map((e) => ShippingServiceConfigEntity.from(e)).toList() ??
+          [],
+    );
   }
 }

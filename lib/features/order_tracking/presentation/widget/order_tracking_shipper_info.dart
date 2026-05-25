@@ -18,6 +18,9 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
     return BlocBuilder<OrderTrackingBloc, OrderTrackingState>(
       bloc: _orderTrackingBloc,
       builder: (context, state) {
+        if (state.trackingResult.data == null) {
+          return Container();
+        }
         return Container(
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHigh,

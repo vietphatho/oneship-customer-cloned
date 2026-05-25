@@ -12,11 +12,7 @@ class BackToHomeWidget extends StatelessWidget {
       child: Center(
         child: PrimaryAnimatedPressableWidget(
           onTap: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go(RouteName.homePage);
-            }
+            context.go(RouteName.homePage);
           },
           child: Padding(
             padding: AppDimensions.mediumPaddingAll,

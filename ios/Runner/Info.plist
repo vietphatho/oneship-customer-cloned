@@ -24,6 +24,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- <key>NSCameraUsageDescription</key>
+	<string>Cho phép ứng dụng sử dụng camera để thực hiện chức năng chụp ảnh</string> -->
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Ứng dụng cần truy cập vị trí để hiển thị vị trí hiện tại của bạn và hỗ trợ theo dõi hành trình vận đơn trên bản đồ khi sử dụng ứng dụng.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ứng dụng cần truy cập vị trí để hiển thị vị trí hiện tại của bạn trên bản đồ và hỗ trợ theo dõi hành trình vận đơn.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>Cho phép bật thông báo?</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

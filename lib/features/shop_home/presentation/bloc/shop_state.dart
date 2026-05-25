@@ -3,6 +3,7 @@ import 'package:oneship_shop/core/base/models/resource.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_shop/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 
 part 'shop_state.freezed.dart';
@@ -17,15 +18,24 @@ abstract class ShopState with _$ShopState {
     required Resource<GetBriefShopsEntity> briefShopsResource,
     required Resource<CreateShopEntity> createShopResource,
     required Resource<GetShopsEntity> shopsResource,
+    required Resource<List<ShippingServiceConfigEntity>>
+    shippingServiceTypesResource,
     BriefShopEntity? currentShop,
     @Default([]) List<BriefShopEntity> filteredShops,
   }) = _ShopState;
 }
 
 extension ShopStateX on ShopState {
-  bool get hasApprovedShop {
+  List<BriefShopEntity> get approvedBriefShops {
     final shops = briefShopsResource.data?.data ?? const [];
-    return shops.any((shop) => shop.isActive);
+    return shops.where((shop) => shop.isActive).toList();
+  }
+
+  List<ShippingServiceConfigEntity> get shippingServices =>
+      shippingServiceTypesResource.data ?? [];
+
+  bool get hasApprovedShop {
+    return approvedBriefShops.isNotEmpty;
   }
 
   bool get hasNoShops => briefShopsResource.data?.data.isEmpty ?? true;

@@ -6,6 +6,7 @@ import 'package:oneship_shop/core/base/constants/enum.dart';
 import 'package:oneship_shop/di/injection_container.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/widget/map_view.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/widget/order_tracking_detail_session.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/widget/order_tracking_input_session.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/widget/order_tracking_shipper_info.dart';
@@ -48,8 +49,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
           ),
           body: Column(
             children: [
-              const OrderTrackingInputSession(),
-              AppSpacing.horizontal(AppDimensions.mediumSpacing),
+              // const OrderTrackingInputSession(),
+              // AppSpacing.horizontal(AppDimensions.mediumSpacing),
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.zero,
@@ -92,6 +93,8 @@ class _OrderTrackingSession extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               OrderTrackingShipperInfoSession(),
+              AppSpacing.vertical(AppDimensions.xLargeSpacing),
+              MapView(),
               AppSpacing.vertical(AppDimensions.xLargeSpacing),
               OrderTrackingDetailSession(),
             ],

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart' as picker;
+// import 'package:file_picker/file_picker.dart' as picker;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_shop/core/base/base_import_components.dart';
 import 'package:oneship_shop/core/base/components/primary_dialog.dart';
@@ -133,16 +133,16 @@ class _CreateMultiOrderActionButtons extends StatelessWidget {
   }
 
   Future<void> _pickExcelFile() async {
-    picker.FilePickerResult? result = await picker.FilePicker.pickFiles(
-      type: picker.FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
-    );
+    // picker.FilePickerResult? result = await picker.FilePicker.pickFiles(
+    //   type: picker.FileType.custom,
+    //   allowedExtensions: ['xlsx', 'xls'],
+    // );
 
-    if (result != null) {
-      _createMultiOrdersBloc.pickedExcelFile(
-        filePath: result.files.single.path!,
-      );
-    }
+    // if (result != null) {
+    //   _createMultiOrdersBloc.pickedExcelFile(
+    //     filePath: result.files.single.path!,
+    //   );
+    // }
   }
 }
 

@@ -1,5 +1,7 @@
+import 'package:flutter/services.dart';
 import 'package:oneship_shop/core/base/base_import_components.dart';
 import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
 import 'package:oneship_shop/di/injection_container.dart';
 import 'package:oneship_shop/features/orders/data/enum.dart';
 import 'package:oneship_shop/features/orders/presentation/bloc/create_order_bloc.dart';
@@ -34,7 +36,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
   void initState() {
     super.initState();
     var request = _createOrderBloc.state.request;
-    _codCtrl.text = request.codAmount?.toString() ?? "";
+    _codCtrl.text = Utils.formatCurrencyInput(request.codAmount);
     _weightCtrl.text = request.detail?.weight?.toInt().toString() ?? "";
     _lengthCtrl.text = request.detail?.length?.toString() ?? "";
     _widthCtrl.text = request.detail?.width?.toString() ?? "";
@@ -86,6 +88,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _codCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
+                          inputFormatters: [_CurrencyTextInputFormatter()],
                           suffixText: Constants.currencyUnit,
                         ),
                       ),
@@ -204,7 +207,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
   void _onNext() {
     final ProductBloc productBloc = getIt.get();
     _createOrderBloc.completeOrderInfoStep(
-      codAmount: int.tryParse(_codCtrl.text) ?? 0,
+      codAmount: Utils.parseCurrencyInput(_codCtrl.text),
       weight: int.tryParse(_weightCtrl.text) ?? 0,
       length: int.tryParse(_lengthCtrl.text),
       width: int.tryParse(_widthCtrl.text),
@@ -213,6 +216,25 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
       externalOrderId: _externalOrderIdCtrl.text,
       orderSource: _orderSourceCtrl.text,
       selectedProducts: productBloc.state.productsListSelected,
+    );
+  }
+}
+
+class _CurrencyTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final amount = Utils.parseCurrencyInput(newValue.text);
+    if (amount == 0 && newValue.text.isEmpty) {
+      return const TextEditingValue();
+    }
+
+    final formatted = Utils.formatCurrencyInput(amount);
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }

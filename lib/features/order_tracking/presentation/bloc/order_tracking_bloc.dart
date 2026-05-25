@@ -11,7 +11,7 @@ import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tra
 @lazySingleton
 class OrderTrackingBloc extends Bloc<OrderTrackingEvent, OrderTrackingState> {
   OrderTrackingBloc(this._trackingOrderUseCase)
-    : super(OrderTrackingState(trackingResult: Resource.loading())) {
+    : super(OrderTrackingState(trackingResult: Resource.success(null))) {
     on<OrderTrackingSearchEvent>(_onSearchEvent);
     on<OrderTrackingResetDataEvent>(_onResetDataEvent);
   }

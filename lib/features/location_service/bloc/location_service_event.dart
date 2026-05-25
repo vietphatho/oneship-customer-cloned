@@ -33,3 +33,11 @@ class LocationServiceSearchAddressEvent extends LocationServiceEvent {
     this.address = "",
   });
 }
+
+class LocationCheckPermissionEvent extends LocationServiceEvent {
+  const LocationCheckPermissionEvent();
+}
+
+class GetCurrentLocationEvent extends LocationServiceEvent {
+  const GetCurrentLocationEvent();
+}

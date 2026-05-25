@@ -19,6 +19,7 @@ devtools_options.yaml
 # Android
 android/.gradle/
 android/app/build/
+android/build/ios/
 
 # iOS
 ios/Pods/

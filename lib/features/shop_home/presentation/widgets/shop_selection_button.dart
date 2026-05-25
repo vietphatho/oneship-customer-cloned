@@ -20,7 +20,7 @@ class ShopSelectionButton extends StatelessWidget {
               previous.briefShopsResource != current.briefShopsResource ||
               previous.currentShop != current.currentShop,
       builder: (context, state) {
-        final shops = state.briefShopsResource.data?.data ?? const [];
+        final shops = state.approvedBriefShops;
         if (shops.isEmpty || state.currentShop == null) {
           return const SizedBox.shrink();
         }

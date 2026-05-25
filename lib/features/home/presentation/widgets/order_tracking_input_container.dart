@@ -6,6 +6,7 @@ import 'package:oneship_shop/core/base/constants/enum.dart';
 import 'package:oneship_shop/core/navigation/route_name.dart';
 import 'package:oneship_shop/core/navigation/route_observer_page.dart';
 import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_shop/features/order_tracking/domain/entities/order_tracking_entity.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_state.dart';
@@ -21,6 +22,7 @@ class OrderTrackingInputContainer extends StatefulWidget {
 class _OrderTrackingInputContainerState
     extends State<OrderTrackingInputContainer> {
   final OrderTrackingBloc _orderTrackingBloc = getIt.get();
+  final LocationServiceBloc _locationServiceBloc = getIt.get();
 
   final TextEditingController _trackingNumberCtrl = TextEditingController();
 
@@ -82,7 +84,8 @@ class _OrderTrackingInputContainerState
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          if (!(state.trackingResult?.data?.isEmpty ?? true)) {
+          if (!(state.trackingResult.data?.isEmpty ?? true)) {
+            _locationServiceBloc.getCurrentLocation();
             context.push(RouteName.orderTrackingPage);
           }
           break;

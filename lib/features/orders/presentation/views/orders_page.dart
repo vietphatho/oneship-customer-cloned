@@ -28,6 +28,7 @@ class _OrdersPageState extends State<OrdersPage>
 
   late List<OrderStatus> _tabList;
   late TabController _tabCtrl;
+  int _previousIndex = 0;
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _OrdersPageState extends State<OrdersPage>
       OrderStatus.returned,
     ];
     _tabCtrl = TabController(length: _tabList.length, vsync: this);
+    _tabCtrl.addListener(_tabListener);
 
     var shopId = _shopBloc.state.currentShop?.shopId ?? "";
     _ordersBloc.init(shopId);
@@ -50,6 +52,7 @@ class _OrdersPageState extends State<OrdersPage>
 
   @override
   void dispose() {
+    _tabCtrl.removeListener(_tabListener);
     _tabCtrl.dispose();
     _ordersBloc.currentOrderStatus = OrderStatus.pending;
     super.dispose();
@@ -175,7 +178,13 @@ class _OrdersPageState extends State<OrdersPage>
   }
 
   void _onTabChanged(int tabIndex) {
+    if (_previousIndex == tabIndex) return;
+    _previousIndex = tabIndex;
     _ordersBloc.currentOrderStatus = _tabList[tabIndex];
+  }
+
+  void _tabListener() {
+    _onTabChanged(_tabCtrl.index);
   }
 
   void _listenLoadDetailOrder(BuildContext context, OrdersState state) {

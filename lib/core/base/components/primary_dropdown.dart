@@ -13,6 +13,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
   final FormFieldValidator<T>? validator;
   final double paddingMenu;
   final bool requestFocusOnTap;
+  final bool enabled;
 
   const PrimaryDropdown({
     super.key,
@@ -27,6 +28,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
     this.isRequired = false,
     this.paddingMenu = AppDimensions.mediumSpacing * 2,
     this.requestFocusOnTap = true,
+    this.enabled = true,
   });
 
   @override
@@ -55,20 +57,27 @@ class PrimaryDropdown<T> extends StatelessWidget {
               ),
             const SizedBox(height: 8),
             DropdownMenu<T>(
+              enabled: enabled,
               requestFocusOnTap: requestFocusOnTap,
               controller: controller,
               menuHeight: AppDimensions.dropdownMenuHeight,
               width: double.maxFinite,
               enableFilter: true,
               hintText: hintText,
-              trailingIcon: const Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.neutral6,
-              ),
-              selectedTrailingIcon: const Icon(
-                Icons.keyboard_arrow_up,
-                color: AppColors.neutral6,
-              ),
+              trailingIcon:
+                  enabled
+                      ? const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.neutral6,
+                      )
+                      : const SizedBox.shrink(),
+              selectedTrailingIcon:
+                  enabled
+                      ? const Icon(
+                        Icons.keyboard_arrow_up,
+                        color: AppColors.neutral6,
+                      )
+                      : const SizedBox.shrink(),
               textStyle: AppTextStyles.defaultTextStyle,
               inputDecorationTheme: InputDecorationTheme(
                 hintStyle: TextStyle(
@@ -79,12 +88,13 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 ),
                 // contentPadding: AppDimensions.mediumPaddingAll,
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: enabled ? Colors.white : AppColors.neutral8,
                 // border: _getBorder(colorScheme),
                 enabledBorder: _outlineField,
                 focusedBorder: _outlineField,
                 errorBorder: _outlineField,
                 focusedErrorBorder: _outlineField,
+                disabledBorder: _outlineField,
                 contentPadding: EdgeInsets.symmetric(
                   vertical: AppDimensions.smallSpacing,
                   horizontal: AppDimensions.mediumSpacing,

@@ -6,6 +6,7 @@ import 'package:oneship_shop/core/base/components/secondary_text_button.dart';
 import 'package:oneship_shop/core/base/constants/enum.dart';
 import 'package:oneship_shop/core/base/constants/image_path.dart';
 import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/utils/function_utils.dart';
 import 'package:oneship_shop/di/injection_container.dart';
 import 'package:oneship_shop/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_shop/features/auth/presentation/bloc/auth_state.dart';
@@ -38,6 +39,7 @@ class EmptyShopPage extends StatelessWidget {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          FunctionUtils.handleAfterLogout();
           context.pushReplacement(RouteName.loginPage);
           break;
         case Result.error:

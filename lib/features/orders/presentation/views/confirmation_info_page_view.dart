@@ -167,7 +167,7 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             direction: Axis.horizontal,
                             options: Payer.values,
                             value: request.payer,
-                            displayLabel: (item) => item.name,
+                            displayLabel: (item) => item.nameValue.tr(),
                             onChanged: _createOrderBloc.changePayer,
                           ),
                         ],
