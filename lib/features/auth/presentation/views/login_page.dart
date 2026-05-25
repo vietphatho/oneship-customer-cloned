@@ -80,10 +80,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               BlocListener<ShopBloc, ShopState>(
                 bloc: _shopBloc,
-                listenWhen:
-                    (previous, current) =>
-                        previous.briefShopsResource !=
-                        current.briefShopsResource,
+                listenWhen: (previous, current) =>
+                    previous.briefShopsResource != current.briefShopsResource,
                 listener: _listenShopsListChanged,
               ),
             ],
@@ -284,12 +282,9 @@ class _LoginPageState extends State<LoginPage> {
         } else if (!state.hasApprovedShop) {
           context.go(RouteName.shopPendingApprovalPage);
         } else {
-          context.go(RouteName.customerHomePage);
-          return;
-
           final FinanceOverviewBloc financeOverviewBloc = getIt.get();
-          final FinanceReconciliationBloc financeReconciliationBloc =
-              getIt.get();
+          final FinanceReconciliationBloc financeReconciliationBloc = getIt
+              .get();
           final String shopId = state.currentShop?.shopId ?? "";
           financeOverviewBloc.init(
             shopId: shopId,
