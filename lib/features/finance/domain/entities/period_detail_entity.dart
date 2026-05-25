@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/finance/data/models/response/period_detail_response.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/data/models/response/period_detail_response.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
 
 part 'period_detail_entity.freezed.dart';
 

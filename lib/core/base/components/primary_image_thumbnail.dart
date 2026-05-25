@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
 
 class PrimaryImageThumbnail extends StatelessWidget {
   const PrimaryImageThumbnail._internal({

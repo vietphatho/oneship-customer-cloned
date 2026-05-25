@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
 
 class OrdersHistoryFilters {
   const OrdersHistoryFilters({

@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/constants/error_code.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
+import 'package:oneship_shop/core/base/constants/error_code.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/finance/domain/entities/finance_entity.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
 
 part 'finance_overview_state.freezed.dart';
 

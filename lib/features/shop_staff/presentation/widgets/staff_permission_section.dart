@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_config.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/staff_permission_config.dart';
 
 class StaffPermissionSection extends StatelessWidget {
   const StaffPermissionSection({

@@ -1,7 +1,7 @@
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_history_response_entity.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_history_filters.dart';
 
 abstract class OrdersEvent {
   const OrdersEvent();

@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_radio_group.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/domain/entities/create_order_request_entity.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/create_order_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/create_order_state.dart';
 
 class DeliveryServiceTypeRadioGroup extends StatefulWidget {
   const DeliveryServiceTypeRadioGroup({super.key});

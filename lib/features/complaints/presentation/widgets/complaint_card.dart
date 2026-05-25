@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_text_style.dart';
+import 'package:oneship_shop/core/base/components/primary_card.dart';
+import 'package:oneship_shop/core/base/components/primary_text.dart';
+import 'package:oneship_shop/features/complaints/domain/entities/complaint_entity.dart';
 
 class ComplaintCard extends StatelessWidget {
   final ComplaintEntity complaint;

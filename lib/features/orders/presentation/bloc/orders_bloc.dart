@@ -2,25 +2,25 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/models/base_meta_response.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_by_status_lists.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_detail_from_history_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/validate_ord_at_hub_use_case.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/models/base_meta_response.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_by_status_lists.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_history_response_entity.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/delete_order_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/resolve_order_detail_from_history_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/validate_ord_at_hub_use_case.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_event.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_history_filters.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_state.dart';
 
 @lazySingleton
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {

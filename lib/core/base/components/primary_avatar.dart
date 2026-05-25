@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/base/constants/image_path.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
 
 class PrimaryAvatar extends StatelessWidget {
   const PrimaryAvatar({

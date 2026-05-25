@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/location_service/data/datasources/location_service_api.dart';
-import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
-import 'package:oneship_customer/features/location_service/data/repositories/location_service_repository.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
+import 'package:oneship_shop/features/location_service/data/datasources/location_service_api.dart';
+import 'package:oneship_shop/features/location_service/data/models/response/suggested_address_response.dart';
+import 'package:oneship_shop/features/location_service/data/repositories/location_service_repository.dart';
 
 @LazySingleton(as: LocationServiceRepository)
 class LocationServiceRepositoryImpl extends LocationServiceRepository {

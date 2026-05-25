@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/models/base_coordinates.dart';
-import 'package:oneship_customer/core/base/models/base_meta_response.dart';
-import 'package:oneship_customer/features/shop_home/data/enum.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/models/base_coordinates.dart';
+import 'package:oneship_shop/core/base/models/base_meta_response.dart';
+import 'package:oneship_shop/features/shop_home/data/enum.dart';
+import 'package:oneship_shop/features/shop_home/data/models/response/get_brief_shops_response.dart';
 
 part 'get_brief_shops_entity.freezed.dart';
 

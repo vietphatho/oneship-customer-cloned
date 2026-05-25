@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
-import 'package:oneship_customer/core/base/components/primary_dismissible.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_bloc.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_state.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_event.dart';
-import 'package:oneship_customer/features/complaints/presentation/widgets/complaint_card.dart';
+import 'package:oneship_shop/core/base/components/primary_refreshable_list_view.dart';
+import 'package:oneship_shop/core/base/components/primary_dismissible.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/base/components/primary_text.dart';
+import 'package:oneship_shop/features/complaints/domain/entities/complaint_entity.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/complaint_bloc.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/complaint_state.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/complaint_event.dart';
+import 'package:oneship_shop/features/complaints/presentation/widgets/complaint_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class ComplaintListView extends StatefulWidget {
   final String category;

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_shop/features/orders/data/models/request/create_order_request.dart';
+import 'package:oneship_shop/features/orders/domain/entities/product_entity.dart';
 
 part 'selected_product_entity.freezed.dart';
 

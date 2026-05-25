@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/finance/domain/use_cases/fetch_settlement_config_use_case.dart';
-import 'package:oneship_customer/features/finance/domain/use_cases/fetch_settlement_payouts_use_case.dart';
-import 'package:oneship_customer/features/finance/domain/use_cases/fetch_settlement_period_use_case.dart';
-import 'package:oneship_customer/features/finance/domain/use_cases/fetch_period_detail_use_case.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_event.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_state.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/finance/domain/use_cases/fetch_settlement_config_use_case.dart';
+import 'package:oneship_shop/features/finance/domain/use_cases/fetch_settlement_payouts_use_case.dart';
+import 'package:oneship_shop/features/finance/domain/use_cases/fetch_settlement_period_use_case.dart';
+import 'package:oneship_shop/features/finance/domain/use_cases/fetch_period_detail_use_case.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_event.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_state.dart';
 
 @lazySingleton
 class FinanceReconciliationBloc

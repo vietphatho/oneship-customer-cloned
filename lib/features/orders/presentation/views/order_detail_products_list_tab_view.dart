@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_empty_data.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_state.dart';
 
 class OrderDetailProductsListTabView extends StatelessWidget {
   const OrderDetailProductsListTabView({super.key});

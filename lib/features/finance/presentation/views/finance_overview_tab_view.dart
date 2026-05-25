@@ -1,20 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_state.dart';
-import 'package:oneship_customer/features/finance/presentation/widgets/finance_overview_card.dart';
-import 'package:oneship_customer/features/finance/presentation/widgets/finance_text_row.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_card.dart';
+import 'package:oneship_shop/core/base/components/primary_empty_data.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/finance/domain/entities/finance_entity.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_overview_bloc.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_overview_state.dart';
+import 'package:oneship_shop/features/finance/presentation/widgets/finance_overview_card.dart';
+import 'package:oneship_shop/features/finance/presentation/widgets/finance_text_row.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class FinanceOverviewTabView extends StatefulWidget {
   const FinanceOverviewTabView({super.key});

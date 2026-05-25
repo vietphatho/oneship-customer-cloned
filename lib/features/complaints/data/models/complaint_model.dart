@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
+import 'package:oneship_shop/features/complaints/domain/entities/complaint_entity.dart';
 
 part 'complaint_model.freezed.dart';
 part 'complaint_model.g.dart';

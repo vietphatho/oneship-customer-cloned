@@ -2,24 +2,24 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/base_coordinates.dart';
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
-import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/update_ord_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_shop/core/base/models/base_coordinates.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/data/models/request/calculate_delivery_fee_request.dart';
+import 'package:oneship_shop/features/orders/data/models/response/get_routing_to_shop_response.dart';
+import 'package:oneship_shop/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/create_order_request_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/routing_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/selected_product_entity.dart';
+import 'package:oneship_shop/features/orders/domain/repositories/orders_repository.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/update_ord_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/create_order_event.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {

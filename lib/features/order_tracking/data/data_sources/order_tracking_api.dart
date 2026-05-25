@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/base_error.dart';
-import 'package:oneship_customer/core/base/models/base_response.dart';
-import 'package:oneship_customer/features/order_tracking/data/models/request/order_tracking_request.dart';
-import 'package:oneship_customer/features/order_tracking/data/models/response/order_tracking_response.dart';
+import 'package:oneship_shop/core/base/models/base_error.dart';
+import 'package:oneship_shop/core/base/models/base_response.dart';
+import 'package:oneship_shop/features/order_tracking/data/models/request/order_tracking_request.dart';
+import 'package:oneship_shop/features/order_tracking/data/models/response/order_tracking_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'order_tracking_api.g.dart';

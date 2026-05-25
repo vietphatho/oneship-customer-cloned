@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_spacing.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_dimensions.dart';
+import 'package:oneship_shop/core/themes/app_spacing.dart';
 
 class ShopManagementHeader extends StatelessWidget {
   final int totalCount;

@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/themes/app_box_shadows.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/themes/app_box_shadows.dart';
 
 class PrimaryCard extends StatelessWidget {
   const PrimaryCard({super.key, this.child});

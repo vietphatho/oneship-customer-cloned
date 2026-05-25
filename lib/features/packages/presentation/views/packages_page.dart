@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
-import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
-import 'package:oneship_customer/features/packages/presentation/widgets/package_item.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/components/primary_empty_data.dart';
+import 'package:oneship_shop/core/base/components/primary_refreshable_list_view.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/packages/data/models/response/packages_list_response.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_shop/features/packages/presentation/widgets/package_item.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class PackagesPage extends StatefulWidget {

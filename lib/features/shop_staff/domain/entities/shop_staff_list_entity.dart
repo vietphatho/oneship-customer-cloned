@@ -1,5 +1,5 @@
-import 'package:oneship_customer/features/shop_staff/data/models/response/shop_staff_list_response.dart';
-import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
+import 'package:oneship_shop/features/shop_staff/data/models/response/shop_staff_list_response.dart';
+import 'package:oneship_shop/features/shop_staff/domain/entities/shop_staff_entity.dart';
 
 class ShopStaffMetaEntity {
   final int total;

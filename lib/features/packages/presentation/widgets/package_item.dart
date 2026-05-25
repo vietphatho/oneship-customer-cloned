@@ -1,8 +1,8 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
-import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/order_status_tag.dart';
+import 'package:oneship_shop/features/packages/data/models/response/packages_list_response.dart';
 
 class PackageItem extends StatelessWidget {
   const PackageItem({

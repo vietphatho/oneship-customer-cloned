@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:oneship_customer/features/finance/presentation/views/finance_page.dart';
-import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
-import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
-import 'package:oneship_customer/features/shop_home/presentation/views/shop_management_page.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_management_page.dart';
+import 'package:oneship_shop/features/finance/presentation/views/finance_page.dart';
+import 'package:oneship_shop/features/profile/presentation/views/general_profile_page.dart';
+import 'package:oneship_shop/features/shop_home/presentation/views/shop_home.dart';
+import 'package:oneship_shop/features/shop_home/presentation/views/shop_management_page.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/views/shop_staff_management_page.dart';
 
 enum BottomNavigationItem {
   home,

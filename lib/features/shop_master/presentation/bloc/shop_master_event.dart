@@ -1,4 +1,4 @@
-import 'package:oneship_customer/features/shop_master/data/enum.dart';
+import 'package:oneship_shop/features/shop_master/data/enum.dart';
 
 abstract class ShopMasterEvent {
   const ShopMasterEvent();

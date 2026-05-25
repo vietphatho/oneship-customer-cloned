@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/domain/entities/selected_product_entity.dart';
 
 @lazySingleton
 class UpdateProductQuantityUseCase {

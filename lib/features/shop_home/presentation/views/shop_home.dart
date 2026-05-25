@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
-import 'package:oneship_customer/features/shop_home/data/enum.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_app_bar.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_brief_info.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_button.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_overview_bloc.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_shop/features/shop_home/data/enum.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_shop/features/shop_home/presentation/widgets/shop_app_bar.dart';
+import 'package:oneship_shop/features/shop_home/presentation/widgets/shop_brief_info.dart';
+import 'package:oneship_shop/features/shop_home/presentation/widgets/shop_home_feature_button.dart';
 
 class ShopHome extends StatefulWidget {
   const ShopHome({super.key});

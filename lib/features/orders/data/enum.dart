@@ -1,12 +1,12 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/at_hub_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/batched_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/canceled_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/delayed_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/delivering_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/pending_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/returned_orders_list_view.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/at_hub_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/batched_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/canceled_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/delayed_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/delivering_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/pending_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/processing_orders_list_view.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/returned_orders_list_view.dart';
 
 enum CreateOrderProductAction { increment, decrement }
 
@@ -127,8 +127,8 @@ extension OrderPickUpSessionExt on OrderPickUpSession {
   };
 
   static final _mapLabel = {
-    OrderPickUpSession.morning: "Sáng (8:00-12:00)",
-    OrderPickUpSession.afternoon: "Chiều (14:00-18:00)",
+    OrderPickUpSession.morning: "SĂ¡ng (8:00-12:00)",
+    OrderPickUpSession.afternoon: "Chiá»u (14:00-18:00)",
   };
 
   String get requestValue => _mapValue[this]!;

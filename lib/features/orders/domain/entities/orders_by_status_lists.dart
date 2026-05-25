@@ -1,4 +1,4 @@
-import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_shop/features/orders/data/models/response/orders_list_response.dart';
 
 class OrdersByStatusLists {
   const OrdersByStatusLists({

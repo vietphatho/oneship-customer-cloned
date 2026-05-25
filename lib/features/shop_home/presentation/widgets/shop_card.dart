@@ -1,8 +1,8 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_frame.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_status_badge.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_frame.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_shop/features/shop_home/presentation/widgets/shop_status_badge.dart';
 
 class ShopCard extends StatelessWidget {
   final int index;

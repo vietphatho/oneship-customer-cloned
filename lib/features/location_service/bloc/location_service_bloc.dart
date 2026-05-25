@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_event.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
-import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
-import 'package:oneship_customer/features/location_service/data/repositories/location_service_repository.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_event.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_state.dart';
+import 'package:oneship_shop/features/location_service/data/models/response/suggested_address_response.dart';
+import 'package:oneship_shop/features/location_service/data/repositories/location_service_repository.dart';
 
 @lazySingleton
 class LocationServiceBloc

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:excel/excel.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/utils/app_logger.dart';
+import 'package:oneship_shop/core/utils/app_logger.dart';
 
 @lazySingleton
 class CreateMultiOrderUseCase {
@@ -10,7 +10,7 @@ class CreateMultiOrderUseCase {
 
   Future<void> call({required String filePath}) async {
     File file = File(filePath);
-    // 3. Đọc bytes
+    // 3. Äá»c bytes
     final bytes = file.readAsBytesSync();
     try {
       var excel = Excel.decodeBytes(bytes);

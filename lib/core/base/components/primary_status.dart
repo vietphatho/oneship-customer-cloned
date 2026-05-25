@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
+import 'package:oneship_shop/core/base/components/primary_text.dart';
+import 'package:oneship_shop/core/themes/app_dimensions.dart';
+import 'package:oneship_shop/core/themes/app_text_style.dart';
 
 class PrimaryStatus extends StatelessWidget {
   const PrimaryStatus({super.key, required this.color, required this.label});

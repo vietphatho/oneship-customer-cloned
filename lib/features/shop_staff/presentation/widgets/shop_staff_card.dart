@@ -1,9 +1,9 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_frame.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_badges.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_shop/core/base/components/primary_frame.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/features/shop_staff/domain/entities/shop_staff_entity.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/shop_staff_badges.dart';
 
 class ShopStaffCard extends StatelessWidget {
   const ShopStaffCard({

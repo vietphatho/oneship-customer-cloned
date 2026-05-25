@@ -1,5 +1,5 @@
-import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_transport_history_timeline_entity.dart';
+import 'package:oneship_shop/features/order_tracking/domain/entities/order_tracking_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_transport_history_timeline_entity.dart';
 
 class ResolveOrderTransportHistoryTimelineUseCase {
   List<OrderTransportHistoryTimelineEntity> call(

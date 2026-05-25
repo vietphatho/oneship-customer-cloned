@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
-import 'package:oneship_customer/features/finance/domain/use_cases/fetch_shop_financial_use_case.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_event.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_state.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/finance/domain/entities/finance_entity.dart';
+import 'package:oneship_shop/features/finance/domain/use_cases/fetch_shop_financial_use_case.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_overview_event.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_overview_state.dart';
 
 @lazySingleton
 class FinanceOverviewBloc

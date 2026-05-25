@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
 
 part 'splash_state.freezed.dart';
 

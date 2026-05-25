@@ -1,4 +1,4 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
 
 class PrimaryCheckBox extends StatelessWidget {
   final bool value;

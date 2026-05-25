@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/complaints/domain/entities/complaint_entity.dart';
 
 abstract class ComplaintRepository {
   Future<Resource<List<ComplaintEntity>>> getComplaints({

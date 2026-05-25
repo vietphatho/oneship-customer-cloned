@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/liquid_glass_view.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/liquid_glass_view.dart';
 
 class PrimaryDialog {
   static const _headerIconSize = 64.0;

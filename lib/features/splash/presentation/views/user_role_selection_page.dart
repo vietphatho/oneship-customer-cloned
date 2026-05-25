@@ -1,9 +1,9 @@
 // import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';
-// import 'package:oneship_customer/core/base/components/primary_text.dart';
-// import 'package:oneship_customer/core/themes/app_dimensions.dart';
-// import 'package:oneship_customer/core/themes/app_spacing.dart';
-// import 'package:oneship_customer/core/navigation/route_name.dart';
+// import 'package:oneship_shop/core/base/components/primary_text.dart';
+// import 'package:oneship_shop/core/themes/app_dimensions.dart';
+// import 'package:oneship_shop/core/themes/app_spacing.dart';
+// import 'package:oneship_shop/core/navigation/route_name.dart';
 
 // class UserRoleSelectionPage extends StatefulWidget {
 //   const UserRoleSelectionPage({super.key});

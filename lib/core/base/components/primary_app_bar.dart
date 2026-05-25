@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
 
 class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PrimaryAppBar({
@@ -24,13 +24,13 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     return PopScope(
       canPop: !confirmPop,
       onPopInvokedWithResult: (didPop, result) async {
-        // didPop sẽ true nếu pop đã thành công (canPop = true)
-        // didPop sẽ false nếu pop bị block (canPop = false)
+        // didPop sáº½ true náº¿u pop Ä‘Ă£ thĂ nh cĂ´ng (canPop = true)
+        // didPop sáº½ false náº¿u pop bá»‹ block (canPop = false)
         if (didPop) {
-          return; // Pop đã thành công, không cần xử lý
+          return; // Pop Ä‘Ă£ thĂ nh cĂ´ng, khĂ´ng cáº§n xá»­ lĂ½
         }
 
-        // Nếu didPop = false, có nghĩa confirmPop = true và user bấm back
+        // Náº¿u didPop = false, cĂ³ nghÄ©a confirmPop = true vĂ  user báº¥m back
         if (confirmPop) {
           bool? confirmed = false;
           await PrimaryDialog.showQuestionDialog<bool>(
@@ -40,9 +40,9 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             onNegativeTapped: () => confirmed = false,
           );
 
-          // Nếu user xác nhận, gọi pop thông qua microtask
+          // Náº¿u user xĂ¡c nháº­n, gá»i pop thĂ´ng qua microtask
           if (confirmed == true) {
-            // Đảo ngược confirmPop để lần tới cho phép pop
+            // Äáº£o ngÆ°á»£c confirmPop Ä‘á»ƒ láº§n tá»›i cho phĂ©p pop
             Future.microtask(() {
               Navigator.pop(context);
             });

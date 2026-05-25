@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/finance/data/models/response/finance_response.dart';
+import 'package:oneship_shop/features/finance/data/models/response/finance_response.dart';
 
 part 'finance_entity.freezed.dart';
 

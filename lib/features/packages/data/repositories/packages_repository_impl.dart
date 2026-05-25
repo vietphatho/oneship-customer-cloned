@@ -1,11 +1,11 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/packages/data/datasources/packages_api.dart';
-import 'package:oneship_customer/features/packages/data/enum.dart';
-import 'package:oneship_customer/features/packages/data/models/request/package_dispatch_request.dart';
-import 'package:oneship_customer/features/packages/data/models/response/package_detail.dart';
-import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
-import 'package:oneship_customer/features/packages/domain/repositories/packages_repository.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/packages/data/datasources/packages_api.dart';
+import 'package:oneship_shop/features/packages/data/enum.dart';
+import 'package:oneship_shop/features/packages/data/models/request/package_dispatch_request.dart';
+import 'package:oneship_shop/features/packages/data/models/response/package_detail.dart';
+import 'package:oneship_shop/features/packages/data/models/response/packages_list_response.dart';
+import 'package:oneship_shop/features/packages/domain/repositories/packages_repository.dart';
 
 @LazySingleton(as: PackagesRepository)
 class PackagesRepositoryImpl extends PackagesRepository {

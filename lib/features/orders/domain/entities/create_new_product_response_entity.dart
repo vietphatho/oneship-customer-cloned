@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/product_entity.dart';
 
 part 'create_new_product_response_entity.freezed.dart'; 
 

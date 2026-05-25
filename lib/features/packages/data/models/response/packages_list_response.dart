@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/models/base_coordinates.dart';
-import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_shop/core/base/models/base_coordinates.dart';
+import 'package:oneship_shop/core/base/models/base_meta_response.dart';
 
 part 'packages_list_response.freezed.dart';
 part 'packages_list_response.g.dart';

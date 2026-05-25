@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/core/network/token_manager.dart';
-import 'package:oneship_customer/features/splash/presentation/bloc/splash_event.dart';
-import 'package:oneship_customer/features/splash/presentation/bloc/splash_state.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/core/network/token_manager.dart';
+import 'package:oneship_shop/features/splash/presentation/bloc/splash_event.dart';
+import 'package:oneship_shop/features/splash/presentation/bloc/splash_state.dart';
 
 @lazySingleton
 class SplashBloc extends Bloc<SplashEvent, SplashState> {

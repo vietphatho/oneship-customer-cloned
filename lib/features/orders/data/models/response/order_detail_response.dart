@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/models/base_coordinates.dart';
+import 'package:oneship_shop/core/base/models/base_coordinates.dart';
 
 part 'order_detail_response.freezed.dart';
 part 'order_detail_response.g.dart';

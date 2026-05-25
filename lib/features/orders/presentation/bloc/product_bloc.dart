@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/create_new_product_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/fetch_products_list_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/update_product_quantity_use_case.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/product_event.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/product_state.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/data/models/request/create_product_request.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/selected_product_entity.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/create_new_product_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/fetch_products_list_use_case.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/update_product_quantity_use_case.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/product_event.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/product_state.dart';
 
 @lazySingleton
 class ProductBloc extends Bloc<ProductEvent, ProductState> {

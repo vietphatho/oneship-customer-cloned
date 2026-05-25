@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
-import 'package:oneship_customer/features/finance/data/enum.dart';
+import 'package:oneship_shop/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_shop/features/finance/data/enum.dart';
 
 class FinanceTabBar extends StatelessWidget {
   const FinanceTabBar({super.key, required this.controller});

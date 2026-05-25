@@ -1,4 +1,4 @@
-import 'package:oneship_customer/features/shop_staff/data/models/response/shop_staff_detail_response.dart';
+import 'package:oneship_shop/features/shop_staff/data/models/response/shop_staff_detail_response.dart';
 
 class ShopStaffDetailEntity {
   const ShopStaffDetailEntity({

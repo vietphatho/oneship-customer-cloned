@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/themes/app_theme.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/themes/app_theme.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_state.dart';
 
 class OrderTrackingShipperInfoSession extends StatelessWidget {
   const OrderTrackingShipperInfoSession({super.key});

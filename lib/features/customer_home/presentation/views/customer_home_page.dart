@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/features/customer_home/presentation/widgets/customer_order_tracking_input_session.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/features/customer_home/presentation/widgets/customer_order_tracking_input_session.dart';
 
 class CustomerHomePage extends StatefulWidget {
   const CustomerHomePage({super.key});

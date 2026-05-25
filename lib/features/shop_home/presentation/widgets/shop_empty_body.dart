@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/constants/image_path.dart';
 
 class ShopEmptyBody extends StatelessWidget {
   const ShopEmptyBody({super.key, required this.onCreateShopPressed});

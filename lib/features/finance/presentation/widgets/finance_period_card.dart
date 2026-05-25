@@ -1,11 +1,11 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/components/primary_status.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/finance/domain/entities/settlement_periods_entity.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_shop/core/base/components/primary_card.dart';
+import 'package:oneship_shop/core/base/components/primary_status.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/features/finance/domain/entities/settlement_periods_entity.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
 
 class FinancePeriodCard extends StatelessWidget {
   const FinancePeriodCard({

@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_avatar.dart';
-import 'package:oneship_customer/core/base/components/primary_frame.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/utils/string_utils.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_avatar.dart';
+import 'package:oneship_shop/core/base/components/primary_frame.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/utils/string_utils.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_fee_entity.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {

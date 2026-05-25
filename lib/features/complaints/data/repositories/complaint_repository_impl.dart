@@ -1,13 +1,13 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/base_repository.dart';
-import 'package:oneship_customer/core/base/models/base_error.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/complaints/data/datasources/complaint_api.dart';
-import 'package:oneship_customer/features/complaints/data/models/complaint_model.dart';
-import 'package:oneship_customer/features/complaints/data/models/response/complaint_list_response.dart';
-import 'package:oneship_customer/features/complaints/data/models/request/create_complaint_request.dart';
-import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
-import 'package:oneship_customer/features/complaints/domain/repositories/complaint_repository.dart';
+import 'package:oneship_shop/core/base/base_repository.dart';
+import 'package:oneship_shop/core/base/models/base_error.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/complaints/data/datasources/complaint_api.dart';
+import 'package:oneship_shop/features/complaints/data/models/complaint_model.dart';
+import 'package:oneship_shop/features/complaints/data/models/response/complaint_list_response.dart';
+import 'package:oneship_shop/features/complaints/data/models/request/create_complaint_request.dart';
+import 'package:oneship_shop/features/complaints/domain/entities/complaint_entity.dart';
+import 'package:oneship_shop/features/complaints/domain/repositories/complaint_repository.dart';
 
 @LazySingleton(as: ComplaintRepository)
 class ComplaintRepositoryImpl extends BaseRepository implements ComplaintRepository {

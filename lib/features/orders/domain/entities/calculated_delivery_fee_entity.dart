@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
+import 'package:oneship_shop/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 
 part 'calculated_delivery_fee_entity.freezed.dart';
 

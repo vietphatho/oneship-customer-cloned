@@ -1,4 +1,4 @@
-import 'package:oneship_customer/features/shop_home/data/models/response/create_shop_response.dart';
+import 'package:oneship_shop/features/shop_home/data/models/response/create_shop_response.dart';
 
 class CreateShopEntity {
   const CreateShopEntity({

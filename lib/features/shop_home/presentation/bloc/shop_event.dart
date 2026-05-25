@@ -1,5 +1,5 @@
-import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/create_shop_params.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 abstract class ShopEvent {
   const ShopEvent();

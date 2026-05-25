@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/features/shop_master/data/enum.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_event.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_state.dart';
+import 'package:oneship_shop/features/shop_master/data/enum.dart';
+import 'package:oneship_shop/features/shop_master/presentation/bloc/shop_master_event.dart';
+import 'package:oneship_shop/features/shop_master/presentation/bloc/shop_master_state.dart';
 
 @lazySingleton
 class ShopMasterBloc extends Bloc<ShopMasterEvent, ShopMasterState> {

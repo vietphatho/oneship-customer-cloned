@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:oneship_customer/core/base/components/primary_text_field.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/base/components/primary_text_field.dart';
+import 'package:oneship_shop/core/base/constants/constants.dart';
+import 'package:oneship_shop/core/themes/app_dimensions.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
 
 class PrimaryDateTimePicker extends StatefulWidget {
   final String? Function(DateTime value)? validator;

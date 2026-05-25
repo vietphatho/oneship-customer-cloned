@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/base_error.dart';
-import 'package:oneship_customer/core/base/models/base_response.dart';
-import 'package:oneship_customer/features/packages/data/models/request/package_dispatch_request.dart';
-import 'package:oneship_customer/features/packages/data/models/response/package_detail.dart';
-import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
+import 'package:oneship_shop/core/base/models/base_error.dart';
+import 'package:oneship_shop/core/base/models/base_response.dart';
+import 'package:oneship_shop/features/packages/data/models/request/package_dispatch_request.dart';
+import 'package:oneship_shop/features/packages/data/models/response/package_detail.dart';
+import 'package:oneship_shop/features/packages/data/models/response/packages_list_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'packages_api.g.dart';

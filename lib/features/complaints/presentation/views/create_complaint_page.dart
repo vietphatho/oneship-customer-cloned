@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/components/primary_app_bar.dart';
-import 'package:oneship_customer/core/base/components/primary_text_field.dart';
-import 'package:oneship_customer/core/base/components/primary_dropdown.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/create_complaint_bloc.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/create_complaint_state.dart';
-import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_shop/core/base/components/primary_app_bar.dart';
+import 'package:oneship_shop/core/base/components/primary_text_field.dart';
+import 'package:oneship_shop/core/base/components/primary_dropdown.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/create_complaint_bloc.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/create_complaint_state.dart';
+import 'package:oneship_shop/di/injection_container.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/utils/validators.dart';
-import 'package:oneship_customer/features/complaints/presentation/widgets/submit_complaint_button.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/utils/validators.dart';
+import 'package:oneship_shop/features/complaints/presentation/widgets/submit_complaint_button.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
 
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 
 const _kCategories = ['order_issue', 'delivery_issue'];

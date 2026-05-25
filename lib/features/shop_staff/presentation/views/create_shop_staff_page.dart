@@ -1,20 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/utils/validators.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:oneship_customer/features/shop_staff/data/models/request/create_shop_staff_request.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/password_strength_indicator.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_config.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_section.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_form_footer.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/utils/validators.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_shop/features/shop_staff/data/models/request/create_shop_staff_request.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/bloc/shop_staff_state.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/password_strength_indicator.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/staff_permission_config.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/staff_permission_section.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/shop_staff_form_footer.dart';
 
 class CreateShopStaffPage extends StatefulWidget {
   const CreateShopStaffPage({super.key});

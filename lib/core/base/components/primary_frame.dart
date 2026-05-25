@@ -1,4 +1,4 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
 
 class PrimaryFrame extends StatelessWidget {
   const PrimaryFrame({super.key, this.child, this.padding});

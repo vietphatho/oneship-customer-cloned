@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/create_shop_params.dart';
 
 part 'create_shop_request.freezed.dart';
 part 'create_shop_request.g.dart';

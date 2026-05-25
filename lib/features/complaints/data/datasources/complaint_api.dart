@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/base_error.dart';
-import 'package:oneship_customer/core/base/models/base_response.dart';
-import 'package:oneship_customer/features/complaints/data/models/complaint_model.dart';
-import 'package:oneship_customer/features/complaints/data/models/response/complaint_list_response.dart';
-import 'package:oneship_customer/features/complaints/data/models/request/create_complaint_request.dart';
+import 'package:oneship_shop/core/base/models/base_error.dart';
+import 'package:oneship_shop/core/base/models/base_response.dart';
+import 'package:oneship_shop/features/complaints/data/models/complaint_model.dart';
+import 'package:oneship_shop/features/complaints/data/models/response/complaint_list_response.dart';
+import 'package:oneship_shop/features/complaints/data/models/request/create_complaint_request.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'complaint_api.g.dart';

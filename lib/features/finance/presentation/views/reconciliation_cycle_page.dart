@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/finance/domain/entities/settlement_config_entity.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_state.dart';
-import 'package:oneship_customer/features/finance/presentation/widgets/finance_text_row.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_card.dart';
+import 'package:oneship_shop/core/base/components/primary_empty_data.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/finance/domain/entities/settlement_config_entity.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_state.dart';
+import 'package:oneship_shop/features/finance/presentation/widgets/finance_text_row.dart';
 
 class ReconciliationCyclePage extends StatelessWidget {
   const ReconciliationCyclePage({super.key});

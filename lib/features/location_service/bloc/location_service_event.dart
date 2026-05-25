@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
 
 abstract class LocationServiceEvent {
   const LocationServiceEvent();

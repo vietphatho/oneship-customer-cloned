@@ -1,12 +1,12 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/product_selected_container.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/product_selection_button.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/create_order_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/product_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/product_selected_container.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/product_selection_button.dart';
 
 class OrderInfoPageView extends StatefulWidget {
   const OrderInfoPageView({super.key});

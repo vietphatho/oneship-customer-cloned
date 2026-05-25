@@ -1,6 +1,6 @@
-import 'package:oneship_customer/features/auth/data/models/response/login_response.dart';
-import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
-import 'package:oneship_customer/features/auth/data/models/response/verify_secondary_password_response.dart';
+import 'package:oneship_shop/features/auth/data/models/response/login_response.dart';
+import 'package:oneship_shop/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_shop/features/auth/data/models/response/verify_secondary_password_response.dart';
 
 import '../../../../core/base/models/resource.dart';
 

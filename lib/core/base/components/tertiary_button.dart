@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_spacing.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
+import 'package:oneship_shop/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_shop/core/base/components/primary_text.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_dimensions.dart';
+import 'package:oneship_shop/core/themes/app_spacing.dart';
+import 'package:oneship_shop/core/themes/app_text_style.dart';
 
 class TertiaryButton extends StatelessWidget {
   final Function()? onPressed;

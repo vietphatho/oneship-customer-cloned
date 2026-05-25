@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
 
 class PrimaryBoxShadows {
   PrimaryBoxShadows._();

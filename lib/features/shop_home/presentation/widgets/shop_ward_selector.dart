@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_state.dart';
 
 class ShopWardSelector extends StatefulWidget {
   const ShopWardSelector({

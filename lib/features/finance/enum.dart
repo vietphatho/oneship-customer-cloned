@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
 
 enum FinanceRequestSource { page, filterDialog }
 

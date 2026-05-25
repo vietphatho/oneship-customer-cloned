@@ -1,10 +1,10 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/navigation/app_routes.dart';
-import 'package:oneship_customer/core/navigation/route_observer_page.dart';
-import 'package:oneship_customer/core/network/network_utils.dart';
-import 'package:oneship_customer/core/themes/app_theme.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/navigation/app_routes.dart';
+import 'package:oneship_shop/core/navigation/route_observer_page.dart';
+import 'package:oneship_shop/core/network/network_utils.dart';
+import 'package:oneship_shop/core/themes/app_theme.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_bloc.dart';
 
 class OneShipCustomerApp extends StatelessWidget {
   const OneShipCustomerApp({super.key});

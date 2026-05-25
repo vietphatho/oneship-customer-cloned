@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/shop_home/data/enum.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/shop_home/data/enum.dart';
 
 class ShopStatusBadge extends StatelessWidget {
   final ShopStatus status;

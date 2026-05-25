@@ -1,4 +1,4 @@
-import 'package:oneship_customer/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
 
 abstract class FinanceOverviewEvent {
   FinanceOverviewEvent();

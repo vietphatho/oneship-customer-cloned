@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:oneship_customer/core/base/constants/error_code.dart';
-import 'package:oneship_customer/core/base/models/base_response.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_shop/core/base/constants/error_code.dart';
+import 'package:oneship_shop/core/base/models/base_response.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
 
 abstract class BaseRepository {
   E? parseError<E>(

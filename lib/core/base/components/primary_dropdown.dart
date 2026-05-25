@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/themes/app_theme.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/themes/app_theme.dart';
 
 class PrimaryDropdown<T> extends StatelessWidget {
   final List<T> menu;

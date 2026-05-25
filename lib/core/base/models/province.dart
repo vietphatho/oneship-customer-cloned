@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
 
 part 'province.freezed.dart';
 part 'province.g.dart';

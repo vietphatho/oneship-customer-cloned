@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_text_button.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/register_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/components/primary_text_button.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/constants/image_path.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/register_bloc.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/register_state.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyEmailPage extends StatefulWidget {

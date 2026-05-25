@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:oneship_customer/core/base/models/base_meta_entity.dart';
-import 'package:oneship_customer/features/finance/data/models/response/settlement_payouts_response.dart';
+import 'package:oneship_shop/core/base/models/base_meta_entity.dart';
+import 'package:oneship_shop/features/finance/data/models/response/settlement_payouts_response.dart';
 
 part 'settlement_payouts_entity.freezed.dart';
 

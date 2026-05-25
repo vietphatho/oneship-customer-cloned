@@ -2,25 +2,25 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
-import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/create_second_password_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/log_in_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/update_password_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/update_second_password_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/update_user_profile_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/verify_secondary_password_use_case.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/auth/data/models/request/login_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/update_user_profile_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/update_password_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/update_second_password_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/verify_secondary_password_request.dart';
+import 'package:oneship_shop/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/create_second_password_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/log_in_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/log_out_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/update_password_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/update_second_password_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/update_user_profile_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/verify_secondary_password_use_case.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/auth_event.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/auth_state.dart';
 
 @lazySingleton
 class AuthBloc extends Bloc<AuthEvent, AuthState> {

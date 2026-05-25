@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/liquid_glass_view.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_master/data/enum.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/liquid_glass_view.dart';
+import 'package:oneship_shop/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/shop_master/data/enum.dart';
+import 'package:oneship_shop/features/shop_master/presentation/bloc/shop_master_bloc.dart';
+import 'package:oneship_shop/features/shop_master/presentation/bloc/shop_master_state.dart';
 
 class PrimaryBottomNavigationBar extends StatefulWidget {
   const PrimaryBottomNavigationBar({super.key});

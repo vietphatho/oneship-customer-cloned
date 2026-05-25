@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/orders/domain/entities/shipper_info_entity.dart';
-import 'package:oneship_customer/features/orders/domain/repositories/shipper_repository.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/orders/domain/entities/shipper_info_entity.dart';
+import 'package:oneship_shop/features/orders/domain/repositories/shipper_repository.dart';
 
 @lazySingleton
 class GetShipperInfoUseCase {

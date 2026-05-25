@@ -1,8 +1,8 @@
-import 'package:oneship_customer/core/base/base_repository.dart';
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
+import 'package:oneship_shop/core/base/base_repository.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
+import 'package:oneship_shop/features/location_service/data/models/response/suggested_address_response.dart';
 
 abstract class LocationServiceRepository extends BaseRepository {
   Future<List<Province>> fetchProvinces();

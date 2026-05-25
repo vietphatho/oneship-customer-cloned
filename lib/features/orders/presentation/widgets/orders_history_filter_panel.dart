@@ -3,10 +3,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/models/province.dart';
-import 'package:oneship_customer/core/base/models/ward.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/models/province.dart';
+import 'package:oneship_shop/core/base/models/ward.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_history_filters.dart';
 
 class OrdersHistoryFilterPanel extends StatefulWidget {
   const OrdersHistoryFilterPanel({
@@ -511,7 +511,7 @@ class _OrdersHistoryCodRangeField extends StatelessWidget {
       }
     }
 
-    return "${buffer}đ";
+    return "${buffer}Ä‘";
   }
 }
 

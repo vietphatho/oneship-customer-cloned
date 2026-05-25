@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:oneship_customer/core/utils/app_logger.dart';
+import 'package:oneship_shop/core/utils/app_logger.dart';
 
 class ApiLogger extends Interceptor {
   @override

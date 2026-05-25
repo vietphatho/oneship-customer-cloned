@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_image_thumbnail.dart';
-import 'package:oneship_customer/core/themes/app_theme.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/utils/string_utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_image_thumbnail.dart';
+import 'package:oneship_shop/core/themes/app_theme.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/utils/string_utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/order_tracking/domain/entities/order_tracking_entity.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
 class OrderTrackingDetailSession extends StatelessWidget {

@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tab_bar.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/order_status_tab_bar.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});

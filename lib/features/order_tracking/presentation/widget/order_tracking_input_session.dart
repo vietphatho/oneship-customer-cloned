@@ -1,6 +1,6 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 
 class OrderTrackingInputSession extends StatefulWidget {
   const OrderTrackingInputSession({super.key});

@@ -1,7 +1,7 @@
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/order_status_tag.dart';
 
 class OrderOfPkgInfoItem extends StatelessWidget {
   const OrderOfPkgInfoItem({
@@ -45,7 +45,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-        PrimaryText("Dịch vụ: ${order.payer}", style: AppTextStyles.bodyMedium),
+        PrimaryText("Dá»‹ch vá»¥: ${order.payer}", style: AppTextStyles.bodyMedium),
             PrimaryText(
               "${"service_type".tr()}: ${_translatePayer(order.payer)}",
               style: AppTextStyles.bodyMedium,

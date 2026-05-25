@@ -1,18 +1,18 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_frame.dart';
-import 'package:oneship_customer/core/base/components/secondary_text_button.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/components/primary_frame.dart';
+import 'package:oneship_shop/core/base/components/secondary_text_button.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/constants/image_path.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_state.dart';
 
 class ShopPendingApprovalPage extends StatelessWidget {
   const ShopPendingApprovalPage({super.key});

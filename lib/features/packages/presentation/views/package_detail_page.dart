@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/packages/data/models/response/package_detail.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
-import 'package:oneship_customer/features/packages/presentation/widgets/order_of_pkg_info_item.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_card.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/packages/data/models/response/package_detail.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_shop/features/packages/presentation/widgets/order_of_pkg_info_item.dart';
 
 class PackageDetailPage extends StatefulWidget {
   const PackageDetailPage({super.key});

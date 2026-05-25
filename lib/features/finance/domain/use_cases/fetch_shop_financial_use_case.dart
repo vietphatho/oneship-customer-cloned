@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/features/finance/domain/entities/finance_entity.dart';
-import 'package:oneship_customer/features/finance/domain/repositories/finance_repository.dart';
+import 'package:oneship_shop/core/base/constants/constants.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/features/finance/domain/entities/finance_entity.dart';
+import 'package:oneship_shop/features/finance/domain/repositories/finance_repository.dart';
 
 @lazySingleton
 class FetchShopFinancialUseCase {

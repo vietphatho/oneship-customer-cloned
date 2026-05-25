@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/location_service/data/models/response/suggested_address_response.dart';
 
 class Validators {
   static String? validateEmail(String? value) {

@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/core/base/components/tertiary_button.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/base/components/tertiary_button.dart';
 
 class ShopStaffFormFooter extends StatelessWidget {
   const ShopStaffFormFooter({

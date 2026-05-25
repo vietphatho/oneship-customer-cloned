@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
-import 'package:oneship_customer/core/themes/app_theme.dart';
+import 'package:oneship_shop/core/base/components/primary_text.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_dimensions.dart';
+import 'package:oneship_shop/core/themes/app_text_style.dart';
+import 'package:oneship_shop/core/themes/app_theme.dart';
 
 class PrimaryTextField extends StatefulWidget {
   final String? Function(String value)? validator;
@@ -105,7 +105,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
   @override
   void dispose() {
     widget.node?.dispose();
-    // Không dispose focus node thuộc về parent.
+    // KhĂ´ng dispose focus node thuá»™c vá» parent.
     if (_controllerListener != null && widget.controller != null) {
       widget.controller!.removeListener(_controllerListener!);
     }
@@ -121,7 +121,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🏷 Label
+          /// đŸ· Label
           if (widget.label != null)
             Padding(
               padding: const EdgeInsets.only(
@@ -210,7 +210,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
                 filled: true,
                 fillColor: widget.fillColor ?? Colors.white,
 
-                /// 🎨 Border
+                /// đŸ¨ Border
                 border: _outlineField,
                 enabledBorder: _outlineField,
                 focusedBorder: _outlineField,
@@ -218,7 +218,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
                 focusedErrorBorder: _outlineField,
                 disabledBorder: _outlineField,
 
-                /// 👁 Hiển thị icon toggle password
+                /// đŸ‘ Hiá»ƒn thá»‹ icon toggle password
                 suffixIcon:
                     widget.obscureText
                         ? IconButton(

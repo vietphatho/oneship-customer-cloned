@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/models/base_meta_response.dart';
-import 'package:oneship_customer/features/complaints/data/models/complaint_model.dart';
+import 'package:oneship_shop/core/base/models/base_meta_response.dart';
+import 'package:oneship_shop/features/complaints/data/models/complaint_model.dart';
 
 part 'complaint_list_response.freezed.dart';
 part 'complaint_list_response.g.dart';

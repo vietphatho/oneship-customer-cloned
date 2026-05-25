@@ -1,9 +1,9 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/base/components/screen_main.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_spacing.dart';
+import 'package:oneship_shop/core/base/components/screen_main.dart';
+import 'package:oneship_shop/core/themes/app_dimensions.dart';
+import 'package:oneship_shop/core/themes/app_spacing.dart';
 
 class IncomingFeaturePage extends StatelessWidget {
   const IncomingFeaturePage({super.key});
@@ -21,7 +21,7 @@ class IncomingFeaturePage extends StatelessWidget {
             ),
             AppSpacing.vertical(AppDimensions.largeSpacing),
             // const CustomText(
-            //   text: "Tính năng này sẽ sớm có mặt",
+            //   text: "TĂ­nh nÄƒng nĂ y sáº½ sá»›m cĂ³ máº·t",
             //   textStyle: AppTextStyles.titleLarge,
             // ),
           ],

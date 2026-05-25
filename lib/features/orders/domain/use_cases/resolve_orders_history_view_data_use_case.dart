@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_history_response_entity.dart';
 
 class OrdersHistoryViewData {
   const OrdersHistoryViewData({

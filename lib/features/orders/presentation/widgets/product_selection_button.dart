@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_check_box.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/constants/svg_path.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/core/utils/validators.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/product_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_check_box.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/constants/svg_path.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/core/utils/validators.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/product_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/product_state.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 enum ProductOverlayType { create, select }
 

@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_event.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_transport_history_timeline_use_case.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_transport_history_timeline.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_empty_data.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/order_tracking/domain/entities/order_tracking_entity.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_event.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_shop/features/orders/domain/use_cases/resolve_order_transport_history_timeline_use_case.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/order_transport_history_timeline.dart';
 
 class OrderDetailTransportationHistoryTabView extends StatefulWidget {
   const OrderDetailTransportationHistoryTabView({

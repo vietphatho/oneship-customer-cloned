@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
+import 'package:oneship_shop/core/base/constants/constants.dart';
 
 class DateTimeUtils {
   DateTimeUtils._();

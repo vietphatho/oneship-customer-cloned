@@ -1,8 +1,8 @@
 // lib/core/network/dio_module.dart
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
-import 'package:oneship_customer/core/network/api_logger.dart';
+import 'package:oneship_shop/core/base/constants/constants.dart';
+import 'package:oneship_shop/core/network/api_logger.dart';
 
 import 'api_interceptor.dart';
 import 'token_manager.dart';

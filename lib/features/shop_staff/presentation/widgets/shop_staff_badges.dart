@@ -1,4 +1,4 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
 
 class ShopStaffStatusBadge extends StatelessWidget {
   const ShopStaffStatusBadge({super.key, required this.isActive});
@@ -60,7 +60,7 @@ class ShopStaffRoleBadge extends StatelessWidget {
         return "shop_management.staff_role_owner".tr();
       case "staff":
       case "employee":
-      case "nhân viên":
+      case "nhĂ¢n viĂªn":
         return "shop_management.staff_role_employee".tr();
       default:
         return role;

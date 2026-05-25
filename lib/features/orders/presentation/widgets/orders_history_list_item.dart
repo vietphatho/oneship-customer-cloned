@@ -1,9 +1,9 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_frame.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_shop/core/base/components/primary_frame.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_history_response_entity.dart';
 
 class OrdersHistoryListItem extends StatelessWidget {
   const OrdersHistoryListItem({

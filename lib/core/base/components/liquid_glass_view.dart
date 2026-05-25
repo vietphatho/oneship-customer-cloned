@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
 
 class LiquidGlassView extends StatelessWidget {
   const LiquidGlassView({
@@ -55,7 +55,7 @@ class LiquidGlassView extends StatelessWidget {
     //         ),
     //         child: Stack(
     //           children: [
-    //             // ✨ Highlight phản chiếu ánh sáng
+    //             // âœ¨ Highlight pháº£n chiáº¿u Ă¡nh sĂ¡ng
     //             Positioned.fill(
     //               child: Container(
     //                 decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class LiquidGlassView extends StatelessWidget {
     //                 ),
     //               ),
     //             ),
-    //             // ✨ Ánh sáng mờ ở đáy
+    //             // âœ¨ Ănh sĂ¡ng má» á»Ÿ Ä‘Ă¡y
     //             Positioned(
     //               bottom: 0,
     //               left: 0,
@@ -144,7 +144,7 @@ class LiquidGlassView extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              // ✨ Highlight phản chiếu ánh sáng
+              // âœ¨ Highlight pháº£n chiáº¿u Ă¡nh sĂ¡ng
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
@@ -162,7 +162,7 @@ class LiquidGlassView extends StatelessWidget {
                   ),
                 ),
               ),
-              // ✨ Ánh sáng mờ ở đáy
+              // âœ¨ Ănh sĂ¡ng má» á»Ÿ Ä‘Ă¡y
               // Positioned(
               //   bottom: 0,
               //   left: 0,

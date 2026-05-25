@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_by_status_lists.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_by_status_lists.dart';
 
 @lazySingleton
 class ResolveOrdersByStatusUseCase {

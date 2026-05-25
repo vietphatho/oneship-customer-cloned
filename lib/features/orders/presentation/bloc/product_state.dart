@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/products_list_entity.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/orders/domain/entities/product_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/selected_product_entity.dart';
+import 'package:oneship_shop/features/orders/domain/entities/products_list_entity.dart';
 
 part 'product_state.freezed.dart';
 

@@ -1,4 +1,4 @@
-import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
 
 class Resource<T> {
   final Result _state;

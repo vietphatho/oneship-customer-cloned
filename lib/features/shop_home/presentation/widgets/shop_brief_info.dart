@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_card.dart';
+import 'package:oneship_shop/core/utils/utils.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_state.dart';
 
 class ShopBriefInfo extends StatelessWidget {
   const ShopBriefInfo({super.key});

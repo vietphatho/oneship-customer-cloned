@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/complaints/domain/use_cases/delete_complaint_use_case.dart';
-import 'package:oneship_customer/features/complaints/domain/use_cases/get_complaints_use_case.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_event.dart';
-import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_state.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/complaints/domain/use_cases/delete_complaint_use_case.dart';
+import 'package:oneship_shop/features/complaints/domain/use_cases/get_complaints_use_case.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/complaint_event.dart';
+import 'package:oneship_shop/features/complaints/presentation/bloc/complaint_state.dart';
 
 @injectable
 class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {

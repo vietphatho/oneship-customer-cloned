@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_shop/core/base/models/base_meta_response.dart';
 
 part 'base_meta_entity.freezed.dart';
 

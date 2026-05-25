@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/components/primary_app_bar.dart';
-import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
-import 'package:oneship_customer/features/complaints/presentation/widgets/complaint_list_view.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/base/components/primary_app_bar.dart';
+import 'package:oneship_shop/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/themes/app_text_style.dart';
+import 'package:oneship_shop/core/base/components/primary_text.dart';
+import 'package:oneship_shop/features/complaints/presentation/widgets/complaint_list_view.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:go_router/go_router.dart';
 

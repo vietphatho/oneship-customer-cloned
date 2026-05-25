@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/auth/data/enum.dart';
-import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/register_account_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/resend_verification_email_use_case.dart';
-import 'package:oneship_customer/features/auth/domain/use_cases/verify_email_use_case.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/register_event.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/register_state.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/auth/data/enum.dart';
+import 'package:oneship_shop/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/resend_verification_email_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/verify_email_request.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/register_account_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/resend_verification_email_use_case.dart';
+import 'package:oneship_shop/features/auth/domain/use_cases/verify_email_use_case.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/register_event.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/register_state.dart';
 
 @lazySingleton
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {

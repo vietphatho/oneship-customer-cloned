@@ -1,8 +1,8 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_image_thumbnail.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/core/utils/string_utils.dart';
-import 'package:oneship_customer/features/orders/domain/entities/order_transport_history_timeline_entity.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_image_thumbnail.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/core/utils/string_utils.dart';
+import 'package:oneship_shop/features/orders/domain/entities/order_transport_history_timeline_entity.dart';
 
 class OrderTransportHistoryTimeline extends StatelessWidget {
   const OrderTransportHistoryTimeline({super.key, required this.items});

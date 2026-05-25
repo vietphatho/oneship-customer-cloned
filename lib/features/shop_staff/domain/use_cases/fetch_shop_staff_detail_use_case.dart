@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_detail_entity.dart';
-import 'package:oneship_customer/features/shop_staff/domain/repositories/shop_staff_repository.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/shop_staff/domain/entities/shop_staff_detail_entity.dart';
+import 'package:oneship_shop/features/shop_staff/domain/repositories/shop_staff_repository.dart';
 
 @lazySingleton
 class FetchShopStaffDetailUseCase {

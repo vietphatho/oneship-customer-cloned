@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_detail_content.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/bloc/shop_staff_state.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/shop_staff_detail_content.dart';
 
 class ShopStaffDetailPage extends StatefulWidget {
   const ShopStaffDetailPage({super.key});

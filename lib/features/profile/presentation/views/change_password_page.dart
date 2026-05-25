@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/utils/validators.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/utils/validators.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_shop/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_shop/features/auth/data/models/request/update_password_request.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});

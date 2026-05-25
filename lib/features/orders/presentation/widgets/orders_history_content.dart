@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_filter_button.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_filter_panel.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_card.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
+import 'package:oneship_shop/features/orders/domain/entities/orders_history_response_entity.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_shop/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/orders_history_filter_button.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/orders_history_filter_panel.dart';
+import 'package:oneship_shop/features/orders/presentation/widgets/orders_history_list_card.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrdersHistoryContent extends StatefulWidget {
   const OrdersHistoryContent({

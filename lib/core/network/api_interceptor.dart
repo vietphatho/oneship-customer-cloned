@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/error_code.dart';
-import 'package:oneship_customer/core/navigation/app_navigator.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/core/storage/secure_storage.dart';
-import 'package:oneship_customer/core/storage/secure_storage_key.dart';
-import 'package:oneship_customer/core/utils/app_logger.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/constants/error_code.dart';
+import 'package:oneship_shop/core/navigation/app_navigator.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/storage/secure_storage.dart';
+import 'package:oneship_shop/core/storage/secure_storage_key.dart';
+import 'package:oneship_shop/core/utils/app_logger.dart';
 
 import 'token_manager.dart';
 
@@ -53,7 +53,7 @@ class ApiInterceptor extends Interceptor {
           }
 
           String? newAccessToken = await tokenManager.getAccessToken();
-          // Gọi lại request ban đầu với token mới
+          // Gá»i láº¡i request ban Ä‘áº§u vá»›i token má»›i
           final retryRequest = err.requestOptions;
           retryRequest.headers['Authorization'] = 'Bearer $newAccessToken';
           final newResponse = await dio.fetch(retryRequest);

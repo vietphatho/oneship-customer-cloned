@@ -1,8 +1,8 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/core/network/token_manager.dart';
-import 'package:oneship_customer/features/auth/domain/repositories/auth_repository.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/core/network/token_manager.dart';
+import 'package:oneship_shop/features/auth/domain/repositories/auth_repository.dart';
 
 @lazySingleton
 class LogOutUseCase {

@@ -1,5 +1,5 @@
-import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/verify_email_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_shop/features/auth/data/models/request/verify_email_request.dart';
 
 abstract class RegisterEvent {
   const RegisterEvent();

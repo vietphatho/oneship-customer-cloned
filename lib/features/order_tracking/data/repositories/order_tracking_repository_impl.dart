@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/order_tracking/data/data_sources/order_tracking_api.dart';
-import 'package:oneship_customer/features/order_tracking/data/models/request/order_tracking_request.dart';
-import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
-import 'package:oneship_customer/features/order_tracking/domain/repositories/order_tracking_repository.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/order_tracking/data/data_sources/order_tracking_api.dart';
+import 'package:oneship_shop/features/order_tracking/data/models/request/order_tracking_request.dart';
+import 'package:oneship_shop/features/order_tracking/domain/entities/order_tracking_entity.dart';
+import 'package:oneship_shop/features/order_tracking/domain/repositories/order_tracking_repository.dart';
 
 @LazySingleton(as: OrderTrackingRepository)
 class OrderTrackingRepositoryImpl extends OrderTrackingRepository {

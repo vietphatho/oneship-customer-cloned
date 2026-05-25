@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
+import 'package:oneship_shop/features/orders/data/models/response/get_routing_to_shop_response.dart';
 
 part 'routing_entity.freezed.dart';
 

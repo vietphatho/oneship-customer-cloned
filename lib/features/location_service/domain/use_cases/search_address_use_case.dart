@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
-import 'package:oneship_customer/features/location_service/data/repositories/location_service_repository.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/location_service/data/models/response/suggested_address_response.dart';
+import 'package:oneship_shop/features/location_service/data/repositories/location_service_repository.dart';
 
 @lazySingleton
 class SearchAddressUseCase {

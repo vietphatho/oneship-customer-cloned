@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
-import 'package:oneship_customer/features/shop_staff/data/models/request/create_shop_staff_request.dart';
-import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
-import 'package:oneship_customer/features/shop_staff/domain/use_cases/add_staff_to_shop_use_case.dart';
-import 'package:oneship_customer/features/shop_staff/domain/use_cases/create_shop_staff_use_case.dart';
-import 'package:oneship_customer/features/shop_staff/domain/use_cases/fetch_shop_staff_detail_use_case.dart';
-import 'package:oneship_customer/features/shop_staff/domain/use_cases/fetch_shop_staffs_use_case.dart';
-import 'package:oneship_customer/features/shop_staff/domain/use_cases/toggle_disable_shop_staff_use_case.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_event.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
+import 'package:oneship_shop/core/base/constants/constants.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_shop/features/shop_staff/data/models/request/create_shop_staff_request.dart';
+import 'package:oneship_shop/features/shop_staff/domain/entities/shop_staff_entity.dart';
+import 'package:oneship_shop/features/shop_staff/domain/use_cases/add_staff_to_shop_use_case.dart';
+import 'package:oneship_shop/features/shop_staff/domain/use_cases/create_shop_staff_use_case.dart';
+import 'package:oneship_shop/features/shop_staff/domain/use_cases/fetch_shop_staff_detail_use_case.dart';
+import 'package:oneship_shop/features/shop_staff/domain/use_cases/fetch_shop_staffs_use_case.dart';
+import 'package:oneship_shop/features/shop_staff/domain/use_cases/toggle_disable_shop_staff_use_case.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/bloc/shop_staff_event.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/bloc/shop_staff_state.dart';
 
 @lazySingleton
 class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {

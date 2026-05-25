@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/order_tracking/data/models/response/order_tracking_response.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/order_tracking/data/models/response/order_tracking_response.dart';
+import 'package:oneship_shop/features/orders/data/enum.dart';
 
 part 'order_tracking_entity.freezed.dart';
 

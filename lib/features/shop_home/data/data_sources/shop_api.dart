@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/models/base_error.dart';
-import 'package:oneship_customer/core/base/models/base_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/request/create_shop_request.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/create_shop_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
+import 'package:oneship_shop/core/base/models/base_error.dart';
+import 'package:oneship_shop/core/base/models/base_response.dart';
+import 'package:oneship_shop/features/shop_home/data/models/request/create_shop_request.dart';
+import 'package:oneship_shop/features/shop_home/data/models/response/create_shop_response.dart';
+import 'package:oneship_shop/features/shop_home/data/models/response/get_brief_shops_response.dart';
+import 'package:oneship_shop/features/shop_home/data/models/response/get_shops_response.dart';
+import 'package:oneship_shop/features/shop_home/data/models/response/shop_daily_summary_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'shop_api.g.dart';

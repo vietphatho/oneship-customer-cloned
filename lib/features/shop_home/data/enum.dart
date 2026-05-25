@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/constants/svg_path.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_shop/core/base/constants/svg_path.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/themes/app_colors.dart';
 
 enum ShopHomeFeature {
   createSingleOrder,

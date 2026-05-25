@@ -1,12 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
-import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_detail_entity.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_badges.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_detail_section.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_config.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/secondary_button.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/utils/date_time_utils.dart';
+import 'package:oneship_shop/features/shop_staff/domain/entities/shop_staff_detail_entity.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/shop_staff_badges.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/shop_staff_detail_section.dart';
+import 'package:oneship_shop/features/shop_staff/presentation/widgets/staff_permission_config.dart';
 
 class ShopStaffDetailContent extends StatelessWidget {
   const ShopStaffDetailContent({super.key, required this.staff});

@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_state.dart';
-import 'package:oneship_customer/features/finance/presentation/widgets/finance_period_card.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/components/primary_empty_data.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/finance/enum.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_shop/features/finance/presentation/bloc/finance_reconciliation_state.dart';
+import 'package:oneship_shop/features/finance/presentation/widgets/finance_period_card.dart';
 
 class PeriodsPage extends StatelessWidget {
   const PeriodsPage({super.key});

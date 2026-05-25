@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_shop/core/base/models/base_meta_response.dart';
 
 part 'settlement_payouts_response.freezed.dart';
 part 'settlement_payouts_response.g.dart';

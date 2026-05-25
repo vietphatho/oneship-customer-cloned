@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/packages/domain/repositories/packages_repository.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_event.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/core/base/models/resource.dart';
+import 'package:oneship_shop/features/packages/domain/repositories/packages_repository.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_event.dart';
+import 'package:oneship_shop/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_shop/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 @lazySingleton
 class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {

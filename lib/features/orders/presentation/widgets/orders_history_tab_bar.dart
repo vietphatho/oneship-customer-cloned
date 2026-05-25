@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_tab_bar.dart';
 
 class OrdersHistoryTabBar extends StatelessWidget {
   const OrdersHistoryTabBar({

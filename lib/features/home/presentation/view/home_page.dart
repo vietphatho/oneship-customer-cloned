@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/liquid_glass_view.dart';
-import 'package:oneship_customer/core/base/components/primary_text_button.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:oneship_customer/features/home/presentation/widgets/order_tracking_input_container.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/liquid_glass_view.dart';
+import 'package:oneship_shop/core/base/components/primary_text_button.dart';
+import 'package:oneship_shop/core/base/constants/image_path.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
+import 'package:oneship_shop/features/home/presentation/widgets/order_tracking_input_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
