@@ -1,23 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shipping_service_config_response.dart';
 
-class ShippingServiceConfigEntity {
-  final String id;
-  final String serviceCode;
-  final String serviceLabel;
-  final bool isEnabled;
-  final int maxWeightKg;
-  final int baseFee;
-  final int sortOrder;
+part 'shipping_service_config_entity.freezed.dart';
 
-  ShippingServiceConfigEntity({
-    required this.id,
-    required this.serviceCode,
-    required this.serviceLabel,
-    required this.isEnabled,
-    required this.maxWeightKg,
-    required this.baseFee,
-    required this.sortOrder,
-  });
+@freezed
+abstract class ShippingServiceConfigEntity with _$ShippingServiceConfigEntity {
+  const ShippingServiceConfigEntity._();
+
+  const factory ShippingServiceConfigEntity({
+    required String id,
+    required String serviceCode,
+    required String serviceLabel,
+    required bool isEnabled,
+    required int maxWeightKg,
+    required int baseFee,
+    required int sortOrder,
+  }) = _ShippingServiceConfigEntity;
 
   factory ShippingServiceConfigEntity.from(ShippingServiceConfigResponse data) {
     return ShippingServiceConfigEntity(

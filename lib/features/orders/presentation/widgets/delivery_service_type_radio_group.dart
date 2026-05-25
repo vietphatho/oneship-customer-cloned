@@ -6,6 +6,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 
 class DeliveryServiceTypeRadioGroup extends StatefulWidget {
   const DeliveryServiceTypeRadioGroup({super.key});
@@ -28,24 +29,29 @@ class _DeliveryServiceTypeRadioGroupState
             _createOrderBloc.state.draftRequest;
 
         final availableServices = state.availableServices;
-        final options = availableServices.map((config) {
-          return DeliveryServiceType.values.firstWhere(
-            (e) => e.requestValue == config.serviceCode,
-            orElse: () => DeliveryServiceType.standard, // fallback
-          );
-        }).toSet().toList();
-        final displayOptions =
-            options.isNotEmpty ? options : DeliveryServiceType.values;
+        ShippingServiceConfigEntity? selectedValue;
+        for (var e in availableServices) {
+          if (e.serviceCode == draftRequest.serviceCode?.requestValue) {
+            selectedValue = e;
+            break;
+          }
+        }
 
-        return PrimaryRadioGroup(
+        return PrimaryRadioGroup<ShippingServiceConfigEntity>(
           direction: Axis.horizontal,
           title: "delivery_service_type".tr(),
           isRequired: true,
-          options: displayOptions,
-          subTitle: (value) => value.description,
-          value: draftRequest.serviceCode,
+          options: availableServices,
+          subTitle: (value) {
+            final type = DeliveryServiceType.values.firstWhere(
+              (e) => e.requestValue == value.serviceCode,
+              orElse: () => DeliveryServiceType.standard,
+            );
+            return type.description.tr();
+          },
+          value: selectedValue,
           displayLabel: (value) {
-            return value.nameValue.tr();
+            return value.serviceLabel;
           },
           onChanged: _onChanged,
         );
@@ -53,7 +59,11 @@ class _DeliveryServiceTypeRadioGroupState
     );
   }
 
-  void _onChanged(DeliveryServiceType value) {
-    _createOrderBloc.changeOrderInfo(deliveryServiceType: value);
+  void _onChanged(ShippingServiceConfigEntity entity) {
+    final type = DeliveryServiceType.values.firstWhere(
+      (e) => e.requestValue == entity.serviceCode,
+      orElse: () => DeliveryServiceType.standard,
+    );
+    _createOrderBloc.changeOrderInfo(deliveryServiceType: type);
   }
 }

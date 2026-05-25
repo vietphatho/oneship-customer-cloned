@@ -21,7 +21,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/validate_creat
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
-import 'package:oneship_customer/features/shop_home/domain/repositories/shop_repository.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/get_shipping_service_configs_use_case.dart';
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
@@ -32,7 +32,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
   CreateOrderBloc(
     this._repository,
-    this._shopRepository,
+    this._getShippingServiceConfigsUseCase,
     // this._addProductToOrderUseCase,
     // this._updateProductQuantityUseCase,
     this._validateCreateOrderInfoUseCase,
@@ -61,7 +61,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   }
 
   final OrdersRepository _repository;
-  final ShopRepository _shopRepository;
+  final GetShippingServiceConfigsUseCase _getShippingServiceConfigsUseCase;
 
   FutureOr<void> _onInitEvent(
     CreateOrderInitShopEvent event,
@@ -84,7 +84,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
     if (shopId != null) {
       final resource =
-          await _shopRepository.getShippingServiceConfigs(shopId: shopId);
+          await _getShippingServiceConfigsUseCase.call(shopId: shopId);
       if (resource.state == Result.success && resource.data != null) {
         emit(
           CreateOrderRequestChangedState(
