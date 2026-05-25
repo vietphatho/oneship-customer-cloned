@@ -56,7 +56,7 @@ class _MapViewState extends State<MapView> {
   void _listenGetLocationChanged(
     BuildContext context,
     LocationServiceState state,
-  ) {
+  ) async {
     if (state is GetCurrentLocationState) {
       if (state.resource.data != null) {
         LatLng curCoor = LatLng(
@@ -65,9 +65,11 @@ class _MapViewState extends State<MapView> {
         );
         LatLng? shopCoor = _shopBloc.state.currentShop?.shopCoordinates?.latLng;
 
-        _mapCtrl.fitCamera(
-          CameraFit.coordinates(coordinates: [curCoor, shopCoor ?? curCoor]),
-        );
+        await Future.delayed(Durations.medium4);
+        // _mapCtrl.fitCamera(
+        //   CameraFit.coordinates(coordinates: [curCoor, shopCoor ?? curCoor]),
+        // );
+        _mapCtrl.move(curCoor, 16.5);
       }
     }
   }

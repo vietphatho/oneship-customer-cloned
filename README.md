@@ -1,5 +1,7 @@
 # OneShip Customer
 
+Flutter: 3.38.2
+
 # Project rules
 
 1. icon: 
@@ -18,3 +20,4 @@ gcloud auth application-default print-access-token
 # Generate code
 
 flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs

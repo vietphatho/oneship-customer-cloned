@@ -76,16 +76,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        PrimaryDropdown<UserRole>(
-                          label: "user_role".tr(),
-                          isRequired: true,
-                          menu: UserRole.values,
-                          initialValue: UserRole.customer,
-                          toLabel: (item) => item.roleName.tr(),
-                          requestFocusOnTap: false,
-                          onSelected: (value) {
-                            if (value != null) _userRole = value;
-                          },
+                        AbsorbPointer(
+                          child: PrimaryDropdown<UserRole>(
+                            label: "user_role".tr(),
+                            isRequired: true,
+                            menu: UserRole.values,
+                            initialValue: UserRole.customer,
+                            toLabel: (item) => item.roleName.tr(),
+                            requestFocusOnTap: false,
+                            onSelected: (value) {
+                              if (value != null) _userRole = value;
+                            },
+                          ),
                         ),
                         AppSpacing.vertical(AppDimensions.smallSpacing),
                         PrimaryTextField(
@@ -173,7 +175,10 @@ class _RegisterPageState extends State<RegisterPage> {
         break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
-        PrimaryDialog.showErrorDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.registerResult!.message,
+        );
         break;
     }
   }

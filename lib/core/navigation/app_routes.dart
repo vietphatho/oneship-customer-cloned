@@ -17,6 +17,7 @@ import 'package:oneship_customer/features/orders/presentation/views/create_order
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_history_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/product_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/change_password_page.dart';
@@ -152,6 +153,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.financePeriodDetailPage,
       builder: (context, state) => const FinancePeriodDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.productPage,
+      builder: (context, state) => const ProductPage(),
     ),
   ],
 );
