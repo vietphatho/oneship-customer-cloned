@@ -22,6 +22,7 @@ import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -35,6 +36,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthBloc _authBloc = getIt<AuthBloc>();
   final ShopBloc _shopBloc = getIt.get();
+  final PackagesBloc _packagesBloc = getIt.get();
+  final FinanceOverviewBloc financeOverviewBloc = getIt.get();
+  final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
 
   TextEditingController phoneController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
@@ -83,6 +87,12 @@ class _LoginPageState extends State<LoginPage> {
                 listenWhen: (previous, current) =>
                     previous.briefShopsResource != current.briefShopsResource,
                 listener: _listenShopsListChanged,
+              ),
+              BlocListener<ShopBloc, ShopState>(
+                bloc: _shopBloc,
+                listenWhen: (previous, current) =>
+                    previous.currentShop != current.currentShop,
+                listener: _listenCurrentShopChanged,
               ),
             ],
             child: Stack(
@@ -282,15 +292,18 @@ class _LoginPageState extends State<LoginPage> {
         } else if (!state.hasApprovedShop) {
           context.go(RouteName.shopPendingApprovalPage);
         } else {
-          final FinanceOverviewBloc financeOverviewBloc = getIt.get();
-          final FinanceReconciliationBloc financeReconciliationBloc = getIt
-              .get();
-          final String shopId = state.currentShop?.shopId ?? "";
-          financeOverviewBloc.init(
-            shopId: shopId,
-            requestSource: FinanceRequestSource.page,
-          );
-          financeReconciliationBloc.initPeriods(shopId: shopId);
+          // await Future.delayed(Durations.medium1);
+          // final String shopId = state.currentShop?.shopId ?? "";
+          // financeOverviewBloc.init(
+          //   shopId: shopId,
+          //   requestSource: FinanceRequestSource.page,
+          // );
+          // financeReconciliationBloc.initPeriods(shopId: shopId);
+
+          // if (state.currentShop != null) {
+          //   _packagesBloc.init(state.currentShop!);
+          // }
+
           context.go(RouteName.shopMasterPage);
         }
       case Result.error:
@@ -299,6 +312,19 @@ class _LoginPageState extends State<LoginPage> {
           context,
           message: state.briefShopsResource.message,
         );
+    }
+  }
+
+  void _listenCurrentShopChanged(BuildContext context, ShopState state) {
+    final String shopId = state.currentShop?.shopId ?? "";
+    financeOverviewBloc.init(
+      shopId: shopId,
+      requestSource: FinanceRequestSource.page,
+    );
+    financeReconciliationBloc.initPeriods(shopId: shopId);
+
+    if (state.currentShop != null) {
+      _packagesBloc.init(state.currentShop!);
     }
   }
 
