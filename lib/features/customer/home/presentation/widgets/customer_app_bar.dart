@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/navigation/route_name.dart';
 
 class CustomerAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomerAppBar({super.key});

@@ -1,6 +1,6 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/features/customer/home/presentation/views/customer_completed_ords_tab_view.dart';
-import 'package:oneship_customer/features/customer/home/presentation/views/customer_in_progress_ords_tab_view.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/features/customer/home/presentation/views/customer_completed_ords_tab_view.dart';
+import 'package:oneship_shop/features/customer/home/presentation/views/customer_in_progress_ords_tab_view.dart';
 
 enum CustomerOrdTab { inProgress, completed }
 

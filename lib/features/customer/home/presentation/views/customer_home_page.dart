@@ -1,18 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/customer/home/data/enum.dart';
-import 'package:oneship_customer/features/customer/home/presentation/widgets/customer_app_bar.dart';
-import 'package:oneship_customer/features/customer/home/presentation/widgets/customer_drawer.dart';
-import 'package:oneship_customer/features/customer/home/presentation/widgets/customer_order_tracking_input_session.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/widget/map_view.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/widget/order_tracking_detail_session.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/widget/order_tracking_shipper_info.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_dialog.dart';
+import 'package:oneship_shop/core/base/constants/enum.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/customer/home/data/enum.dart';
+import 'package:oneship_shop/features/customer/home/presentation/widgets/customer_app_bar.dart';
+import 'package:oneship_shop/features/customer/home/presentation/widgets/customer_drawer.dart';
+import 'package:oneship_shop/features/customer/home/presentation/widgets/customer_order_tracking_input_session.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/widget/map_view.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/widget/order_tracking_detail_session.dart';
+import 'package:oneship_shop/features/order_tracking/presentation/widget/order_tracking_shipper_info.dart';
 
 class CustomerHomePage extends StatefulWidget {
   const CustomerHomePage({super.key});

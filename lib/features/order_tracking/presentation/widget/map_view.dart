@@ -2,13 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/models/base_coordinates.dart';
-import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
-import 'package:oneship_customer/features/map/presentation/views/primary_map_view.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/models/base_coordinates.dart';
+import 'package:oneship_shop/di/injection_container.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_shop/features/location_service/bloc/location_service_state.dart';
+import 'package:oneship_shop/features/map/presentation/views/primary_map_view.dart';
+import 'package:oneship_shop/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});

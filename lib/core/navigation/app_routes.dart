@@ -8,7 +8,6 @@ import 'package:oneship_shop/features/auth/presentation/views/verify_email_page.
 import 'package:oneship_shop/features/complaints/presentation/views/complaint_page.dart';
 import 'package:oneship_shop/features/complaints/presentation/views/create_complaint_page.dart';
 import 'package:oneship_shop/features/customer/home/presentation/views/customer_home_page.dart';
-import 'package:oneship_shop/features/customer_home/presentation/views/customer_home_page.dart';
 import 'package:oneship_shop/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_shop/features/finance/presentation/views/finance_period_detail_page.dart';
 import 'package:oneship_shop/features/home/presentation/view/home_page.dart';

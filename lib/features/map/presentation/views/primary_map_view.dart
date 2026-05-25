@@ -2,7 +2,7 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 // import 'package:maplibre/maplibre.dart';
-import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
 
 class PrimaryMapView extends StatelessWidget {
   const PrimaryMapView({

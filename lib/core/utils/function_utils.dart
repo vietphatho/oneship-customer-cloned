@@ -1,4 +1,4 @@
-import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_shop/di/injection_container.dart';
 
 class FunctionUtils {
   FunctionUtils._();

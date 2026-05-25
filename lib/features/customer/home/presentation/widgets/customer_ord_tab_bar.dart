@@ -1,6 +1,6 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
-import 'package:oneship_customer/features/customer/home/data/enum.dart';
+import 'package:oneship_shop/core/base/base_import_components.dart';
+import 'package:oneship_shop/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_shop/features/customer/home/data/enum.dart';
 
 class CustomerOrdTabBar extends StatelessWidget {
   const CustomerOrdTabBar({super.key, required this.tabController, this.onTap});
