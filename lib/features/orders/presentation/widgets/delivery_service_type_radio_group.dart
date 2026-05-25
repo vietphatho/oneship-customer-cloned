@@ -6,6 +6,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 
 class DeliveryServiceTypeRadioGroup extends StatefulWidget {
   const DeliveryServiceTypeRadioGroup({super.key});
@@ -27,21 +28,34 @@ class _DeliveryServiceTypeRadioGroupState
         CreateOrderRequestEntity draftRequest =
             _createOrderBloc.state.draftRequest;
 
-        return PrimaryRadioGroup(
+        final availableServices = state.availableServices;
+        ShippingServiceConfigEntity? selectedValue;
+        for (var e in availableServices) {
+          if (e.serviceCode == draftRequest.serviceConfig?.serviceCode) {
+            selectedValue = e;
+            break;
+          }
+        }
+
+        return PrimaryRadioGroup<ShippingServiceConfigEntity>(
           direction: Axis.horizontal,
           title: "delivery_service_type".tr(),
           isRequired: true,
-          options: DeliveryServiceType.values,
-          subTitle: (value) => value.description,
-          value: draftRequest.serviceCode,
-          displayLabel: (value) => value.nameValue.tr(),
+          options: availableServices,
+          subTitle: (value) {
+            return "${value.baseFee}"; // Using baseFee as subtitle since no description
+          },
+          value: selectedValue,
+          displayLabel: (value) {
+            return value.serviceLabel;
+          },
           onChanged: _onChanged,
         );
       },
     );
   }
 
-  void _onChanged(DeliveryServiceType value) {
-    _createOrderBloc.changeOrderInfo(deliveryServiceType: value);
+  void _onChanged(ShippingServiceConfigEntity entity) {
+    _createOrderBloc.changeOrderInfo(serviceConfig: entity);
   }
 }

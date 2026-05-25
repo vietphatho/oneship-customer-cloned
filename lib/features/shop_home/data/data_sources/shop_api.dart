@@ -7,6 +7,7 @@ import 'package:oneship_customer/features/shop_home/data/models/response/create_
 import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/shipping_service_config_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'shop_api.g.dart';
@@ -35,5 +36,11 @@ abstract class ShopApi {
   Future<BaseResponse<GetShopsResponse, BaseError>> getShops({
     @Query("page") required int page,
     @Query("limit") required int limit,
+  });
+
+  @GET("/api/v1/delivery/shops/{shopId}/shipping-config/services")
+  Future<BaseResponse<List<ShippingServiceConfigResponse>, BaseError>>
+  getShippingServiceConfigs({
+    @Path("shopId") required String shopId,
   });
 }

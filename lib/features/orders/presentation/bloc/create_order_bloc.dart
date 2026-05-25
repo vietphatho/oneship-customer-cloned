@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
@@ -20,6 +23,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/validate_creat
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/get_shipping_service_configs_use_case.dart';
 
 @lazySingleton
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
@@ -30,6 +34,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
   CreateOrderBloc(
     this._repository,
+    this._getShippingServiceConfigsUseCase,
     // this._addProductToOrderUseCase,
     // this._updateProductQuantityUseCase,
     this._validateCreateOrderInfoUseCase,
@@ -58,11 +63,12 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   }
 
   final OrdersRepository _repository;
+  final GetShippingServiceConfigsUseCase _getShippingServiceConfigsUseCase;
 
   FutureOr<void> _onInitEvent(
     CreateOrderInitShopEvent event,
     Emitter<CreateOrderState> emit,
-  ) {
+  ) async {
     // Preserve existing request data, only inject shopId if not already set
     final shopId = state.request.shopId ?? event.shop.shopId;
     emit(
@@ -74,8 +80,29 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         routingToShopResource: state.routingToShopResource,
         productEntitySelected: state.productEntitySelected,
         updateOrdId: state.updateOrdId,
+        availableServices: state.availableServices,
       ),
     );
+
+    if (shopId != null) {
+      final resource =
+          await _getShippingServiceConfigsUseCase.call(shopId: shopId);
+      if (resource.state == Result.success && resource.data != null) {
+        emit(
+          CreateOrderRequestChangedState(
+            shopInfo: state.shopInfo,
+            request: state.request,
+            draftRequest: state.draftRequest,
+            step: state.step,
+            routingToShopResource: state.routingToShopResource,
+            productEntitySelected: state.productEntitySelected,
+            updateOrdId: state.updateOrdId,
+            availableServices:
+                resource.data!.where((e) => e.isEnabled).toList(),
+          ),
+        );
+      }
+    }
   }
 
   FutureOr<void> _onRequestChangedEvent(
@@ -159,7 +186,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
             height: event.height,
             note: event.note,
           ),
-          serviceCode: event.deliveryServiceType,
+          serviceConfig: event.serviceConfig,
         ),
         productEntitySelected: state.productEntitySelected,
         updateOrdId: state.updateOrdId,
@@ -449,7 +476,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     final newReq = currentReq.copyWith(
       externalOrderId: externalOrderId,
       codAmount: codAmount,
-      serviceCode: draftReq.serviceCode,
+      serviceConfig: draftReq.serviceConfig,
       detail: currentReq.detail?.copyWith(
         weight: weight.toDouble(),
         height: height,
@@ -469,7 +496,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     final calculateFeeRequest = CalculateDeliveryFeeRequest(
       shopId: state.shopInfo.shopId ?? newReq.shopId,
       distance: routingDistance,
-      serviceCode: newReq.serviceCode?.requestValue,
+      serviceCode: newReq.serviceConfig?.serviceCode,
       weight: newReq.detail?.weight?.toInt(),
     );
     add(CreateOrderCalculateFeeEvent(calculateFeeRequest));
@@ -524,7 +551,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     int? width,
     int? height,
     String? note,
-    DeliveryServiceType? deliveryServiceType,
+    ShippingServiceConfigEntity? serviceConfig,
   }) {
     var draftRequest = state.draftRequest;
     add(
@@ -535,7 +562,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         width: width ?? draftRequest.detail?.width,
         height: height ?? draftRequest.detail?.height,
         note: note ?? draftRequest.detail?.note,
-        deliveryServiceType: deliveryServiceType ?? draftRequest.serviceCode,
+        serviceConfig: serviceConfig ?? draftRequest.serviceConfig,
       ),
     );
   }
