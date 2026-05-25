@@ -14,6 +14,7 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShopPendingApprovalPage extends StatelessWidget {
   const ShopPendingApprovalPage({super.key});
@@ -40,7 +41,8 @@ class ShopPendingApprovalPage extends StatelessWidget {
         builder: (context, state) {
           final shopName =
               state.createShopResource.data?.shopName ??
-              state.currentShop?.shopName;
+              state.currentShop?.shopName ??
+              '';
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -177,10 +179,17 @@ class _SupportCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.primary,
-                child: Icon(Icons.phone, color: Colors.white, size: 22),
+              IconButton(
+                style: IconButton.styleFrom(backgroundColor: AppColors.primary),
+                icon: const Icon(Icons.phone, color: Colors.white, size: 22),
+                onPressed: () async {
+                  final Uri launchUri = Uri(scheme: 'tel', path: hotline);
+                  if (await canLaunchUrl(launchUri)) {
+                    await launchUrl(launchUri);
+                  } else {
+                    onCopy();
+                  }
+                },
               ),
               AppSpacing.horizontal(AppDimensions.smallSpacing),
               PrimaryText(
