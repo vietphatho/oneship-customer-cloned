@@ -11,8 +11,13 @@ class Constants {
   static const String refreshTokenEndpoint = "/api/v1/shops/refresh-token";
   static const vietmapAccessToken = "VIETMAP_ACCESS_TOKEN";
   static const String vehicleDefault = "motorcycle";
-  static const String endpoint = "https://one-ship-api.de.onexway.io";
-  static const String imgEndpoint = "https://xbyw3unofel1.cmccdn.net";
+  // dev
+  // static const String endpoint = "https://one-ship-api.de.onexway.io";
+  // static const String imgEndpoint = "https://xbyw3unofel1.cmccdn.net";
+  // production
+  static const String endpoint = "https://122025api.oneship.app";
+  static const String imgEndpoint = "http://sxlcfqvbwh6y.cmccdn.net";
+
   static const String orderTrackingAction = "track_shipment";
   static const String orderTrackingNonce = "039a82a441";
 

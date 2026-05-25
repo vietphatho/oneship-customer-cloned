@@ -72,6 +72,7 @@ class AppColors {
   static const Color moneyOutColor = Color(0xFFF04438);
   static const Color accentColor1 = Color.fromARGB(255, 105, 169, 201);
   static const Color accentColor2 = Color.fromARGB(255, 210, 240, 255);
+  static const Color logout = Color(0xFFD73030);
 
   // Gradient Colors
   // static const LinearGradient primaryGradient = LinearGradient(

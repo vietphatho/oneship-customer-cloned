@@ -11,7 +11,6 @@ import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state
 import 'package:oneship_customer/features/shop_staff/data/models/request/create_shop_staff_request.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/password_strength_indicator.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_config.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_section.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_form_footer.dart';
@@ -36,19 +35,16 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
 
   BriefShopEntity? _selectedShop;
   late Map<String, Map<String, bool>> _permissions;
-  PasswordStrength _passwordStrength = PasswordStrength.empty;
 
   @override
   void initState() {
     super.initState();
     _selectedShop = _shopBloc.state.currentShop;
     _permissions = CreateShopStaffRequest.defaultPermissions();
-    _passwordController.addListener(_handlePasswordChanged);
   }
 
   @override
   void dispose() {
-    _passwordController.removeListener(_handlePasswordChanged);
     _usernameController.dispose();
     _passwordController.dispose();
     _fullNameController.dispose();
@@ -133,10 +129,6 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
                           validateMode: AutovalidateMode.onUserInteraction,
                           validator: _validatePassword,
                         ),
-                        PasswordStrengthIndicator(
-                          strength: _passwordStrength,
-                        ),
-                        AppSpacing.vertical(AppDimensions.xxSmallSpacing),
                         PrimaryText(
                           "shop_management.staff_password_instruction".tr(),
                           style: AppTextStyles.bodyMedium,
@@ -245,14 +237,6 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
     setState(() {
       _permissions[group] = Map<String, bool>.from(_permissions[group] ?? {})
         ..[action] = value;
-    });
-  }
-
-  void _handlePasswordChanged() {
-    setState(() {
-      _passwordStrength = PasswordStrength.fromValue(
-        _passwordController.text,
-      );
     });
   }
 

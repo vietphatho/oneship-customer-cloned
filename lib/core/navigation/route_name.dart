@@ -29,6 +29,7 @@ class RouteName {
       '/shop_master/packages/package_detail';
 
   static const String orderTrackingPage = '/home/order_tracking_page';
+  static const String productPage = '/product_page';
 
   static const String financeDetailByDayPage = '/finance_detail_by_day';
   static const String financePeriodDetailPage = '/finance_period_detail_page';

@@ -112,6 +112,7 @@ class AppDimensions {
   static const double defaultHeightOfSwitch = 32.0;
   static const double defaultAvatarRadius = 40.0;
   static const double homeAvatarRadius = 24.0;
+  static const double customerAvatarRadius = 32.0;
 
   // Screen Breakpoints
   static const double mobileBreakpoint = 600.0;
