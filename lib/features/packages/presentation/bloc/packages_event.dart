@@ -25,7 +25,9 @@ class PackagesViewDetailEvent extends PackagesEvent {
 }
 
 class PackagesFindShipperEvent extends PackagesEvent {
-  const PackagesFindShipperEvent();
+  const PackagesFindShipperEvent({this.orderIds});
+
+  final List<String>? orderIds;
 }
 
 class PackagesCancelFindingShipperEvent extends PackagesEvent {

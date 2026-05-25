@@ -14,7 +14,7 @@ abstract class PackagesRepository extends BaseRepository {
     required String pkgId,
   });
 
-  Future<Resource> findShipper(String shopId);
+  Future<Resource> findShipper(String shopId, {List<String>? orderIds});
 
   Future<Resource> cancelFindingShipper(String shopId);
 }

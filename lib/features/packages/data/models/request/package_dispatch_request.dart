@@ -13,9 +13,10 @@ abstract class PackageDispatchRequest with _$PackageDispatchRequest {
   factory PackageDispatchRequest.create({
     required String shopId,
     required String type,
+    List<String>? orderIds,
   }) => PackageDispatchRequest(
     type: type,
-    data: PackageDispatchDataRequest(shopId: shopId),
+    data: PackageDispatchDataRequest(shopId: shopId, orderIds: orderIds),
   );
 
   factory PackageDispatchRequest.fromJson(Map<String, dynamic> json) =>
@@ -26,6 +27,7 @@ abstract class PackageDispatchRequest with _$PackageDispatchRequest {
 abstract class PackageDispatchDataRequest with _$PackageDispatchDataRequest {
   const factory PackageDispatchDataRequest({
     @JsonKey(name: "shopId") String? shopId,
+    @JsonKey(name: "orderIds", includeIfNull: false) List<String>? orderIds,
   }) = _PackageDispatchDataRequest;
 
   factory PackageDispatchDataRequest.fromJson(Map<String, dynamic> json) =>

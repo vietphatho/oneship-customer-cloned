@@ -71,7 +71,10 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     Emitter<PackagesState> emit,
   ) async {
     emit(state.copyWith(findingShipperResult: Resource.loading()));
-    final response = await _repository.findShipper(state.shopId);
+    final response = await _repository.findShipper(
+      state.shopId,
+      orderIds: event.orderIds,
+    );
     emit(state.copyWith(findingShipperResult: response));
   }
 
@@ -127,8 +130,8 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     add(PackagesViewDetailEvent(pkgId));
   }
 
-  void findShipper() {
-    add(const PackagesFindShipperEvent());
+  void findShipper({List<String>? orderIds}) {
+    add(PackagesFindShipperEvent(orderIds: orderIds));
   }
 
   void cancelfindingShipper() {

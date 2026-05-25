@@ -25,6 +25,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   final PackagesBloc _pkgsBloc = getIt.get();
 
   final RefreshController _refreshController = RefreshController();
+  final Set<String> _selectedOrderKeys = {};
 
   @override
   void initState() {
@@ -59,7 +60,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
       ],
       child: Column(
         children: [
-          const _TopActionButtons(),
+          _TopActionButtons(onFindShipper: _onFindShipper),
           Expanded(
             child: BlocBuilder<OrdersBloc, OrdersState>(
               bloc: _ordersBloc,
@@ -86,8 +87,12 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                       (context, index) => OrderInfoItem(
                         index: index + 1,
                         order: _orders[index],
-                        onTap: _ordersBloc.openOrderDetail,
-                        onRemoved: _onRemoved,
+                        isSelected: _isSelected(_orders[index]),
+                        showSelectionControl: _selectedOrderKeys.isNotEmpty,
+                        onTap: _onOrderTap,
+                        onLongPress: _toggleOrderSelection,
+                        onRemoved:
+                            _selectedOrderKeys.isEmpty ? _onRemoved : null,
                       ),
                   separatorBuilder:
                       (context, index) =>
@@ -103,6 +108,50 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
 
   void _onRemoved(OrderInfo order) {
     _ordersBloc.deleteOrder(order);
+  }
+
+  void _onOrderTap(OrderInfo order) {
+    if (_selectedOrderKeys.isNotEmpty) {
+      _toggleOrderSelection(order);
+      return;
+    }
+
+    _ordersBloc.openOrderDetail(order);
+  }
+
+  void _toggleOrderSelection(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+
+    setState(() {
+      if (_selectedOrderKeys.contains(key)) {
+        _selectedOrderKeys.remove(key);
+      } else {
+        _selectedOrderKeys.add(key);
+      }
+    });
+  }
+
+  bool _isSelected(OrderInfo order) {
+    final key = _orderKey(order);
+    return key != null && _selectedOrderKeys.contains(key);
+  }
+
+  String? _orderKey(OrderInfo order) {
+    return order.id;
+  }
+
+  void _onFindShipper() {
+    final selectedOrderIds =
+        _ordersBloc.state.pendingOrdersList
+            .where(_isSelected)
+            .map((order) => order.id)
+            .whereType<String>()
+            .toList();
+
+    _pkgsBloc.findShipper(
+      orderIds: selectedOrderIds.isEmpty ? null : selectedOrderIds,
+    );
   }
 
   void _listenDeleteOrderState(BuildContext context, OrdersState state) {
@@ -137,6 +186,10 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
+    final visibleOrderKeys =
+        state.pendingOrdersList.map(_orderKey).whereType<String>().toSet();
+    _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
+
     switch (state.orderListByStatusResource.state) {
       case Result.success:
         _refreshController
@@ -153,11 +206,12 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
 }
 
 class _TopActionButtons extends StatelessWidget {
-  const _TopActionButtons({super.key});
+  const _TopActionButtons({required this.onFindShipper});
+
+  final VoidCallback onFindShipper;
 
   @override
   Widget build(BuildContext context) {
-    final PackagesBloc _pkgsBloc = getIt.get();
     final OrdersBloc _ordersBloc = getIt.get();
 
     return BlocBuilder<OrdersBloc, OrdersState>(
@@ -174,15 +228,6 @@ class _TopActionButtons extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Expanded(
-              //   child: PrimaryButton.iconOutlined(
-              //     label: "print_all".tr(),
-              //     icon: Icon(Icons.print, color: AppColors.primary),
-              //     height: AppDimensions.smallHeightButton,
-              //     onPressed: () {},
-              //   ),
-              // ),
-              // AppSpacing.horizontal(AppDimensions.xSmallSpacing),
               Expanded(
                 child: SecondaryButton.iconOutlined(
                   label: "find_shipper".tr(),
@@ -191,9 +236,7 @@ class _TopActionButtons extends StatelessWidget {
                     color: AppColors.secondary,
                   ),
                   height: AppDimensions.smallHeightButton,
-                  onPressed: () {
-                    _pkgsBloc.findShipper();
-                  },
+                  onPressed: onFindShipper,
                 ),
               ),
             ],
