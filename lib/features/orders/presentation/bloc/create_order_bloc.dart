@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
@@ -184,7 +186,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
             height: event.height,
             note: event.note,
           ),
-          serviceCode: event.deliveryServiceType,
+          serviceConfig: event.serviceConfig,
         ),
         productEntitySelected: state.productEntitySelected,
         updateOrdId: state.updateOrdId,
@@ -474,7 +476,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     final newReq = currentReq.copyWith(
       externalOrderId: externalOrderId,
       codAmount: codAmount,
-      serviceCode: draftReq.serviceCode,
+      serviceConfig: draftReq.serviceConfig,
       detail: currentReq.detail?.copyWith(
         weight: weight.toDouble(),
         height: height,
@@ -494,7 +496,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     final calculateFeeRequest = CalculateDeliveryFeeRequest(
       shopId: state.shopInfo.shopId ?? newReq.shopId,
       distance: routingDistance,
-      serviceCode: newReq.serviceCode?.requestValue,
+      serviceCode: newReq.serviceConfig?.serviceCode,
       weight: newReq.detail?.weight?.toInt(),
     );
     add(CreateOrderCalculateFeeEvent(calculateFeeRequest));
@@ -549,7 +551,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     int? width,
     int? height,
     String? note,
-    DeliveryServiceType? deliveryServiceType,
+    ShippingServiceConfigEntity? serviceConfig,
   }) {
     var draftRequest = state.draftRequest;
     add(
@@ -560,7 +562,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         width: width ?? draftRequest.detail?.width,
         height: height ?? draftRequest.detail?.height,
         note: note ?? draftRequest.detail?.note,
-        deliveryServiceType: deliveryServiceType ?? draftRequest.serviceCode,
+        serviceConfig: serviceConfig ?? draftRequest.serviceConfig,
       ),
     );
   }

@@ -31,7 +31,7 @@ class _DeliveryServiceTypeRadioGroupState
         final availableServices = state.availableServices;
         ShippingServiceConfigEntity? selectedValue;
         for (var e in availableServices) {
-          if (e.serviceCode == draftRequest.serviceCode?.requestValue) {
+          if (e.serviceCode == draftRequest.serviceConfig?.serviceCode) {
             selectedValue = e;
             break;
           }
@@ -43,11 +43,7 @@ class _DeliveryServiceTypeRadioGroupState
           isRequired: true,
           options: availableServices,
           subTitle: (value) {
-            final type = DeliveryServiceType.values.firstWhere(
-              (e) => e.requestValue == value.serviceCode,
-              orElse: () => DeliveryServiceType.standard,
-            );
-            return type.description.tr();
+            return "${value.baseFee}"; // Using baseFee as subtitle since no description
           },
           value: selectedValue,
           displayLabel: (value) {
@@ -60,10 +56,6 @@ class _DeliveryServiceTypeRadioGroupState
   }
 
   void _onChanged(ShippingServiceConfigEntity entity) {
-    final type = DeliveryServiceType.values.firstWhere(
-      (e) => e.requestValue == entity.serviceCode,
-      orElse: () => DeliveryServiceType.standard,
-    );
-    _createOrderBloc.changeOrderInfo(deliveryServiceType: type);
+    _createOrderBloc.changeOrderInfo(serviceConfig: entity);
   }
 }
