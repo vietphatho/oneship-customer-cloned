@@ -125,6 +125,7 @@ class _PrimaryAutoCompleteTextFieldState<T>
       setState(() => _isLoading = true);
       final results = await widget.onSearch(value);
       if (mounted) {
+        if (_controller?.text != value) return; // Prevent race conditions
         setState(() {
           _options = results;
           _isLoading = false;
