@@ -26,8 +26,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     this._updateProductQuantityUseCase,
   ) : super(
         ProductState(
-          createProductResource: Resource.loading(),
-          productsList: Resource.loading(),
+          createProductResource: Resource.success(null),
+          productsList: Resource.success(null),
         ),
       ) {
     on<FetchProductsListEvent>(_onFetchProductList);
