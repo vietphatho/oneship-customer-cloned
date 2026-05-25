@@ -14,6 +14,7 @@ import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_dimensions.dart';
 import 'package:oneship_customer/core/themes/app_spacing.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/enum.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
@@ -253,7 +254,12 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          _shopBloc.init(state.resource.data?.id ?? "");
+          if (state.resource.data?.userRole == UserRole.shop.value) {
+            _shopBloc.init(state.resource.data?.id ?? "");
+            break;
+          } else if (state.resource.data?.userRole == UserRole.customer.value) {
+            context.go(RouteName.customerHomePage);
+          }
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);

@@ -16,8 +16,7 @@ abstract class UserProfileResponse with _$UserProfileResponse {
     @JsonKey(name: "avatarUrl") String? avatarUrl,
     @JsonKey(name: "coordinates") dynamic coordinates,
     @JsonKey(name: "userRegistered") dynamic userRegistered,
-    @JsonKey(name: "roleId") int? roleId,
-    @JsonKey(name: "role") Role? role,
+        @JsonKey(name: "userRole") String? userRole,
     @JsonKey(name: "hasSecondPassword") bool? hasSecondPassword,
     @JsonKey(name: "profile") Profile? profile,
   }) = _UserProfileResponse;
@@ -32,15 +31,4 @@ abstract class Profile with _$Profile {
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);
-}
-
-@freezed
-abstract class Role with _$Role {
-  const factory Role({
-    @JsonKey(name: "id") int? id,
-    @JsonKey(name: "roleName") String? roleName,
-    @JsonKey(name: "roleDisplayName") String? roleDisplayName,
-  }) = _Role;
-
-  factory Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);
 }

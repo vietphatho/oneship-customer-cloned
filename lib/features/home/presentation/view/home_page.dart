@@ -18,25 +18,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.asset(
-          ImagePath.homeBackground,
-          width: AppDimensions.getSize(context).width,
-          height: AppDimensions.getSize(context).height,
-          fit: BoxFit.cover,
-        ),
         Positioned(
           top: 0,
           left: 0,
-          child: Container(
+          child: Image.asset(
+            ImagePath.homeBackground,
             width: AppDimensions.getSize(context).width,
-            height: AppDimensions.getSize(context).height / 3,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xffF4C96B).withAlpha(130), Colors.transparent],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
+            // height: AppDimensions.getSize(context).height,
+            fit: BoxFit.cover,
           ),
         ),
         Positioned(

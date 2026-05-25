@@ -1,5 +1,7 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 
 class CustomerOrderTrackingInputSession extends StatefulWidget {
   const CustomerOrderTrackingInputSession({super.key});
@@ -12,6 +14,7 @@ class CustomerOrderTrackingInputSession extends StatefulWidget {
 class _CustomerOrderTrackingInputSessionState
     extends State<CustomerOrderTrackingInputSession> {
   final TextEditingController _trackingNumberCtrl = TextEditingController();
+  final OrderTrackingBloc _orderTrackingBloc = getIt.get();
 
   @override
   void initState() {
@@ -54,5 +57,9 @@ class _CustomerOrderTrackingInputSessionState
     );
   }
 
-  void _onSearch() {}
+  void _onSearch() {
+    if (_trackingNumberCtrl.text.isNotEmpty) {
+      _orderTrackingBloc.search(_trackingNumberCtrl.text.trim());
+    }
+  }
 }
