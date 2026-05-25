@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -295,6 +296,8 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                     isRequired: true,
                     keyboardType: TextInputType.number,
                     controller: _priceCtrl,
+                    inputFormatters: [_CurrencyTextInputFormatter()],
+                    suffixText: Constants.currencyUnit,
                     validator: Validators.validateEmptyField,
                   ),
                 ),
@@ -322,7 +325,7 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                           shopId: _shopBloc.state.currentShop?.shopId ?? "",
                           name: _proNameCtrl.text.trim(),
                           sku: _skuCodeCtrl.text.trim(),
-                          price: int.parse(_priceCtrl.text.trim()),
+                          price: Utils.parseCurrencyInput(_priceCtrl.text),
                         );
                       }
                     },
@@ -343,5 +346,24 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
     _skuCodeCtrl.dispose();
     _priceCtrl.dispose();
     super.dispose();
+  }
+}
+
+class _CurrencyTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final amount = Utils.parseCurrencyInput(newValue.text);
+    if (amount == 0 && newValue.text.isEmpty) {
+      return const TextEditingValue();
+    }
+
+    final formatted = Utils.formatCurrencyInput(amount);
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
   }
 }
