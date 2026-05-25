@@ -1,12 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class DeliveryServiceTypeRadioGroup extends StatefulWidget {
   const DeliveryServiceTypeRadioGroup({super.key});
@@ -19,6 +21,15 @@ class DeliveryServiceTypeRadioGroup extends StatefulWidget {
 class _DeliveryServiceTypeRadioGroupState
     extends State<DeliveryServiceTypeRadioGroup> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
+
+  late List<ShippingServiceConfigEntity> shippingServices;
+
+  @override
+  void initState() {
+    super.initState();
+    shippingServices = _shopBloc.state.shippingServices;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +39,15 @@ class _DeliveryServiceTypeRadioGroupState
         CreateOrderRequestEntity draftRequest =
             _createOrderBloc.state.draftRequest;
 
-        final availableServices = state.availableServices;
-        ShippingServiceConfigEntity? selectedValue;
-        for (var e in availableServices) {
-          if (e.serviceCode == draftRequest.serviceConfig?.serviceCode) {
-            selectedValue = e;
-            break;
-          }
-        }
-
         return PrimaryRadioGroup<ShippingServiceConfigEntity>(
           direction: Axis.horizontal,
           title: "delivery_service_type".tr(),
           isRequired: true,
-          options: availableServices,
+          options: shippingServices,
           subTitle: (value) {
-            return "${value.baseFee}"; // Using baseFee as subtitle since no description
+            return Utils.formatCurrencyWithUnit(value.baseFee);
           },
-          value: selectedValue,
+          value: draftRequest.serviceConfig,
           displayLabel: (value) {
             return value.serviceLabel;
           },

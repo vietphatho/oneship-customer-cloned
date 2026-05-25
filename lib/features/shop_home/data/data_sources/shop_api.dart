@@ -6,8 +6,8 @@ import 'package:oneship_customer/features/shop_home/data/models/request/create_s
 import 'package:oneship_customer/features/shop_home/data/models/response/create_shop_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
-import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shipping_service_config_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'shop_api.g.dart';
@@ -39,8 +39,6 @@ abstract class ShopApi {
   });
 
   @GET("/api/v1/delivery/shops/{shopId}/shipping-config/services")
-  Future<BaseResponse<List<ShippingServiceConfigResponse>, BaseError>>
-  getShippingServiceConfigs({
-    @Path("shopId") required String shopId,
-  });
+  Future<BaseResponse<ShippingServiceConfigResponse, BaseError>>
+  getShippingServiceConfigs({@Path("shopId") required String shopId});
 }

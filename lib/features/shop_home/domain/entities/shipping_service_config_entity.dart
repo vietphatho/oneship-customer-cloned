@@ -17,7 +17,7 @@ abstract class ShippingServiceConfigEntity with _$ShippingServiceConfigEntity {
     required int sortOrder,
   }) = _ShippingServiceConfigEntity;
 
-  factory ShippingServiceConfigEntity.from(ShippingServiceConfigResponse data) {
+  factory ShippingServiceConfigEntity.from(ShippingService data) {
     return ShippingServiceConfigEntity(
       id: data.id ?? '',
       serviceCode: data.serviceCode ?? '',

@@ -2,6 +2,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/navigation/app_routes.dart';
 import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/core/network/network_utils.dart';
+import 'package:oneship_customer/core/themes/app_theme.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 
@@ -61,7 +62,8 @@ class _OneShipCustomerMaterialAppState
           // onGenerateRoute: AppRoutes.generateRoutes,
           // navigatorKey: AppNavigator.globalKey,
           // navigatorObservers: [_routeObserver],
-          // theme: AppTheme.lightTheme,
+          theme: AppTheme.lightTheme,
+          themeMode: ThemeMode.light,
           // darkTheme: AppTheme.darkTheme,
           // themeMode: _splashBloc.themeMode,
           // scrollBehavior: AppScrollBehavior(),

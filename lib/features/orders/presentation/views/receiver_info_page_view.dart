@@ -78,10 +78,8 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                         controller: _nameCtrl,
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
-                        onChanged:
-                            (value) => _createOrderBloc.changeCustomerInfo(
-                              name: value,
-                            ),
+                        onChanged: (value) =>
+                            _createOrderBloc.changeCustomerInfo(name: value),
                       ),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       PrimaryTextField(
@@ -93,10 +91,8 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(10),
                         ],
-                        onChanged:
-                            (value) => _createOrderBloc.changeCustomerInfo(
-                              phoneNumber: value,
-                            ),
+                        onChanged: (value) => _createOrderBloc
+                            .changeCustomerInfo(phoneNumber: value),
                       ),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
                       // PrimaryRadioGroup<ReceiverAddressOption>(
@@ -122,7 +118,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                       // AppSpacing.vertical(AppDimensions.smallSpacing),
                       const CustomerInfoProvinceSelector(),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
-                      const CustomerInfoWardSelector(),
+                      CustomerInfoWardSelector(),
                       // AppSpacing.vertical(AppDimensions.smallSpacing),
                       // PrimaryDropdown(),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
@@ -132,14 +128,13 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                         enabled: state.isEnableAddressField,
                         controller: _addressCtrl,
                         displayStringForOption: (item) => item.display ?? "--",
-                        onSearch:
-                            (value) => _locationServiceBloc.searchAddress(
-                              province: state.draftRequest.province!,
-                              ward: state.draftRequest.ward!,
-                              address: value,
-                            ),
-                        onSelected:
-                            (value) => _createOrderBloc.changeCustomerInfo(
+                        onSearch: (value) => _locationServiceBloc.searchAddress(
+                          province: state.draftRequest.province!,
+                          ward: state.draftRequest.ward!,
+                          address: value,
+                        ),
+                        onSelected: (value) =>
+                            _createOrderBloc.changeCustomerInfo(
                               address: value.display,
                               destinationRefId: value.refId,
                             ),
