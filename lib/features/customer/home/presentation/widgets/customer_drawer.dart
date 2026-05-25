@@ -53,13 +53,17 @@ class CustomerDrawer extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    // _drawerItem(
-                    //   icon: Icons.password,
-                    //   label: 'change_password_label'.tr(),
-                    //   onTap: () {
-                    //     Navigator.pop(context);
-                    //   },
-                    // ),
+                    _drawerItem(
+                      icon: Icons.person,
+                      label: 'delete_account'.tr(),
+                      onTap: () {
+                        PrimaryDialog.showAlertDialog(
+                          context,
+                          message: "contact_admin_to_delete_account".tr(),
+                        );
+                      },
+                      color: AppColors.logout,
+                    ),
 
                     // const Divider(),
                     BlocListener<AuthBloc, AuthState>(

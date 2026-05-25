@@ -989,5 +989,7 @@
   "user_role": "Vai trò",
   "at_hub": "Tại kho",
   "in_progress_ords": "Đang xử lý",
-  "completed_ords": "Đã hoàn thành"
+  "completed_ords": "Đã hoàn thành",
+  "delete_account": "Xoá tài khoản",
+  "contact_admin_to_delete_account": "Vui lòng liên hệ quản trị viên để được hỗ trợ xoá tài khoản\nnhut.nguyen@onexway.io"
 }
