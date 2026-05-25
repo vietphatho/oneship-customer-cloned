@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController passwordController;
   late final TextEditingController confirmPasswordController;
 
-  UserRole _userRole = UserRole.customer;
+  static const UserRole _userRole = UserRole.customer;
 
   @override
   void initState() {
