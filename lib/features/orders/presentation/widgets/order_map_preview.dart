@@ -64,8 +64,9 @@ class OrderMapPreview extends StatelessWidget {
     }
 
     return PrimaryFrame(
+      padding: EdgeInsets.zero,
       child: ClipRRect(
-        borderRadius: AppDimensions.smallBorderRadius,
+        borderRadius: AppDimensions.mediumBorderRadius,
         child: SizedBox(
           height: height,
           width: double.infinity,
