@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -7,7 +6,6 @@ import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_state.dart';
-import 'package:oneship_customer/features/map/presentation/views/primary_map_view.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class MapView extends StatefulWidget {
@@ -20,7 +18,7 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   LocationServiceBloc _locationServiceBloc = getIt.get();
   ShopBloc _shopBloc = getIt.get();
-  final MapController _mapCtrl = MapController();
+  // final MapController _mapCtrl = MapController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +40,11 @@ class _MapViewState extends State<MapView> {
 
           return SizedBox(
             height: 300,
-            child: PrimaryMapView(
-              mapCtrl: _mapCtrl,
-              currentLocation: curCoor,
-              shopLocation: shopCoor,
-            ),
+            // child: PrimaryMapView(
+            //   mapCtrl: _mapCtrl,
+            //   currentLocation: curCoor,
+            //   shopLocation: shopCoor,
+            // ),
           );
         },
       ),
@@ -69,7 +67,7 @@ class _MapViewState extends State<MapView> {
         // _mapCtrl.fitCamera(
         //   CameraFit.coordinates(coordinates: [curCoor, shopCoor ?? curCoor]),
         // );
-        _mapCtrl.move(curCoor, 16.5);
+        // _mapCtrl.move(curCoor, 16.5);
       }
     }
   }
