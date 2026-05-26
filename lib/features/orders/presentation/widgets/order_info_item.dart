@@ -45,84 +45,87 @@ class OrderInfoItem extends StatelessWidget {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => onTap?.call(order),
-              child: _OrderSelectionIndicator(isSelected: isSelected),
+              child: _buildSelectionIndicator(),
             ),
             AppSpacing.horizontal(AppDimensions.smallSpacing),
           ],
           Expanded(
-            child: PrimaryAnimatedPressableWidget(
-              onTap: () => onTap?.call(order),
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onLongPress: () => onLongPress?.call(order),
-              child: PrimaryFrame(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.smallSpacing,
-                  vertical: AppDimensions.xSmallSpacing,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              PrimaryText(
-                                "#$index.",
-                                style: AppTextStyles.bodySmall,
-                              ),
-                              AppSpacing.horizontal(
-                                AppDimensions.xxSmallSpacing,
-                              ),
-                              Expanded(
-                                child: PrimaryText(
-                                  order.orderNumber,
-                                  style: AppTextStyles.labelMedium,
-                                  overflow: TextOverflow.ellipsis,
+              child: PrimaryAnimatedPressableWidget(
+                onTap: () => onTap?.call(order),
+                child: PrimaryFrame(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppDimensions.smallSpacing,
+                    vertical: AppDimensions.xSmallSpacing,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                PrimaryText(
+                                  "#$index.",
+                                  style: AppTextStyles.bodySmall,
                                 ),
-                              ),
-                            ],
+                                AppSpacing.horizontal(
+                                  AppDimensions.xxSmallSpacing,
+                                ),
+                                Expanded(
+                                  child: PrimaryText(
+                                    order.orderNumber,
+                                    style: AppTextStyles.labelMedium,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        OrderStatusTag(status: order.status ?? "--"),
-                      ],
-                    ),
-                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                    PrimaryText(
-                      "${order.customerName} - ${order.phone}",
-                      style: AppTextStyles.bodySmall,
-                      color: AppColors.neutral4,
-                    ),
-                    AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-                    Row(
-                      children: [
-                        PrimaryText(
-                          "${"cod".tr()}:",
-                          style: AppTextStyles.bodySmall,
-                          color: AppColors.neutral4,
-                        ),
-                        AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-                        PrimaryText(
-                          Utils.formatCurrencyWithUnit(order.codAmount),
-                          style: AppTextStyles.bodySmall,
-                          color: AppColors.neutral4,
-                        ),
-                      ],
-                    ),
-                    AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-                    PrimaryText(
-                      "${"created_at".tr()}: ${DateTimeUtils.formatDateTime(order.createdAt?.toLocal())}",
-                      style: AppTextStyles.bodySmall,
-                      color: AppColors.neutral4,
-                    ),
-                    if (onConfirmOrdAtHub != null) ...[
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
-                      SecondaryButton.filled(
-                        label: "confirm".tr(),
-                        height: AppDimensions.smallHeightButton,
-                        onPressed: () => onConfirmOrdAtHub?.call(order),
+                          OrderStatusTag(status: order.status ?? "--"),
+                        ],
                       ),
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                      PrimaryText(
+                        "${order.customerName} - ${order.phone}",
+                        style: AppTextStyles.bodySmall,
+                        color: AppColors.neutral4,
+                      ),
+                      AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+                      Row(
+                        children: [
+                          PrimaryText(
+                            "${"cod".tr()}:",
+                            style: AppTextStyles.bodySmall,
+                            color: AppColors.neutral4,
+                          ),
+                          AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
+                          PrimaryText(
+                            Utils.formatCurrencyWithUnit(order.codAmount),
+                            style: AppTextStyles.bodySmall,
+                            color: AppColors.neutral4,
+                          ),
+                        ],
+                      ),
+                      AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+                      PrimaryText(
+                        "${"created_at".tr()}: ${DateTimeUtils.formatDateTime(order.createdAt?.toLocal())}",
+                        style: AppTextStyles.bodySmall,
+                        color: AppColors.neutral4,
+                      ),
+                      if (onConfirmOrdAtHub != null) ...[
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        SecondaryButton.filled(
+                          label: "confirm".tr(),
+                          height: AppDimensions.smallHeightButton,
+                          onPressed: () => onConfirmOrdAtHub?.call(order),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -131,15 +134,8 @@ class OrderInfoItem extends StatelessWidget {
       ),
     );
   }
-}
 
-class _OrderSelectionIndicator extends StatelessWidget {
-  const _OrderSelectionIndicator({required this.isSelected});
-
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildSelectionIndicator() {
     return Container(
       width: 24,
       height: 24,

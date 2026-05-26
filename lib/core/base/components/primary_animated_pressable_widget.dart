@@ -6,7 +6,6 @@ class PrimaryAnimatedPressableWidget extends StatefulWidget {
     super.key,
     required this.child,
     this.onTap,
-    this.onLongPress,
     this.scale = 0.95,
     this.downDuration = const Duration(milliseconds: 120),
     this.upDuration = const Duration(milliseconds: 120),
@@ -16,7 +15,6 @@ class PrimaryAnimatedPressableWidget extends StatefulWidget {
 
   final Widget child;
   final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
   final double scale;
   final Duration downDuration;
   final Duration upDuration;
@@ -33,7 +31,6 @@ class _CustomAnimatedPressableWidgetState
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _anim;
-  bool _didLongPress = false;
 
   @override
   void initState() {
@@ -56,7 +53,6 @@ class _CustomAnimatedPressableWidgetState
   }
 
   void _onTapDown(TapDownDetails _) {
-    _didLongPress = false;
     if (widget.enableFeedback) {
       HapticFeedback.selectionClick();
     }
@@ -70,8 +66,6 @@ class _CustomAnimatedPressableWidgetState
   }
 
   Future<void> _onTapUp(TapUpDetails _) async {
-    if (_didLongPress) return;
-
     // If user releases too fast, fast-forward to pressed state so the press is visible.
     if (!_ctrl.isCompleted) {
       // short fast-forward to make press visible even on quick taps
@@ -86,15 +80,6 @@ class _CustomAnimatedPressableWidgetState
     widget.onTap?.call();
   }
 
-  void _onLongPress() {
-    _didLongPress = true;
-    _ctrl.reverse();
-    if (widget.enableFeedback) {
-      HapticFeedback.mediumImpact();
-    }
-    widget.onLongPress?.call();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -102,7 +87,6 @@ class _CustomAnimatedPressableWidgetState
       onTapDown: _onTapDown,
       onTapCancel: _onTapCancel,
       onTapUp: _onTapUp,
-      onLongPress: widget.onLongPress == null ? null : _onLongPress,
       child: AnimatedBuilder(
         animation: _anim,
         builder: (context, child) {
