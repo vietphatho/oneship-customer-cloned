@@ -912,6 +912,7 @@
   "select_time": "Chọn thời gian",
   "payer": "Người trả phí vận chuyển",
   "accept_terms": "Tôi đã đọc và đồng ý với Điều khoản quy định",
+  "please_accept_terms": "Vui lòng đồng ý với Điều khoản quy định",
   "create_order_successfully": "Tạo đơn hàng thành công",
   "update_order_successfully": "Cập nhật đơn hàng thành công",
   "gross_fee": "Tổng cước phí giao hàng",
