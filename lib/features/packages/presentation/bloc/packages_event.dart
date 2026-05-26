@@ -31,3 +31,8 @@ class PackagesFindShipperEvent extends PackagesEvent {
 class PackagesCancelFindingShipperEvent extends PackagesEvent {
   const PackagesCancelFindingShipperEvent();
 }
+
+class PackagesFindingShipperStatusEvent extends PackagesEvent {
+  final bool status;
+  const PackagesFindingShipperStatusEvent(this.status);
+}
