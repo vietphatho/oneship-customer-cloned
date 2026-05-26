@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -7,6 +6,7 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
+import 'package:oneship_customer/core/utils/currency_text_input_formatter.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -296,7 +296,7 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
                     isRequired: true,
                     keyboardType: TextInputType.number,
                     controller: _priceCtrl,
-                    inputFormatters: [_CurrencyTextInputFormatter()],
+                    inputFormatters: [CurrencyTextInputFormatter()],
                     suffixText: Constants.currencyUnit,
                     validator: Validators.validateEmptyField,
                   ),
@@ -346,24 +346,5 @@ class _CreateProductContainerState extends State<_CreateProductContainer> {
     _skuCodeCtrl.dispose();
     _priceCtrl.dispose();
     super.dispose();
-  }
-}
-
-class _CurrencyTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final amount = Utils.parseCurrencyInput(newValue.text);
-    if (amount == 0 && newValue.text.isEmpty) {
-      return const TextEditingValue();
-    }
-
-    final formatted = Utils.formatCurrencyInput(amount);
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
   }
 }

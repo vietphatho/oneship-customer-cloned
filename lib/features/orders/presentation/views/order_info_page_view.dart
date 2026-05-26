@@ -1,6 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
+import 'package:oneship_customer/core/utils/currency_text_input_formatter.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -88,7 +88,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _codCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
-                          inputFormatters: [_CurrencyTextInputFormatter()],
+                          inputFormatters: [CurrencyTextInputFormatter()],
                           suffixText: Constants.currencyUnit,
                         ),
                       ),
@@ -216,25 +216,6 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
       externalOrderId: _externalOrderIdCtrl.text,
       orderSource: _orderSourceCtrl.text,
       selectedProducts: productBloc.state.productsListSelected,
-    );
-  }
-}
-
-class _CurrencyTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final amount = Utils.parseCurrencyInput(newValue.text);
-    if (amount == 0 && newValue.text.isEmpty) {
-      return const TextEditingValue();
-    }
-
-    final formatted = Utils.formatCurrencyInput(amount);
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
