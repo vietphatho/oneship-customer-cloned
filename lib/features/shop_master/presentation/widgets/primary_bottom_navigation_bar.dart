@@ -45,16 +45,15 @@ class _PrimaryBottomNavigationBarState
                 // ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children:
-                      BottomNavigationItem.values
-                          .map(
-                            (item) => _NavigationItem(
-                              item: item,
-                              isSelected: _shopMasterBloc.currentTab == item,
-                              onTap: _onItemTapped,
-                            ),
-                          )
-                          .toList(),
+                  children: BottomNavigationItem.values
+                      .map(
+                        (item) => _NavigationItem(
+                          item: item,
+                          isSelected: _shopMasterBloc.currentTab == item,
+                          onTap: _onItemTapped,
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ),

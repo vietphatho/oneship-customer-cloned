@@ -39,26 +39,30 @@ class OrderOfPkgInfoItem extends StatelessWidget {
             OrderStatusTag(status: order.status ?? ""),
           ],
         ),
-        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+        AppSpacing.vertical(AppDimensions.xxSmallSpacing),
         PrimaryText(
           "${order.customerName} - ${order.phone}",
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-        PrimaryText("Dá»‹ch vá»¥: ${order.payer}", style: AppTextStyles.bodyMedium),
-            PrimaryText(
-              "${"service_type".tr()}: ${_translatePayer(order.payer)}",
-              style: AppTextStyles.bodyMedium,
-            ),
+
         PrimaryText(
-          "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+          "Dịch vụ: ${order.serviceCode}",
           style: AppTextStyles.bodyMedium,
         ),
-        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"address".tr()}: ${order.fullAddress}",
           style: AppTextStyles.bodyMedium,
         ),
+        // PrimaryText(
+        //   "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+        //   style: AppTextStyles.bodyMedium,
+        // ),
+        // AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+        // PrimaryText(
+        //   "${"address".tr()}: ${order.fullAddress}",
+        //   style: AppTextStyles.bodyMedium,
+        // ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"created_at".tr()}: ${DateTimeUtils.formatDateFromDT(order.createdAt) ?? '--'}",
