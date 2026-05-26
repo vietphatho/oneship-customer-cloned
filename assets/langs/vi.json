@@ -701,6 +701,8 @@
   "cancel_finding_shipper": "Huỷ tìm",
   "empty_data": "Không có dữ liệu",
   "find_shipper": "Tìm tài xế",
+  "finding_driver": "Đang tìm tài xế...",
+  "finding_driver_desc": "Hệ thống đang quét tài xế phù hợp gần cửa hàng",
   "pick_up_info": "Thông tin nhận hàng",
   "pick_up_date": "Ngày lấy hàng",
   "pick_up_time": "Thời gian lấy hàng",
