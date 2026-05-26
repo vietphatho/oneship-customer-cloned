@@ -9,6 +9,7 @@ import 'package:oneship_customer/features/orders/presentation/bloc/create_order_
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_province_selector.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_ward_selector.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_map_preview.dart';
 
 enum ReceiverAddressOption { newAddress, oldAddress }
 
@@ -140,7 +141,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                             ),
                       ),
                       AppSpacing.vertical(AppDimensions.smallSpacing),
-                      // Container(height: 200, color: Colors.green),
+                      CreateOrderMapPreview(),
                     ],
                   ),
                 ),

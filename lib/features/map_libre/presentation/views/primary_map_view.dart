@@ -3,7 +3,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/map_libre/enum.dart';
 import 'package:oneship_customer/features/map_libre/presentation/bloc/map_libre_bloc.dart';
 import 'package:oneship_customer/features/map_libre/presentation/bloc/map_libre_state.dart';
@@ -23,11 +22,11 @@ class PrimaryMapView extends StatefulWidget {
 }
 
 class _PrimaryMapViewState extends State<PrimaryMapView> {
-  final MapLibreBloc _mapLibreBloc = getIt.get();
+  final MapLibreBloc _mapLibreBloc = MapLibreBloc();
 
   @override
   void dispose() {
-    getIt.resetLazySingleton<MapLibreBloc>();
+    _mapLibreBloc.close();
     super.dispose();
   }
 

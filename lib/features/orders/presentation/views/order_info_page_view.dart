@@ -7,6 +7,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_map_preview.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/product_selected_container.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/product_selection_button.dart';
 
@@ -173,7 +174,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
             ),
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
-          //map view
+          CreateOrderMapPreview(),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
           SafeArea(
             child: Row(
