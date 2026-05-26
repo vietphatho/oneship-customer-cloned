@@ -216,14 +216,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(
       state.copyWith(
         ordersHistoryResource: response,
-        deliveredOrdersHistoryList:
-            event.status == OrderStatus.delivered
-                ? [...state.deliveredOrdersHistoryList, ...orders]
-                : state.deliveredOrdersHistoryList,
-        returnedOrdersHistoryList:
-            event.status == OrderStatus.returned
-                ? [...state.returnedOrdersHistoryList, ...orders]
-                : state.returnedOrdersHistoryList,
+        deliveredOrdersHistoryList: event.status == OrderStatus.delivered
+            ? [...state.deliveredOrdersHistoryList, ...orders]
+            : state.deliveredOrdersHistoryList,
+        returnedOrdersHistoryList: event.status == OrderStatus.returned
+            ? [...state.returnedOrdersHistoryList, ...orders]
+            : state.returnedOrdersHistoryList,
       ),
     );
   }
@@ -434,6 +432,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   void init(String shopId) {
     _shopId = shopId;
-    add(OrdersFetchingByStatusEvent(_currentOrderStatus));
+    // add(OrdersFetchingByStatusEvent(_currentOrderStatus));
   }
 }

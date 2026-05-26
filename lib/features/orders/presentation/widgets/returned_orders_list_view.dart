@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -24,6 +25,7 @@ class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
   @override
   void initState() {
     super.initState();
+    _ordersBloc.currentOrderStatus = OrderStatus.returned;
     _ordersBloc.fetchOrdersByStatus();
   }
 
@@ -39,16 +41,15 @@ class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.returnedOrdersList != current.returnedOrdersList,
+          listenWhen: (previous, current) =>
+              previous.returnedOrdersList != current.returnedOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
       child: BlocBuilder<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
-        buildWhen:
-            (pre, cur) => pre.returnedOrdersList != cur.returnedOrdersList,
+        buildWhen: (pre, cur) =>
+            pre.returnedOrdersList != cur.returnedOrdersList,
         builder: (context, state) {
           List<OrderInfo> orders = state.returnedOrdersList;
 
@@ -66,15 +67,13 @@ class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
               horizontal: AppDimensions.smallSpacing,
             ),
             itemCount: orders.length,
-            itemBuilder:
-                (context, index) => OrderInfoItem(
-                  index: index + 1,
-                  order: orders[index],
-                  onTap: _ordersBloc.openOrderDetail,
-                ),
-            separatorBuilder:
-                (context, index) =>
-                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
+            itemBuilder: (context, index) => OrderInfoItem(
+              index: index + 1,
+              order: orders[index],
+              onTap: _ordersBloc.openOrderDetail,
+            ),
+            separatorBuilder: (context, index) =>
+                AppSpacing.vertical(AppDimensions.xSmallSpacing),
           );
         },
       ),
