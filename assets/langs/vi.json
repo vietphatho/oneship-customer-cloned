@@ -991,5 +991,6 @@
   "in_progress_ords": "Đang xử lý",
   "completed_ords": "Đã hoàn thành",
   "delete_account": "Xoá tài khoản",
-  "contact_admin_to_delete_account": "Vui lòng liên hệ quản trị viên để được hỗ trợ xoá tài khoản\nnhut.nguyen@onexway.io"
+  "contact_admin_to_delete_account": "Vui lòng liên hệ quản trị viên để được hỗ trợ xoá tài khoản\nnhut.nguyen@onexway.io",
+  "create_shop_success": "Tạo cửa hàng thành công"
 }
