@@ -42,9 +42,8 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.processingOrdersList != current.processingOrdersList,
+          listenWhen: (previous, current) =>
+              previous.processingOrdersList != current.processingOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
@@ -74,15 +73,13 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
                     horizontal: AppDimensions.smallSpacing,
                   ),
                   itemCount: orders.length,
-                  itemBuilder:
-                      (context, index) => OrderInfoItem(
-                        index: index + 1,
-                        order: orders[index],
-                        onTap: _ordersBloc.openOrderDetail,
-                      ),
-                  separatorBuilder:
-                      (context, index) =>
-                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                  itemBuilder: (context, index) => OrderInfoItem(
+                    index: index + 1,
+                    order: orders[index],
+                    onTap: _ordersBloc.openOrderDetail,
+                  ),
+                  separatorBuilder: (context, index) =>
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
                 ),
               ),
             ],
@@ -131,8 +128,8 @@ class _TopActionButtons extends StatelessWidget {
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: ordersBloc,
-      buildWhen:
-          (pre, cur) => pre.processingOrdersList != cur.processingOrdersList,
+      buildWhen: (pre, cur) =>
+          pre.processingOrdersList != cur.processingOrdersList,
       builder: (context, state) {
         List<OrderInfo> orders = state.processingOrdersList;
         if (orders.isEmpty) return const SizedBox();

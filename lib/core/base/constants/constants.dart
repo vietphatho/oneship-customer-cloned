@@ -58,34 +58,31 @@ class Constants {
   static const darkTileMapUrl =
       "https://maps.vietmap.vn/maps/styles/dm/style.json?apikey=";
 
-
-  static const String googleMapsStyleJson = '''
-    {
-      "version": 8,
-      "sources": {
-        "google-tiles": {
-          "type": "raster",
-          "tiles": [
-            "https://mt0.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-            "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-            "https://mt2.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-            "https://mt3.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
-          ],
-          "tileSize": 256,
-          "attribution": "© Google Maps"
-        }
+  static const Map googleMapsStyleJson = {
+    "version": 8,
+    "sources": {
+      "google-tiles": {
+        "type": "raster",
+        "tiles": [
+          "https://mt0.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+          "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+          "https://mt2.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+          "https://mt3.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+        ],
+        "tileSize": 256,
+        "attribution": "© Google Maps",
       },
-      "layers": [
-        {
-          "id": "google-map",
-          "type": "raster",
-          "source": "google-tiles",
-          "minzoom": 0,
-          "maxzoom": 22
-        }
-      ]
-    }
-    ''';
+    },
+    "layers": [
+      {
+        "id": "google-map",
+        "type": "raster",
+        "source": "google-tiles",
+        "minzoom": 0,
+        "maxzoom": 22,
+      },
+    ],
+  };
 
   /// Default center (Ho Chi Minh City, Vietnam)
   static const double defaultCenterLat = 10.8231;

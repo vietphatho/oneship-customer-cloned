@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:maplibre/maplibre.dart';
@@ -40,15 +44,21 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
       lon: widget.shopLocation.longitude,
       lat: widget.shopLocation.latitude,
     );
+
     return BlocBuilder<MapLibreBloc, MapLibreState>(
       bloc: _mapLibreBloc,
       builder: (context, state) {
         return MapLibreMap(
           options: MapOptions(
-            initStyle: Constants.googleMapsStyleJson,
+            initStyle: jsonEncode(Constants.googleMapsStyleJson),
             initCenter: currentLocation,
             initZoom: Constants.defaultZoom,
           ),
+          gestureRecognizers: {
+            Factory<OneSequenceGestureRecognizer>(
+              () => EagerGestureRecognizer(),
+            ),
+          },
           onEvent: (event) async {
             switch (event) {
               case MapEventMapCreated():
