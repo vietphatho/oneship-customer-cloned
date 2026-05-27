@@ -5,12 +5,11 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/shop_staff/data/models/request/create_shop_staff_request.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_shop_selector.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_config.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_section.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_form_footer.dart';
@@ -33,13 +32,13 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  BriefShopEntity? _selectedShop;
+  // BriefShopEntity? _selectedShop;
   late Map<String, Map<String, bool>> _permissions;
 
   @override
   void initState() {
     super.initState();
-    _selectedShop = _shopBloc.state.currentShop;
+    // _selectedShop = _shopBloc.state.currentShop;
     _permissions = CreateShopStaffRequest.defaultPermissions();
   }
 
@@ -57,9 +56,8 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
   Widget build(BuildContext context) {
     return BlocListener<ShopStaffBloc, ShopStaffState>(
       bloc: _shopStaffBloc,
-      listenWhen:
-          (previous, current) =>
-              previous.createStaffResource != current.createStaffResource,
+      listenWhen: (previous, current) =>
+          previous.createStaffResource != current.createStaffResource,
       listener: _handleCreateStaffChanged,
       child: Scaffold(
         appBar: PrimaryAppBar(title: "shop_management.staff_add_title".tr()),
@@ -96,12 +94,7 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
                           ),
                         ),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
-                        _StaffShopSelector(
-                          shopBloc: _shopBloc,
-                          selectedShop: _selectedShop,
-                          onSelected:
-                              (shop) => setState(() => _selectedShop = shop),
-                        ),
+                        ShopStaffShopSelector(),
                         AppSpacing.vertical(AppDimensions.mediumSpacing),
                         PrimaryText(
                           "shop_management.staff_info".tr(),
@@ -191,8 +184,8 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
                           return StaffPermissionSection(
                             group: group,
                             values: _permissions[group.key] ?? const {},
-                            onChanged:
-                                (action, value) => _handlePermissionChanged(
+                            onChanged: (action, value) =>
+                                _handlePermissionChanged(
                                   group.key,
                                   action,
                                   value,
@@ -217,7 +210,7 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
 
   void _handleSubmit() {
     if (!_formKey.currentState!.validate()) return;
-    final shopId = _selectedShop?.shopId;
+    final shopId = _shopBloc.state.currentShop?.shopId;
     if (shopId == null || shopId.isEmpty) return;
 
     _shopStaffBloc.createStaff(
@@ -270,39 +263,38 @@ class _CreateShopStaffPageState extends State<CreateShopStaffPage> {
   }
 }
 
-class _StaffShopSelector extends StatelessWidget {
-  const _StaffShopSelector({
-    required this.shopBloc,
-    required this.selectedShop,
-    required this.onSelected,
-  });
+// class _StaffShopSelector extends StatelessWidget {
+//   const _StaffShopSelector({
+//     required this.shopBloc,
+//     required this.selectedShop,
+//     required this.onSelected,
+//   });
 
-  final ShopBloc shopBloc;
-  final BriefShopEntity? selectedShop;
-  final ValueChanged<BriefShopEntity?> onSelected;
+//   final ShopBloc shopBloc;
+//   final BriefShopEntity? selectedShop;
+//   final ValueChanged<BriefShopEntity?> onSelected;
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ShopBloc, ShopState>(
-      bloc: shopBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.briefShopsResource != current.briefShopsResource ||
-              previous.currentShop != current.currentShop,
-      builder: (context, state) {
-        final shops = state.briefShopsResource.data?.data ?? const [];
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<ShopBloc, ShopState>(
+//       bloc: shopBloc,
+//       buildWhen: (previous, current) =>
+//           previous.briefShopsResource != current.briefShopsResource ||
+//           previous.currentShop != current.currentShop,
+//       builder: (context, state) {
+//         final shops = state.briefShopsResource.data?.data ?? const [];
 
-        return PrimaryDropdown<BriefShopEntity>(
-          label: "shop_management.staff_select_shop".tr(),
-          hintText: "select".tr(),
-          menu: shops,
-          initialValue: selectedShop,
-          toLabel: (shop) => shop.shopName,
-          validator:
-              (value) => value == null ? "validate.text_required".tr() : null,
-          onSelected: onSelected,
-        );
-      },
-    );
-  }
-}
+//         return PrimaryDropdown<BriefShopEntity>(
+//           label: "shop_management.staff_select_shop".tr(),
+//           hintText: "select".tr(),
+//           menu: shops,
+//           initialValue: selectedShop,
+//           toLabel: (shop) => shop.shopName,
+//           validator: (value) =>
+//               value == null ? "validate.text_required".tr() : null,
+//           onSelected: onSelected,
+//         );
+//       },
+//     );
+//   }
+// }

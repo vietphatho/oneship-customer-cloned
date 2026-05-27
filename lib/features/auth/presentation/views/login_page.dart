@@ -265,10 +265,16 @@ class _LoginPageState extends State<LoginPage> {
           if (state.resource.data?.userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
             break;
-          } else if (state.resource.data?.userRole == UserRole.customer.value) {
-            context.go(RouteName.customerHomePage);
+          } else {
+            PrimaryDialog.showAlertDialog(
+              context,
+              message: "login_with_shop_owner_account".tr(),
+              onClosed: () {
+                _authBloc.logOut();
+              },
+            );
+            break;
           }
-          break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showErrorDialog(

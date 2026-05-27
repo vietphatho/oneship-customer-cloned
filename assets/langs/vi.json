@@ -6,6 +6,8 @@
   "confirmed_quantity": "Xác nhận số lượng",
   "confirmed_pickup": "Xác nhận lấy hàng",
   "dropped": "Đã bỏ",
+  "select_shop": "Chọn cửa hàng",
+  "login_with_shop_owner_account": "Vui lòng đăng nhập bằng tài khoản dành cho chủ shop!",
   "shipper_founded": "Đã tìm thấy tài xế cho túi hàng!",
   "shipper_not_found": "Không tìm thấy tài xế cho túi hàng này!",
   "not_found": "Không tìm thấy",
