@@ -17,6 +17,10 @@ class ShopFetchBriefListEvent extends ShopEvent {
   const ShopFetchBriefListEvent(this.userId);
 }
 
+class ShopLoadMoreBriefListEvent extends ShopEvent {
+  const ShopLoadMoreBriefListEvent();
+}
+
 class ShopFetchDataEvent extends ShopEvent {
   const ShopFetchDataEvent();
 }
@@ -41,6 +45,12 @@ class ShopChangeEvent extends ShopEvent {
   final BriefShopEntity shop;
 
   ShopChangeEvent(this.shop);
+}
+
+class ShopChangeDraftSelectedEvent extends ShopEvent {
+  final BriefShopEntity shop;
+
+  ShopChangeDraftSelectedEvent(this.shop);
 }
 
 class ShopSearchEvent extends ShopEvent {

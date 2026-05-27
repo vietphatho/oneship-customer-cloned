@@ -21,14 +21,16 @@ abstract class ShopState with _$ShopState {
     required Resource<List<ShippingServiceConfigEntity>>
     shippingServiceTypesResource,
     BriefShopEntity? currentShop,
+    BriefShopEntity? draftSelectedShop,
+    @Default([]) List<BriefShopEntity> listBriefShops,
     @Default([]) List<BriefShopEntity> filteredShops,
   }) = _ShopState;
 }
 
 extension ShopStateX on ShopState {
   List<BriefShopEntity> get approvedBriefShops {
-    final shops = briefShopsResource.data?.data ?? const [];
-    return shops.where((shop) => shop.isActive).toList();
+    // final shops = briefShopsResource.data?.data ?? const [];
+    return listBriefShops.where((shop) => shop.isActive).toList();
   }
 
   List<ShippingServiceConfigEntity> get shippingServices =>
@@ -39,6 +41,8 @@ extension ShopStateX on ShopState {
   }
 
   bool get hasNoShops => briefShopsResource.data?.data.isEmpty ?? true;
+
+  bool get hasNext => briefShopsResource.data?.meta?.hasNext == true;
 
   List<ShopEntity> get shopsList => shopsResource.data?.items ?? [];
 }
