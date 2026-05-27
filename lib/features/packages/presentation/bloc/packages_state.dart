@@ -16,6 +16,8 @@ abstract class PackagesState with _$PackagesState {
     required Resource<PackageDetail> currentPkg,
     required Resource findingShipperResult,
     required Resource cancelFindingShipperResult,
+
+    bool? findShipperStatus,
   }) = _PackagesState;
 }
 

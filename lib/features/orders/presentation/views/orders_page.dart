@@ -28,7 +28,6 @@ class _OrdersPageState extends State<OrdersPage>
 
   late List<OrderStatus> _tabList;
   late TabController _tabCtrl;
-  int _previousIndex = 0;
 
   @override
   void initState() {
@@ -44,15 +43,16 @@ class _OrdersPageState extends State<OrdersPage>
       OrderStatus.returned,
     ];
     _tabCtrl = TabController(length: _tabList.length, vsync: this);
-    _tabCtrl.addListener(_tabListener);
 
     var shopId = _shopBloc.state.currentShop?.shopId ?? "";
     _ordersBloc.init(shopId);
+
+    int destination = _tabList.indexOf(OrderStatus.pending);
+    _tabCtrl.animateTo(destination);
   }
 
   @override
   void dispose() {
-    _tabCtrl.removeListener(_tabListener);
     _tabCtrl.dispose();
     _ordersBloc.currentOrderStatus = OrderStatus.pending;
     super.dispose();
@@ -66,25 +66,28 @@ class _OrdersPageState extends State<OrdersPage>
         listeners: [
           BlocListener<PackagesBloc, PackagesState>(
             bloc: _packagesBloc,
-            listenWhen:
-                (pre, cur) =>
-                    pre.findingShipperResult != cur.findingShipperResult,
+            listenWhen: (pre, cur) =>
+                pre.findingShipperResult != cur.findingShipperResult,
             listener: _handleFindingShipperChanged,
           ),
           BlocListener<PackagesBloc, PackagesState>(
             bloc: _packagesBloc,
-            listenWhen:
-                (pre, cur) =>
-                    pre.cancelFindingShipperResult !=
-                    cur.cancelFindingShipperResult,
+            listenWhen: (pre, cur) =>
+                pre.cancelFindingShipperResult !=
+                cur.cancelFindingShipperResult,
             listener: _handleCancelFindingShipperChanged,
           ),
           BlocListener<OrdersBloc, OrdersState>(
             bloc: _ordersBloc,
-            listenWhen:
-                (previous, current) =>
-                    previous.orderDetailResource != current.orderDetailResource,
+            listenWhen: (previous, current) =>
+                previous.orderDetailResource != current.orderDetailResource,
             listener: _listenLoadDetailOrder,
+          ),
+          BlocListener<PackagesBloc, PackagesState>(
+            bloc: _packagesBloc,
+            listenWhen: (pre, cur) =>
+                pre.findShipperStatus != cur.findShipperStatus,
+            listener: _handleFindingShipperStatusListener,
           ),
         ],
         child: Column(
@@ -109,7 +112,6 @@ class _OrdersPageState extends State<OrdersPage>
                     OrderStatusTabBar(
                       controller: _tabCtrl,
                       items: _tabList,
-                      onTap: _onTabChanged,
                     ),
                     Expanded(
                       child: TabBarView(
@@ -139,8 +141,8 @@ class _OrdersPageState extends State<OrdersPage>
         PrimaryDialog.hideLoadingDialog(context);
         await Future.delayed(Durations.short2);
         int destination = _tabList.indexOf(OrderStatus.processing);
-        _onTabChanged(destination);
         _tabCtrl.animateTo(destination);
+        _packagesBloc.connectSocket();
         break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
@@ -164,8 +166,8 @@ class _OrdersPageState extends State<OrdersPage>
         PrimaryDialog.hideLoadingDialog(context);
         await Future.delayed(Durations.short2);
         int destination = _tabList.indexOf(OrderStatus.pending);
-        _onTabChanged(destination);
         _tabCtrl.animateTo(destination);
+        _packagesBloc.disconnectSocket();
         break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
@@ -175,16 +177,6 @@ class _OrdersPageState extends State<OrdersPage>
         );
         break;
     }
-  }
-
-  void _onTabChanged(int tabIndex) {
-    if (_previousIndex == tabIndex) return;
-    _previousIndex = tabIndex;
-    _ordersBloc.currentOrderStatus = _tabList[tabIndex];
-  }
-
-  void _tabListener() {
-    _onTabChanged(_tabCtrl.index);
   }
 
   void _listenLoadDetailOrder(BuildContext context, OrdersState state) {
@@ -202,6 +194,33 @@ class _OrdersPageState extends State<OrdersPage>
           context,
           message: state.orderDetailResource.message,
         );
+    }
+  }
+
+  void _handleFindingShipperStatusListener(
+    BuildContext context,
+    PackagesState state,
+  ) {
+    switch (state.findShipperStatus) {
+      case true:
+        PrimaryDialog.showSuccessDialog(
+          context,
+          message: "shipper_founded".tr(),
+          onClosed: () {
+            int destination = _tabList.indexOf(OrderStatus.batched);
+            _tabCtrl.animateTo(destination);
+          },
+        );
+        break;
+      case false:
+        PrimaryDialog.showErrorDialog(
+          context,
+          title: "not_found".tr(),
+          message: "shipper_not_found".tr(),
+        );
+        break;
+      default:
+        break;
     }
   }
 }

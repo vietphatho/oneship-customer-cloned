@@ -10,8 +10,7 @@ class FindingShipperSearchWidget extends StatefulWidget {
       _FindingShipperSearchWidgetState();
 }
 
-class _FindingShipperSearchWidgetState
-    extends State<FindingShipperSearchWidget>
+class _FindingShipperSearchWidgetState extends State<FindingShipperSearchWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -67,10 +66,7 @@ class _FindingShipperSearchWidgetState
                 Positioned(
                   left: AppDimensions.largeSpacing,
                   top: 82,
-                  child: _DriverPingChip(
-                    progress: _controller.value,
-                    delay: 0,
-                  ),
+                  child: _DriverPingChip(progress: _controller.value, delay: 0),
                 ),
                 Positioned(
                   right: AppDimensions.largeSpacing,
@@ -107,9 +103,7 @@ class _SearchingShipperTitle extends StatelessWidget {
       children: [
         PrimaryText(
           'finding_driver'.tr(),
-          style: AppTextStyles.titleMedium.copyWith(
-            color: AppColors.neutral2,
-          ),
+          style: AppTextStyles.titleMedium.copyWith(color: AppColors.neutral2),
           textAlign: TextAlign.center,
           maxLine: 1,
           overflow: TextOverflow.ellipsis,
@@ -117,9 +111,7 @@ class _SearchingShipperTitle extends StatelessWidget {
         AppSpacing.vertical(AppDimensions.xxSmallSpacing),
         PrimaryText(
           'finding_driver_desc'.tr(),
-          style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.neutral5,
-          ),
+          style: AppTextStyles.bodySmall.copyWith(color: AppColors.neutral5),
           textAlign: TextAlign.center,
           maxLine: 1,
           overflow: TextOverflow.ellipsis,
@@ -165,10 +157,7 @@ class _SearchCenter extends StatelessWidget {
 }
 
 class _DriverPingChip extends StatelessWidget {
-  const _DriverPingChip({
-    required this.progress,
-    required this.delay,
-  });
+  const _DriverPingChip({required this.progress, required this.delay});
 
   final double progress;
   final double delay;
@@ -220,17 +209,14 @@ class _SearchBeamPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height * 0.60);
+    final center = Offset(size.width / 2, size.height / 2);
     final radius = size.shortestSide * 0.42;
     final bgRect = Offset.zero & size;
     final bgPaint = Paint()
       ..shader = const LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFFFFFFFF),
-          Color(0xFFF8FBFF),
-        ],
+        colors: [Color(0xFFFFFFFF), Color(0xFFF8FBFF)],
       ).createShader(bgRect);
 
     canvas.drawRRect(
