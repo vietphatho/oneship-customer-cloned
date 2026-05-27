@@ -185,7 +185,7 @@ class _NavigationItem extends StatelessWidget {
             ),
             AppSpacing.vertical(AppDimensions.xxSmallSpacing),
             PrimaryText(
-              item.navLabel,
+              item.navLabelKey.tr(),
               style: AppTextStyles.bodySmall.copyWith(
                 color: isSelected ? AppColors.primary : AppColors.neutral5,
                 fontSize: isSelected ? 13 : 12,
@@ -200,18 +200,18 @@ class _NavigationItem extends StatelessWidget {
 }
 
 extension _BottomNavigationItemLabel on BottomNavigationItem {
-  String get navLabel {
+  String get navLabelKey {
     switch (this) {
       case BottomNavigationItem.home:
-        return 'Home';
+        return 'bottom_navigation.home';
       case BottomNavigationItem.finance:
-        return 'Finance';
+        return 'bottom_navigation.finance';
       case BottomNavigationItem.staffManagement:
-        return 'Staff';
+        return 'bottom_navigation.staff';
       case BottomNavigationItem.shopManagement:
-        return 'Shop';
+        return 'bottom_navigation.shop';
       case BottomNavigationItem.menu:
-        return 'More';
+        return 'bottom_navigation.more';
     }
   }
 }

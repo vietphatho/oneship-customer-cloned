@@ -1,4 +1,11 @@
 {
+  "bottom_navigation": {
+    "home": "Trang chủ",
+    "finance": "Tài chính",
+    "staff": "Nhân sự",
+    "shop": "Cửa hàng",
+    "more": "Thêm"
+  },
   "shipper_founded": "Đã tìm thấy tài xế cho túi hàng!",
   "shipper_not_found": "Không tìm thấy tài xế cho túi hàng này!",
   "not_found": "Không tìm thấy",
