@@ -1,4 +1,9 @@
 {
+  "assigned": "Đã phân công",
+  "remove_orders_pending": "Chờ duyệt bỏ đơn",
+  "confirmed_quantity": "Xác nhận số lượng",
+  "confirmed_pickup": "Xác nhận lấy hàng",
+  "dropped": "Đã bỏ",
   "shipper_founded": "Đã tìm thấy tài xế cho túi hàng!",
   "shipper_not_found": "Không tìm thấy tài xế cho túi hàng này!",
   "not_found": "Không tìm thấy",
@@ -44,7 +49,7 @@
   "input": "Nhập",
   "arrived_at_shop": "Đã đến cửa hàng",
   "confirm_qty": "Xác nhận số lượng",
-  "picked_up": "Xác nhận lấy hàng",
+  "picked_up": "Đã lấy hàng",
   "arrived_at_delivery": "Đã đến điểm giao hàng",
   "delivery_solutions": "Giải pháp giao hàng\nChặng cuối thông minh",
   "company_slogan": "Lộ trình tối ưu - Chống giao hàng khống - Tiết kiệm chi phí - Đối soát thần tốc.",
