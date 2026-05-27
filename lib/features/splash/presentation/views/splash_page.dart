@@ -99,8 +99,9 @@ class _SplashPageState extends State<SplashPage> {
           if (state.resource.data?.userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
             break;
-          } else if (state.resource.data?.userRole == UserRole.customer.value) {
-            context.go(RouteName.customerHomePage);
+          } else  {
+            _authBloc.logOut();
+            context.go(RouteName.homePage);
           }
           break;
         case Result.error:
