@@ -18,8 +18,14 @@ class ShopRepositoryImpl extends ShopRepository {
   ShopRepositoryImpl(this._api);
 
   @override
-  Future<Resource<GetBriefShopsEntity>> getBriefShops(String userId) async {
-    final response = await request(() => _api.getBriefShops(userId));
+  Future<Resource<GetBriefShopsEntity>> getBriefShops({
+    required String userId,
+    int? page,
+    int? limit,
+  }) async {
+    final response = await request(
+      () => _api.getBriefShops(userId: userId, page: page, limit: limit),
+    );
     return response.parse((dto) => GetBriefShopsEntity.from(dto));
   }
 

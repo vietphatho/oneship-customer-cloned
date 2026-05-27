@@ -8,7 +8,11 @@ import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_s
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 
 abstract class ShopRepository extends BaseRepository {
-  Future<Resource<GetBriefShopsEntity>> getBriefShops(String userId);
+  Future<Resource<GetBriefShopsEntity>> getBriefShops({
+    required String userId,
+    int? page,
+    int? limit,
+  });
 
   Future<Resource<ShopDailySummaryEntity>> fetchShopDailySummary(String shopId);
 
@@ -16,7 +20,6 @@ abstract class ShopRepository extends BaseRepository {
 
   Future<Resource<GetShopsEntity>> getShops({int? page, int? limit});
 
-  Future<Resource<List<ShippingServiceConfigEntity>>> getShippingServiceConfigs({
-    required String shopId,
-  });
+  Future<Resource<List<ShippingServiceConfigEntity>>>
+  getShippingServiceConfigs({required String shopId});
 }
