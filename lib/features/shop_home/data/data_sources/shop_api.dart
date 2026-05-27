@@ -19,9 +19,11 @@ abstract class ShopApi {
   factory ShopApi(Dio dio) = _ShopApi;
 
   @GET("/api/v1/shop-staff/users/{user_id}/shops")
-  Future<BaseResponse<GetBriefShopsResponse, BaseError>> getBriefShops(
-    @Path("user_id") String userId,
-  );
+  Future<BaseResponse<GetBriefShopsResponse, BaseError>> getBriefShops({
+    @Path("user_id") required  String userId,
+    @Query("page") int? page,
+    @Query("limit") int? limit,
+  });
 
   @GET("/api/v1/statistics/shop/{shopId}/daily-summary")
   Future<BaseResponse<ShopDailySummaryResponse, BaseError>>

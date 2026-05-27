@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
@@ -36,12 +37,14 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         ),
       ) {
     on<ShopFetchBriefListEvent>(_onFetchBriefShops);
+    on<ShopLoadMoreBriefListEvent>(_onLoadMoreBriefShops);
     on<ShopFetchDataEvent>(_onFetchShops);
     on<ShopLoadMoreDataEvent>(_onLoadMoreShops);
     on<ShopFetchDailySummaryEvent>(_onFetchDailySummary);
     on<ShopInitDataEvent>(_onInit);
     on<ShopCreateEvent>(_onCreateShop);
     on<ShopChangeEvent>(_onChangeShopEvent);
+    on<ShopChangeDraftSelectedEvent>(_onChangeDraftSelected);
     on<ShopSearchEvent>(_onSearch);
   }
 
@@ -70,8 +73,38 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         briefShopsResource: Resource.loading(),
       ),
     );
-    final response = await _fetchShopsUseCase.getBriefShops(event.userId);
-    emit(state.copyWith(briefShopsResource: response));
+    final response = await _fetchShopsUseCase.getBriefShops(
+      userId: event.userId,
+    );
+    emit(
+      state.copyWith(
+        briefShopsResource: response,
+        listBriefShops: response.data?.data ?? [],
+      ),
+    );
+  }
+
+  FutureOr<void> _onLoadMoreBriefShops(
+    ShopLoadMoreBriefListEvent event,
+    Emitter<ShopState> emit,
+  ) async {
+    var meta = state.briefShopsResource.data?.meta;
+    emit(state.copyWith(briefShopsResource: Resource.loading()));
+
+    final response = await _fetchShopsUseCase.getBriefShops(
+      userId: state.userId,
+      page: (meta?.page ?? 1) + 1,
+    );
+
+    List<BriefShopEntity> briefShops = List.from(state.listBriefShops);
+
+    if (response.state == Result.success) {
+      briefShops.addAll(response.data?.data ?? []);
+    }
+
+    emit(
+      state.copyWith(briefShopsResource: response, listBriefShops: briefShops),
+    );
   }
 
   FutureOr<void> _onFetchShops(
@@ -111,15 +144,21 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
       ),
     );
     final getShopsResponse = await _fetchShopsUseCase.getBriefShops(
-      event.userId,
+      userId: event.userId,
     );
     emit(
       state.copyWith(
         briefShopsResource: getShopsResponse,
         filteredShops: getShopsResponse.data?.data ?? [],
+        listBriefShops: getShopsResponse.data?.data ?? [],
       ),
     );
-    emit(state.copyWith(currentShop: state.approvedBriefShops.firstOrNull));
+    emit(
+      state.copyWith(
+        currentShop: state.approvedBriefShops.firstOrNull,
+        draftSelectedShop: state.approvedBriefShops.firstOrNull,
+      ),
+    );
 
     String? shopId = state.currentShop?.shopId;
     if (shopId == null) return;
@@ -149,12 +188,29 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     ShopChangeEvent event,
     Emitter<ShopState> emit,
   ) {
-    emit(state.copyWith(currentShop: event.shop));
+    emit(
+      state.copyWith(currentShop: event.shop, draftSelectedShop: event.shop),
+    );
+  }
+
+  FutureOr<void> _onChangeDraftSelected(
+    ShopChangeDraftSelectedEvent event,
+    Emitter<ShopState> emit,
+  ) {
+    emit(state.copyWith(draftSelectedShop: event.shop));
   }
 
   void init(String userId) {
     add(ShopInitDataEvent(userId));
     add(ShopFetchDataEvent());
+  }
+
+  void fetchBriefShop() {
+    add(ShopFetchBriefListEvent(state.userId));
+  }
+
+  void loadMoreBriefShop() {
+    add(ShopLoadMoreBriefListEvent());
   }
 
   void fetchShop() {
@@ -187,6 +243,10 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   void changeShop(BriefShopEntity shop) {
     add(ShopChangeEvent(shop));
     add(ShopFetchDailySummaryEvent(shop.shopId!));
+  }
+
+  void changeDraftSelectedShop(BriefShopEntity shop) {
+    add(ShopChangeDraftSelectedEvent(shop));
   }
 
   void searchShops(String query) {

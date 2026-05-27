@@ -5,14 +5,12 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/shop_staff/data/models/request/create_shop_staff_request.dart';
 import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_detail_entity.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_badges.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_shop_selector.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_config.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/staff_permission_section.dart';
 
@@ -27,7 +25,6 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
   final ShopBloc _shopBloc = getIt.get();
   final ShopStaffBloc _shopStaffBloc = getIt.get();
 
-  BriefShopEntity? _selectedShop;
   late final ValueNotifier<Map<String, Map<String, bool>>> _permissionsNotifier;
 
   @override
@@ -48,9 +45,8 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
   Widget build(BuildContext context) {
     return BlocListener<ShopStaffBloc, ShopStaffState>(
       bloc: _shopStaffBloc,
-      listenWhen:
-          (previous, current) =>
-              previous.addStaffToShopResource != current.addStaffToShopResource,
+      listenWhen: (previous, current) =>
+          previous.addStaffToShopResource != current.addStaffToShopResource,
       listener: _handleAddStaffToShopChanged,
       child: Scaffold(
         appBar: PrimaryAppBar(
@@ -59,9 +55,8 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
         body: SafeArea(
           child: BlocBuilder<ShopStaffBloc, ShopStaffState>(
             bloc: _shopStaffBloc,
-            buildWhen:
-                (previous, current) =>
-                    previous.staffDetailResource != current.staffDetailResource,
+            buildWhen: (previous, current) =>
+                previous.staffDetailResource != current.staffDetailResource,
             builder: (context, state) {
               final staff = state.staffDetailResource.data;
               if (staff == null) {
@@ -99,12 +94,7 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
                       ),
                     ),
                     AppSpacing.vertical(AppDimensions.largeSpacing),
-                    _ShopSelectionSection(
-                      shopBloc: _shopBloc,
-                      selectedShop: _selectedShop,
-                      onSelected:
-                          (shop) => setState(() => _selectedShop = shop),
-                    ),
+                    ShopStaffShopSelector(),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     PrimaryText(
                       "shop_management.staff_permission".tr(),
@@ -128,20 +118,18 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
                       valueListenable: _permissionsNotifier,
                       builder: (context, permissions, child) {
                         return Column(
-                          children:
-                              staffPermissionGroups.map((group) {
-                                return StaffPermissionSection(
-                                  group: group,
-                                  values: permissions[group.key] ?? const {},
-                                  onChanged:
-                                      (action, value) =>
-                                          _handlePermissionChanged(
-                                            group.key,
-                                            action,
-                                            value,
-                                          ),
-                                );
-                              }).toList(),
+                          children: staffPermissionGroups.map((group) {
+                            return StaffPermissionSection(
+                              group: group,
+                              values: permissions[group.key] ?? const {},
+                              onChanged: (action, value) =>
+                                  _handlePermissionChanged(
+                                    group.key,
+                                    action,
+                                    value,
+                                  ),
+                            );
+                          }).toList(),
                         );
                       },
                     ),
@@ -171,7 +159,7 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
   }
 
   void _handleSubmit(ShopStaffDetailEntity staff) {
-    final shopId = _selectedShop?.shopId;
+    final shopId = _shopBloc.state.currentShop?.shopId;
     if (shopId == null || shopId.isEmpty) {
       PrimaryDialog.showErrorDialog(
         context,
@@ -209,63 +197,5 @@ class _AddShopToStaffPageState extends State<AddShopToStaffPage> {
         );
         break;
     }
-  }
-}
-
-class _ShopSelectionSection extends StatelessWidget {
-  const _ShopSelectionSection({
-    required this.shopBloc,
-    required this.selectedShop,
-    required this.onSelected,
-  });
-
-  final ShopBloc shopBloc;
-  final BriefShopEntity? selectedShop;
-  final ValueChanged<BriefShopEntity?> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PrimaryText(
-          "shop_management.staff_shop_info".tr(),
-          style: AppTextStyles.titleMedium,
-          bold: true,
-        ),
-        AppSpacing.vertical(AppDimensions.smallSpacing),
-        BlocBuilder<ShopBloc, ShopState>(
-          bloc: shopBloc,
-          buildWhen:
-              (previous, current) =>
-                  previous.briefShopsResource != current.briefShopsResource ||
-                  previous.currentShop != current.currentShop,
-          builder: (context, state) {
-            final shops = state.briefShopsResource.data?.data ?? const [];
-            return PrimaryDropdown<BriefShopEntity>(
-              key: ValueKey(selectedShop?.shopId),
-              label: "shop_management.staff_select_shop".tr(),
-              hintText: "select".tr(),
-              menu: shops,
-              initialValue: selectedShop,
-              toLabel: (shop) => shop.shopName,
-              onSelected: onSelected,
-            );
-          },
-        ),
-        AppSpacing.vertical(AppDimensions.smallSpacing),
-        Row(
-          children: [
-            PrimaryText(
-              "shop_management.field_status".tr(),
-              style: AppTextStyles.bodyMedium,
-              color: AppColors.neutral4,
-            ),
-            const Spacer(),
-            ShopStaffStatusBadge(isActive: selectedShop?.isActive == true),
-          ],
-        ),
-      ],
-    );
   }
 }

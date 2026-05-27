@@ -59,6 +59,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
         centerTitle: true,
         actions: actions,
         automaticallyImplyLeading: canPop,
+        forceMaterialTransparency: true,
       ),
     );
   }
