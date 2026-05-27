@@ -33,4 +33,19 @@ extension BottomNavigationItemExt on BottomNavigationItem {
   IconData get icon => _mapIcon[this]!;
 
   Widget get page => _mapPage[this]!;
+
+  String get navLabelKey {
+    switch (this) {
+      case BottomNavigationItem.home:
+        return 'bottom_navigation.home';
+      case BottomNavigationItem.finance:
+        return 'bottom_navigation.finance';
+      case BottomNavigationItem.staffManagement:
+        return 'bottom_navigation.staff';
+      case BottomNavigationItem.shopManagement:
+        return 'bottom_navigation.shop';
+      case BottomNavigationItem.menu:
+        return 'bottom_navigation.more';
+    }
+  }
 }

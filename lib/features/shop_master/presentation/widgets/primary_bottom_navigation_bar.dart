@@ -199,23 +199,6 @@ class _NavigationItem extends StatelessWidget {
   }
 }
 
-extension _BottomNavigationItemLabel on BottomNavigationItem {
-  String get navLabelKey {
-    switch (this) {
-      case BottomNavigationItem.home:
-        return 'bottom_navigation.home';
-      case BottomNavigationItem.finance:
-        return 'bottom_navigation.finance';
-      case BottomNavigationItem.staffManagement:
-        return 'bottom_navigation.staff';
-      case BottomNavigationItem.shopManagement:
-        return 'bottom_navigation.shop';
-      case BottomNavigationItem.menu:
-        return 'bottom_navigation.more';
-    }
-  }
-}
-
 class _BottomNavigationBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
