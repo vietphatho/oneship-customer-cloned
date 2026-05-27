@@ -52,7 +52,7 @@ class PackageItem extends StatelessWidget {
             AppSpacing.vertical(AppDimensions.xSmallSpacing),
             _buildInfoItem(
               label: "total_orders".tr(),
-              value: package.totalOrders.toString(),
+              value: (package.totalOrders ?? 0).toString(),
             ),
             _buildInfoItem(
               label: "total_cod".tr(),

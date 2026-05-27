@@ -101,7 +101,7 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
               textField: '{name}',
               textAllowOverlap: true,
               iconImage: MarkerType.customer.value,
-              iconSize: 0.15,
+              iconSize: 0.075,
               iconAnchor: IconAnchor.bottom,
               textOffset: const [0, 1],
             ),
@@ -111,12 +111,21 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
               textField: '{name}',
               textAllowOverlap: true,
               iconImage: MarkerType.shop.value,
-              iconSize: 0.15,
+              iconSize: 0.075,
               iconAnchor: IconAnchor.bottom,
               textOffset: const [0, 1],
             ),
           ],
-          children: [SourceAttribution(showMapLibre: false)],
+          children: [
+            Transform.scale(
+              scale: 0.58,
+              alignment: Alignment.bottomRight,
+              child: SourceAttribution(
+                showMapLibre: false,
+                padding: AppDimensions.xSmallPaddingAll,
+              ),
+            ),
+          ],
         );
       },
     );
