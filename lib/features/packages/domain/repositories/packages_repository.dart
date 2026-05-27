@@ -6,7 +6,10 @@ import 'package:oneship_customer/features/packages/data/models/response/packages
 abstract class PackagesRepository extends BaseRepository {
   Future<Resource<PackagesListResponse>> fetchPackages({
     required String shopId,
-    int? page
+    String? packageNumber,
+    String? shipperCode,
+    String? status,
+    int? page,
   });
 
   Future<Resource<PackageDetail>> fetchPackageDetail({

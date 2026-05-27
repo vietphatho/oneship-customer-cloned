@@ -18,6 +18,9 @@ abstract class PackagesApi {
   @GET("/api/v1/packages")
   Future<BaseResponse<PackagesListResponse, BaseError>> fetchPackages({
     @Query("shopId") required String shopId,
+    @Query("packageNumber") String? packageNumber,
+    @Query("userCode") String? shipperCode,
+    @Query("status") String? status,
     @Query("page") int? page,
     @Query("limit") int? limit,
   });

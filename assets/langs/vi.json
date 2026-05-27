@@ -1,4 +1,6 @@
 {
+  "package_number": "Mã kiện hàng",
+  "filter_results": "Lọc kết quả",
   "assigned": "Đã phân công",
   "remove_orders_pending": "Chờ duyệt bỏ đơn",
   "confirmed_quantity": "Xác nhận số lượng",

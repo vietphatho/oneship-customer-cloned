@@ -1,6 +1,7 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 
 enum PackageStatus {
+  all,
   assigned,
   pickedUp,
   arrivedAtShop,
@@ -14,6 +15,7 @@ enum PackageStatus {
 
 extension PackageStatusX on PackageStatus {
   static const _mapName = {
+    PackageStatus.all: 'all',
     PackageStatus.assigned: 'assigned',
     PackageStatus.pickedUp: 'picked_up',
     PackageStatus.arrivedAtShop: 'arrived_at_shop',
@@ -28,6 +30,7 @@ extension PackageStatusX on PackageStatus {
   String get name => _mapName[this]!;
 
   static const _mapColor = {
+    PackageStatus.all: AppColors.secondary,
     PackageStatus.assigned: AppColors.secondary,
     PackageStatus.pickedUp: AppColors.secondary,
     PackageStatus.arrivedAtShop: AppColors.secondary,

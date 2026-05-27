@@ -10,6 +10,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_customer/features/packages/presentation/widgets/package_filter_widget.dart';
 import 'package:oneship_customer/features/packages/presentation/widgets/package_item.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -45,7 +46,10 @@ class _PackagesPageState extends State<PackagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(title: "packages".tr()),
+      appBar: PrimaryAppBar(
+        title: "packages".tr(),
+        actions: [_PackageFilterIcon()],
+      ),
       body: MultiBlocListener(
         listeners: [
           BlocListener<PackagesBloc, PackagesState>(
@@ -55,15 +59,15 @@ class _PackagesPageState extends State<PackagesPage> {
           ),
           BlocListener<PackagesBloc, PackagesState>(
             bloc: _packagesBloc,
-            listenWhen:
-                (pre, cur) => pre.pkgsDataResource != cur.pkgsDataResource,
+            listenWhen: (pre, cur) =>
+                pre.pkgsDataResource != cur.pkgsDataResource,
             listener: _handleRefreshablePkgs,
           ),
         ],
         child: BlocBuilder<PackagesBloc, PackagesState>(
           bloc: _packagesBloc,
-          buildWhen:
-              (previous, current) => previous.pkgsData != current.pkgsData,
+          buildWhen: (previous, current) =>
+              previous.pkgsData != current.pkgsData,
           builder: (context, state) {
             var data = state.pkgsData;
 
@@ -76,16 +80,14 @@ class _PackagesPageState extends State<PackagesPage> {
               onRefresh: _onRefresh,
               onLoading: _onLoading,
               enablePullUp: true,
-              itemBuilder:
-                  (context, index) => PackageItem(
-                    index: index,
-                    package: data[index],
-                    onViewDetail: onViewDetail,
-                  ),
+              itemBuilder: (context, index) => PackageItem(
+                index: index,
+                package: data[index],
+                onViewDetail: onViewDetail,
+              ),
               itemCount: data.length,
-              separatorBuilder:
-                  (context, index) =>
-                      const SizedBox(height: AppDimensions.smallSpacing),
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: AppDimensions.smallSpacing),
             );
           },
         ),
@@ -142,5 +144,31 @@ class _PackagesPageState extends State<PackagesPage> {
     }
 
     _packagesBloc.loadMorePackages();
+  }
+}
+
+class _PackageFilterIcon extends StatelessWidget {
+  const _PackageFilterIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    final PackagesBloc packagesBloc = getIt.get();
+    return BlocBuilder<PackagesBloc, PackagesState>(
+      bloc: packagesBloc,
+      buildWhen: (pre, cur) => pre.isHasFilter != cur.isHasFilter,
+      builder: (context, state) {
+        return IconButton(
+          onPressed: () {
+            PrimaryDialog.showCustomDialog(
+              context,
+              child: PackageFilterWidget(),
+            );
+          },
+          icon: Icon(
+            state.isHasFilter ? Icons.filter_alt : Icons.filter_alt_outlined,
+          ),
+        );
+      },
+    );
   }
 }
