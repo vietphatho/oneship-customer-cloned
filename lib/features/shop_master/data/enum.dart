@@ -19,7 +19,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     BottomNavigationItem.finance: CupertinoIcons.money_dollar,
     BottomNavigationItem.staffManagement: CupertinoIcons.person_3,
     BottomNavigationItem.shopManagement: CupertinoIcons.shopping_cart,
-    BottomNavigationItem.menu: CupertinoIcons.settings,
+    BottomNavigationItem.menu: CupertinoIcons.line_horizontal_3,
   };
 
   static const _mapPage = {
