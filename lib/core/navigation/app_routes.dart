@@ -26,6 +26,7 @@ import 'package:oneship_customer/features/profile/presentation/views/profile_det
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_from_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_selection_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop_to_staff_page.dart';
@@ -157,6 +158,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.productPage,
       builder: (context, state) => const ProductPage(),
+    ),
+    GoRoute(
+      path: RouteName.shopSelectionPage,
+      builder: (context, state) => const ShopSelectionPage(),
     ),
   ],
 );

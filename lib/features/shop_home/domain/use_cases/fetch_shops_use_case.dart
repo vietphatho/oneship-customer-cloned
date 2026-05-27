@@ -10,8 +10,12 @@ class FetchShopsUseCase {
 
   FetchShopsUseCase(this._repository);
 
-  Future<Resource<GetBriefShopsEntity>> getBriefShops(String userId) {
-    return _repository.getBriefShops(userId);
+  Future<Resource<GetBriefShopsEntity>> getBriefShops({
+    required String userId,
+    int? page,
+    int? limit,
+  }) {
+    return _repository.getBriefShops(userId: userId, page: page, limit: 5);
   }
 
   Future<Resource<GetShopsEntity>> getShops({int? page, int? limit}) {

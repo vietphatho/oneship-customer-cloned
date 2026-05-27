@@ -1,8 +1,9 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -13,97 +14,46 @@ class ShopSelectionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final shopBloc = getIt.get<ShopBloc>();
 
-    return BlocBuilder<ShopBloc, ShopState>(
-      bloc: shopBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.briefShopsResource != current.briefShopsResource ||
-              previous.currentShop != current.currentShop,
-      builder: (context, state) {
-        final shops = state.approvedBriefShops;
-        if (shops.isEmpty || state.currentShop == null) {
-          return const SizedBox.shrink();
-        }
-
-        final selectedShop =
-            shops.contains(state.currentShop) ? state.currentShop : null;
-
-        return _ShopDropdownButton<BriefShopEntity>(
-          items: shops,
-          value: selectedShop,
-          labelBuilder: (shop) => shop.shopName,
-          onChanged: (value) {
-            if (value != null) {
-              HapticFeedback.heavyImpact();
-              shopBloc.changeShop(value);
-            }
-          },
-        );
+    return PrimaryAnimatedPressableWidget(
+      onTap: () {
+        context.push(RouteName.shopSelectionPage);
       },
-    );
-  }
-}
-
-class _ShopDropdownButton<T> extends StatelessWidget {
-  final List<T> items;
-  final T? value;
-  final String Function(T) labelBuilder;
-  final void Function(T?) onChanged;
-
-  final EdgeInsets padding;
-  final Color backgroundColor;
-  final double iconSize;
-  final Color iconColor;
-  final double borderRadius;
-
-  const _ShopDropdownButton({
-    super.key,
-    required this.items,
-    required this.value,
-    required this.labelBuilder,
-    required this.onChanged,
-    this.padding = const EdgeInsets.symmetric(
-      horizontal: AppDimensions.smallSpacing,
-      vertical: AppDimensions.xSmallSpacing,
-    ),
-    this.backgroundColor = Colors.white,
-    this.iconSize = AppDimensions.xSmallIconSize,
-    this.iconColor = AppColors.neutral5,
-    this.borderRadius = AppDimensions.largeRadius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(borderRadius),
-        // border: Border.all(color: Colors.grey),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<T>(
-          value: value,
-          isExpanded: true,
-          isDense: true,
-          icon: Icon(
-            Icons.keyboard_arrow_down,
-            size: iconSize,
-            color: iconColor,
-          ),
-          items:
-              items.map((item) {
-                return DropdownMenuItem<T>(
-                  value: item,
-                  child: PrimaryText(
-                    labelBuilder(item),
-                    style: AppTextStyles.labelSmall,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.smallSpacing,
+          vertical: AppDimensions.xxSmallSpacing,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: AppDimensions.largeBorderRadius,
+          border: Border.all(color: AppColors.primary),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: BlocBuilder<ShopBloc, ShopState>(
+                bloc: shopBloc,
+                buildWhen: (previous, current) =>
+                    previous.briefShopsResource != current.briefShopsResource ||
+                    previous.currentShop != current.currentShop,
+                builder: (context, state) {
+                  return PrimaryText(
+                    (state.currentShop?.shopName ?? 'select_shop').tr(),
                     maxLine: 1,
                     overflow: TextOverflow.ellipsis,
-                  ),
-                );
-              }).toList(),
-          onChanged: onChanged,
+                    style: AppTextStyles.labelMedium,
+                    color: AppColors.primary,
+                  );
+                },
+              ),
+            ),
+            AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: AppDimensions.xSmallIconSize,
+              color: AppColors.primary,
+            ),
+          ],
         ),
       ),
     );
