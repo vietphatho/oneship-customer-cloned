@@ -3,7 +3,6 @@ import 'package:oneship_customer/core/base/components/primary_animated_pressable
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_status.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
 import 'package:oneship_customer/features/packages/enum.dart';
 

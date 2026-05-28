@@ -23,7 +23,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  PrimaryText("#$index.", style: AppTextStyles.bodyMedium),
+                  PrimaryText("#${index + 1}.", style: AppTextStyles.bodyMedium),
                   AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                   Expanded(
                     child: PrimaryText(

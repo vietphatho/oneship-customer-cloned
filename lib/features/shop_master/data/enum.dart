@@ -19,7 +19,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     BottomNavigationItem.finance: CupertinoIcons.money_dollar,
     BottomNavigationItem.staffManagement: CupertinoIcons.person_3,
     BottomNavigationItem.shopManagement: CupertinoIcons.shopping_cart,
-    BottomNavigationItem.menu: CupertinoIcons.settings,
+    BottomNavigationItem.menu: CupertinoIcons.line_horizontal_3,
   };
 
   static const _mapPage = {
@@ -33,4 +33,19 @@ extension BottomNavigationItemExt on BottomNavigationItem {
   IconData get icon => _mapIcon[this]!;
 
   Widget get page => _mapPage[this]!;
+
+  String get navLabelKey {
+    switch (this) {
+      case BottomNavigationItem.home:
+        return 'bottom_navigation.home';
+      case BottomNavigationItem.finance:
+        return 'bottom_navigation.finance';
+      case BottomNavigationItem.staffManagement:
+        return 'bottom_navigation.staff';
+      case BottomNavigationItem.shopManagement:
+        return 'bottom_navigation.shop';
+      case BottomNavigationItem.menu:
+        return 'bottom_navigation.more';
+    }
+  }
 }

@@ -16,8 +16,8 @@ class Constants {
   static const String endpoint = "https://one-ship-api.de.onexway.io";
   static const String imgEndpoint = "https://xbyw3unofel1.cmccdn.net";
   // production
-  // static const String endpoint = "https://122025api.oneship.app";
-  // static const String imgEndpoint = "http://sxlcfqvbwh6y.cmccdn.net";
+  // static const String endpoint = "https://ems-api.oneship.app";
+  // static const String imgEndpoint = "http://4miowg5r1as2.cmccdn.net";
 
   static const String orderTrackingAction = "track_shipment";
   static const String orderTrackingNonce = "039a82a441";
