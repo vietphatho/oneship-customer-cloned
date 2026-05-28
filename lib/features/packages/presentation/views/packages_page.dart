@@ -119,37 +119,19 @@ class _PackagesPageState extends State<PackagesPage> {
   }
 
   void _handleRefreshablePkgs(BuildContext context, PackagesState state) {
-    if (_refreshController.isRefresh) {
-      switch (state.pkgsDataResource.state) {
-        case Result.success:
-          _refreshController
-            ..refreshCompleted()
-            ..loadComplete();
-          break;
-        case Result.error:
-          _refreshController
-            ..refreshFailed()
-            ..loadFailed();
-          break;
-        default:
-          break;
-      }
-    } else {
-      switch (state.pkgsDataResource.state) {
-        case Result.loading:
-          PrimaryDialog.showLoadingDialog(context);
-          break;
-        case Result.success:
-          PrimaryDialog.hideLoadingDialog(context);
-          break;
-        case Result.error:
-          PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(
-            context,
-            message: state.pkgsDataResource.message,
-          );
-          break;
-      }
+    switch (state.pkgsDataResource.state) {
+      case Result.success:
+        _refreshController
+          ..refreshCompleted()
+          ..loadComplete();
+        break;
+      case Result.error:
+        _refreshController
+          ..refreshFailed()
+          ..loadFailed();
+        break;
+      default:
+        break;
     }
   }
 
