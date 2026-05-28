@@ -41,25 +41,31 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: BottomNavigationItem.values.length,
-                        itemBuilder: (context, index) =>
-                            BottomNavigationItem.values[index].page,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: AppDimensions.bottomNavBarHeight,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: PageView.builder(
+                          controller: _pageController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: BottomNavigationItem.values.length,
+                          itemBuilder: (context, index) =>
+                              BottomNavigationItem.values[index].page,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                const PrimaryBottomNavigationBar(),
               ],
             );
           },
         ),
       ),
-      bottomNavigationBar: const PrimaryBottomNavigationBar(),
+      // bottomNavigationBar: const PrimaryBottomNavigationBar(),
     );
   }
 

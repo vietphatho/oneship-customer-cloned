@@ -22,7 +22,7 @@ class _PrimaryBottomNavigationBarState
 
   static const List<BottomNavigationItem> _sideItems = [
     BottomNavigationItem.home,
-    BottomNavigationItem.order,
+    BottomNavigationItem.orderList,
     BottomNavigationItem.finance,
     BottomNavigationItem.menu,
   ];

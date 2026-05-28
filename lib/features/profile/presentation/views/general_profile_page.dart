@@ -24,22 +24,23 @@ class GeneralProfilePage extends StatefulWidget {
 class _GeneralProfilePageState extends State<GeneralProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Padding(
           padding: AppDimensions.mediumPaddingAll,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _Header(),
-              AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-              _SettingsContainer(),
-              AppSpacing.vertical(AppDimensions.mediumSpacing),
-              // _UtilitiesContainer(),
-              // AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _SupportsContainer(),
-              AppSpacing.vertical(AppDimensions.bottomNavBarHeight),
-            ],
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _Header(),
+                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                _SettingsContainer(),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                // _UtilitiesContainer(),
+                // AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _SupportsContainer(),
+              ],
+            ),
           ),
         ),
       ),
@@ -141,10 +142,9 @@ class _SettingsContainer extends StatelessWidget {
         ),
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(
-          label:
-              (userProfile.hasSecondPassword ?? false)
-                  ? 'secondary_password.change_page_title'.tr()
-                  : 'secondary_password.create_page_title'.tr(),
+          label: (userProfile.hasSecondPassword ?? false)
+              ? 'secondary_password.change_page_title'.tr()
+              : 'secondary_password.create_page_title'.tr(),
           onTap: () {
             context.push(RouteName.changeSecondaryPasswordPage);
           },
