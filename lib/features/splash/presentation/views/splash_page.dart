@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -69,13 +70,13 @@ class _SplashPageState extends State<SplashPage> {
         body: Container(
           color: AppColors.primary,
           child: Center(
-            // child: Image.asset(
-            //   ImagePath.logo,
-            //   width: 250,
-            //   height: 250,
-            //   fit: BoxFit.contain,
-            //   color: Colors.white,
-            // ),
+            child: Image.asset(
+              ImagePath.logo,
+              width: 250,
+              height: 250,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
