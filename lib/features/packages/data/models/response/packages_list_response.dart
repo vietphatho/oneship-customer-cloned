@@ -35,7 +35,7 @@ abstract class Package with _$Package {
     @JsonKey(name: "pickupImages") dynamic pickupImages,
     @JsonKey(name: "pickupConfirmedAt") dynamic pickupConfirmedAt,
     @JsonKey(name: "quantityConfirmedAt") dynamic quantityConfirmedAt,
-    @JsonKey(name: "totalOrders") int? totalOrders,
+    @JsonKey(name: "orderCount") int? totalOrders,
     @JsonKey(name: "mergedToPackageId") String? mergedToPackageId,
     @JsonKey(name: "shipper") Shipper? shipper,
   }) = _Package;
