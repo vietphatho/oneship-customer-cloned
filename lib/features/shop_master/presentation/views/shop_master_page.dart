@@ -48,19 +48,18 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
                         controller: _pageController,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: BottomNavigationItem.values.length,
-                        itemBuilder:
-                            (context, index) =>
-                                BottomNavigationItem.values[index].page,
+                        itemBuilder: (context, index) =>
+                            BottomNavigationItem.values[index].page,
                       ),
                     ),
                   ],
                 ),
-                const PrimaryBottomNavigationBar(),
               ],
             );
           },
         ),
       ),
+      bottomNavigationBar: const PrimaryBottomNavigationBar(),
     );
   }
 
@@ -86,10 +85,10 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
 
   void _handleListener(BuildContext context, ShopMasterState state) {
     if (state is ShopMasterMenuTabChangedState) {
-      _pageController.animateToPage(
+      _pageController.jumpToPage(
         _shopMasterBloc.currentTab.index,
-        duration: Constants.pageViewTransitionDur,
-        curve: Curves.easeInOut,
+        // duration: Constants.pageViewTransitionDur,
+        // curve: Curves.easeInOut,
       );
     }
   }
