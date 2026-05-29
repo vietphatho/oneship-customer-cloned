@@ -231,7 +231,7 @@ class _Header extends StatelessWidget {
                 children: [
                   PrimaryText(
                     userProfile.displayName,
-                    style: AppTextStyles.displaySmall,
+                    style: AppTextStyles.titleXXXLarge,
                   ),
                   PrimaryText(
                     userProfile.userPhone,

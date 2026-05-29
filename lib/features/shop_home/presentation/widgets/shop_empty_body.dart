@@ -32,7 +32,7 @@ class ShopEmptyBody extends StatelessWidget {
                 PrimaryText(
                   "no_shop_title".tr(),
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.headlineSmall.copyWith(
+                  style: AppTextStyles.titleXXXLarge.copyWith(
                     height: 1.45,
                     color: Colors.black,
                     fontWeight: FontWeight.w800,

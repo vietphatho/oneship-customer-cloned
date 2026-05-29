@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 PrimaryText(
                   'delivery_solutions'.tr(),
-                  style: AppTextStyles.displaySmall.copyWith(
+                  style: AppTextStyles.titleXXXLarge.copyWith(
                     color: Colors.white,
                   ),
                 ),

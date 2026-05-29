@@ -163,10 +163,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
               // cursorHeight: TextSize.h4,
               textInputAction: widget.textInputAction,
               textCapitalization: widget.textCapitalization,
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-                fontFamily: AppTextStyles.fontFamily,
-              ),
+              style: AppTextStyles.bodyMedium,
               validator: (value) {
                 if (widget.validator == null) return null;
                 final result = widget.validator!(value!);
@@ -195,11 +192,12 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
               decoration: InputDecoration(
                 counterText: '',
                 hintText: widget.hintText,
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontFamily: AppTextStyles.fontFamily,
-                  fontWeight: FontWeight.w300,
-                ),
+                hintStyle: AppTextStyles.hintText,
+                // hintStyle: TextStyle(
+                //   color: Colors.grey.shade500,
+                //   fontFamily: AppTextStyles.fontFamily,
+                //   fontWeight: FontWeight.w300,
+                // ),
                 contentPadding: const EdgeInsets.only(
                   left: 14.0,
                   bottom: 8.0,
@@ -219,23 +217,22 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
                 disabledBorder: _outlineField,
 
                 /// 👁 Hiển thị icon toggle password
-                suffixIcon:
-                    widget.obscureText
-                        ? IconButton(
-                          onPressed: () {
-                            setState(() {
-                              showPass = !showPass;
-                            });
-                          },
-                          icon: Icon(
-                            showPass
-                                ? CupertinoIcons.eye_fill
-                                : CupertinoIcons.eye_slash_fill,
-                            color: Colors.grey.shade500,
-                            size: AppDimensions.smallIconSize,
-                          ),
-                        )
-                        : widget.suffixIcon,
+                suffixIcon: widget.obscureText
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showPass = !showPass;
+                          });
+                        },
+                        icon: Icon(
+                          showPass
+                              ? CupertinoIcons.eye_fill
+                              : CupertinoIcons.eye_slash_fill,
+                          color: Colors.grey.shade500,
+                          size: AppDimensions.smallIconSize,
+                        ),
+                      )
+                    : widget.suffixIcon,
                 prefixIcon: widget.prefixIcon,
                 prefix: widget.prefix,
                 suffixText: widget.suffixText,
@@ -273,12 +270,11 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
 
     return OutlineInputBorder(
       borderSide: BorderSide(
-        color:
-            errorText == null
-                // ? isDarkMode
-                //     ? AppColors.neutral2
-                ? AppColors.neutral7
-                : AppColors.red500,
+        color: errorText == null
+            // ? isDarkMode
+            //     ? AppColors.neutral2
+            ? AppColors.neutral7
+            : AppColors.red500,
       ),
       borderRadius: AppDimensions.largeBorderRadius,
     );

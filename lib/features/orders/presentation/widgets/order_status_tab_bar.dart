@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_dimensions.dart';
+import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 
 class OrderStatusTabBar extends StatelessWidget {
@@ -29,6 +30,8 @@ class OrderStatusTabBar extends StatelessWidget {
         controller: controller,
         padding: EdgeInsets.zero,
         labelColor: AppColors.primary,
+        labelStyle: AppTextStyles.labelMedium,
+        unselectedLabelStyle: AppTextStyles.labelMedium,
         unselectedLabelColor: AppColors.primaryLight,
         indicator: BoxDecoration(
           color: AppColors.primaryLight,
@@ -37,15 +40,14 @@ class OrderStatusTabBar extends StatelessWidget {
         indicatorPadding: EdgeInsets.zero,
         isScrollable: true,
         tabAlignment: TabAlignment.start,
-        tabs:
-            items
-                .map(
-                  ((status) => Tab(
-                    text: status.value.tr(),
-                    height: AppDimensions.xxxLargeSpacing,
-                  )),
-                )
-                .toList(),
+        tabs: items
+            .map(
+              ((status) => Tab(
+                text: status.value.tr(),
+                height: AppDimensions.xxxLargeSpacing,
+              )),
+            )
+            .toList(),
         onTap: onTap,
       ),
     );

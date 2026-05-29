@@ -1,4 +1,6 @@
 {
+  "select_shop": "Chọn cửa hàng",
+  "login_with_shop_owner_account": "Vui lòng đăng nhập bằng tài khoản dành cho chủ shop!",
   "bottom_navigation": {
     "home": "Trang chủ",
     "finance": "Tài chính",

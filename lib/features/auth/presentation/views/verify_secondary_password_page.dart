@@ -46,7 +46,7 @@ class _VerifySecondaryPasswordPageState
                 children: [
                   PrimaryText(
                     'security_verification'.tr(),
-                    style: AppTextStyles.displaySmall,
+                    style: AppTextStyles.titleXXXLarge,
                   ),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   PrimaryText(
