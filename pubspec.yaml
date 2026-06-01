@@ -1,5 +1,5 @@
 name: oneship_customer
-description: "OneShip for Customer"
+description: "OneShip Seller Center"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+4
+version: 1.0.0+2
 
 environment:
   sdk: ^3.9.2
@@ -47,6 +47,7 @@ dependencies:
   dio: ^5.9.0
   retrofit: ^4.6.0
   go_router: ^17.0.0
+  socket_io_client: ^3.1.4
 
   # utilities
   easy_localization: ^3.0.8
@@ -65,8 +66,7 @@ dependencies:
   universal_file_viewer: ^0.1.3
   excel: ^4.0.6
   pin_code_fields: ^9.3.0
-  # maplibre: 0.3.0
-  flutter_map: ^8.3.0
+  maplibre: ^0.3.3+2
 
 dev_dependencies:
   flutter_test:
@@ -109,6 +109,9 @@ flutter:
     - assets/fonts/
     - assets/json/
     - assets/langs/
+
+  config:
+    enable-swift-package-manager: true
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

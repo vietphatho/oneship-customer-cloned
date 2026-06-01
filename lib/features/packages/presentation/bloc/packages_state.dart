@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/packages/data/models/response/package_detail.dart';
 import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
+import 'package:oneship_customer/features/packages/enum.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 
 part 'packages_state.freezed.dart';
@@ -12,13 +13,24 @@ abstract class PackagesState with _$PackagesState {
     required BriefShopEntity currentShop,
     required Resource<PackagesListResponse> pkgsDataResource,
     @Default([]) List<Package> pkgsData,
-    
+
     required Resource<PackageDetail> currentPkg,
     required Resource findingShipperResult,
     required Resource cancelFindingShipperResult,
+
+    bool? findShipperStatus,
+
+    String? packageNumber,
+    String? shipperCode,
+    @Default(PackageStatus.all) PackageStatus status,
   }) = _PackagesState;
 }
 
 extension PackagesStateExt on PackagesState {
   String get shopId => currentShop.shopId ?? "";
+
+  bool get isHasFilter =>
+      packageNumber != null ||
+      shipperCode != null ||
+      status != PackageStatus.all;
 }

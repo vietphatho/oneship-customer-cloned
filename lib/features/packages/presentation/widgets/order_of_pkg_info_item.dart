@@ -1,5 +1,5 @@
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 
@@ -23,7 +23,7 @@ class OrderOfPkgInfoItem extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  PrimaryText("#$index.", style: AppTextStyles.bodyMedium),
+                  PrimaryText("#${index + 1}.", style: AppTextStyles.bodyMedium),
                   AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                   Expanded(
                     child: PrimaryText(
@@ -39,26 +39,29 @@ class OrderOfPkgInfoItem extends StatelessWidget {
             OrderStatusTag(status: order.status ?? ""),
           ],
         ),
-        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+        AppSpacing.vertical(AppDimensions.xxSmallSpacing),
         PrimaryText(
           "${order.customerName} - ${order.phone}",
           style: AppTextStyles.bodyMedium,
         ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-        PrimaryText("Dịch vụ: ${order.payer}", style: AppTextStyles.bodyMedium),
-            PrimaryText(
-              "${"service_type".tr()}: ${_translatePayer(order.payer)}",
-              style: AppTextStyles.bodyMedium,
-            ),
         PrimaryText(
-          "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+          "Dịch vụ: ${order.serviceCode}",
           style: AppTextStyles.bodyMedium,
         ),
-        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"address".tr()}: ${order.fullAddress}",
           style: AppTextStyles.bodyMedium,
         ),
+        // PrimaryText(
+        //   "${"service_type".tr()}: ${_translatePayer(order.payer)}",
+        //   style: AppTextStyles.bodyMedium,
+        // ),
+        // AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+        // PrimaryText(
+        //   "${"address".tr()}: ${order.fullAddress}",
+        //   style: AppTextStyles.bodyMedium,
+        // ),
         AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
         PrimaryText(
           "${"created_at".tr()}: ${DateTimeUtils.formatDateFromDT(order.createdAt) ?? '--'}",

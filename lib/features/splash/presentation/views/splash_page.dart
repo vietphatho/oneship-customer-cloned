@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -13,6 +14,7 @@ import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_bloc.dart';
@@ -30,6 +32,9 @@ class _SplashPageState extends State<SplashPage> {
   final ShopBloc _shopBloc = getIt.get();
   final AuthBloc _authBloc = getIt.get();
   final OrdersBloc _ordersBloc = getIt.get();
+  final PackagesBloc _packagesBloc = getIt.get();
+  final FinanceOverviewBloc financeOverviewBloc = getIt.get();
+  final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
 
   @override
   void initState() {
@@ -50,23 +55,28 @@ class _SplashPageState extends State<SplashPage> {
         ),
         BlocListener<ShopBloc, ShopState>(
           bloc: _shopBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.briefShopsResource != current.briefShopsResource,
+          listenWhen: (previous, current) =>
+              previous.briefShopsResource != current.briefShopsResource,
           listener: _listenShopsListChanged,
+        ),
+        BlocListener<ShopBloc, ShopState>(
+          bloc: _shopBloc,
+          listenWhen: (previous, current) =>
+              previous.currentShop != current.currentShop,
+          listener: _listenCurrentShopChanged,
         ),
       ],
       child: Scaffold(
         body: Container(
           color: AppColors.primary,
           child: Center(
-            // child: Image.asset(
-            //   ImagePath.logo,
-            //   width: 250,
-            //   height: 250,
-            //   fit: BoxFit.contain,
-            //   color: Colors.white,
-            // ),
+            child: Image.asset(
+              ImagePath.logo,
+              width: 250,
+              height: 250,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -90,8 +100,9 @@ class _SplashPageState extends State<SplashPage> {
           if (state.resource.data?.userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
             break;
-          } else if (state.resource.data?.userRole == UserRole.customer.value) {
-            context.go(RouteName.customerHomePage);
+          } else  {
+            _authBloc.logOut();
+            context.go(RouteName.homePage);
           }
           break;
         case Result.error:
@@ -101,7 +112,7 @@ class _SplashPageState extends State<SplashPage> {
     }
   }
 
-  void _listenShopsListChanged(BuildContext context, ShopState state) {
+  void _listenShopsListChanged(BuildContext context, ShopState state) async {
     switch (state.briefShopsResource.state) {
       case Result.loading:
         break;
@@ -111,15 +122,18 @@ class _SplashPageState extends State<SplashPage> {
         } else if (!state.hasApprovedShop) {
           context.go(RouteName.shopPendingApprovalPage);
         } else {
-          final FinanceOverviewBloc financeOverviewBloc = getIt.get();
-          final FinanceReconciliationBloc financeReconciliationBloc =
-              getIt.get();
-          final String shopId = state.currentShop?.shopId ?? "";
-          financeOverviewBloc.init(
-            shopId: shopId,
-            requestSource: FinanceRequestSource.page,
-          );
-          financeReconciliationBloc.initPeriods(shopId: shopId);
+          // await Future.delayed(Durations.medium1);
+          // final String shopId = state.currentShop?.shopId ?? "";
+
+          // financeOverviewBloc.init(
+          //   shopId: shopId,
+          //   requestSource: FinanceRequestSource.page,
+          // );
+          // financeReconciliationBloc.initPeriods(shopId: shopId);
+
+          // if (state.currentShop != null) {
+          //   _packagesBloc.init(state.currentShop!);
+          // }
           context.go(RouteName.shopMasterPage);
         }
       case Result.error:
@@ -127,6 +141,20 @@ class _SplashPageState extends State<SplashPage> {
           context,
           message: state.briefShopsResource.message,
         );
+    }
+  }
+
+  void _listenCurrentShopChanged(BuildContext context, ShopState state) {
+    final String shopId = state.currentShop?.shopId ?? "";
+
+    financeOverviewBloc.init(
+      shopId: shopId,
+      requestSource: FinanceRequestSource.page,
+    );
+    financeReconciliationBloc.initPeriods(shopId: shopId);
+
+    if (state.currentShop != null) {
+      _packagesBloc.init(state.currentShop!);
     }
   }
 }

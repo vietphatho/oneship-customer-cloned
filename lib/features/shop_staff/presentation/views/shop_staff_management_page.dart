@@ -76,24 +76,20 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
         listeners: [
           BlocListener<ShopBloc, ShopState>(
             bloc: _shopBloc,
-            listenWhen:
-                (previous, current) =>
-                    previous.currentShop != current.currentShop,
+            listenWhen: (previous, current) =>
+                previous.currentShop != current.currentShop,
             listener: _handleCurrentShopChanged,
           ),
           BlocListener<ShopStaffBloc, ShopStaffState>(
             bloc: _shopStaffBloc,
-            listenWhen:
-                (previous, current) =>
-                    previous.staffsResource != current.staffsResource,
+            listenWhen: (previous, current) =>
+                previous.staffsResource != current.staffsResource,
             listener: _handleStaffsResourceChanged,
           ),
           BlocListener<ShopStaffBloc, ShopStaffState>(
             bloc: _shopStaffBloc,
-            listenWhen:
-                (previous, current) =>
-                    previous.toggleDisableResource !=
-                    current.toggleDisableResource,
+            listenWhen: (previous, current) =>
+                previous.toggleDisableResource != current.toggleDisableResource,
             listener: _handleToggleDisableChanged,
           ),
         ],
@@ -137,58 +133,59 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                       nameController: _nameController,
                       emailController: _emailController,
                       selectedStatus: _selectedStatus,
-                      onStatusSelected:
-                          (value) => setState(() => _selectedStatus = value),
+                      onStatusSelected: (value) =>
+                          setState(() => _selectedStatus = value),
                       onApply: _applyFilters,
                       onClear: _clearFilters,
                     ),
-                  ShopStaffShopSelector(
-                    shopBloc: _shopBloc,
-                    onSelected: _handleShopSelected,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.mediumSpacing,
+                      vertical: AppDimensions.smallSpacing,
+                    ),
+                    child: ShopStaffShopSelector(),
                   ),
                   Expanded(
-                    child:
-                        isInitialLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : PrimaryRefreshabelListView(
-                              controller: _refreshController,
-                              enablePullDown: true,
-                              enablePullUp: state.hasMoreData,
-                              onRefresh: () {
-                                _isLoadingMore = false;
-                                _shopStaffBloc.refresh();
-                              },
-                              onLoading: () {
-                                _isLoadingMore = true;
-                                _shopStaffBloc.loadMore();
-                              },
-                              padding: EdgeInsets.fromLTRB(
-                                AppDimensions.mediumSpacing,
-                                0,
-                                AppDimensions.mediumSpacing,
-                                AppDimensions.smallSpacing,
-                              ),
-                              itemCount: state.staffs.length,
-                              separatorBuilder:
-                                  (context, index) => AppSpacing.vertical(
-                                    AppDimensions.mediumSpacing,
-                                  ),
-                              itemBuilder: (context, index) {
-                                return ShopStaffCard(
-                                  index: index + 1,
-                                  staff: state.staffs[index],
-                                  onViewDetails:
-                                      () => _openStaffDetail(
-                                        context,
-                                        state.staffs[index],
-                                      ),
-                                );
-                              },
+                    child: isInitialLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : PrimaryRefreshabelListView(
+                            controller: _refreshController,
+                            enablePullDown: true,
+                            enablePullUp: state.hasMoreData,
+                            onRefresh: () {
+                              _isLoadingMore = false;
+                              _shopStaffBloc.refresh();
+                            },
+                            onLoading: () {
+                              _isLoadingMore = true;
+                              _shopStaffBloc.loadMore();
+                            },
+                            padding: EdgeInsets.fromLTRB(
+                              AppDimensions.mediumSpacing,
+                              0,
+                              AppDimensions.mediumSpacing,
+                              AppDimensions.smallSpacing,
                             ),
+                            itemCount: state.staffs.length,
+                            separatorBuilder: (context, index) =>
+                                AppSpacing.vertical(
+                                  AppDimensions.mediumSpacing,
+                                ),
+                            itemBuilder: (context, index) {
+                              return ShopStaffCard(
+                                index: index + 1,
+                                staff: state.staffs[index],
+                                onViewDetails: () => _openStaffDetail(
+                                  context,
+                                  state.staffs[index],
+                                ),
+                              );
+                            },
+                          ),
                   ),
                   ShopStaffAddFooter(
-                    onPressed:
-                        () => context.push(RouteName.createShopStaffPage),
+                    onPressed: () =>
+                        context.push(RouteName.createShopStaffPage),
                   ),
                 ],
               );
@@ -204,8 +201,9 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     _shopStaffBloc.filterStaffs(
       displayName: _nameController.text,
       userEmail: _emailController.text,
-      userStatus:
-          _selectedStatus == StaffStatusFilter.all ? null : _selectedStatus,
+      userStatus: _selectedStatus == StaffStatusFilter.all
+          ? null
+          : _selectedStatus,
     );
   }
 
@@ -219,11 +217,11 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     _shopStaffBloc.filterStaffs();
   }
 
-  void _handleShopSelected(BriefShopEntity? shop) {
-    if (shop == null) return;
-    _isLoadingMore = false;
-    _shopBloc.changeShop(shop);
-  }
+  // void _handleShopSelected(BriefShopEntity? shop) {
+  //   if (shop == null) return;
+  //   _isLoadingMore = false;
+  //   _shopBloc.changeShop(shop);
+  // }
 
   void _handleCurrentShopChanged(BuildContext context, ShopState state) {
     final currentShop = state.currentShop;

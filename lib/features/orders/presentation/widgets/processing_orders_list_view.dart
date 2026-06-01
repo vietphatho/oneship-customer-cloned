@@ -4,9 +4,11 @@ import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/finding_shipper_search_widget.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -26,6 +28,7 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
   @override
   void initState() {
     super.initState();
+    _ordersBloc.currentOrderStatus = OrderStatus.processing;
     _ordersBloc.fetchOrdersByStatus();
   }
 
@@ -41,28 +44,27 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.processingOrdersList != current.processingOrdersList,
+          listenWhen: (previous, current) =>
+              previous.processingOrdersList != current.processingOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
-      child: Column(
-        children: [
-          const _TopActionButtons(),
-          BlocBuilder<OrdersBloc, OrdersState>(
-            bloc: _ordersBloc,
-            buildWhen:
-                (pre, cur) =>
-                    pre.processingOrdersList != cur.processingOrdersList,
-            builder: (context, state) {
-              List<OrderInfo> orders = state.processingOrdersList;
+      child: BlocBuilder<OrdersBloc, OrdersState>(
+        bloc: _ordersBloc,
+        buildWhen:
+            (pre, cur) => pre.processingOrdersList != cur.processingOrdersList,
+        builder: (context, state) {
+          List<OrderInfo> orders = state.processingOrdersList;
 
-              if (orders.isEmpty) {
-                return Expanded(child: const PrimaryEmptyData());
-              }
+          if (orders.isEmpty) {
+            return const PrimaryEmptyData();
+          }
 
-              return Expanded(
+          return Column(
+            children: [
+              const FindingShipperSearchWidget(),
+              const _TopActionButtons(),
+              Expanded(
                 child: PrimaryRefreshabelListView(
                   controller: _refreshController,
                   onRefresh: _onRefresh,
@@ -73,20 +75,18 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
                     horizontal: AppDimensions.smallSpacing,
                   ),
                   itemCount: orders.length,
-                  itemBuilder:
-                      (context, index) => OrderInfoItem(
-                        index: index + 1,
-                        order: orders[index],
-                        onTap: _ordersBloc.openOrderDetail,
-                      ),
-                  separatorBuilder:
-                      (context, index) =>
-                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                  itemBuilder: (context, index) => OrderInfoItem(
+                    index: index + 1,
+                    order: orders[index],
+                    onTap: _ordersBloc.openOrderDetail,
+                  ),
+                  separatorBuilder: (context, index) =>
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -130,8 +130,8 @@ class _TopActionButtons extends StatelessWidget {
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: ordersBloc,
-      buildWhen:
-          (pre, cur) => pre.processingOrdersList != cur.processingOrdersList,
+      buildWhen: (pre, cur) =>
+          pre.processingOrdersList != cur.processingOrdersList,
       builder: (context, state) {
         List<OrderInfo> orders = state.processingOrdersList;
         if (orders.isEmpty) return const SizedBox();
@@ -139,7 +139,7 @@ class _TopActionButtons extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.symmetric(
             horizontal: AppDimensions.smallSpacing,
-            vertical: AppDimensions.mediumSpacing,
+            vertical: AppDimensions.xSmallSpacing,
           ),
           child: PrimaryButton.warningFilled(
             label: "cancel_finding_shipper".tr(),

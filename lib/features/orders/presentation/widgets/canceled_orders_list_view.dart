@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
@@ -24,6 +25,7 @@ class _CanceledOrdersListViewState extends State<CanceledOrdersListView> {
   @override
   void initState() {
     super.initState();
+    _ordersBloc.currentOrderStatus = OrderStatus.cancelled;
     _ordersBloc.fetchOrdersByStatus();
   }
 

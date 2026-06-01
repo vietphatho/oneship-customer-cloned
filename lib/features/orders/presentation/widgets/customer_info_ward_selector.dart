@@ -23,19 +23,17 @@ class _CustomerInfoWardSelectorState extends State<CustomerInfoWardSelector> {
   Widget build(BuildContext context) {
     return BlocBuilder<LocationServiceBloc, LocationServiceState>(
       bloc: _locationServiceBloc,
-      buildWhen:
-          (pre, cur) =>
-              cur is LocationServiceProvincesChangedState ||
-              cur is LocationServiceWardsChangedState,
+      buildWhen: (pre, cur) =>
+          cur is LocationServiceProvincesChangedState ||
+          cur is LocationServiceWardsChangedState,
       builder: (context, state) {
         final wards = state.wardsByProvince[_hcmProvinceCode] ?? [];
         if (wards.isEmpty) return const SizedBox();
 
         final draftWard = _createOrderBloc.state.draftRequest.ward;
-        final selectedWard =
-            draftWard != null
-                ? wards.firstWhereOrNull((ward) => ward.code == draftWard.code)
-                : null;
+        final selectedWard = draftWard != null
+            ? wards.firstWhereOrNull((ward) => ward.code == draftWard.code)
+            : null;
 
         return PrimaryDropdown(
           label: "ward".tr(),

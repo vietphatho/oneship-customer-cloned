@@ -1,12 +1,13 @@
-import 'package:flutter/services.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
+import 'package:oneship_customer/core/utils/currency_text_input_formatter.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delivery_service_type_radio_group.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_map_preview.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/product_selected_container.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/product_selection_button.dart';
 
@@ -88,7 +89,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                           controller: _codCtrl,
                           keyboardType: TextInputType.number,
                           onChanged: (_) => setState(() {}),
-                          inputFormatters: [_CurrencyTextInputFormatter()],
+                          inputFormatters: [CurrencyTextInputFormatter()],
                           suffixText: Constants.currencyUnit,
                         ),
                       ),
@@ -173,7 +174,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
             ),
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
-          //map view
+          CreateOrderMapPreview(),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
           SafeArea(
             child: Row(
@@ -216,25 +217,6 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
       externalOrderId: _externalOrderIdCtrl.text,
       orderSource: _orderSourceCtrl.text,
       selectedProducts: productBloc.state.productsListSelected,
-    );
-  }
-}
-
-class _CurrencyTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final amount = Utils.parseCurrencyInput(newValue.text);
-    if (amount == 0 && newValue.text.isEmpty) {
-      return const TextEditingValue();
-    }
-
-    final formatted = Utils.formatCurrencyInput(amount);
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }

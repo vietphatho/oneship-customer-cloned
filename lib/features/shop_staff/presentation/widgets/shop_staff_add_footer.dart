@@ -15,7 +15,7 @@ class ShopStaffAddFooter extends StatelessWidget {
           AppDimensions.mediumSpacing,
           AppDimensions.xSmallSpacing,
           AppDimensions.mediumSpacing,
-          AppDimensions.bottomNavBarHeight + AppDimensions.xxxLargeSpacing,
+          AppDimensions.safeBottomSpacing + AppDimensions.smallSpacing,
         ),
         child: SecondaryButton.iconFilled(
           label: "shop_management.staff_add_new".tr(),

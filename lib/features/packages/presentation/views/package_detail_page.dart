@@ -81,11 +81,11 @@ class _PackageDetailPageState extends State<PackageDetailPage> {
                       ),
                       _buildInfoField(
                         title: "distance".tr(),
-                        value: pkg.distance?.toString(),
+                        value: "${pkg.distance} m",
                       ),
                       _buildInfoField(
                         title: "est_time".tr(),
-                        value: pkg.duration?.toString(),
+                        value: "${pkg.duration} s",
                       ),
                     ],
                   ),
@@ -110,7 +110,10 @@ class _PackageDetailPageState extends State<PackageDetailPage> {
                         title: "phone_number".tr(),
                         value: pkg.shopPhone,
                       ),
-                      _buildInfoField(title: "address".tr(), value: pkg.shopAddress),
+                      _buildInfoField(
+                        title: "address".tr(),
+                        value: pkg.shopAddress,
+                      ),
                     ],
                   ),
                 ),
@@ -130,15 +133,12 @@ class _PackageDetailPageState extends State<PackageDetailPage> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: pkg.orders.length,
-                        itemBuilder:
-                            (context, index) => OrderOfPkgInfoItem(
-                              index: index,
-                              order: pkg.orders[index],
-                            ),
-                        separatorBuilder:
-                            (_, __) => const Divider(
-                              height: AppDimensions.xLargeSpacing,
-                            ),
+                        itemBuilder: (context, index) => OrderOfPkgInfoItem(
+                          index: index,
+                          order: pkg.orders[index],
+                        ),
+                        separatorBuilder: (_, __) =>
+                            const Divider(height: AppDimensions.xLargeSpacing),
                       ),
                     ],
                   ),

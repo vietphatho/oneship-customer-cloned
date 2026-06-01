@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/themes/app_box_shadows.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
@@ -82,6 +83,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
                       OrderDetailTransportationHistoryTabView(
                         trackingCode: ordDtl.trackingCode ?? ordDtl.orderNumber,
                         fallbackStartedAt: ordDtl.createdAt,
+                        deliveryLocation: ordDtl.coordinates?.latLong,
                       ),
                     ],
                   ),

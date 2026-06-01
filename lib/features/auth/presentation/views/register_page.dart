@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController passwordController;
   late final TextEditingController confirmPasswordController;
 
-  static const UserRole _userRole = UserRole.customer;
+  UserRole _userRole = UserRole.shop;
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             label: "user_role".tr(),
                             isRequired: true,
                             menu: UserRole.values,
-                            initialValue: UserRole.customer,
+                            initialValue: UserRole.shop,
                             toLabel: (item) => item.roleName.tr(),
                             requestFocusOnTap: false,
                             onSelected: (value) {
@@ -131,8 +131,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           label: "confirm_pw".tr(),
                           obscureText: true,
                           isRequired: true,
-                          validator:
-                              (value) => Validators.validateConfirmPassword(
+                          validator: (value) =>
+                              Validators.validateConfirmPassword(
                                 value,
                                 passwordController.text,
                               ),

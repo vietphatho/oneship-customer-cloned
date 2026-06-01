@@ -35,6 +35,9 @@ class ImagePath {
   static const arrow = 'assets/images/arrow.png';
   static const String iconWarehouse = 'assets/images/icon_warehouse.png';
 
+  static const String iconCusLocation =
+      'assets/images/icon_customer_location.png';
+  static const String iconShopLocation = 'assets/images/icon_shop_location.png';
 
   //icon
   static const String iconCall = 'assets/icons/icon_call.svg';

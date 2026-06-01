@@ -50,25 +50,25 @@ class _CreateMultiOrdersPageState extends State<CreateMultiOrdersPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PrimaryText("shop_name".tr(), style: AppTextStyles.titleLarge),
-              BlocListener<ShopBloc, ShopState>(
-                bloc: _shopBloc,
-                listenWhen:
-                    (pre, cur) =>
-                        pre.dailySummaryResource != cur.dailySummaryResource,
-                listener: _handleListenerChangedShop,
-                child: PrimaryDropdown<BriefShopEntity>(
-                  initialValue: _shopBloc.state.currentShop,
-                  toLabel: (item) {
-                    return item.shopName;
-                  },
-                  menu: _shopBloc.state.briefShopsResource.data!.data,
-                  onSelected: (value) {
-                    if (value != _shopBloc.state.currentShop) {
-                      _shopBloc.changeShop(value!);
-                    }
-                  },
-                ),
-              ),
+              // BlocListener<ShopBloc, ShopState>(
+              //   bloc: _shopBloc,
+              //   listenWhen:
+              //       (pre, cur) =>
+              //           pre.dailySummaryResource != cur.dailySummaryResource,
+              //   listener: _handleListenerChangedShop,
+              //   child: PrimaryDropdown<BriefShopEntity>(
+              //     initialValue: _shopBloc.state.currentShop,
+              //     toLabel: (item) {
+              //       return item.shopName;
+              //     },
+              //     menu: _shopBloc.state.briefShopsResource.data!.data,
+              //     onSelected: (value) {
+              //       if (value != _shopBloc.state.currentShop) {
+              //         _shopBloc.changeShop(value!);
+              //       }
+              //     },
+              //   ),
+              // ),
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
               PrimaryText(
                 "order_information".tr(),

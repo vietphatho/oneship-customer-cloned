@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
@@ -20,7 +21,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
 
   const factory CreateOrderRequestEntity({
     String? externalOrderId,
-    DeliveryServiceType? serviceCode,
+    ShippingServiceConfigEntity? serviceConfig,
     @Default([]) List<String> surchargeCodes,
     String? orderNumber,
     int? codAmount,
@@ -48,7 +49,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
   CreateOrderRequest toDto() {
     return CreateOrderRequest(
       externalOrderId: externalOrderId,
-      serviceCode: serviceCode?.requestValue,
+      serviceCode: serviceConfig?.serviceCode,
       surchargeCodes: surchargeCodes,
       orderNumber: orderNumber,
       codAmount: codAmount,
@@ -86,10 +87,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
     return CreateOrderRequestEntity(
       externalOrderId: model.externalOrderId,
 
-      serviceCode: DeliveryServiceType.values.firstWhere(
-        (e) => e.requestValue == model.serviceCode,
-        orElse: () => DeliveryServiceType.standard,
-      ),
+      serviceConfig: null, // We can't map this easily from string without the list, or we could create a dummy entity if needed. Let's leave it null for now or adapt as needed.
 
       orderNumber: model.orderNumber,
 

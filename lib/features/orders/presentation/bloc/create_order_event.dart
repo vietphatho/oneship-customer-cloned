@@ -1,5 +1,6 @@
 import 'package:oneship_customer/core/base/models/lat_long.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
@@ -71,7 +72,7 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
   final int? width;
   final int? height;
   final String? note;
-  final DeliveryServiceType? deliveryServiceType;
+  final ShippingServiceConfigEntity? serviceConfig;
 
   CreateOrderChangeOrderInfoEvent({
     this.cod,
@@ -80,7 +81,7 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
     this.width,
     this.height,
     this.note,
-    this.deliveryServiceType,
+    this.serviceConfig,
   });
 }
 

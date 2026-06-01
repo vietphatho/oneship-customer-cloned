@@ -1,11 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_radio_group.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class DeliveryServiceTypeRadioGroup extends StatefulWidget {
   const DeliveryServiceTypeRadioGroup({super.key});
@@ -18,6 +21,15 @@ class DeliveryServiceTypeRadioGroup extends StatefulWidget {
 class _DeliveryServiceTypeRadioGroupState
     extends State<DeliveryServiceTypeRadioGroup> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
+
+  late List<ShippingServiceConfigEntity> shippingServices;
+
+  @override
+  void initState() {
+    super.initState();
+    shippingServices = _shopBloc.state.shippingServices;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,21 +39,25 @@ class _DeliveryServiceTypeRadioGroupState
         CreateOrderRequestEntity draftRequest =
             _createOrderBloc.state.draftRequest;
 
-        return PrimaryRadioGroup(
+        return PrimaryRadioGroup<ShippingServiceConfigEntity>(
           direction: Axis.horizontal,
           title: "delivery_service_type".tr(),
           isRequired: true,
-          options: DeliveryServiceType.values,
-          subTitle: (value) => value.description,
-          value: draftRequest.serviceCode,
-          displayLabel: (value) => value.nameValue.tr(),
+          options: shippingServices,
+          subTitle: (value) {
+            return Utils.formatCurrencyWithUnit(value.baseFee);
+          },
+          value: draftRequest.serviceConfig,
+          displayLabel: (value) {
+            return value.serviceLabel;
+          },
           onChanged: _onChanged,
         );
       },
     );
   }
 
-  void _onChanged(DeliveryServiceType value) {
-    _createOrderBloc.changeOrderInfo(deliveryServiceType: value);
+  void _onChanged(ShippingServiceConfigEntity entity) {
+    _createOrderBloc.changeOrderInfo(serviceConfig: entity);
   }
 }

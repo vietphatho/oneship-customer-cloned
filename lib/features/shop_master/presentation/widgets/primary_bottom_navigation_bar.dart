@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/liquid_glass_view.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
@@ -19,45 +20,111 @@ class _PrimaryBottomNavigationBarState
     extends State<PrimaryBottomNavigationBar> {
   final ShopMasterBloc _shopMasterBloc = getIt.get();
 
+  static const List<BottomNavigationItem> _sideItems = [
+    BottomNavigationItem.home,
+    BottomNavigationItem.orderList,
+    BottomNavigationItem.finance,
+    BottomNavigationItem.menu,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ShopMasterBloc, ShopMasterState>(
       bloc: _shopMasterBloc,
       builder: (context, state) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.mediumSpacing,
-              vertical: AppDimensions.smallSpacing,
-            ),
-            child: LiquidGlassView(
-              borderRadius: AppDimensions.xLargeBorderRadius,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: AppDimensions.xxxSmallSpacing,
-                  horizontal: AppDimensions.mediumSpacing,
-                ),
-
-                // decoration: BoxDecoration(
-                //   color: Colors.white,
-                //   boxShadow: PrimaryBoxShadows.bottomNavShadow,
-                //   borderRadius: AppDimensions.xLargeBorderRadius,
-                // ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children:
-                      BottomNavigationItem.values
-                          .map(
-                            (item) => _NavigationItem(
-                              item: item,
-                              isSelected: _shopMasterBloc.currentTab == item,
+        return Container(
+          color: Colors.transparent,
+          height: AppDimensions.safeBottomSpacing,
+          width: double.infinity,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(20),
+                        blurRadius: 32,
+                        spreadRadius: 20,
+                        offset: const Offset(0, -8),
+                      ),
+                    ],
+                  ),
+                  child: ClipPath(
+                    clipper: _BottomNavigationBarClipper(),
+                    child: Container(
+                      height: AppDimensions.bottomNavBarHeight,
+                      padding: const EdgeInsets.only(
+                        left: AppDimensions.mediumSpacing,
+                        right: AppDimensions.mediumSpacing,
+                        bottom: AppDimensions.mediumSpacing,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppDimensions.xxLargeRadius),
+                          topRight: Radius.circular(
+                            AppDimensions.xxLargeRadius,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _NavigationItem(
+                              item: _sideItems[0],
+                              isSelected:
+                                  _shopMasterBloc.currentTab == _sideItems[0],
                               onTap: _onItemTapped,
                             ),
-                          )
-                          .toList(),
+                          ),
+                          Expanded(
+                            child: _NavigationItem(
+                              item: _sideItems[1],
+                              isSelected:
+                                  _shopMasterBloc.currentTab == _sideItems[1],
+                              onTap: _onItemTapped,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: AppDimensions.centerButtonNavHeight,
+                          ),
+                          Expanded(
+                            child: _NavigationItem(
+                              item: _sideItems[2],
+                              isSelected:
+                                  _shopMasterBloc.currentTab == _sideItems[2],
+                              onTap: _onItemTapped,
+                            ),
+                          ),
+                          Expanded(
+                            child: _NavigationItem(
+                              item: _sideItems[3],
+                              isSelected:
+                                  _shopMasterBloc.currentTab == _sideItems[3],
+                              onTap: _onItemTapped,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: _CenterNavigationItem(
+                  item: BottomNavigationItem.createOrder,
+                  // isSelected:
+                  //     _shopMasterBloc.currentTab == BottomNavigationItem.home,
+                  onTap: () {
+                    context.push(RouteName.createOrderPage);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -69,13 +136,47 @@ class _PrimaryBottomNavigationBarState
   }
 }
 
+class _CenterNavigationItem extends StatelessWidget {
+  final BottomNavigationItem item;
+  final VoidCallback onTap;
+
+  const _CenterNavigationItem({required this.item, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return PrimaryAnimatedPressableWidget(
+      onTap: onTap,
+      child: Container(
+        width: AppDimensions.centerButtonNavHeight,
+        height: AppDimensions.centerButtonNavHeight,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: SizedBox(
+            width: AppDimensions.largeIconSize,
+            height: AppDimensions.largeIconSize,
+            child: SvgPicture.asset(
+              item.icon,
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _NavigationItem extends StatelessWidget {
   final BottomNavigationItem item;
   final void Function(BottomNavigationItem item)? onTap;
   final bool isSelected;
 
   const _NavigationItem({
-    super.key,
     required this.item,
     this.onTap,
     required this.isSelected,
@@ -85,23 +186,50 @@ class _NavigationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return PrimaryAnimatedPressableWidget(
       onTap: () => onTap?.call(item),
-      child: LiquidGlassView(
-        isEnable: isSelected,
-        backgroundColor: AppColors.primary,
-        opacity: 0.9,
-        borderRadius: AppDimensions.xLargeBorderRadius,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.mediumSpacing,
-            vertical: AppDimensions.smallSpacing,
-          ),
-          child: Icon(
-            item.icon,
-            size: AppDimensions.mediumIconSize,
-            color: isSelected ? Colors.white : AppColors.neutral3,
+      child: Center(
+        child: SvgPicture.asset(
+          item.icon,
+          width: AppDimensions.largeIconSize,
+          height: AppDimensions.largeIconSize,
+          colorFilter: ColorFilter.mode(
+            isSelected ? AppColors.primary : AppColors.neutral7,
+            BlendMode.srcIn,
           ),
         ),
       ),
     );
   }
+}
+
+class _BottomNavigationBarClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width * 0.35, 0)
+      ..quadraticBezierTo(
+        size.width * 0.40,
+        0,
+        size.width * 0.40,
+        size.height * 0.10,
+      )
+      ..cubicTo(
+        size.width * 0.43,
+        size.height * 0.57,
+
+        size.width * 0.57,
+        size.height * 0.57,
+
+        size.width * 0.60,
+        size.height * 0.10,
+      )
+      ..quadraticBezierTo(size.width * 0.60, 0, size.width * 0.65, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

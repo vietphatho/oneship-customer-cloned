@@ -57,36 +57,20 @@ class _FinancePageState extends State<FinancePage>
           ),
         ],
       ),
-      body: SafeArea(
-        child: BlocConsumer<FinanceOverviewBloc, FinanceOverviewState>(
-          bloc: _financeOverviewBloc,
-          listenWhen:
-              (pre, cur) =>
-                  pre.shopFinancialData.state != cur.shopFinancialData.state,
-          listener: _handleFinanceOverviewListener,
-          buildWhen:
-              (pre, cur) =>
-                  pre.shopFinancialData.state != cur.shopFinancialData.state &&
-                  (cur.shopFinancialData.state != Result.loading),
-          builder: (context, state) {
-            if (state.shopFinancialData.state == Result.error) {
-              if (state.isSecondPasswordRequired) {
-                return VerifySecondaryPasswordPage(
-                  onCallback: () {
-                    _financeOverviewBloc.init(
-                      shopId: _shopBloc.state.currentShop?.shopId ?? "",
-                      requestSource: FinanceRequestSource.page,
-                    );
-                  },
-                );
-              }
-
-              return PrimaryEmptyData(
-                onRetry: () {
-                  _financeOverviewBloc.fetchFinancialData(
-                    filter: state.financeFilter,
-                    startDate: state.startDate,
-                    endDate: state.endDate,
+      body: BlocConsumer<FinanceOverviewBloc, FinanceOverviewState>(
+        bloc: _financeOverviewBloc,
+        listenWhen: (pre, cur) =>
+            pre.shopFinancialData.state != cur.shopFinancialData.state,
+        listener: _handleFinanceOverviewListener,
+        buildWhen: (pre, cur) =>
+            pre.shopFinancialData.state != cur.shopFinancialData.state &&
+            (cur.shopFinancialData.state != Result.loading),
+        builder: (context, state) {
+          if (state.shopFinancialData.state == Result.error) {
+            if (state.isSecondPasswordRequired) {
+              return VerifySecondaryPasswordPage(
+                onCallback: () {
+                  _financeOverviewBloc.init(
                     shopId: _shopBloc.state.currentShop?.shopId ?? "",
                     requestSource: FinanceRequestSource.page,
                   );
@@ -94,26 +78,38 @@ class _FinancePageState extends State<FinancePage>
               );
             }
 
-            return DefaultTabController(
-              length: FinanceSubFeature.values.length,
-              child: Column(
-                children: [
-                  FinanceTabBar(controller: controller),
-                  Expanded(
-                    child: TabBarView(
-                      controller: controller,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                        FinanceOverviewTabView(),
-                        FinanceReconciliationTabView(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            return PrimaryEmptyData(
+              onRetry: () {
+                _financeOverviewBloc.fetchFinancialData(
+                  filter: state.financeFilter,
+                  startDate: state.startDate,
+                  endDate: state.endDate,
+                  shopId: _shopBloc.state.currentShop?.shopId ?? "",
+                  requestSource: FinanceRequestSource.page,
+                );
+              },
             );
-          },
-        ),
+          }
+
+          return DefaultTabController(
+            length: FinanceSubFeature.values.length,
+            child: Column(
+              children: [
+                FinanceTabBar(controller: controller),
+                Expanded(
+                  child: TabBarView(
+                    controller: controller,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      FinanceOverviewTabView(),
+                      FinanceReconciliationTabView(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
