@@ -6,7 +6,7 @@ part 'create_order_request.g.dart';
 @freezed
 abstract class CreateOrderRequest with _$CreateOrderRequest {
   const factory CreateOrderRequest({
-    @JsonKey(name: "externalOrderId", includeIfNull: false) String? externalOrderId,
+    @JsonKey(name: "externalId", includeIfNull: false) String? externalOrderId,
     @JsonKey(name: "serviceCode") String? serviceCode,
     @JsonKey(name: "surchargeCodes") List<String>? surchargeCodes,
     @JsonKey(name: "orderNumber", includeIfNull: false) String? orderNumber,
