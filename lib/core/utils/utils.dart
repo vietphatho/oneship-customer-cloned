@@ -5,7 +5,8 @@ class Utils {
 
   static String formatWeightWithUnit(num? value) {
     if (value == null) return "--";
-    return "${value.toStringAsFixed(2)} ${Constants.weightUnit}";
+    final formatter = NumberFormat.decimalPattern('vi_VN');
+    return "${formatter.format(value)} ${Constants.weightUnit}";
   }
 
   static String formatCurrencyWithUnit(num? value) {

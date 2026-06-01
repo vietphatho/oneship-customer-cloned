@@ -52,7 +52,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
 
   @override
   Widget build(BuildContext context) {
-    final isStepValid = (int.tryParse(_weightCtrl.text) ?? 0) > 0;
+    final isStepValid = Utils.parseCurrencyInput(_weightCtrl.text) > 0;
 
     super.build(context);
     return Container(
@@ -209,7 +209,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
     final ProductBloc productBloc = getIt.get();
     _createOrderBloc.completeOrderInfoStep(
       codAmount: Utils.parseCurrencyInput(_codCtrl.text),
-      weight: int.tryParse(_weightCtrl.text) ?? 0,
+      weight: Utils.parseCurrencyInput(_weightCtrl.text),
       length: int.tryParse(_lengthCtrl.text),
       width: int.tryParse(_widthCtrl.text),
       height: int.tryParse(_heightCtrl.text),

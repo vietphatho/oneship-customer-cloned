@@ -129,11 +129,16 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                         enabled: state.isEnableAddressField,
                         controller: _addressCtrl,
                         displayStringForOption: (item) => item.display ?? "--",
-                        onSearch: (value) => _locationServiceBloc.searchAddress(
-                          province: state.draftRequest.province!,
-                          ward: state.draftRequest.ward!,
-                          address: value,
-                        ),
+                        onSearch: (value) {
+                          if (value.trim().length < 5) {
+                            return Future.value([]);
+                          }
+                          return _locationServiceBloc.searchAddress(
+                            province: state.draftRequest.province!,
+                            ward: state.draftRequest.ward!,
+                            address: value,
+                          );
+                        },
                         onSelected: (value) =>
                             _createOrderBloc.changeCustomerInfo(
                               address: value.display,
