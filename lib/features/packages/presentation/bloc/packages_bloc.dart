@@ -8,6 +8,7 @@ import 'package:oneship_customer/core/services/socket_service.dart';
 import 'package:oneship_customer/core/utils/app_logger.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/packages/domain/repositories/packages_repository.dart';
+import 'package:oneship_customer/features/packages/enum.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_event.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
@@ -32,7 +33,8 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     on<PackagesLoadMoreEvent>(_onLoadMorePackages);
 
     on<PackagesFindingShipperStatusEvent>(_onFindShipperStatus);
-    // on<PackagesFindingShipperFailedEvent>(_onFindShipperFailed);
+
+    on<PackagesFilterResultsEvent>(_onFilterResults);
   }
 
   final PackagesRepository _repository;
@@ -52,7 +54,12 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
   ) async {
     emit(state.copyWith(pkgsDataResource: Resource.loading()));
 
-    final response = await _repository.fetchPackages(shopId: state.shopId);
+    final response = await _repository.fetchPackages(
+      shopId: state.shopId,
+      packageNumber: state.packageNumber,
+      shipperCode: state.shipperCode,
+      status: state.status == PackageStatus.all ? null : state.status.name,
+    );
 
     if (response.state == Result.success) {
       emit(state.copyWith(pkgsData: response.data?.data ?? []));
@@ -78,7 +85,10 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     Emitter<PackagesState> emit,
   ) async {
     emit(state.copyWith(findingShipperResult: Resource.loading()));
-    final response = await _repository.findShipper(state.shopId);
+    final response = await _repository.findShipper(
+      state.shopId,
+      orderIds: event.orderIds,
+    );
     emit(state.copyWith(findingShipperResult: response));
   }
 
@@ -126,6 +136,34 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     emit(state.copyWith(findShipperStatus: null));
   }
 
+  FutureOr<void> _onFilterResults(
+    PackagesFilterResultsEvent event,
+    Emitter<PackagesState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        packageNumber: event.packageNumber,
+        shipperCode: event.shipperCode,
+        status: event.status!,
+      ),
+    );
+  }
+
+  void filterResults({
+    String? packageNumber,
+    String? shipperCode,
+    PackageStatus? status,
+  }) {
+    add(
+      PackagesFilterResultsEvent(
+        packageNumber: packageNumber,
+        shipperCode: shipperCode,
+        status: status ?? PackageStatus.all,
+      ),
+    );
+    add(PackagesFetchingEvent());
+  }
+
   void init(BriefShopEntity shop) {
     add(PackageInitEvent(shop));
     add(PackagesFetchingEvent());
@@ -143,8 +181,8 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     add(PackagesViewDetailEvent(pkgId));
   }
 
-  void findShipper() {
-    add(const PackagesFindShipperEvent());
+  void findShipper({List<String>? orderIds}) {
+    add(PackagesFindShipperEvent(orderIds: orderIds));
   }
 
   void cancelfindingShipper() {

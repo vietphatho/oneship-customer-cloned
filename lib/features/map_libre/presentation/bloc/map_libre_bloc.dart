@@ -45,7 +45,7 @@ class MapLibreBloc extends Bloc<MapLibreEvent, MapLibreState> {
   void fitCamera(List<Geographic> coordinates) async {
     await state.mapCtrl?.fitBounds(
       bounds: LngLatBounds.fromPoints(coordinates),
-      padding: EdgeInsets.all(200),
+      padding: EdgeInsets.all(40),
     );
   }
 }

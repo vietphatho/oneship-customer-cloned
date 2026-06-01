@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
@@ -50,12 +49,12 @@ class _ShopSelectionPageState extends State<ShopSelectionPage> {
                   onRefresh: _onRefresh,
                   onLoading: _onLoading,
                   enablePullUp: true,
-                  padding: const EdgeInsets.all(AppDimensions.smallSpacing),
+                  padding: AppDimensions.smallPaddingHorizontal,
                   itemCount: shops.length,
                   separatorBuilder: (context, index) =>
-                      AppSpacing.vertical(AppDimensions.smallSpacing),
+                      const Divider(height: 1),
                   itemBuilder: (context, index) {
-                    return _ShopItem(shops[index]);
+                    return _ShopItem(index: index + 1, shop: shops[index]);
                   },
                 );
               },
@@ -111,8 +110,9 @@ class _ShopSelectionPageState extends State<ShopSelectionPage> {
 }
 
 class _ShopItem extends StatelessWidget {
-  const _ShopItem(this.shop);
+  const _ShopItem({required this.index, required this.shop});
 
+  final int index;
   final BriefShopEntity shop;
 
   @override
@@ -132,9 +132,16 @@ class _ShopItem extends StatelessWidget {
             if (isSelected) return;
             shopBloc.changeDraftSelectedShop(shop);
           },
-          child: PrimaryCard(
+          child: Padding(
+            padding: AppDimensions.mediumPaddingVertical,
             child: Row(
               children: [
+                PrimaryText(
+                  '$index.',
+                  style: AppTextStyles.labelLarge,
+                  color: isSelected ? AppColors.primary : AppColors.neutral6,
+                ),
+                AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                 Expanded(
                   child: PrimaryText(
                     shop.shopName.tr(),

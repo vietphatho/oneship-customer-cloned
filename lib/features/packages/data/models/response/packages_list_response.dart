@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_customer/features/packages/enum.dart';
 
 part 'packages_list_response.freezed.dart';
 part 'packages_list_response.g.dart';
@@ -24,6 +25,7 @@ abstract class Package with _$Package {
     @JsonKey(name: "shopId") String? shopId,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "shipperId") String? shipperId,
+    @JsonKey(name: "shipperCode") String? shipperCode,
     @JsonKey(name: "distance") double? distance,
     @JsonKey(name: "duration") int? duration,
     @JsonKey(name: "totalCollectAmount") int? totalCollectAmount,
@@ -35,7 +37,7 @@ abstract class Package with _$Package {
     @JsonKey(name: "pickupImages") dynamic pickupImages,
     @JsonKey(name: "pickupConfirmedAt") dynamic pickupConfirmedAt,
     @JsonKey(name: "quantityConfirmedAt") dynamic quantityConfirmedAt,
-    @JsonKey(name: "orderCount") int? totalOrders,
+    @JsonKey(name: "orderCount") int? orderCount,
     @JsonKey(name: "mergedToPackageId") String? mergedToPackageId,
     @JsonKey(name: "shipper") Shipper? shipper,
   }) = _Package;
@@ -70,4 +72,9 @@ abstract class Shipper with _$Shipper {
 
   factory Shipper.fromJson(Map<String, dynamic> json) =>
       _$ShipperFromJson(json);
+}
+
+extension PackageX on Package {
+  PackageStatus get statusEnum =>
+      PackageStatus.values.firstWhere((element) => element.name == status);
 }

@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
@@ -19,9 +21,9 @@ class _PrimaryBottomNavigationBarState
   final ShopMasterBloc _shopMasterBloc = getIt.get();
 
   static const List<BottomNavigationItem> _sideItems = [
+    BottomNavigationItem.home,
+    BottomNavigationItem.orderList,
     BottomNavigationItem.finance,
-    BottomNavigationItem.staffManagement,
-    BottomNavigationItem.shopManagement,
     BottomNavigationItem.menu,
   ];
 
@@ -30,23 +32,44 @@ class _PrimaryBottomNavigationBarState
     return BlocBuilder<ShopMasterBloc, ShopMasterState>(
       bloc: _shopMasterBloc,
       builder: (context, state) {
-        return SafeArea(
-          child: SizedBox(
-            height: AppDimensions.safeBottomSpacing,
-            width: double.infinity,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: PhysicalShape(
-                    color: AppColors.neutral9,
+        return Container(
+          color: Colors.transparent,
+          height: AppDimensions.safeBottomSpacing,
+          width: double.infinity,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(20),
+                        blurRadius: 32,
+                        spreadRadius: 20,
+                        offset: const Offset(0, -8),
+                      ),
+                    ],
+                  ),
+                  child: ClipPath(
                     clipper: _BottomNavigationBarClipper(),
-                    elevation: AppDimensions.xSmallSpacing,
-                    shadowColor: AppColors.neutral7,
                     child: Container(
                       height: AppDimensions.bottomNavBarHeight,
-                      padding: AppDimensions.largePaddingHorizontal,
+                      padding: const EdgeInsets.only(
+                        left: AppDimensions.mediumSpacing,
+                        right: AppDimensions.mediumSpacing,
+                        bottom: AppDimensions.mediumSpacing,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppDimensions.xxLargeRadius),
+                          topRight: Radius.circular(
+                            AppDimensions.xxLargeRadius,
+                          ),
+                        ),
+                      ),
                       child: Row(
                         children: [
                           Expanded(
@@ -65,7 +88,9 @@ class _PrimaryBottomNavigationBarState
                               onTap: _onItemTapped,
                             ),
                           ),
-                          const SizedBox(width: AppDimensions.displayIconSize),
+                          const SizedBox(
+                            width: AppDimensions.centerButtonNavHeight,
+                          ),
                           Expanded(
                             child: _NavigationItem(
                               item: _sideItems[2],
@@ -87,17 +112,19 @@ class _PrimaryBottomNavigationBarState
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: _CenterNavigationItem(
-                    item: BottomNavigationItem.home,
-                    isSelected:
-                        _shopMasterBloc.currentTab == BottomNavigationItem.home,
-                    onTap: _onItemTapped,
-                  ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: _CenterNavigationItem(
+                  item: BottomNavigationItem.createOrder,
+                  // isSelected:
+                  //     _shopMasterBloc.currentTab == BottomNavigationItem.home,
+                  onTap: () {
+                    context.push(RouteName.createOrderPage);
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -111,44 +138,33 @@ class _PrimaryBottomNavigationBarState
 
 class _CenterNavigationItem extends StatelessWidget {
   final BottomNavigationItem item;
-  final void Function(BottomNavigationItem item)? onTap;
-  final bool isSelected;
+  final VoidCallback onTap;
 
-  const _CenterNavigationItem({
-    required this.item,
-    this.onTap,
-    required this.isSelected,
-  });
+  const _CenterNavigationItem({required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return PrimaryAnimatedPressableWidget(
-      onTap: () => onTap?.call(item),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOut,
-        width: AppDimensions.bottomNavBarHeight,
-        height: AppDimensions.bottomNavBarHeight,
+      onTap: onTap,
+      child: Container(
+        width: AppDimensions.centerButtonNavHeight,
+        height: AppDimensions.centerButtonNavHeight,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.neutral8,
+          color: AppColors.primary,
           shape: BoxShape.circle,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.white,
-              spreadRadius: AppDimensions.xSmallSpacing,
-              blurRadius: AppDimensions.xSmallSpacing,
-            ),
-            BoxShadow(
-              color: AppColors.neutral8,
-              offset: Offset(0, AppDimensions.xSmallSpacing),
-              blurRadius: AppDimensions.mediumSpacing,
-            ),
-          ],
         ),
-        child: Icon(
-          item.icon,
-          size: AppDimensions.largeIconSize,
-          color: Colors.white,
+        child: Center(
+          child: SizedBox(
+            width: AppDimensions.largeIconSize,
+            height: AppDimensions.largeIconSize,
+            child: SvgPicture.asset(
+              item.icon,
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -171,28 +187,14 @@ class _NavigationItem extends StatelessWidget {
     return PrimaryAnimatedPressableWidget(
       onTap: () => onTap?.call(item),
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              item.icon,
-              size:
-                  isSelected
-                      ? AppDimensions.mediumIconSize +
-                          AppDimensions.xxSmallSpacing
-                      : AppDimensions.mediumIconSize,
-              color: isSelected ? AppColors.primary : AppColors.neutral5,
-            ),
-            AppSpacing.vertical(AppDimensions.xxSmallSpacing),
-            PrimaryText(
-              item.navLabelKey.tr(),
-              style: AppTextStyles.bodySmall.copyWith(
-                color: isSelected ? AppColors.primary : AppColors.neutral5,
-                fontSize: isSelected ? 13 : 12,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
-              ),
-            ),
-          ],
+        child: SvgPicture.asset(
+          item.icon,
+          width: AppDimensions.largeIconSize,
+          height: AppDimensions.largeIconSize,
+          colorFilter: ColorFilter.mode(
+            isSelected ? AppColors.primary : AppColors.neutral7,
+            BlendMode.srcIn,
+          ),
         ),
       ),
     );
@@ -204,27 +206,24 @@ class _BottomNavigationBarClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     return Path()
       ..moveTo(0, 0)
-      ..lineTo(size.width * 0.30, 0)
+      ..lineTo(size.width * 0.35, 0)
       ..quadraticBezierTo(
-        size.width * 0.375,
+        size.width * 0.40,
         0,
-        size.width * 0.375,
+        size.width * 0.40,
         size.height * 0.10,
       )
       ..cubicTo(
-        size.width * 0.40,
-        size.height * 0.90,
+        size.width * 0.43,
+        size.height * 0.57,
+
+        size.width * 0.57,
+        size.height * 0.57,
+
         size.width * 0.60,
-        size.height * 0.90,
-        size.width * 0.625,
         size.height * 0.10,
       )
-      ..quadraticBezierTo(
-        size.width * 0.625,
-        0,
-        size.width * 0.70,
-        0,
-      )
+      ..quadraticBezierTo(size.width * 0.60, 0, size.width * 0.65, 0)
       ..lineTo(size.width, 0)
       ..lineTo(size.width, size.height)
       ..lineTo(0, size.height)

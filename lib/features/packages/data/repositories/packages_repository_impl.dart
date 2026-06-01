@@ -16,9 +16,20 @@ class PackagesRepositoryImpl extends PackagesRepository {
   @override
   Future<Resource<PackagesListResponse>> fetchPackages({
     required String shopId,
-    int? page
+    String? packageNumber,
+    String? shipperCode,
+    String? status,
+    int? page,
   }) {
-    return request(() => _packagesApi.fetchPackages(shopId: shopId, page: page));
+    return request(
+      () => _packagesApi.fetchPackages(
+        shopId: shopId,
+        page: page,
+        packageNumber: packageNumber,
+        shipperCode: shipperCode,
+        status: status,
+      ),
+    );
   }
 
   @override
@@ -33,7 +44,7 @@ class PackagesRepositoryImpl extends PackagesRepository {
 
   @override
   Future<Resource> cancelFindingShipper(String shopId) {
-    PackageDispatchRequest body = PackageDispatchRequest.create(
+    final body = PackageDispatchRequest.create(
       type: PackageDispatchType.cancel.name,
       shopId: shopId,
     );
@@ -41,10 +52,11 @@ class PackagesRepositoryImpl extends PackagesRepository {
   }
 
   @override
-  Future<Resource> findShipper(String shopId) {
-    PackageDispatchRequest body = PackageDispatchRequest.create(
+  Future<Resource> findShipper(String shopId, {List<String>? orderIds}) {
+    final body = PackageDispatchRequest.create(
       type: PackageDispatchType.find.name,
       shopId: shopId,
+      orderIds: orderIds,
     );
     return request(() => _packagesApi.dispatch(body));
   }

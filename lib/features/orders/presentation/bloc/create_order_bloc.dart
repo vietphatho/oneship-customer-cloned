@@ -270,6 +270,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         paymentStatus: null,
         paymentMethod: null,
         status: null,
+        externalOrderId: null,
+        orderNumber: null,
         selectedProducts: currentRequest.selectedProducts
             .where((p) => p.id != null && p.id!.isNotEmpty)
             .toList(),

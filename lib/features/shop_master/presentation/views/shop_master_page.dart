@@ -41,19 +41,23 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: BottomNavigationItem.values.length,
-                        itemBuilder:
-                            (context, index) =>
-                                BottomNavigationItem.values[index].page,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: AppDimensions.bottomNavBarHeight,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: PageView.builder(
+                          controller: _pageController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: BottomNavigationItem.values.length,
+                          itemBuilder: (context, index) =>
+                              BottomNavigationItem.values[index].page,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const PrimaryBottomNavigationBar(),
               ],
@@ -61,6 +65,7 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
           },
         ),
       ),
+      // bottomNavigationBar: const PrimaryBottomNavigationBar(),
     );
   }
 
@@ -86,10 +91,10 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
 
   void _handleListener(BuildContext context, ShopMasterState state) {
     if (state is ShopMasterMenuTabChangedState) {
-      _pageController.animateToPage(
+      _pageController.jumpToPage(
         _shopMasterBloc.currentTab.index,
-        duration: Constants.pageViewTransitionDur,
-        curve: Curves.easeInOut,
+        // duration: Constants.pageViewTransitionDur,
+        // curve: Curves.easeInOut,
       );
     }
   }
