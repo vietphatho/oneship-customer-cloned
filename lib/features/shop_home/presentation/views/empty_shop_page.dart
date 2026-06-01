@@ -76,7 +76,7 @@ class _Body extends StatelessWidget {
               PrimaryText(
                 "no_shop_title".tr(),
                 textAlign: TextAlign.center,
-                style: AppTextStyles.headlineSmall,
+                style: AppTextStyles.titleXXXLarge,
               ),
               AppSpacing.vertical(AppDimensions.xLargeSpacing),
               PrimaryText(

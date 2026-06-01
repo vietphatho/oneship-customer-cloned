@@ -64,28 +64,27 @@ class PrimaryDropdown<T> extends StatelessWidget {
               width: double.maxFinite,
               enableFilter: true,
               hintText: hintText,
-              trailingIcon:
-                  enabled
-                      ? const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.neutral6,
-                      )
-                      : const SizedBox.shrink(),
-              selectedTrailingIcon:
-                  enabled
-                      ? const Icon(
-                        Icons.keyboard_arrow_up,
-                        color: AppColors.neutral6,
-                      )
-                      : const SizedBox.shrink(),
-              textStyle: AppTextStyles.defaultTextStyle,
+              trailingIcon: enabled
+                  ? const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.neutral6,
+                    )
+                  : const SizedBox.shrink(),
+              selectedTrailingIcon: enabled
+                  ? const Icon(
+                      Icons.keyboard_arrow_up,
+                      color: AppColors.neutral6,
+                    )
+                  : const SizedBox.shrink(),
+              textStyle: AppTextStyles.bodyMedium,
               inputDecorationTheme: InputDecorationTheme(
-                hintStyle: TextStyle(
-                  // fontSize: TextSize.p + 1,
-                  fontFamily: AppTextStyles.fontFamily,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.grey.shade500,
-                ),
+                hintStyle: AppTextStyles.hintText,
+                // hintStyle: TextStyle(
+                //   // fontSize: TextSize.p + 1,
+                //   fontFamily: AppTextStyles.fontFamily,
+                //   fontWeight: FontWeight.w300,
+                //   color: Colors.grey.shade500,
+                // ),
                 // contentPadding: AppDimensions.mediumPaddingAll,
                 filled: true,
                 fillColor: enabled ? Colors.white : AppColors.neutral8,
@@ -121,15 +120,14 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 ),
               ),
               initialSelection: initialValue,
-              dropdownMenuEntries:
-                  menu
-                      .map(
-                        (e) => DropdownMenuEntry(
-                          value: e,
-                          label: toLabel?.call(e) ?? e.toString(),
-                        ),
-                      )
-                      .toList(),
+              dropdownMenuEntries: menu
+                  .map(
+                    (e) => DropdownMenuEntry(
+                      value: e,
+                      label: toLabel?.call(e) ?? e.toString(),
+                    ),
+                  )
+                  .toList(),
             ),
 
             if (hasError)

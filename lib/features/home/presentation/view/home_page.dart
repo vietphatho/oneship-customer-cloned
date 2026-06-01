@@ -28,6 +28,24 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
         ),
+        // Positioned(
+        //   top: 0,
+        //   left: 0,
+        //   child: Container(
+        //     width: AppDimensions.getSize(context).width,
+        //     height: AppDimensions.getSize(context).height / 3,
+        //     decoration: BoxDecoration(
+        //       gradient: LinearGradient(
+        //         colors: [
+        //           Color.fromARGB(255, 224, 186, 162),
+        //           Colors.transparent,
+        //         ],
+        //         begin: Alignment.topCenter,
+        //         end: Alignment.bottomCenter,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Positioned(
           bottom: 0,
           left: 0,
@@ -58,20 +76,20 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SafeArea(
-                  child: AppSpacing.vertical(AppDimensions.mediumSpacing),
-                ),
-                PrimaryText(
-                  'delivery_solutions'.tr(),
-                  style: AppTextStyles.displaySmall.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-                AppSpacing.vertical(AppDimensions.smallSpacing),
-                PrimaryText(
-                  'company_slogan'.tr(),
-                  style: AppTextStyles.titleLarge.copyWith(color: Colors.white),
-                ),
+                // SafeArea(
+                //   child: AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+                // ),
+                // PrimaryText(
+                //   'delivery_solutions'.tr(),
+                //   style: AppTextStyles.titleXXXLarge.copyWith(
+                //     color: Colors.white,
+                //   ),
+                // ),
+                // AppSpacing.vertical(AppDimensions.smallSpacing),
+                // PrimaryText(
+                //   'company_slogan'.tr(),
+                //   style: AppTextStyles.titleLarge.copyWith(color: Colors.white),
+                // ),
                 Spacer(),
                 LiquidGlassView(
                   borderRadius: BorderRadius.only(
@@ -86,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         AppSpacing.vertical(AppDimensions.smallSpacing),
                         Image.asset(
-                          ImagePath.logo,
+                          ImagePath.oneshipLogo,
                           height: AppDimensions.smallHeightButton,
                         ),
                         AppSpacing.vertical(AppDimensions.xxxLargeSpacing),

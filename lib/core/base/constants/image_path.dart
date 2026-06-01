@@ -1,9 +1,9 @@
 class ImagePath {
-
   ImagePath._internal();
-  
+
   //image
   static const String logo = 'assets/images/logo_app.png';
+  static const String oneshipLogo = 'assets/images/oneship_logo_white.png';
   static const String logoBreak = 'assets/images/logo_break.png';
   static const String shopOnboarding = 'assets/images/shop_onboarding.png';
   static const String shopPendingApproval =

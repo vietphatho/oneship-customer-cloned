@@ -72,7 +72,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                           PrimaryText(
                             shopName,
                             textAlign: TextAlign.center,
-                            style: AppTextStyles.headlineSmall,
+                            style: AppTextStyles.titleXXXLarge,
                             color: AppColors.primary,
                           ),
                           PrimaryText(
@@ -194,7 +194,7 @@ class _SupportCard extends StatelessWidget {
               AppSpacing.horizontal(AppDimensions.smallSpacing),
               PrimaryText(
                 hotline,
-                style: AppTextStyles.headlineSmall.copyWith(
+                style: AppTextStyles.titleXXXLarge.copyWith(
                   color: AppColors.secondary,
                   fontWeight: FontWeight.w800,
                 ),

@@ -108,18 +108,15 @@ class SecondaryButton extends StatelessWidget {
         width: AppDimensions.getSize(context).width,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color:
-              onPressed == null || isDisable
-                  ? AppColors.neutral8
-                  : backgroundColor ?? AppColors.primary,
-          borderRadius:
-              height < AppDimensions.mediumHeightButton
-                  ? AppDimensions.smallBorderRadius
-                  : AppDimensions.largeBorderRadius,
-          border:
-              borderColor != null
-                  ? Border.all(color: borderColor!, width: 0.8)
-                  : null,
+          color: onPressed == null || isDisable
+              ? AppColors.neutral8
+              : backgroundColor ?? AppColors.primary,
+          borderRadius: height < AppDimensions.mediumHeightButton
+              ? AppDimensions.smallBorderRadius
+              : AppDimensions.largeBorderRadius,
+          border: borderColor != null
+              ? Border.all(color: borderColor!, width: 0.8)
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -131,15 +128,13 @@ class SecondaryButton extends StatelessWidget {
             PrimaryText(
               label,
               textAlign: TextAlign.center,
-              color:
-                  onPressed == null || isDisable
-                      ? AppColors.neutral6
-                      : textColor ?? Colors.white,
+              color: onPressed == null || isDisable
+                  ? AppColors.neutral6
+                  : textColor ?? Colors.white,
               bold: true,
-              style:
-                  height < AppDimensions.mediumHeightButton
-                      ? AppTextStyles.labelSmall
-                      : AppTextStyles.labelMedium,
+              style: height < AppDimensions.mediumHeightButton
+                  ? AppTextStyles.smallButtonText
+                  : AppTextStyles.buttonText,
             ),
           ],
         ),
