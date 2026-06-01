@@ -9,7 +9,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -84,7 +84,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                   ),
                   itemCount: _orders.length,
                   itemBuilder:
-                      (context, index) => OrderInfoItem(
+                      (context, index) => SelectableOrderInfoItem(
                         index: index + 1,
                         order: _orders[index],
                         isSelected: _isSelected(_orders[index]),
