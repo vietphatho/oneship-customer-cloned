@@ -18,20 +18,18 @@ class ShopHomeFeatureButton extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            width: AppDimensions.shopHomeButtonSize,
+            height: AppDimensions.shopHomeButtonSize,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.background, AppColors.primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppColors.shopHomeButtonGradBg,
               shape: BoxShape.circle,
             ),
             padding: AppDimensions.xSmallPaddingAll,
-            child: SvgPicture.asset(
-              feature.icon,
-              width: AppDimensions.xLargeIconSize,
-              height: AppDimensions.xLargeIconSize,
-            ),
+            // child: SvgPicture.asset(
+            //   feature.icon,
+            //   width: AppDimensions.xLargeIconSize,
+            //   height: AppDimensions.xLargeIconSize,
+            // ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           PrimaryText(
