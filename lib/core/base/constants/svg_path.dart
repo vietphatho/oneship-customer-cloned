@@ -15,4 +15,10 @@ class SvgPath {
   static const String icOrderProcessing = "assets/icons/ic_order_processing.svg";
   static const String icOrderProcessed = "assets/icons/ic_order_processed.svg";
   static const String icOrderSupport = "assets/icons/ic_order_support.svg";
+
+  static const String iconHome = "assets/icons/bottom_nav_home.svg";
+  static const String iconOrderList = "assets/icons/bottom_nav_order_list.svg";
+  static const String iconAdd = "assets/icons/bottom_nav_add.svg";
+  static const String iconFinance = "assets/icons/bottom_nav_finance.svg";
+  static const String iconMenu = "assets/icons/bottom_nav_menu.svg";
 }
