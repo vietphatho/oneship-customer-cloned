@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/function_utils.dart';
@@ -220,11 +220,7 @@ class _Header extends StatelessWidget {
         return PrimaryCard(
           child: Row(
             children: [
-              PrimaryAvatar(
-                url: userProfile.avatarUrl,
-                radius: AppDimensions.defaultAvatarRadius,
-                isOnline: true,
-              ),
+              const _ProfileAvatar(),
               AppSpacing.horizontal(AppDimensions.mediumSpacing),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,24 +235,38 @@ class _Header extends StatelessWidget {
                   ),
                 ],
               ),
-              AppSpacing.horizontal(AppDimensions.mediumSpacing),
-              // const Spacer(),
-              // Container(
-              //   padding: AppDimensions.xxSmallPaddingAll,
-              //   decoration: BoxDecoration(
-              //     color: AppColors.green100,
-              //     borderRadius: AppDimensions.mediumBorderRadius,
-              //   ),
-              //   child: PrimaryText(
-              //     "online".tr(),
-              //     style: AppTextStyles.bodySmall,
-              //     color: AppColors.green600,
-              //   ),
-              // ),
+              const Spacer(),
+              Container(
+                padding: AppDimensions.xxSmallPaddingAll,
+                decoration: BoxDecoration(
+                  color: AppColors.green100,
+                  borderRadius: AppDimensions.mediumBorderRadius,
+                ),
+                child: PrimaryText(
+                  "active".tr(),
+                  style: AppTextStyles.bodySmall,
+                  color: AppColors.green600,
+                ),
+              ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return const PrimaryAssetAvatar(
+      image: ImagePath.profileAvatarUser,
+      backgroundImage: ImagePath.profileAvatarBackground,
+      imageSize: AppDimensions.defaultAvatarRadius * 1.45,
+      overlayImage: ImagePath.profileEditBadge,
+      radius: AppDimensions.defaultAvatarRadius,
     );
   }
 }

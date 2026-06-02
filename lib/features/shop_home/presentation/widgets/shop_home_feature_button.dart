@@ -35,10 +35,16 @@ class ShopHomeFeatureButton extends StatelessWidget {
             ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          PrimaryText(
-            feature.title.tr(),
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.labelSmall,
+          SizedBox(
+            width: double.infinity,
+            height: AppDimensions.xxLargeSpacing + AppDimensions.smallSpacing,
+            child: PrimaryText(
+              feature.title.tr(),
+              maxLine: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.labelXSmall,
+            ),
           ),
         ],
       ),

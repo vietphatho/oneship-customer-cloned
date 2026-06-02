@@ -13,6 +13,16 @@ class ImagePath {
   static String onboarding_3 = 'assets/images/onboarding_3.png';
   static String homeBackground = 'assets/images/home_background.png';
   static String shopHomeBackground = 'assets/images/shop_home_background.png';
+  static const String shopHomeAvatar = 'assets/images/shop_home_avatar.png';
+  static const String shopHomeAvatarBackground =
+      'assets/images/shop_home_avatar_background.png';
+  static const String shopHomeStore = 'assets/images/shop_home_store.png';
+  static const String profileAvatarBackground =
+      'assets/images/profile_avatar_background.png';
+  static const String profileAvatarUser = 'assets/images/profile_avatar_user.png';
+  static const String profileEditBadge = 'assets/images/profile_edit_badge.png';
+  static const String customerHomeSlider1 =
+      'assets/images/customer_home_slider_1.png';
   static String iconApprovalProcess = 'assets/images/icon_approval_process.png';
 
   static const String iconMap = 'assets/images/icon_map.png';
