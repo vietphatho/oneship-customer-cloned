@@ -9,6 +9,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.confirmPop = false,
     this.canPop = true,
     this.backgroundColor = Colors.white,
+    this.titleColor = AppColors.primary,
   });
 
   final String? title;
@@ -18,6 +19,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool canPop;
 
   final Color backgroundColor;
+  final Color titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
         title: PrimaryText(
           title,
           style: AppTextStyles.appBarTitle,
-          color: AppColors.primary,
+          color: titleColor,
         ),
         centerTitle: true,
         actions: actions,
