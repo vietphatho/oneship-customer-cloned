@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
@@ -41,39 +42,64 @@ class _ShopHomeState extends State<ShopHome> {
           listener: _listenCurrentShopChanged,
         ),
       ],
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(gradient: AppColors.shopHomeGradBg),
-          ),
-          Column(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Stack(
             children: [
-              const ShopAppBar(),
-              AppSpacing.vertical(AppDimensions.smallSpacing),
-              const ShopBriefInfo(),
-              AppSpacing.vertical(AppDimensions.mediumSpacing),
-              GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  // childAspectRatio: 2 / 1,
-                  mainAxisSpacing: AppDimensions.smallSpacing,
-                  crossAxisSpacing: AppDimensions.smallSpacing,
+              Container(
+                width: MediaQuery.of(context).size.width,
+                // height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(ImagePath.shopHomeBackground),
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                  ),
                 ),
-                itemCount: ShopHomeFeature.values.length,
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.mediumSpacing,
-                  vertical: AppDimensions.smallSpacing,
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    top: AppDimensions.shopHomeTopSpacing,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  // height: MediaQuery.of(context).size.height,
+                  height: AppDimensions.xxLargeRadius,
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(AppDimensions.xxLargeRadius),
+                    ),
+                  ),
                 ),
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder:
-                    (context, index) => ShopHomeFeatureButton(
+              ),
+              Column(
+                children: [
+                  const ShopAppBar(),
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  const ShopBriefInfo(),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      // childAspectRatio: 2 / 1,
+                      mainAxisSpacing: AppDimensions.smallSpacing,
+                      crossAxisSpacing: AppDimensions.smallSpacing,
+                    ),
+                    itemCount: ShopHomeFeature.values.length,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppDimensions.mediumSpacing,
+                      vertical: AppDimensions.smallSpacing,
+                    ),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => ShopHomeFeatureButton(
                       feature: ShopHomeFeature.values[index],
                     ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

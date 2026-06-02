@@ -26,12 +26,14 @@ import 'package:oneship_customer/features/profile/presentation/views/profile_det
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_from_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_selection_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop_to_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_management_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -162,6 +164,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopSelectionPage,
       builder: (context, state) => const ShopSelectionPage(),
+    ),
+    GoRoute(
+      path: RouteName.staffManagementPage,
+      builder: (context, state) => const ShopStaffManagementPage(),
+    ),
+    GoRoute(
+      path: RouteName.shopManagementPage,
+      builder: (context, state) => const ShopManagementPage(),
     ),
   ],
 );

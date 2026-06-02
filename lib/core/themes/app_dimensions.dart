@@ -86,6 +86,7 @@ class AppDimensions {
   static const double centerButtonNavHeight = 64.0;
   static const double dropdownMenuHeight = 240.0;
   static const double safeBottomSpacing = 120.0;
+  static const double shopHomeTopSpacing = 300.0;
 
   // Spacing
   static const double xxxSmallSpacing = 2;
@@ -128,6 +129,7 @@ class AppDimensions {
   static const double largeIconSize = 28;
   static const double xLargeIconSize = 48;
   static const double displayIconSize = 56;
+  static const double shopHomeButtonSize = 78;
 
   static const double myLocationIconSize = 36;
 

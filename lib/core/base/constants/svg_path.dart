@@ -21,4 +21,11 @@ class SvgPath {
   static const String iconAdd = "assets/icons/bottom_nav_add.svg";
   static const String iconFinance = "assets/icons/bottom_nav_finance.svg";
   static const String iconMenu = "assets/icons/bottom_nav_menu.svg";
+
+  static const String icShopHomeCreateOrder = "assets/icons/ic_shop_home_create_order.svg";
+  static const String icShopHomePackage = "assets/icons/ic_shop_home_package.svg";
+  static const String icShopHomeOrderProcessed = "assets/icons/ic_shop_home_order_processed.svg";
+  static const String icShopHomeStaff = "assets/icons/ic_shop_home_staff.svg";
+  static const String icShopHomeShop = "assets/icons/ic_shop_home_shop.svg";
+  static const String icShopHomeSupport = "assets/icons/ic_shop_home_supporting.svg";
 }

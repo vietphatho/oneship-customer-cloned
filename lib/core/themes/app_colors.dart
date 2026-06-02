@@ -135,4 +135,11 @@ class AppColors {
     end: Alignment.bottomCenter,
     stops: [0.0, 0.3],
   );
+
+  static const LinearGradient shopHomeButtonGradBg = LinearGradient(
+    colors: [Color(0xffC3E2FF), Color(0xff5294CF)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    // stops: [0.0, 0.3],
+  );
 }

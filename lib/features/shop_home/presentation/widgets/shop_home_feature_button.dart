@@ -7,6 +7,8 @@ import '../../data/enum.dart' show ShopHomeFeature, ShopHomeFeatureExt;
 class ShopHomeFeatureButton extends StatelessWidget {
   const ShopHomeFeatureButton({super.key, required this.feature});
 
+  static const double _iconSize = 38;
+
   final ShopHomeFeature feature;
 
   @override
@@ -18,19 +20,18 @@ class ShopHomeFeatureButton extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            width: AppDimensions.shopHomeButtonSize,
+            height: AppDimensions.shopHomeButtonSize,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.background, AppColors.primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppColors.shopHomeButtonGradBg,
               shape: BoxShape.circle,
             ),
             padding: AppDimensions.xSmallPaddingAll,
-            child: SvgPicture.asset(
-              feature.icon,
-              width: AppDimensions.xLargeIconSize,
-              height: AppDimensions.xLargeIconSize,
+            child: Center(
+              child: SizedBox.square(
+                dimension: _iconSize,
+                child: SvgPicture.asset(feature.icon),
+              ),
             ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
