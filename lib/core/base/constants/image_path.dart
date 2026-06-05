@@ -13,6 +13,8 @@ class ImagePath {
   static String onboarding_3 = 'assets/images/onboarding_3.png';
   static String homeBackground = 'assets/images/home_background.png';
   static String shopHomeBackground = 'assets/images/shop_home_background.png';
+  static const String profileDetailBackground =
+      'assets/images/profile_detail_background.png';
   static String iconApprovalProcess = 'assets/images/icon_approval_process.png';
 
   static const String iconMap = 'assets/images/icon_map.png';

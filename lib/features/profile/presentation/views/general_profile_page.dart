@@ -12,6 +12,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class GeneralProfilePage extends StatefulWidget {
@@ -24,7 +25,8 @@ class GeneralProfilePage extends StatefulWidget {
 class _GeneralProfilePageState extends State<GeneralProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ProfileBackgroundScaffold(
+      showBodyBackground: false,
       body: SingleChildScrollView(
         child: Padding(
           padding: AppDimensions.mediumPaddingAll,

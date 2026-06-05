@@ -8,6 +8,7 @@ import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
 
 class ProfileDetailPage extends StatefulWidget {
   const ProfileDetailPage({super.key});
@@ -44,8 +45,12 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PrimaryAppBar(title: 'account_info.page_title'.tr()),
+    return ProfileBackgroundScaffold(
+      appBar: PrimaryAppBar(
+        title: 'account_info.page_title'.tr(),
+        backgroundColor: Colors.transparent,
+        titleColor: AppColors.onPrimary,
+      ),
       body: Padding(
         padding: AppDimensions.mediumPaddingAll,
         child: Form(
