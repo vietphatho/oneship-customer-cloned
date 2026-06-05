@@ -9,6 +9,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -34,9 +35,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ProfileBackgroundScaffold(
       appBar: PrimaryAppBar(
         title: 'change_password.page_title'.tr(),
+        backgroundColor: Colors.transparent,
+        titleColor: AppColors.onPrimary,
       ),
       body: BlocListener<AuthBloc, AuthState>(
         bloc: _authBloc,
@@ -77,7 +80,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 const Spacer(),
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: AppDimensions.mediumSpacing),
+                    padding: const EdgeInsets.only(
+                      bottom: AppDimensions.mediumSpacing,
+                    ),
                     child: Row(
                       children: [
                         Expanded(

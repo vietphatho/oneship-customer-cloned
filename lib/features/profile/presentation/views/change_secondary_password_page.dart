@@ -11,6 +11,7 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
 
 class ChangeSecondaryPasswordPage extends StatefulWidget {
   const ChangeSecondaryPasswordPage({super.key});
@@ -39,11 +40,13 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
   @override
   Widget build(BuildContext context) {
     final userProfile = _authBloc.userProfile;
-    return Scaffold(
+    return ProfileBackgroundScaffold(
       appBar: PrimaryAppBar(
         title: (userProfile.hasSecondPassword ?? false)
             ? 'secondary_password.change_page_title'.tr()
             : 'secondary_password.create_page_title'.tr(),
+        backgroundColor: Colors.transparent,
+        titleColor: AppColors.onPrimary,
       ),
       body: BlocListener<AuthBloc, AuthState>(
         bloc: _authBloc,
@@ -104,7 +107,9 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
                 const Spacer(),
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: AppDimensions.mediumSpacing),
+                    padding: const EdgeInsets.only(
+                      bottom: AppDimensions.mediumSpacing,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
