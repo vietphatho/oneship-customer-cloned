@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_avatar.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
@@ -22,7 +22,6 @@ class ShopAppBar extends StatelessWidget {
       buildWhen: (_, state) => state is AuthFetchedUserProfileState,
       builder: (context, state) {
         UserProfileResponse userProfile = authBloc.userProfile;
-        final avatarUrl = userProfile.avatarUrl;
 
         return SafeArea(
           bottom: false,
@@ -37,11 +36,7 @@ class ShopAppBar extends StatelessWidget {
                   flex: 4,
                   child: Row(
                     children: [
-                      PrimaryAvatar(
-                        url: avatarUrl,
-                        radius: AppDimensions.homeAvatarRadius,
-                        showStatusIndicator: false,
-                      ),
+                      const _ShopHomeAvatar(),
                       AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                       Expanded(
                         child: PrimaryText(
@@ -55,12 +50,25 @@ class ShopAppBar extends StatelessWidget {
                   ),
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
-                const Expanded(flex: 3, child: ShopSelectionButton()),
+                const ShopSelectionButton(),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _ShopHomeAvatar extends StatelessWidget {
+  const _ShopHomeAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return const PrimaryAssetAvatar(
+      image: ImagePath.shopHomeAvatar,
+      backgroundImage: ImagePath.shopHomeAvatarBackground,
+      radius: AppDimensions.homeAvatarRadius,
     );
   }
 }

@@ -1,10 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -21,15 +25,25 @@ class ShopHome extends StatefulWidget {
 }
 
 class _ShopHomeState extends State<ShopHome> {
+  static const List<String> _banners = [ImagePath.customerHomeSlider1];
+
   final ShopBloc _shopBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
+  final OrderTrackingBloc _orderTrackingBloc = getIt.get();
   final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
+  final TextEditingController _trackingNumberCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     // _shopBloc.init(shopId);
+  }
+
+  @override
+  void dispose() {
+    _trackingNumberCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,6 +88,8 @@ class _ShopHomeState extends State<ShopHome> {
               Column(
                 children: [
                   const ShopAppBar(),
+                  AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                  _buildTrackingInput(context),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   const ShopBriefInfo(),
                   AppSpacing.vertical(AppDimensions.mediumSpacing),
@@ -81,7 +97,7 @@ class _ShopHomeState extends State<ShopHome> {
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      // childAspectRatio: 2 / 1,
+                      childAspectRatio: 0.76,
                       mainAxisSpacing: AppDimensions.smallSpacing,
                       crossAxisSpacing: AppDimensions.smallSpacing,
                     ),
@@ -95,6 +111,8 @@ class _ShopHomeState extends State<ShopHome> {
                       feature: ShopHomeFeature.values[index],
                     ),
                   ),
+                  _buildPromotionSlider(),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
                 ],
               ),
             ],
@@ -115,5 +133,68 @@ class _ShopHomeState extends State<ShopHome> {
         shopId: state.currentShop?.shopId ?? "",
       );
     }
+  }
+
+  Widget _buildTrackingInput(BuildContext context) {
+    return Padding(
+      padding: AppDimensions.mediumPaddingHorizontal,
+      child: PrimaryTextField(
+        controller: _trackingNumberCtrl,
+        hintText: "input_tracking_number".tr(),
+        textInputAction: TextInputAction.search,
+        textCapitalization: TextCapitalization.characters,
+        prefixIcon: Icon(
+          Icons.search_rounded,
+          color: AppColors.primary,
+          size: AppDimensions.smallIconSize,
+        ),
+        onFieldSubmitted: (_) => _onSearch(context),
+      ),
+    );
+  }
+
+  Widget _buildPromotionSlider() {
+    return Padding(
+      padding: AppDimensions.mediumPaddingHorizontal,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText(
+            'Chương trình khuyến mãi',
+            style: AppTextStyles.labelSmall,
+          ),
+          AppSpacing.vertical(AppDimensions.smallSpacing),
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 120,
+              autoPlay: true,
+              enlargeCenterPage: false,
+              viewportFraction: 1,
+            ),
+            items: _banners.map((banner) {
+              return ClipRRect(
+                borderRadius: AppDimensions.smallBorderRadius,
+                child: Image.asset(
+                  banner,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSearch(BuildContext context) {
+    final trackingNumber = _trackingNumberCtrl.text.trim();
+
+    if (trackingNumber.isEmpty) {
+      return;
+    }
+
+    _orderTrackingBloc.search(trackingNumber);
+    context.push(RouteName.orderTrackingPage);
   }
 }
