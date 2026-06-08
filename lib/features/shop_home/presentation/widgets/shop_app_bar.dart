@@ -5,6 +5,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/shop_master/data/enum.dart';
+import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_selection_button.dart';
 
 class ShopAppBar extends StatelessWidget {
@@ -65,10 +67,18 @@ class _ShopHomeAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PrimaryAssetAvatar(
-      image: ImagePath.shopHomeAvatar,
-      backgroundImage: ImagePath.shopHomeAvatarBackground,
-      radius: AppDimensions.homeAvatarRadius,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        getIt
+            .get<ShopMasterBloc>()
+            .changeTab(BottomNavigationItem.menu);
+      },
+      child: const PrimaryAssetAvatar(
+        image: ImagePath.shopHomeAvatar,
+        backgroundImage: ImagePath.shopHomeAvatarBackground,
+        radius: AppDimensions.homeAvatarRadius,
+      ),
     );
   }
 }
