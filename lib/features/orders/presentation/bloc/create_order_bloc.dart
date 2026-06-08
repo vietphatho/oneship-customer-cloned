@@ -453,6 +453,11 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       externalOrderId: externalOrderId,
       codAmount: codAmount,
       serviceConfig: draftReq.serviceConfig,
+      packageSize: _buildPackageSize(
+        length: length,
+        width: width,
+        height: height,
+      ),
       detail: currentReq.detail?.copyWith(
         weight: weight.toDouble(),
         height: height,
@@ -567,6 +572,15 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     }
 
     add(CreateOrderCreateEvent());
+  }
+
+  String? _buildPackageSize({int? length, int? width, int? height}) {
+    final dimensions =
+        [length, width, height].map((value) => value ?? 0).toList();
+    if (dimensions.every((value) => value <= 0)) {
+      return null;
+    }
+    return dimensions.join('x');
   }
 
   void initUpdateOrdData(OrderDetailEntity ord) {

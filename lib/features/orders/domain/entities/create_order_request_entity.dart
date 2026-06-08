@@ -38,6 +38,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
     String? paymentStatus,
     String? paymentMethod,
     String? packageType,
+    String? packageSize,
     String? shopId,
     @Default(Payer.recipient) Payer payer,
     @Default(true) bool agreeTerms,
@@ -68,6 +69,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
       paymentStatus: paymentStatus,
       paymentMethod: paymentMethod,
       packageType: packageType,
+      packageSize: packageSize,
       shopId: shopId,
       payer: payer.requestValue,
       agreeTerms: agreeTerms,
@@ -125,6 +127,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
       paymentMethod: model.paymentMethod,
 
       packageType: model.packageType,
+      packageSize: model.packageSize,
 
       shopId: model.shopId,
 
