@@ -15,6 +15,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
     this.onLoading,
     this.separatorBuilder,
     this.padding = AppDimensions.smallPaddingAll,
+    this.noMoreText,
   });
 
   final RefreshController controller;
@@ -27,6 +28,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
   final bool enablePullUp;
   final void Function()? onRefresh;
   final void Function()? onLoading;
+  final String? noMoreText;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
             transitionBuilder:
                 (child, animation) =>
                     FadeTransition(opacity: animation, child: child),
-            child: _CustomFooter(key: ValueKey(currentMode), mode: currentMode),
+            child: _CustomFooter(key: ValueKey(currentMode), mode: currentMode, noMoreText: noMoreText),
           );
         },
       ),
@@ -100,9 +102,10 @@ class PrimaryRefreshabelListView extends StatelessWidget {
 }
 
 class _CustomFooter extends StatelessWidget {
-  const _CustomFooter({super.key, required this.mode});
+  const _CustomFooter({super.key, required this.mode, this.noMoreText});
 
   final LoadStatus mode;
+  final String? noMoreText;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +115,7 @@ class _CustomFooter extends StatelessWidget {
       case LoadStatus.failed:
         return const _FooterFailed();
       case LoadStatus.noMore:
-        return const _FooterNoMore();
+        return _FooterNoMore(text: noMoreText);
       default:
         return const SizedBox.shrink();
     }
@@ -164,7 +167,9 @@ class _FooterFailed extends StatelessWidget {
 }
 
 class _FooterNoMore extends StatelessWidget {
-  const _FooterNoMore();
+  const _FooterNoMore({this.text});
+
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +184,7 @@ class _FooterNoMore extends StatelessWidget {
         ),
         AppSpacing.vertical(AppDimensions.xSmallSpacing),
         PrimaryText(
-          "no_more_data".tr(),
+          text ?? "no_more_data".tr(),
           style: AppTextStyles.bodySmall,
           color: AppColors.neutral6,
         ),

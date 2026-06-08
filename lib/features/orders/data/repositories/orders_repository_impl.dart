@@ -101,7 +101,7 @@ class OrdersRepositoryImpl extends OrdersRepository {
   }) async {
     final response = await request(
       () => _ordersApi.fetchOrderHistory(
-        status: status.value,
+        status: status == OrderStatus.allProcessing ? null : status.value,
         shopId: shopId,
         page: page,
         limit: limit,

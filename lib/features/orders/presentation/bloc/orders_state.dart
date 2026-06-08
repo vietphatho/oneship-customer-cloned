@@ -25,6 +25,7 @@ abstract class OrdersState with _$OrdersState {
     @Default([]) List<OrderInfo> returnedOrdersList,
     @Default([]) List<OrdersHistoryEntity> deliveredOrdersHistoryList,
     @Default([]) List<OrdersHistoryEntity> returnedOrdersHistoryList,
+    @Default([]) List<OrdersHistoryEntity> allOrdersHistoryList,
     @Default([]) List<OrdersHistoryEntity> filteredDeliveredOrdersHistoryList,
     @Default([]) List<OrdersHistoryEntity> filteredReturnedOrdersHistoryList,
     @Default([]) List<OrdersHistoryEntity> visibleDeliveredOrdersHistoryList,

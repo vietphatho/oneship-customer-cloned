@@ -7,7 +7,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_list_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processed_order_list_item.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class OrdersHistoryListCard extends StatefulWidget {
@@ -57,12 +57,12 @@ class _OrdersHistoryListCardState extends State<OrdersHistoryListCard> {
                 controller: _refreshController,
                 itemCount: widget.orders.length,
                 enablePullUp: true,
+                noMoreText: "Không còn đơn hàng",
                 onRefresh: widget.onRefresh,
                 onLoading: _onLoading,
                 itemBuilder: (context, index) {
                   final order = widget.orders[index];
-                  return OrdersHistoryListItem(
-                    index: index + 1,
+                  return ProcessedOrderListItem(
                     order: order,
                     onTap:
                         widget.onOrderTap != null

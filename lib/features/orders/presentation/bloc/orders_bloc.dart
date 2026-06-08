@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
@@ -76,6 +77,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   BaseMetaResponse? _ordersMeta;
   BaseMetaResponse? _deliveredOrdersHistoryMeta;
   BaseMetaResponse? _returnedOrdersHistoryMeta;
+  BaseMetaResponse? _allOrdersHistoryMeta;
 
   OrderStatus _currentOrderStatus = OrderStatus.pending;
   set currentOrderStatus(OrderStatus status) => _currentOrderStatus = status;
@@ -193,6 +195,11 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
           state.copyWith(returnedOrdersHistoryList: response.data?.items ?? []),
         );
         break;
+      case OrderStatus.allProcessing:
+        emit(
+          state.copyWith(allOrdersHistoryList: response.data?.items ?? []),
+        );
+        break;
       default:
     }
     emit(state.copyWith(ordersHistoryResource: response));
@@ -202,8 +209,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     OrdersHistoryLoadMoreEvent event,
     Emitter<OrdersState> emit,
   ) async {
+    if (!hasMoreOrderHistory(event.status)) return null;
     final meta = _getOrdersHistoryMeta(event.status);
-    if (meta?.hasNext != true) return null;
 
     final response = await _fetchOrderHistoryUseCase.call(
       status: event.status,
@@ -222,6 +229,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         returnedOrdersHistoryList: event.status == OrderStatus.returned
             ? [...state.returnedOrdersHistoryList, ...orders]
             : state.returnedOrdersHistoryList,
+        allOrdersHistoryList: event.status == OrderStatus.allProcessing
+            ? [...state.allOrdersHistoryList, ...orders]
+            : state.allOrdersHistoryList,
       ),
     );
   }
@@ -261,7 +271,19 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     OrdersLoadMoreByStatusEvent event,
     Emitter<OrdersState> emit,
   ) async {
-    if (_ordersMeta?.hasNext != true) return null;
+    bool hasMore = false;
+    if (_ordersMeta != null) {
+      if (_ordersMeta!.hasNext != null) {
+        hasMore = _ordersMeta!.hasNext!;
+      } else {
+        final total = _ordersMeta!.total ?? 0;
+        final page = _ordersMeta!.page ?? 1;
+        final limit = _ordersMeta!.limit ?? Constants.defaultLimitPerPage;
+        hasMore = (page * limit) < total;
+      }
+    }
+    
+    if (!hasMore) return null;
 
     final response = await _fetchOrdersByStatusUseCase.call(
       status: _currentOrderStatus,
@@ -340,9 +362,10 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   }
 
   BaseMetaResponse? _getOrdersHistoryMeta(OrderStatus status) {
-    return status == OrderStatus.delivered
-        ? _deliveredOrdersHistoryMeta
-        : _returnedOrdersHistoryMeta;
+    if (status == OrderStatus.delivered) return _deliveredOrdersHistoryMeta;
+    if (status == OrderStatus.returned) return _returnedOrdersHistoryMeta;
+    if (status == OrderStatus.allProcessing) return _allOrdersHistoryMeta;
+    return null;
   }
 
   void _setOrdersHistoryMeta(OrderStatus status, BaseMetaResponse? meta) {
@@ -350,9 +373,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       _deliveredOrdersHistoryMeta = meta;
       return;
     }
-
     if (status == OrderStatus.returned) {
       _returnedOrdersHistoryMeta = meta;
+      return;
+    }
+    if (status == OrderStatus.allProcessing) {
+      _allOrdersHistoryMeta = meta;
     }
   }
 
@@ -415,7 +441,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   }
 
   bool hasMoreOrderHistory(OrderStatus status) {
-    return _getOrdersHistoryMeta(status)?.hasNext == true;
+    final meta = _getOrdersHistoryMeta(status);
+    if (meta == null) return false;
+    if (meta.hasNext != null) return meta.hasNext!;
+    final total = meta.total ?? 0;
+    final page = meta.page ?? 1;
+    final limit = meta.limit ?? Constants.defaultLimitPerPage;
+    return (page * limit) < total;
   }
 
   void toggleOrdersHistoryFilters() {
