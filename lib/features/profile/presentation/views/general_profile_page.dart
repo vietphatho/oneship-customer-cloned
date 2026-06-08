@@ -1,19 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
-import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_header.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_info_section.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_menu_section.dart';
 
 class GeneralProfilePage extends StatefulWidget {
   const GeneralProfilePage({super.key});
@@ -23,64 +20,64 @@ class GeneralProfilePage extends StatefulWidget {
 }
 
 class _GeneralProfilePageState extends State<GeneralProfilePage> {
+  final AuthBloc _authBloc = getIt.get();
+
   @override
   Widget build(BuildContext context) {
-    return ProfileBackgroundScaffold(
-      showBodyBackground: false,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: AppDimensions.mediumPaddingAll,
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const _Header(),
-                AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                _SettingsContainer(),
-                AppSpacing.vertical(AppDimensions.mediumSpacing),
-                // _UtilitiesContainer(),
-                // AppSpacing.vertical(AppDimensions.mediumSpacing),
-                _SupportsContainer(),
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: _authBloc,
+      listener: _handleLogOutListener,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFFFE8C7),
+                Color(0xFFFFF5E8),
+                Color(0xFFFFFBF6),
+                Colors.white,
               ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0, 0.18, 0.38, 0.62],
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(
+                AppDimensions.largeSpacing,
+                AppDimensions.largeSpacing,
+                AppDimensions.largeSpacing,
+                AppDimensions.safeBottomSpacing,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const GeneralProfileTopBar(),
+                  AppSpacing.vertical(AppDimensions.largeSpacing),
+                  const GeneralProfileSummaryCard(),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  const GeneralProfileShopInfoCard(),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  const GeneralProfileMenuPanel(),
+                  AppSpacing.vertical(AppDimensions.largeSpacing),
+                  GeneralProfileLogoutButton(authBloc: _authBloc),
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+                  Center(
+                    child: PrimaryText(
+                      'Phiên bản 2.1.0',
+                      style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
+                      color: AppColors.neutral5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SupportsContainer extends StatelessWidget {
-  final AuthBloc _authBloc = getIt.get();
-  _SupportsContainer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _ProfileTitleItem(icon: SvgPath.iconHelper, label: "help".tr()),
-        _ProfileSelectedItem(label: 'info'.tr(), onTap: () {}),
-        Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(label: 'support_request'.tr(), onTap: () {}),
-        Divider(height: 1, color: AppColors.neutral7),
-        BlocListener<AuthBloc, AuthState>(
-          bloc: _authBloc,
-          listener: _handleLogOutListener,
-          child: _ProfileSelectedItem(
-            label: 'logout'.tr(),
-            onTap: () {
-              PrimaryDialog.showQuestionDialog(
-                context,
-                title: 'confirm_logout',
-                onPositiveTapped: () {
-                  _authBloc.logOut();
-                },
-              );
-            },
-            textColor: AppColors.expenseRed,
-          ),
-        ),
-      ],
     );
   }
 
@@ -101,174 +98,5 @@ class _SupportsContainer extends StatelessWidget {
           break;
       }
     }
-  }
-}
-
-class _UtilitiesContainer extends StatelessWidget {
-  const _UtilitiesContainer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _ProfileTitleItem(icon: SvgPath.iconUtilities, label: "utilities".tr()),
-        _ProfileSelectedItem(label: 'print_warning_label'.tr(), onTap: () {}),
-        Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(label: 'create_api_key'.tr(), onTap: () {}),
-      ],
-    );
-  }
-}
-
-class _SettingsContainer extends StatelessWidget {
-  const _SettingsContainer();
-
-  @override
-  Widget build(BuildContext context) {
-    final userProfile = getIt.get<AuthBloc>().userProfile;
-    return Column(
-      children: [
-        _ProfileTitleItem(icon: SvgPath.iconSettings, label: "settings".tr()),
-        _ProfileSelectedItem(
-          label: 'account_info.page_title'.tr(),
-          onTap: () {
-            context.push(RouteName.profileDetailPage);
-          },
-        ),
-        Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(
-          label: 'change_password.page_title'.tr(),
-          onTap: () {
-            context.push(RouteName.changePasswordPage);
-          },
-        ),
-        Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(
-          label: (userProfile.hasSecondPassword ?? false)
-              ? 'secondary_password.change_page_title'.tr()
-              : 'secondary_password.create_page_title'.tr(),
-          onTap: () {
-            context.push(RouteName.changeSecondaryPasswordPage);
-          },
-        ),
-        Divider(height: 1, color: AppColors.neutral7),
-        _ProfileSelectedItem(label: 'activity_history'.tr(), onTap: () {}),
-      ],
-    );
-  }
-}
-
-class _ProfileTitleItem extends StatelessWidget {
-  final String icon;
-  final String label;
-
-  const _ProfileTitleItem({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SvgPicture.asset(icon, height: AppDimensions.smallIconSize),
-        AppSpacing.horizontal(AppDimensions.smallSpacing),
-        PrimaryText(
-          label,
-          style: AppTextStyles.titleXLarge,
-          color: AppColors.primary,
-        ),
-      ],
-    );
-  }
-}
-
-class _ProfileSelectedItem extends StatelessWidget {
-  const _ProfileSelectedItem({
-    required this.onTap,
-    required this.label,
-    this.textColor,
-  });
-  final VoidCallback onTap;
-  final String label;
-  final Color? textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: AppDimensions.getSize(context).width,
-        padding: AppDimensions.smallPaddingVertical,
-        child: PrimaryText(
-          label,
-          style: AppTextStyles.labelMedium,
-          color: textColor,
-        ),
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    final AuthBloc _authBloc = getIt.get();
-
-    return BlocBuilder<AuthBloc, AuthState>(
-      bloc: _authBloc,
-      builder: (context, state) {
-        var userProfile = _authBloc.userProfile;
-
-        return PrimaryCard(
-          child: Row(
-            children: [
-              const _ProfileAvatar(),
-              AppSpacing.horizontal(AppDimensions.mediumSpacing),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PrimaryText(
-                    userProfile.displayName,
-                    style: AppTextStyles.titleXXXLarge,
-                  ),
-                  PrimaryText(
-                    userProfile.userPhone,
-                    style: AppTextStyles.bodyMedium,
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Container(
-                padding: AppDimensions.xxSmallPaddingAll,
-                decoration: BoxDecoration(
-                  color: AppColors.green100,
-                  borderRadius: AppDimensions.mediumBorderRadius,
-                ),
-                child: PrimaryText(
-                  "active".tr(),
-                  style: AppTextStyles.bodySmall,
-                  color: AppColors.green600,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar();
-
-  @override
-  Widget build(BuildContext context) {
-    return const PrimaryAssetAvatar(
-      image: ImagePath.profileAvatarUser,
-      backgroundImage: ImagePath.profileAvatarBackground,
-      imageSize: AppDimensions.defaultAvatarRadius * 1.45,
-      overlayImage: ImagePath.profileEditBadge,
-      radius: AppDimensions.defaultAvatarRadius,
-    );
   }
 }
