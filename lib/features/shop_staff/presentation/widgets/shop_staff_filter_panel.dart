@@ -103,9 +103,8 @@ class StaffStatusFilter {
   static const all = "all";
   static const active = "active";
   static const inactive = "inactive";
-  static const pending = "pending";
 
-  static const filterValues = [active, inactive, pending];
+  static const filterValues = [active, inactive];
 
   static String label(String value) {
     switch (value) {
@@ -113,8 +112,6 @@ class StaffStatusFilter {
         return "shop_management.status_active".tr();
       case inactive:
         return "shop_management.status_inactive".tr();
-      case pending:
-        return "shop_management.status_pending".tr();
       default:
         return "shop_management.status_all".tr();
     }
