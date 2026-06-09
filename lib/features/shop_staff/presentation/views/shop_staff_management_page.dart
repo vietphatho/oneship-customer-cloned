@@ -6,7 +6,6 @@ import 'package:oneship_customer/core/base/components/primary_refreshable_list_v
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
@@ -61,7 +60,6 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     return Scaffold(
       appBar: PrimaryAppBar(
         title: "shop_management.staff_title".tr(),
-        canPop: false,
         // actions: [
         //   IconButton(
         //     onPressed: () => setState(() => _showFilters = !_showFilters),

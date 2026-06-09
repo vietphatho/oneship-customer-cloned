@@ -1,12 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 
 part 'create_order_request_entity.freezed.dart';
 
@@ -37,7 +37,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
     String? orderItems,
     String? paymentStatus,
     String? paymentMethod,
-    String? packageType,
+    PackageSize? packageSize,
     String? shopId,
     @Default(Payer.recipient) Payer payer,
     @Default(true) bool agreeTerms,
@@ -67,7 +67,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
       orderItems: orderItems,
       paymentStatus: paymentStatus,
       paymentMethod: paymentMethod,
-      packageType: packageType,
+      packageSize: packageSize?.requestValue,
       shopId: shopId,
       payer: payer.requestValue,
       agreeTerms: agreeTerms,
@@ -87,7 +87,9 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
     return CreateOrderRequestEntity(
       externalOrderId: model.externalOrderId,
 
-      serviceConfig: null, // We can't map this easily from string without the list, or we could create a dummy entity if needed. Let's leave it null for now or adapt as needed.
+      serviceConfig: model.serviceCode != null
+          ? ShippingServiceConfigEntity.fromValue(model.serviceCode!)
+          : null,
 
       orderNumber: model.orderNumber,
 
@@ -98,22 +100,17 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
       fullAddress: model.fullAddress,
       fullAddressOld: model.fullAddressOld,
 
-      ward:
-          model.wardCode != null
-              ? Ward(
-                code: model.wardCode!,
-                name: model.wardName ?? "",
-                provinceCode: model.provinceCode!,
-              )
-              : null,
+      ward: model.wardCode != null
+          ? Ward(
+              code: model.wardCode!,
+              name: model.wardName ?? "",
+              provinceCode: model.provinceCode!,
+            )
+          : null,
 
-      province:
-          model.provinceCode != null
-              ? Province(
-                code: model.provinceCode!,
-                name: model.provinceName ?? "",
-              )
-              : null,
+      province: model.provinceCode != null
+          ? Province(code: model.provinceCode!, name: model.provinceName ?? "")
+          : null,
 
       isNewAddress: false,
 
@@ -124,7 +121,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
       paymentStatus: model.paymentStatus,
       paymentMethod: model.paymentMethod,
 
-      packageType: model.packageType,
+      packageSize: model.packageSize,
 
       shopId: model.shopId,
 
@@ -137,13 +134,12 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
 
       detail: DetailEntity(
         pickupDate: model.pickupDate,
-        pickupSession:
-            model.pickupTimeSlot != null
-                ? OrderPickUpSession.values.firstWhere(
-                  (e) => e.requestValue == model.pickupTimeSlot,
-                  orElse: () => OrderPickUpSession.morning,
-                )
-                : null,
+        pickupSession: model.pickupTimeSlot != null
+            ? OrderPickUpSession.values.firstWhere(
+                (e) => e.requestValue == model.pickupTimeSlot,
+                orElse: () => OrderPickUpSession.morning,
+              )
+            : null,
         deliveryTimeSlot: model.deliveryTimeSlot,
         weight: model.weight,
         length: model.length,
@@ -155,21 +151,22 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
         note: model.note,
       ),
 
-      selectedProducts:
-          model.items
-              .map(
-                (e) => SelectedProductEntity(
-                  id: e.productId ?? e.id ?? "",
-                  name: e.productName ?? "",
-                  sku: e.productSku ?? "",
-                  price: e.unitPrice,
-                  quantity: e.quantity,
-                ),
-              )
-              .toList(),
+      selectedProducts: model.items
+          .map(
+            (e) => SelectedProductEntity(
+              id: e.productId ?? e.id ?? "",
+              name: e.productName ?? "",
+              sku: e.productSku ?? "",
+              price: e.unitPrice,
+              quantity: e.quantity,
+            ),
+          )
+          .toList(),
 
       router: RoutingEntity(
-        distance: model.distance != null ? double.tryParse(model.distance!) : null,
+        distance: model.distance != null
+            ? double.tryParse(model.distance!)
+            : null,
         orderCoordinates: (model.coordinates?.coordinates?.length ?? 0) >= 2
             ? model.coordinates!.coordinates!
             : [],

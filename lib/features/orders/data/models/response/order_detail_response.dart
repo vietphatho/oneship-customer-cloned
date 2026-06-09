@@ -29,7 +29,7 @@ abstract class OrderDetailResponse with _$OrderDetailResponse {
     @JsonKey(name: "phone") String? phone,
     @JsonKey(name: "customerName") String? customerName,
     @JsonKey(name: "email") String? email,
-    @JsonKey(name: "packageType") String? packageType,
+    @JsonKey(name: "packageSize") String? packageSize,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "paymentStatus") String? paymentStatus,

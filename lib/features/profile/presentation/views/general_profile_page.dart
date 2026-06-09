@@ -11,9 +11,8 @@ import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/app_version.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class GeneralProfilePage extends StatefulWidget {
   const GeneralProfilePage({super.key});
@@ -80,6 +79,9 @@ class _SupportsContainer extends StatelessWidget {
             textColor: AppColors.expenseRed,
           ),
         ),
+        Divider(height: 1, color: AppColors.neutral7),
+        const AppVersion(),
+        AppSpacing.vertical(AppDimensions.largeSpacing),
       ],
     );
   }
