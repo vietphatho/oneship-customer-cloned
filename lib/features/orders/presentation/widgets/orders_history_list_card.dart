@@ -57,6 +57,8 @@ class _OrdersHistoryListCardState extends State<OrdersHistoryListCard> {
                 controller: _refreshController,
                 itemCount: widget.orders.length,
                 enablePullUp: true,
+                padding: const EdgeInsets.all(AppDimensions.smallSpacing),
+                footerBottomSpacing: AppDimensions.safeBottomSpacing,
                 noMoreText: "Không còn đơn hàng",
                 onRefresh: widget.onRefresh,
                 onLoading: _onLoading,

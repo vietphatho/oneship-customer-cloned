@@ -50,6 +50,7 @@ class OrdersHistoryListItem extends StatelessWidget {
                           text: order.orderNumber ?? "--",
                           style: AppTextStyles.titleMedium.copyWith(
                             color: AppColors.neutral2,
+                            fontSize: 16,
                           ),
                         ),
                       ],

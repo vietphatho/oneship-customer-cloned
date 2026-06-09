@@ -66,14 +66,15 @@ class ProcessedOrderListItem extends StatelessWidget {
                           style: AppTextStyles.titleMedium.copyWith(
                             color: AppColors.neutral1,
                             fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
+                          maxLine: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         AppSpacing.vertical(AppDimensions.xxSmallSpacing),
-                        PrimaryText(
-                          createdAt, // e.g. 05/05/2025 • 14:30
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: AppColors.neutral4,
-                          ),
+                        _OrderStatusAndDate(
+                          createdAt: createdAt,
+                          status: order.status,
                         ),
                         AppSpacing.vertical(AppDimensions.xxSmallSpacing),
                         PrimaryText(
@@ -87,57 +88,8 @@ class ProcessedOrderListItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
-                  AppSpacing.horizontal(AppDimensions.smallSpacing),
-                  
-                  // Trailing section
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6), // Shift down slightly to align with text baseline
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        _StatusChip(
-                          label: order.status,
-                          isDelivered: isDelivered,
-                        ),
-                        AppSpacing.vertical(AppDimensions.xxSmallSpacing),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: Utils.formatCurrencyInput(order.codAmount),
-                                style: AppTextStyles.titleLarge.copyWith( // Enlarged
-                                  color: AppColors.accentColor1, // Orange color
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " vnd",
-                                style: AppTextStyles.labelSmall.copyWith( // Enlarged
-                                  color: AppColors.accentColor1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        AppSpacing.vertical(AppDimensions.smallSpacing), // Increased space to move chip down
-                        _PaymentMethodChip(
-                          paymentMethod: order.paymentMethod ?? "COD",
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
-            ),
-            
-            AppSpacing.horizontal(AppDimensions.smallSpacing),
-            
-            // Chevron
-            const Icon(
-              CupertinoIcons.chevron_right,
-              size: 16,
-              color: AppColors.neutral4,
             ),
           ],
         ),
@@ -219,6 +171,45 @@ class _PaymentMethodChip extends StatelessWidget {
           height: 1.1, // Adjust line height
         ),
       ),
+    );
+  }
+}
+
+class _OrderStatusIcon extends StatelessWidget {
+  final String status;
+
+  const _OrderStatusIcon({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    if (status == OrderStatus.delivered.value) {
+      return const Icon(Icons.check_circle_rounded, color: AppColors.green, size: 20);
+    } else if (status == OrderStatus.returned.value) {
+      return const Icon(Icons.sync_rounded, color: AppColors.primary, size: 20);
+    }
+    return const SizedBox.shrink();
+  }
+}
+
+class _OrderStatusAndDate extends StatelessWidget {
+  final String createdAt;
+  final String status;
+
+  const _OrderStatusAndDate({required this.createdAt, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        PrimaryText(
+          createdAt,
+          style: AppTextStyles.labelSmall.copyWith(
+            color: AppColors.neutral4,
+          ),
+        ),
+        _OrderStatusIcon(status: status),
+      ],
     );
   }
 }

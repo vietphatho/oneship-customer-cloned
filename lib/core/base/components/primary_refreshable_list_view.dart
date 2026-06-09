@@ -15,6 +15,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
     this.onLoading,
     this.separatorBuilder,
     this.padding = AppDimensions.smallPaddingAll,
+    this.footerBottomSpacing = 0.0,
     this.noMoreText,
   });
 
@@ -23,6 +24,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
   final Widget Function(BuildContext context, int index)? separatorBuilder;
   final int itemCount;
   final EdgeInsetsGeometry padding;
+  final double footerBottomSpacing;
 
   final bool enablePullDown;
   final bool enablePullUp;
@@ -72,18 +74,21 @@ class PrimaryRefreshabelListView extends StatelessWidget {
         ),
       ),
       footer: CustomFooter(
-        height: 72,
+        height: 72 + footerBottomSpacing,
         builder: (context, mode) {
           final currentMode = mode ?? LoadStatus.loading;
-          return AnimatedSwitcher(
-            duration: Durations.short4,
-            reverseDuration: Durations.long1,
-            switchInCurve: Curves.easeIn,
-            switchOutCurve: Curves.easeOut,
-            transitionBuilder:
-                (child, animation) =>
-                    FadeTransition(opacity: animation, child: child),
-            child: _CustomFooter(key: ValueKey(currentMode), mode: currentMode, noMoreText: noMoreText),
+          return Container(
+            padding: EdgeInsets.only(bottom: footerBottomSpacing),
+            child: AnimatedSwitcher(
+              duration: Durations.short4,
+              reverseDuration: Durations.long1,
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
+              transitionBuilder:
+                  (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+              child: _CustomFooter(key: ValueKey(currentMode), mode: currentMode, noMoreText: noMoreText),
+            ),
           );
         },
       ),

@@ -70,6 +70,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      extendBody: true,
       bottomNavigationBar: const PrimaryBottomNavigationBar(),
       appBar: PrimaryAppBar(
         title: "completed_orders".tr(),
@@ -160,6 +161,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
                           style: AppTextStyles.titleMedium.copyWith(
                             color: AppColors.neutral1,
                             fontWeight: FontWeight.w700,
+                            fontSize: 20,
                           ),
                         ),
                       ),
