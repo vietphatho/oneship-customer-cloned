@@ -32,7 +32,7 @@ class OrdersRepositoryImpl extends OrdersRepository {
   }) {
     return request(
       () => _ordersApi.fetchOrdersByStatus(
-        status: status.value,
+        status: status == OrderStatus.allProcessing ? null : status.value,
         shopId: shopId,
         page: page,
         limit: limit,

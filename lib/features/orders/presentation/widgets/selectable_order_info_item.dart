@@ -26,56 +26,33 @@ class SelectableOrderInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (showSelectionControl) ...[
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => onTap?.call(order),
-            child: _SelectionIndicator(isSelected: isSelected),
-          ),
-          AppSpacing.horizontal(AppDimensions.smallSpacing),
-        ],
-        Expanded(
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onLongPress: () => onLongPress?.call(order),
-            child: OrderInfoItem(
-              index: index,
-              order: order,
-              onTap: onTap,
-              onRemoved: onRemoved,
-              onConfirmOrdAtHub: onConfirmOrdAtHub,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SelectionIndicator extends StatelessWidget {
-  const _SelectionIndicator({required this.isSelected});
-
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.secondary : Colors.white,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: AppColors.secondary,
-          width: AppDimensions.mediumBorderStroke * 1.5,
-        ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onLongPress: () => onLongPress?.call(order),
+      child: OrderInfoItem(
+        index: index,
+        order: order,
+        onTap: onTap, // Let OrderInfoItem handle the tap
+        onRemoved: onRemoved,
+        onConfirmOrdAtHub: onConfirmOrdAtHub,
+        leading: showSelectionControl
+            ? Padding(
+                padding: const EdgeInsets.only(top: 8.0, right: AppDimensions.smallSpacing),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Checkbox(
+                    value: isSelected,
+                    onChanged: (_) => onLongPress?.call(order), // Use onLongPress for selection toggle
+                    activeColor: AppColors.orange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+              )
+            : null,
       ),
-      child:
-          isSelected
-              ? const Icon(Icons.check, color: Colors.white, size: 16)
-              : null,
     );
   }
 }

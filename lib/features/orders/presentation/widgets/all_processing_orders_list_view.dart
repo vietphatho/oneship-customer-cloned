@@ -12,15 +12,15 @@ import 'package:oneship_customer/features/orders/presentation/widgets/selectable
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
-class DeliveringOrdersListView extends StatefulWidget {
-  const DeliveringOrdersListView({super.key});
+class AllProcessingOrdersListView extends StatefulWidget {
+  const AllProcessingOrdersListView({super.key});
 
   @override
-  State<DeliveringOrdersListView> createState() =>
-      _DeliveringOrdersListViewState();
+  State<AllProcessingOrdersListView> createState() =>
+      _AllProcessingOrdersListViewState();
 }
 
-class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
+class _AllProcessingOrdersListViewState extends State<AllProcessingOrdersListView> {
   final OrdersBloc _ordersBloc = getIt.get();
   final RefreshController _refreshController = RefreshController();
 
@@ -31,7 +31,7 @@ class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
   @override
   void initState() {
     super.initState();
-    _ordersBloc.currentOrderStatus = OrderStatus.shipping;
+    _ordersBloc.currentOrderStatus = OrderStatus.allProcessing;
     _ordersBloc.fetchOrdersByStatus();
   }
 
@@ -47,29 +47,30 @@ class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.deliveringOrdersList != current.deliveringOrdersList,
+          listenWhen: (previous, current) =>
+              previous.allProcessingOrdersList != current.allProcessingOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
       child: BlocBuilder<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         buildWhen:
-            (pre, cur) => pre.deliveringOrdersList != cur.deliveringOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+            (pre, cur) => pre.allProcessingOrdersList != cur.allProcessingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
         builder: (context, state) {
-          List<OrderInfo> orders = sortOrders(state.filteredDeliveringOrdersList, _sortOption);
+          List<OrderInfo> orders = sortOrders(state.filteredAllProcessingOrdersList, _sortOption);
 
           if (orders.isEmpty) {
-            return SafeArea(top: false, child: const PrimaryEmptyData());
+            return const PrimaryEmptyData();
           }
+
+          final allSelected = _selectedOrderKeys.length == orders.length && orders.isNotEmpty;
 
           return Column(
             children: [
               ProcessingOrdersSortSelectBar(
                 totalCount: orders.length,
                 selectedCount: _selectedOrderKeys.length,
-                isAllSelected: _selectedOrderKeys.length == orders.length && orders.isNotEmpty,
+                isAllSelected: allSelected,
                 sortOption: _sortOption,
                 onSelectAll: (val) {
                   setState(() {
@@ -88,28 +89,26 @@ class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
               ),
               Expanded(
                 child: PrimaryRefreshabelListView(
-            controller: _refreshController,
-            onRefresh: _onRefresh,
-            onLoading: _onLoading,
-            enablePullUp: true,
-            padding: EdgeInsets.symmetric(
-              vertical: AppDimensions.smallSpacing,
-              horizontal: AppDimensions.smallSpacing,
-            ),
-            itemCount: orders.length,
-            itemBuilder: (context, index) => SelectableOrderInfoItem(
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  onLoading: _onLoading,
+                  enablePullUp: true,
+                  padding: EdgeInsets.symmetric(
+                    vertical: AppDimensions.smallSpacing,
+                    horizontal: AppDimensions.smallSpacing,
+                  ),
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) => SelectableOrderInfoItem(
                     index: index + 1,
                     order: orders[index],
                     isSelected: _isSelected(orders[index]),
-                    showSelectionControl: true,
+                    showSelectionControl: true, // Show unconditionally as per user screenshot
                     onTap: _onOrderTap,
                     onLongPress: _toggleOrderSelection,
-                    
                   ),
-            separatorBuilder:
-                (context, index) =>
-                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          )
+                  separatorBuilder: (context, index) =>
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                ),
               ),
             ],
           );
@@ -131,7 +130,6 @@ class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
     _ordersBloc.loadMoreOrders();
   }
 
-  
   String? _orderKey(OrderInfo order) => order.id;
 
   bool _isSelected(OrderInfo order) {
@@ -156,7 +154,7 @@ class _DeliveringOrdersListViewState extends State<DeliveringOrdersListView> {
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
-    final visibleOrderKeys = state.filteredDeliveringOrdersList.map(_orderKey).whereType<String>().toSet();
+    final visibleOrderKeys = state.filteredAllProcessingOrdersList.map(_orderKey).whereType<String>().toSet();
     _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
 
     switch (state.orderListByStatusResource.state) {

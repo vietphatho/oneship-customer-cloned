@@ -56,4 +56,15 @@ class Utils {
     return "${distanceInKilometers.toStringAsFixed(1)} km";
   }
 
+  static String formatPhoneNumber(String? phone) {
+    if (phone == null || phone.isEmpty) return "--";
+    String formatted = phone.trim();
+    if (formatted.startsWith('+84')) {
+      return '0${formatted.substring(3)}';
+    } else if (formatted.startsWith('84')) {
+      return '0${formatted.substring(2)}';
+    }
+    return formatted;
+  }
+
 }
