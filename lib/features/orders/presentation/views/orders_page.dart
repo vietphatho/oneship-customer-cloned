@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -12,6 +13,8 @@ import 'package:oneship_customer/features/orders/presentation/widgets/order_stat
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
+
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -33,6 +36,7 @@ class _OrdersPageState extends State<OrdersPage>
   void initState() {
     super.initState();
     _tabList = const [
+      OrderStatus.allProcessing,
       OrderStatus.atHub,
       OrderStatus.pending,
       OrderStatus.processing,
@@ -61,7 +65,54 @@ class _OrdersPageState extends State<OrdersPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(title: "orders".tr()),
+      appBar: PrimaryAppBar(
+        title: 'processing_orders_title'.tr(),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              CupertinoIcons.search,
+              color: AppColors.neutral2,
+            ),
+            tooltip: 'search'.tr(),
+            onPressed: () {
+              // TODO: implement order search
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.filter_alt_outlined,
+              color: AppColors.neutral2,
+            ),
+            tooltip: 'filter'.tr(),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (context) => Padding(
+                  padding: EdgeInsets.only(
+                    top: 16,
+                    bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: ProcessingOrdersFilterPanel(
+                    initialFilters: _ordersBloc.state.processingOrdersFilters,
+                    onApply: (filters) {
+                      _ordersBloc.applyProcessingOrdersFilters(filters);
+                      Navigator.pop(context);
+                    },
+                    onReset: () {
+                      _ordersBloc.applyProcessingOrdersFilters(ProcessingOrdersFilters.empty());
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: MultiBlocListener(
         listeners: [
           BlocListener<PackagesBloc, PackagesState>(

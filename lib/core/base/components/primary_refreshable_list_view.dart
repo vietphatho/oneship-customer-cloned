@@ -70,7 +70,7 @@ class PrimaryRefreshabelListView extends StatelessWidget {
         ),
       ),
       footer: CustomFooter(
-        height: 72,
+        height: 152,
         builder: (context, mode) {
           final currentMode = mode ?? LoadStatus.loading;
           return AnimatedSwitcher(
@@ -89,12 +89,12 @@ class PrimaryRefreshabelListView extends StatelessWidget {
           itemCount == 0
               ? const SizedBox.expand(child: Center(child: PrimaryEmptyData()))
               : ListView.separated(
-                padding: padding,
-                itemBuilder: itemBuilder,
-                itemCount: itemCount,
-                separatorBuilder:
-                    separatorBuilder ?? (_, __) => const SizedBox(),
-              ),
+                  padding: padding,
+                  itemBuilder: itemBuilder,
+                  itemCount: itemCount,
+                  separatorBuilder:
+                      separatorBuilder ?? (_, __) => const SizedBox(),
+                ),
     );
   }
 }
@@ -106,16 +106,24 @@ class _CustomFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
     switch (mode) {
       case LoadStatus.loading:
-        return const _FooterLoading();
+        child = const _FooterLoading();
+        break;
       case LoadStatus.failed:
-        return const _FooterFailed();
+        child = const _FooterFailed();
+        break;
       case LoadStatus.noMore:
-        return const _FooterNoMore();
+        child = const _FooterNoMore();
+        break;
       default:
-        return const SizedBox.shrink();
+        child = const SizedBox.shrink();
     }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 80),
+      child: child,
+    );
   }
 }
 

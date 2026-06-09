@@ -2,6 +2,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
 
 abstract class OrdersEvent {
   const OrdersEvent();
@@ -62,6 +63,12 @@ class OrdersHistoryFilterAppliedEvent extends OrdersEvent {
 
 class OrdersHistoryFilterClearedEvent extends OrdersEvent {
   const OrdersHistoryFilterClearedEvent();
+}
+
+class ProcessingOrdersFilterAppliedEvent extends OrdersEvent {
+  final ProcessingOrdersFilters filters;
+
+  const ProcessingOrdersFilterAppliedEvent(this.filters);
 }
 
 class ValidateOrdAtHubEvent extends OrdersEvent {

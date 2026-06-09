@@ -3,14 +3,16 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/components/primary_refreshable_list_view.dart';
-import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/pending_orders_action_card.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
+import 'package:oneship_customer/core/base/components/filter_dropdown.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -26,7 +28,11 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   final PackagesBloc _pkgsBloc = getIt.get();
 
   final RefreshController _refreshController = RefreshController();
+
+  // Selection & Sorting state
   final Set<String> _selectedOrderKeys = {};
+  ProcessingOrdersSortOption _sortOption = ProcessingOrdersSortOption.newest;
+
 
   @override
   void initState() {
@@ -47,31 +53,69 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.deleteOrderResource != current.deleteOrderResource,
+          listenWhen: (previous, current) =>
+              previous.deleteOrderResource != current.deleteOrderResource,
           listener: _listenDeleteOrderState,
         ),
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.pendingOrdersList != current.pendingOrdersList,
+          listenWhen: (previous, current) =>
+              previous.pendingOrdersList != current.pendingOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
       child: Column(
         children: [
-          _TopActionButtons(onFindShipper: _onFindShipper),
+          // Action Card
+          BlocBuilder<OrdersBloc, OrdersState>(
+            bloc: _ordersBloc,
+            buildWhen: (pre, cur) =>
+                pre.pendingOrdersList != cur.pendingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+            builder: (context, state) {
+              final visibleOrders = sortOrders(state.filteredPendingOrdersList, _sortOption);
+              if (visibleOrders.isEmpty) return const SizedBox.shrink();
+
+              final allSelected = _selectedOrderKeys.length == visibleOrders.length &&
+                  visibleOrders.isNotEmpty;
+
+              return Column(
+                children: [
+                  PendingOrdersActionCard(
+                    selectedCount: _selectedOrderKeys.length,
+                    totalCount: visibleOrders.length,
+                    isAllSelected: allSelected,
+                    sortOption: _sortOption,
+                    onSelectAll: (val) {
+                      setState(() {
+                        if (val == true) {
+                          _selectedOrderKeys.addAll(
+                            visibleOrders.map(_orderKey).whereType<String>(),
+                          );
+                        } else {
+                          _selectedOrderKeys.clear();
+                        }
+                      });
+                    },
+                    onSortChanged: (val) {
+                      if (val != null) setState(() => _sortOption = val);
+                    },
+                    onFindShipper: _onFindShipper,
+                  ),
+                ],
+              );
+            },
+          ),
+
+          // Orders list
           Expanded(
             child: BlocBuilder<OrdersBloc, OrdersState>(
               bloc: _ordersBloc,
-              buildWhen:
-                  (pre, cur) => pre.pendingOrdersList != cur.pendingOrdersList,
+              buildWhen: (pre, cur) =>
+                  pre.pendingOrdersList != cur.pendingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
               builder: (context, state) {
-                List<OrderInfo> _orders = state.pendingOrdersList;
+                final orders = sortOrders(state.filteredPendingOrdersList, _sortOption);
 
-                if (_orders.isEmpty) {
+                if (orders.isEmpty) {
                   return SafeArea(top: false, child: const PrimaryEmptyData());
                 }
 
@@ -84,21 +128,19 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                     vertical: AppDimensions.smallSpacing,
                     horizontal: AppDimensions.smallSpacing,
                   ),
-                  itemCount: _orders.length,
-                  itemBuilder:
-                      (context, index) => SelectableOrderInfoItem(
-                        index: index + 1,
-                        order: _orders[index],
-                        isSelected: _isSelected(_orders[index]),
-                        showSelectionControl: _selectedOrderKeys.isNotEmpty,
-                        onTap: _onOrderTap,
-                        onLongPress: _toggleOrderSelection,
-                        onRemoved:
-                            _selectedOrderKeys.isEmpty ? _onRemoved : null,
-                      ),
-                  separatorBuilder:
-                      (context, index) =>
-                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) => SelectableOrderInfoItem(
+                    index: index + 1,
+                    order: orders[index],
+                    isSelected: _isSelected(orders[index]),
+                    showSelectionControl: true,
+                    onTap: _onOrderTap,
+                    onLongPress: _toggleOrderSelection,
+                    onRemoved:
+                        _selectedOrderKeys.isEmpty ? _onRemoved : null,
+                  ),
+                  separatorBuilder: (context, index) =>
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
                 );
               },
             ),
@@ -108,23 +150,20 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
     );
   }
 
-  void _onRemoved(OrderInfo order) {
-    _ordersBloc.deleteOrder(order);
-  }
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
 
-  void _onOrderTap(OrderInfo order) {
-    if (_selectedOrderKeys.isNotEmpty) {
-      _toggleOrderSelection(order);
-      return;
-    }
+  String? _orderKey(OrderInfo order) => order.id;
 
-    _ordersBloc.openOrderDetail(order);
+  bool _isSelected(OrderInfo order) {
+    final key = _orderKey(order);
+    return key != null && _selectedOrderKeys.contains(key);
   }
 
   void _toggleOrderSelection(OrderInfo order) {
     final key = _orderKey(order);
     if (key == null) return;
-
     setState(() {
       if (_selectedOrderKeys.contains(key)) {
         _selectedOrderKeys.remove(key);
@@ -134,44 +173,24 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
     });
   }
 
-  bool _isSelected(OrderInfo order) {
-    final key = _orderKey(order);
-    return key != null && _selectedOrderKeys.contains(key);
+  void _onOrderTap(OrderInfo order) {
+    _ordersBloc.openOrderDetail(order);
   }
 
-  String? _orderKey(OrderInfo order) {
-    return order.id;
+  void _onRemoved(OrderInfo order) {
+    _ordersBloc.deleteOrder(order);
   }
 
   void _onFindShipper() {
-    final selectedOrderIds =
-        _ordersBloc.state.pendingOrdersList
-            .where(_isSelected)
-            .map((order) => order.id)
-            .whereType<String>()
-            .toList();
+    final selectedOrderIds = _ordersBloc.state.filteredPendingOrdersList
+        .where(_isSelected)
+        .map((order) => order.id)
+        .whereType<String>()
+        .toList();
 
     _pkgsBloc.findShipper(
       orderIds: selectedOrderIds.isEmpty ? null : selectedOrderIds,
     );
-  }
-
-  void _listenDeleteOrderState(BuildContext context, OrdersState state) {
-    switch (state.deleteOrderResource.state) {
-      case Result.loading:
-        PrimaryDialog.showLoadingDialog(context);
-        break;
-      case Result.success:
-        PrimaryDialog.hideLoadingDialog(context);
-
-        break;
-      case Result.error:
-        PrimaryDialog.hideLoadingDialog(context);
-        PrimaryDialog.showErrorDialog(
-          context,
-          message: state.deleteOrderResource.message,
-        );
-    }
   }
 
   void _onRefresh() {
@@ -183,13 +202,12 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
       _refreshController.loadNoData();
       return;
     }
-
     _ordersBloc.loadMoreOrders();
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
     final visibleOrderKeys =
-        state.pendingOrdersList.map(_orderKey).whereType<String>().toSet();
+        state.filteredPendingOrdersList.map(_orderKey).whereType<String>().toSet();
     _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
 
     switch (state.orderListByStatusResource.state) {
@@ -205,46 +223,22 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
       default:
     }
   }
-}
 
-class _TopActionButtons extends StatelessWidget {
-  const _TopActionButtons({required this.onFindShipper});
-
-  final VoidCallback onFindShipper;
-
-  @override
-  Widget build(BuildContext context) {
-    final OrdersBloc _ordersBloc = getIt.get();
-
-    return BlocBuilder<OrdersBloc, OrdersState>(
-      bloc: _ordersBloc,
-      buildWhen: (pre, cur) => pre.pendingOrdersList != cur.pendingOrdersList,
-      builder: (context, state) {
-        List<OrderInfo> _orders = state.pendingOrdersList;
-        if (_orders.isEmpty) return const SizedBox();
-
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.smallSpacing,
-            vertical: AppDimensions.mediumSpacing,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: SecondaryButton.iconOutlined(
-                  label: "find_shipper".tr(),
-                  icon: Icon(
-                    Icons.gps_fixed_outlined,
-                    color: AppColors.secondary,
-                  ),
-                  height: AppDimensions.smallHeightButton,
-                  onPressed: onFindShipper,
-                ),
-              ),
-            ],
-          ),
+  void _listenDeleteOrderState(BuildContext context, OrdersState state) {
+    switch (state.deleteOrderResource.state) {
+      case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
+        break;
+      case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
+        break;
+      case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
+        PrimaryDialog.showErrorDialog(
+          context,
+          message: state.deleteOrderResource.message,
         );
-      },
-    );
+    }
   }
 }
+

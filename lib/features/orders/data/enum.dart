@@ -7,6 +7,7 @@ import 'package:oneship_customer/features/orders/presentation/widgets/delivering
 import 'package:oneship_customer/features/orders/presentation/widgets/pending_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/returned_orders_list_view.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/all_processing_orders_list_view.dart';
 
 enum CreateOrderProductAction { increment, decrement }
 
@@ -56,7 +57,7 @@ extension OrderStatusExt on OrderStatus {
     OrderStatus.returned: ReturnedOrdersListView(),
     OrderStatus.returnInProgress: SizedBox(),
     OrderStatus.waitingHubVerify: SizedBox(),
-    OrderStatus.allProcessing: SizedBox(),
+    OrderStatus.allProcessing: AllProcessingOrdersListView(),
   };
 
   String get value => _mapValue[this]!;

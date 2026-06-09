@@ -9,8 +9,9 @@ import 'package:oneship_customer/features/orders/data/models/response/orders_lis
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/finding_shipper_search_widget.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class ProcessingOrdersListView extends StatefulWidget {
@@ -24,6 +25,10 @@ class ProcessingOrdersListView extends StatefulWidget {
 class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
   final OrdersBloc _ordersBloc = getIt.get();
   final RefreshController _refreshController = RefreshController();
+
+  // Selection & Sorting state
+  final Set<String> _selectedOrderKeys = {};
+  ProcessingOrdersSortOption _sortOption = ProcessingOrdersSortOption.newest;
 
   @override
   void initState() {
@@ -52,9 +57,9 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
       child: BlocBuilder<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         buildWhen:
-            (pre, cur) => pre.processingOrdersList != cur.processingOrdersList,
+            (pre, cur) => pre.processingOrdersList != cur.processingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
         builder: (context, state) {
-          List<OrderInfo> orders = state.processingOrdersList;
+          List<OrderInfo> orders = sortOrders(state.filteredProcessingOrdersList, _sortOption);
 
           if (orders.isEmpty) {
             return const PrimaryEmptyData();
@@ -63,6 +68,26 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
           return Column(
             children: [
               const FindingShipperSearchWidget(),
+              ProcessingOrdersSortSelectBar(
+                totalCount: orders.length,
+                selectedCount: _selectedOrderKeys.length,
+                isAllSelected: _selectedOrderKeys.length == orders.length && orders.isNotEmpty,
+                sortOption: _sortOption,
+                onSelectAll: (val) {
+                  setState(() {
+                    if (val == true) {
+                      _selectedOrderKeys.addAll(orders.map(_orderKey).whereType<String>());
+                    } else {
+                      _selectedOrderKeys.clear();
+                    }
+                  });
+                },
+                onSortChanged: (val) {
+                  if (val != null) {
+                    setState(() => _sortOption = val);
+                  }
+                },
+              ),
               const _TopActionButtons(),
               Expanded(
                 child: PrimaryRefreshabelListView(
@@ -75,10 +100,14 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
                     horizontal: AppDimensions.smallSpacing,
                   ),
                   itemCount: orders.length,
-                  itemBuilder: (context, index) => OrderInfoItem(
+                  itemBuilder: (context, index) => SelectableOrderInfoItem(
                     index: index + 1,
                     order: orders[index],
-                    onTap: _ordersBloc.openOrderDetail,
+                    isSelected: _isSelected(orders[index]),
+                    showSelectionControl: true,
+                    onTap: _onOrderTap,
+                    onLongPress: _toggleOrderSelection,
+                    
                   ),
                   separatorBuilder: (context, index) =>
                       AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -104,7 +133,35 @@ class _ProcessingOrdersListViewState extends State<ProcessingOrdersListView> {
     _ordersBloc.loadMoreOrders();
   }
 
+  
+  String? _orderKey(OrderInfo order) => order.id;
+
+  bool _isSelected(OrderInfo order) {
+    final key = _orderKey(order);
+    return key != null && _selectedOrderKeys.contains(key);
+  }
+
+  void _toggleOrderSelection(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+    setState(() {
+      if (_selectedOrderKeys.contains(key)) {
+        _selectedOrderKeys.remove(key);
+      } else {
+        _selectedOrderKeys.add(key);
+      }
+    });
+  }
+
+  void _onOrderTap(OrderInfo order) {
+    _ordersBloc.openOrderDetail(order);
+  }
+
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
+
+    final visibleOrderKeys = state.filteredProcessingOrdersList.map(_orderKey).whereType<String>().toSet();
+    _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
+
     switch (state.orderListByStatusResource.state) {
       case Result.success:
         _refreshController
@@ -131,9 +188,9 @@ class _TopActionButtons extends StatelessWidget {
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: ordersBloc,
       buildWhen: (pre, cur) =>
-          pre.processingOrdersList != cur.processingOrdersList,
+          pre.processingOrdersList != cur.processingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
       builder: (context, state) {
-        List<OrderInfo> orders = state.processingOrdersList;
+        List<OrderInfo> orders = state.filteredProcessingOrdersList;
         if (orders.isEmpty) return const SizedBox();
 
         return Padding(
