@@ -35,7 +35,7 @@ abstract class OrderInfo with _$OrderInfo {
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "paymentStatus") String? paymentStatus,
     @JsonKey(name: "paymentMethod") String? paymentMethod,
-    @JsonKey(name: "packageType") String? packageType,
+    @JsonKey(name: "packageSize") String? packageSize,
     @JsonKey(name: "payer") String? payer,
     @JsonKey(name: "codAmount") int? codAmount,
     @JsonKey(name: "collectAmount") int? collectAmount,

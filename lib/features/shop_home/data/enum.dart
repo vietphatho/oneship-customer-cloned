@@ -36,7 +36,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
   static const _mapTitle = {
     ShopHomeFeature.createOrder: "create_order",
     ShopHomeFeature.package: "packages",
-    ShopHomeFeature.ordersProcessed: "processing_orders",
+    ShopHomeFeature.ordersProcessed: "completed_orders",
     ShopHomeFeature.staffManagement: "shop_management.staff_title",
     ShopHomeFeature.shopManagement: "shop_management.title",
     ShopHomeFeature.supporting: "support",

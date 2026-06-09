@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
@@ -34,7 +35,7 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
     String? phone,
     String? customerName,
     String? email,
-    String? packageType,
+    PackageSize? packageSize,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? paymentStatus,
@@ -89,7 +90,7 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       phone: dto.phone,
       customerName: dto.customerName,
       email: dto.email,
-      packageType: dto.packageType,
+      packageSize: findPackageSize(dto.packageSize),
       createdAt: dto.createdAt,
       updatedAt: dto.updatedAt,
       paymentStatus: dto.paymentStatus,
@@ -104,13 +105,16 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       pickupDate: dto.detail?.pickupDate,
       pickupTimeSlot: dto.detail?.pickupTimeSlot,
       deliveryTimeSlot: dto.detail?.deliveryTimeSlot?.toString(),
-      weight:
-          dto.detail != null ? double.tryParse(dto.detail!.weight ?? "") : null,
-      length:
-          dto.detail != null ? int.tryParse(dto.detail!.length ?? "0") : null,
+      weight: dto.detail != null
+          ? double.tryParse(dto.detail!.weight ?? "")
+          : null,
+      length: dto.detail != null
+          ? int.tryParse(dto.detail!.length ?? "0")
+          : null,
       width: dto.detail != null ? int.tryParse(dto.detail!.width ?? "0") : null,
-      height:
-          dto.detail != null ? int.tryParse(dto.detail!.height ?? "0") : null,
+      height: dto.detail != null
+          ? int.tryParse(dto.detail!.height ?? "0")
+          : null,
       isFragile: dto.detail?.isFragile ?? false,
       isLiquid: dto.detail?.isLiquid ?? false,
       hasBattery: dto.detail?.hasBattery ?? false,
@@ -152,7 +156,7 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       phone: model.phone,
       customerName: model.customerName,
       email: model.email,
-      packageType: model.packageType,
+      packageSize: model.packageSize,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       paymentStatus: model.paymentStatus,

@@ -44,4 +44,16 @@ class Utils {
     if (value == null) return null;
     return value / 1000;
   }
+
+  static String formatDistance(num? distanceInMeters) {
+    if (distanceInMeters == null) return "--";
+
+    if (distanceInMeters < 1000) {
+      return "${distanceInMeters.round()} m";
+    }
+
+    final distanceInKilometers = distanceInMeters / 1000;
+    return "${distanceInKilometers.toStringAsFixed(1)} km";
+  }
+
 }

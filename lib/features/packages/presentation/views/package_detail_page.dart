@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/packages/data/models/response/package_detail.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
@@ -81,11 +82,15 @@ class _PackageDetailPageState extends State<PackageDetailPage> {
                       ),
                       _buildInfoField(
                         title: "distance".tr(),
-                        value: "${pkg.distance} m",
+                        value: Utils.formatDistance(pkg.distance),
                       ),
                       _buildInfoField(
                         title: "est_time".tr(),
-                        value: "${pkg.duration} s",
+                        value: DateTimeUtils.formatDurationFromMilliseconds(
+                          pkg.duration,
+                          hourUnit: "hour".tr(),
+                          minuteUnit: "minute".tr(),
+                        ),
                       ),
                     ],
                   ),

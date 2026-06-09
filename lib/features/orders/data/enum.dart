@@ -147,7 +147,6 @@ extension CreateOrderPayerExt on CreateOrderPayer {
   String get requestValue => _mapValue[this]!;
 }
 
-
 enum Payer { sender, recipient }
 
 extension PayerExt on Payer {
@@ -176,4 +175,34 @@ extension OrderDetailTabExt on OrderDetailTab {
   };
 
   String get title => _mapTitle[this]!;
+}
+
+enum PackageSize { small, medium, large, xLarge, xxLarge, xxxLarge }
+
+extension PackageSizeExt on PackageSize {
+  static const _mapValue = {
+    PackageSize.small: "S",
+    PackageSize.medium: "M",
+    PackageSize.large: "L",
+    PackageSize.xLarge: "XL",
+    PackageSize.xxLarge: "2XL",
+    PackageSize.xxxLarge: "3XL",
+  };
+
+  static const _mapName = {
+    PackageSize.small: "Size S",
+    PackageSize.medium: "Size M",
+    PackageSize.large: "Size L",
+    PackageSize.xLarge: "Size XL",
+    PackageSize.xxLarge: "Size 2XL",
+    PackageSize.xxxLarge: "Size 3XL",
+  };
+
+  String get requestValue => _mapValue[this]!;
+
+  String get displayName => _mapName[this]!;
+}
+
+PackageSize? findPackageSize(String? value) {
+  return PackageSize.values.firstWhereOrNull((e) => e.requestValue == value);
 }

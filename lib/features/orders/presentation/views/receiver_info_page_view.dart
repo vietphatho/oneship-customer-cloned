@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
+import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
@@ -45,14 +46,14 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
       bloc: _createOrderBloc,
       buildWhen: (_, state) => state is CreateOrderCustomerInfoChangedState,
       builder: (context, state) {
-        final phone = _phoneCtrl.text.trim();
-        final hasValidPhone = _vnPhoneRegex.hasMatch(phone);
-        final isStepValid =
-            _nameCtrl.text.trim().isNotEmpty &&
-            hasValidPhone &&
-            _addressCtrl.text.trim().isNotEmpty &&
-            state.draftRequest.province != null &&
-            state.draftRequest.ward != null;
+        // final phone = _phoneCtrl.text.trim();
+        // final hasValidPhone = _vnPhoneRegex.hasMatch(phone);
+        // final isStepValid =
+        //     _nameCtrl.text.trim().isNotEmpty &&
+        //     hasValidPhone &&
+        //     _addressCtrl.text.trim().isNotEmpty &&
+        //     state.draftRequest.province != null &&
+        //     state.draftRequest.ward != null;
 
         return Container(
           padding: EdgeInsets.symmetric(
@@ -171,7 +172,7 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
                     Expanded(
                       child: SecondaryButton.filled(
                         label: "next".tr(),
-                        onPressed: isStepValid ? _onNext : null,
+                        onPressed: canNext() ? _onNext : null,
                       ),
                     ),
                   ],
@@ -182,6 +183,16 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
         );
       },
     );
+  }
+
+  bool canNext() {
+    final phone = _phoneCtrl.text.trim();
+    final hasValidPhone = Validators.validatePhoneNumber(phone) == null;
+    return _nameCtrl.text.trim().isNotEmpty &&
+        hasValidPhone &&
+        _addressCtrl.text.trim().isNotEmpty &&
+        _createOrderBloc.state.draftRequest.province != null &&
+        _createOrderBloc.state.draftRequest.ward != null;
   }
 
   // void _onPrevious() {

@@ -7,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:oneship_customer/core/base/views/one_ship_customer_app.dart';
 import 'package:oneship_customer/core/utils/app_logger.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
+late final PackageInfo packageInfo;
 Future<void> main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,8 @@ Future<void> main() async {
       catchUnhandledExceptions(details.exception, details.stack);
     };
 
+    packageInfo = await PackageInfo.fromPlatform();
+
     runApp(const OneShipCustomerApp());
   }, catchUnhandledExceptions);
 }
@@ -44,4 +48,3 @@ void catchUnhandledExceptions(Object error, StackTrace? stack) {
 //   const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'dev');
 //   await dotenv.load(fileName: ".env.${flavor.toLowerCase()}");
 // }
-
