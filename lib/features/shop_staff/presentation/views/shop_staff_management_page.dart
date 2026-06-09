@@ -11,9 +11,9 @@ import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state
 import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_bloc.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/bloc/shop_staff_state.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_add_footer.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_card.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_filter_panel.dart';
+import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_management_header.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_shop_selector.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -58,18 +58,7 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(
-        title: "shop_management.staff_title".tr(),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () => setState(() => _showFilters = !_showFilters),
-        //     icon: const Icon(
-        //       Icons.filter_alt,
-        //       color: AppColors.secondary,
-        //     ),
-        //   ),
-        // ],
-      ),
+      backgroundColor: AppColors.background,
       body: MultiBlocListener(
         listeners: [
           BlocListener<ShopBloc, ShopState>(
@@ -92,37 +81,78 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
           ),
         ],
         child: SafeArea(
+          bottom: false,
           child: BlocBuilder<ShopStaffBloc, ShopStaffState>(
             bloc: _shopStaffBloc,
             builder: (context, state) {
               final isInitialLoading =
                   state.staffsResource.state == Result.loading &&
                   state.staffs.isEmpty;
+              final activeCount = state.staffs
+                  .where((staff) => staff.isActive)
+                  .length;
+              final lockedCount = state.staffs.length - activeCount;
 
               return Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppDimensions.mediumSpacing,
-                      AppDimensions.xxSmallSpacing,
+                      AppDimensions.xSmallSpacing,
                       AppDimensions.mediumSpacing,
-                      AppDimensions.smallSpacing,
+                      AppDimensions.xSmallSpacing,
                     ),
                     child: Column(
                       children: [
-                        PrimaryText(
-                          "shop_management.staff_header".tr(),
-                          style: AppTextStyles.titleMedium,
-                          bold: true,
+                        ShopStaffManagementHeader(
+                          onBack: () => context.pop(),
+                          onSearch: _applyFilters,
+                          onFilter: () =>
+                              setState(() => _showFilters = !_showFilters),
+                          hasActiveFilter: _showFilters,
                         ),
-                        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-                        PrimaryText(
-                          "shop_management.staff_subtitle".tr(
-                            namedArgs: {'count': state.total.toString()},
-                          ),
-                          style: AppTextStyles.bodyMedium,
-                          color: AppColors.neutral4,
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        ShopStaffStats(
+                          total: state.total,
+                          active: activeCount,
+                          locked: lockedCount,
                         ),
+                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: PrimaryTextField(
+                                controller: _nameController,
+                                hintText:
+                                    'Tìm kiếm nhân viên, SĐT, email...',
+                                prefixIcon: const Icon(Icons.search_rounded),
+                                textInputAction: TextInputAction.search,
+                                onFieldSubmitted: (_) => _applyFilters(),
+                              ),
+                            ),
+                            AppSpacing.horizontal(
+                              AppDimensions.xSmallSpacing,
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: PrimaryActionButton(
+                                label: 'shop_management.staff_add'.tr(),
+                                icon: const Icon(Icons.add_rounded, size: 18),
+                                height: AppDimensions.mediumHeightButton,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppDimensions.xxSmallSpacing,
+                                ),
+                                onPressed: () =>
+                                    context.push(RouteName.createShopStaffPage),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_showFilters) ...[
+                          AppSpacing.vertical(AppDimensions.mediumSpacing),
+                          ShopStaffShopSelector(),
+                        ],
                       ],
                     ),
                   ),
@@ -136,13 +166,6 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                       onApply: _applyFilters,
                       onClear: _clearFilters,
                     ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimensions.mediumSpacing,
-                      vertical: AppDimensions.smallSpacing,
-                    ),
-                    child: ShopStaffShopSelector(),
-                  ),
                   Expanded(
                     child: isInitialLoading
                         ? const Center(child: CircularProgressIndicator())
@@ -158,20 +181,19 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                               _isLoadingMore = true;
                               _shopStaffBloc.loadMore();
                             },
-                            padding: EdgeInsets.fromLTRB(
+                            padding: const EdgeInsets.fromLTRB(
                               AppDimensions.mediumSpacing,
                               0,
                               AppDimensions.mediumSpacing,
-                              AppDimensions.smallSpacing,
+                              AppDimensions.safeBottomSpacing,
                             ),
                             itemCount: state.staffs.length,
                             separatorBuilder: (context, index) =>
                                 AppSpacing.vertical(
-                                  AppDimensions.mediumSpacing,
+                                  AppDimensions.xSmallSpacing,
                                 ),
                             itemBuilder: (context, index) {
                               return ShopStaffCard(
-                                index: index + 1,
                                 staff: state.staffs[index],
                                 onViewDetails: () => _openStaffDetail(
                                   context,
@@ -180,10 +202,6 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                               );
                             },
                           ),
-                  ),
-                  ShopStaffAddFooter(
-                    onPressed: () =>
-                        context.push(RouteName.createShopStaffPage),
                   ),
                 ],
               );
@@ -214,12 +232,6 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
     _isLoadingMore = false;
     _shopStaffBloc.filterStaffs();
   }
-
-  // void _handleShopSelected(BriefShopEntity? shop) {
-  //   if (shop == null) return;
-  //   _isLoadingMore = false;
-  //   _shopBloc.changeShop(shop);
-  // }
 
   void _handleCurrentShopChanged(BuildContext context, ShopState state) {
     final currentShop = state.currentShop;
@@ -282,4 +294,5 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
         break;
     }
   }
+
 }

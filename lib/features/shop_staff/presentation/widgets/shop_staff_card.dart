@@ -1,126 +1,98 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
-import 'package:oneship_customer/core/base/components/primary_frame.dart';
-import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/features/shop_staff/domain/entities/shop_staff_entity.dart';
-import 'package:oneship_customer/features/shop_staff/presentation/widgets/shop_staff_badges.dart';
 
 class ShopStaffCard extends StatelessWidget {
   const ShopStaffCard({
     super.key,
-    required this.index,
     required this.staff,
     this.onViewDetails,
   });
 
-  final int index;
   final ShopStaffEntity staff;
   final VoidCallback? onViewDetails;
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryAnimatedPressableWidget(
+    return PrimaryPanel(
       onTap: onViewDetails,
-      child: PrimaryFrame(
-        padding: const EdgeInsets.fromLTRB(
-          AppDimensions.mediumSpacing,
-          AppDimensions.smallSpacing,
-          AppDimensions.mediumSpacing,
-          AppDimensions.mediumSpacing,
-        ),
-        child: Padding(
-          padding: EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PrimaryText(
-                index.toString().padLeft(2, '0'),
-                style: AppTextStyles.titleMedium,
-                bold: true,
-              ),
-              AppSpacing.vertical(AppDimensions.mediumSpacing),
-              _InfoRow(
-                label: "shop_management.staff_full_name".tr(),
-                value: staff.displayName,
-              ),
-              _InfoRow(
-                label: "shop_management.field_email".tr(),
-                value: staff.userEmail,
-              ),
-              _InfoRow(
-                label: "shop_management.field_phone".tr(),
-                value: staff.userPhone,
-              ),
-              _InfoRow(
-                label: "shop_management.field_name".tr(),
-                value: staff.shopName,
-              ),
-              _InfoRow(
-                label: "shop_management.staff_role".tr(),
-                trailing: ShopStaffRoleBadge(role: staff.role),
-              ),
-              _InfoRow(
-                label: "shop_management.field_status".tr(),
-                trailing: ShopStaffStatusBadge(isActive: staff.isActive),
-              ),
-              _InfoRow(
-                label: "shop_management.field_created_at".tr(),
-                value: DateTimeUtils.formatterString(staff.createdAt),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, this.value = "", this.trailing});
-
-  final String label;
-  final String value;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 32),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 4,
-            child: PrimaryText(
-              label,
-              style: AppTextStyles.bodyMedium,
-              color: AppColors.neutral1,
-            ),
+          const PrimaryAssetAvatar(
+            image: ImagePath.shopHomeAvatar,
+            backgroundImage: ImagePath.shopHomeAvatarBackground,
+            radius: 34,
           ),
+          AppSpacing.horizontal(AppDimensions.xSmallSpacing),
           Expanded(
-            flex: 6,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (value.isNotEmpty)
-                  Flexible(
-                    child: PrimaryText(
-                      value,
-                      textAlign: TextAlign.right,
-                      style: AppTextStyles.titleMedium,
-                      color: AppColors.neutral1,
-                      maxLine: 2,
-                      overflow: TextOverflow.ellipsis,
+                PrimaryText(
+                  staff.displayName,
+                  style: AppTextStyles.titleSmall,
+                  maxLine: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                Row(
+                  children: [
+                    Flexible(
+                      child: PrimaryText(
+                        staff.userLogin,
+                        style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
+                        color: AppColors.neutral4,
+                        maxLine: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                if (trailing != null) ...[
-                  if (value.isNotEmpty)
-                    AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-                  trailing!,
-                ],
+                    AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                    const PrimaryText('•', color: AppColors.neutral5),
+                    AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                    Flexible(
+                      child: PrimaryText(
+                        staff.userPhone,
+                        style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
+                        color: AppColors.neutral4,
+                        maxLine: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                PrimaryText(
+                  staff.userEmail,
+                  style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
+                  color: AppColors.neutral4,
+                  maxLine: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
+          ),
+          AppSpacing.horizontal(AppDimensions.smallSpacing),
+          Container(
+            width: AppDimensions.xSmallSpacing,
+            height: AppDimensions.xSmallSpacing,
+            decoration: BoxDecoration(
+              color: staff.isActive
+                  ? AppColors.successForeground
+                  : AppColors.errorForeground,
+              shape: BoxShape.circle,
+            ),
+          ),
+          AppSpacing.horizontal(AppDimensions.smallSpacing),
+          IconButton(
+            onPressed: onViewDetails,
+            icon: const Icon(Icons.more_vert_rounded),
+            color: AppColors.neutral5,
+            iconSize: 22,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+            visualDensity: VisualDensity.compact,
           ),
         ],
       ),
