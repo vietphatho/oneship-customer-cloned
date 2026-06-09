@@ -26,6 +26,7 @@ abstract class CreateOrderRequest with _$CreateOrderRequest {
     @JsonKey(name: "paymentStatus", includeIfNull: false) String? paymentStatus,
     @JsonKey(name: "paymentMethod", includeIfNull: false) String? paymentMethod,
     @JsonKey(name: "packageType") String? packageType,
+    @JsonKey(name: "packageSize", includeIfNull: false) String? packageSize,
     @JsonKey(name: "shopId", includeIfNull: false) String? shopId,
     @JsonKey(name: "payer") String? payer,
     @JsonKey(name: "agreeTerms") bool? agreeTerms,
