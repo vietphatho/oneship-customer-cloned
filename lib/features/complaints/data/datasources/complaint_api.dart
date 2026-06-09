@@ -17,8 +17,14 @@ abstract class ComplaintApi {
 
   @GET("/api/v1/support-tickets")
   Future<BaseResponse<ComplaintListResponse, BaseError>> getComplaints({
-    @Query("category") required String category,
+    @Query("category") String? category,
     @Query("shopId") String? shopId,
+    @Query("status") String? status,
+    @Query("keyword") String? keyword,
+    @Query("startDate") String? startDate,
+    @Query("endDate") String? endDate,
+    @Query("page") int? page,
+    @Query("limit") int? limit,
   });
 
   @POST("/api/v1/support-tickets")
@@ -28,4 +34,9 @@ abstract class ComplaintApi {
 
   @DELETE("/api/v1/support-tickets/{id}")
   Future<BaseResponse<bool, BaseError>> deleteComplaint(@Path("id") String id);
+
+  @GET("/api/v1/support-tickets/summary")
+  Future<BaseResponse<dynamic, BaseError>> getComplaintSummary({
+    @Query("shopId") String? shopId,
+  });
 }

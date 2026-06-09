@@ -104,7 +104,9 @@ class _ComplaintListViewState extends State<ComplaintListView> {
               },
               child: ComplaintCard(
                 complaint: complaint,
-                index: index,
+                onTap: () {
+                  // Navigate to detail or perform action
+                },
               ),
             );
           },

@@ -58,4 +58,11 @@ class ComplaintRepositoryImpl extends BaseRepository implements ComplaintReposit
   Future<Resource<bool>> deleteComplaint(String id) {
     return request<bool, BaseError>(() => _api.deleteComplaint(id));
   }
+
+  @override
+  Future<Resource<dynamic>> getComplaintSummary({String? shopId}) {
+    return request<dynamic, BaseError>(
+      () => _api.getComplaintSummary(shopId: shopId),
+    );
+  }
 }

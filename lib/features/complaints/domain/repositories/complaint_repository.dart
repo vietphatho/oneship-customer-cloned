@@ -18,4 +18,6 @@ abstract class ComplaintRepository {
   });
 
   Future<Resource<bool>> deleteComplaint(String id);
+
+  Future<Resource<dynamic>> getComplaintSummary({String? shopId});
 }
