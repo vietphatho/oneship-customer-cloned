@@ -62,6 +62,18 @@ class _SupportsContainer extends StatelessWidget {
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(label: 'support_request'.tr(), onTap: () {}),
         Divider(height: 1, color: AppColors.neutral7),
+        _ProfileSelectedItem(
+          label: 'deactive_account'.tr(),
+          textColor: AppColors.expenseRed,
+          onTap: () => _onDeactiveAccountTap(context),
+        ),
+        Divider(height: 1, color: AppColors.neutral7),
+        _ProfileSelectedItem(
+          label: 'delete_account'.tr(),
+          textColor: AppColors.expenseRed,
+          onTap: () => _onDeleteAccountTap(context),
+        ),
+        Divider(height: 1, color: AppColors.neutral7),
         BlocListener<AuthBloc, AuthState>(
           bloc: _authBloc,
           listener: _handleLogOutListener,
@@ -83,6 +95,20 @@ class _SupportsContainer extends StatelessWidget {
         const AppVersion(),
         AppSpacing.vertical(AppDimensions.largeSpacing),
       ],
+    );
+  }
+
+  void _onDeleteAccountTap(BuildContext context) {
+    PrimaryDialog.showAlertDialog(
+      context,
+      message: "contact_admin_to_delete_account".tr(),
+    );
+  }
+
+  void _onDeactiveAccountTap(BuildContext context) {
+    PrimaryDialog.showAlertDialog(
+      context,
+      message: "contact_admin_to_deactive_account".tr(),
     );
   }
 
