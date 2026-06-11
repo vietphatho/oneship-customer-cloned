@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/base/components/filter_text_field.dart';
+import 'package:oneship_customer/core/base/components/primary_text_field.dart';
 import 'package:oneship_customer/core/base/components/primary_app_bar.dart';
 import 'package:oneship_customer/core/base/components/primary_chip_tab_bar.dart';
 import 'package:oneship_customer/core/base/components/primary_pagination.dart';
@@ -139,8 +139,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
         children: [
           Expanded(
             flex: 2,
-            child: FilterTextField(
-              label: '',
+            child: PrimaryTextField(
               hintText: 'Tìm kiếm theo mã, đơn hàng, người gửi...',
               controller: _searchController,
             ),
