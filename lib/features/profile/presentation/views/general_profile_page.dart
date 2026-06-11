@@ -81,6 +81,20 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
     );
   }
 
+  void _onDeleteAccountTap(BuildContext context) {
+    PrimaryDialog.showAlertDialog(
+      context,
+      message: "contact_admin_to_delete_account".tr(),
+    );
+  }
+
+  void _onDeactiveAccountTap(BuildContext context) {
+    PrimaryDialog.showAlertDialog(
+      context,
+      message: "contact_admin_to_deactive_account".tr(),
+    );
+  }
+
   void _handleLogOutListener(context, state) {
     if (state is AuthLogOutState) {
       switch (state.resource.state) {

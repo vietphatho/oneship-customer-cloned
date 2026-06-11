@@ -55,6 +55,22 @@ class DateTimeUtils {
     return Duration(milliseconds: (hours * 3600 * 1000).round());
   }
 
+  static String formatDurationFromMilliseconds(
+    int? milliseconds, {
+    required String hourUnit,
+    required String minuteUnit,
+  }) {
+    if (milliseconds == null) return "--";
+
+    final totalMinutes = (milliseconds / Duration.millisecondsPerMinute).ceil();
+    final hours = totalMinutes ~/ Duration.minutesPerHour;
+    final minutes = totalMinutes % Duration.minutesPerHour;
+
+    if (hours == 0) return "$minutes $minuteUnit";
+    if (minutes == 0) return "$hours $hourUnit";
+    return "$hours $hourUnit $minutes $minuteUnit";
+  }
+
   static DateTime? parseToDateTime(String formatTime) {
     try {
       return DateFormat('dd/MM/yyyy').parseStrict(formatTime);

@@ -25,7 +25,6 @@ class ShopStaffAddFooter extends StatelessWidget {
             size: AppDimensions.smallIconSize,
           ),
           onPressed: onPressed,
-          height: AppDimensions.smallHeightButton,
         ),
       ),
     );

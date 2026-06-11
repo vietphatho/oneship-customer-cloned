@@ -59,6 +59,18 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: PrimaryAppBar(
+        title: "shop_management.staff_title".tr(),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () => setState(() => _showFilters = !_showFilters),
+        //     icon: const Icon(
+        //       Icons.filter_alt,
+        //       color: AppColors.secondary,
+        //     ),
+        //   ),
+        // ],
+      ),
       body: MultiBlocListener(
         listeners: [
           BlocListener<ShopBloc, ShopState>(

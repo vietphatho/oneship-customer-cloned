@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
 
@@ -47,7 +48,7 @@ abstract class OrdersHistoryEntity with _$OrdersHistoryEntity {
 
     String? paymentStatus,
     String? paymentMethod,
-    String? packageType,
+    PackageSize? packageSize,
     String? payer,
 
     @Default(0) int codAmount,
@@ -103,7 +104,7 @@ abstract class OrdersHistoryEntity with _$OrdersHistoryEntity {
       status: dto.status ?? '',
       paymentStatus: dto.paymentStatus ?? '',
       paymentMethod: dto.paymentMethod ?? '',
-      packageType: dto.packageType ?? '',
+      packageSize: findPackageSize(dto.packageSize),
       payer: dto.payer ?? '',
       codAmount: dto.codAmount ?? 0,
       collectAmount: dto.collectAmount ?? 0,

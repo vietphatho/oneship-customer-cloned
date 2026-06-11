@@ -28,4 +28,16 @@ abstract class ShippingServiceConfigEntity with _$ShippingServiceConfigEntity {
       sortOrder: data.sortOrder ?? 0,
     );
   }
+
+  factory ShippingServiceConfigEntity.fromValue(String value) {
+    return ShippingServiceConfigEntity(
+      id: "",
+      serviceCode: value,
+      serviceLabel: value,
+      isEnabled: true,
+      maxWeightKg: 0,
+      baseFee: 0,
+      sortOrder: 0,
+    );
+  }
 }
