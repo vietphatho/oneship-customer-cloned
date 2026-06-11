@@ -103,8 +103,8 @@ class _ProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const PrimaryAssetAvatar(
-      image: ImagePath.profileAvatarUser,
-      backgroundImage: ImagePath.profileAvatarBackground,
+      image: ImagePath.shopHomeAvatarOzoShipGenerated,
+      backgroundImage: ImagePath.shopHomeAvatarBackground,
       imageSize: 68,
       overlayImage: ImagePath.profileEditBadge,
       radius: 46,

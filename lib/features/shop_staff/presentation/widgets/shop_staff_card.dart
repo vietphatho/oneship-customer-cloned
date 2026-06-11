@@ -21,7 +21,7 @@ class ShopStaffCard extends StatelessWidget {
       child: Row(
         children: [
           const PrimaryAssetAvatar(
-            image: ImagePath.shopHomeAvatar,
+            image: ImagePath.shopHomeAvatarOzoShipGenerated,
             backgroundImage: ImagePath.shopHomeAvatarBackground,
             radius: 34,
           ),

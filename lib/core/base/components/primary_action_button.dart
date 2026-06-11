@@ -9,6 +9,7 @@ class PrimaryActionButton extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.icon,
+    this.trailingIcon,
     this.type = PrimaryActionButtonType.filled,
     this.height = AppDimensions.mediumHeightButton,
     this.width,
@@ -27,6 +28,7 @@ class PrimaryActionButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final Widget? icon;
+  final Widget? trailingIcon;
   final PrimaryActionButtonType type;
   final double height;
   final double? width;
@@ -83,25 +85,35 @@ class PrimaryActionButton extends StatelessWidget {
                 ),
               )
             : Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              IconTheme(
-                data: IconThemeData(
-                  color: resolvedTextColor,
-                  size: AppDimensions.smallIconSize,
-                ),
-                child: icon!,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon != null) ...[
+                    IconTheme(
+                      data: IconThemeData(
+                        color: resolvedTextColor,
+                        size: AppDimensions.smallIconSize,
+                      ),
+                      child: icon!,
+                    ),
+                    AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                  ],
+                  PrimaryText(
+                    label,
+                    style: textStyle ?? AppTextStyles.labelXSmall,
+                    color: resolvedTextColor,
+                  ),
+                  if (trailingIcon != null) ...[
+                    AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                    IconTheme(
+                      data: IconThemeData(
+                        color: resolvedTextColor,
+                        size: AppDimensions.smallIconSize,
+                      ),
+                      child: trailingIcon!,
+                    ),
+                  ],
+                ],
               ),
-              AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-            ],
-            PrimaryText(
-              label,
-              style: textStyle ?? AppTextStyles.labelXSmall,
-              color: resolvedTextColor,
-            ),
-          ],
-        ),
       ),
     );
   }

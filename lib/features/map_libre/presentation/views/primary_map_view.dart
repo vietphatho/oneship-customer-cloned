@@ -16,10 +16,12 @@ class PrimaryMapView extends StatefulWidget {
     super.key,
     required this.currentLocation,
     required this.shopLocation,
+    this.showCurrentLocation = true,
   });
 
   final LatLng currentLocation;
   final LatLng shopLocation;
+  final bool showCurrentLocation;
 
   @override
   State<PrimaryMapView> createState() => _PrimaryMapViewState();
@@ -75,17 +77,23 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
                   asset: ImagePath.iconShopLocation,
                 );
 
-                _mapLibreBloc.addMarker(
-                  marker: Feature(geometry: Point(currentLocation)),
-                  type: MarkerType.customer,
-                );
+                if (widget.showCurrentLocation) {
+                  _mapLibreBloc.addMarker(
+                    marker: Feature(geometry: Point(currentLocation)),
+                    type: MarkerType.customer,
+                  );
+                }
 
                 _mapLibreBloc.addMarker(
                   marker: Feature(geometry: Point(shopLocation)),
                   type: MarkerType.shop,
                 );
 
-                _mapLibreBloc.fitCamera([currentLocation, shopLocation]);
+                _mapLibreBloc.fitCamera(
+                  widget.showCurrentLocation
+                      ? [currentLocation, shopLocation]
+                      : [shopLocation],
+                );
 
               case MapEventClick():
                 // add a new marker on click

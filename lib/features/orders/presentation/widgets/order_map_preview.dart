@@ -10,9 +10,10 @@ import 'package:oneship_customer/features/orders/presentation/bloc/create_order_
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 
 class CreateOrderMapPreview extends StatelessWidget {
-  CreateOrderMapPreview({super.key});
+  CreateOrderMapPreview({super.key, this.height = 220});
 
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class CreateOrderMapPreview extends StatelessWidget {
         return OrderMapPreview(
           shopLocation: state.shopInfo.shopCoordinates?.latLong,
           deliveryLocation: _toLatLong(_deliveryCoordinates(state)),
+          height: height,
         );
       },
     );
@@ -59,20 +61,26 @@ class OrderMapPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final shopLatLng = _toMapLatLng(shopLocation);
     final deliveryLatLng = _toMapLatLng(deliveryLocation);
-    if (shopLatLng == null || deliveryLatLng == null) {
+    if (shopLatLng == null) {
       return const SizedBox.shrink();
     }
+    final initialLocation = deliveryLatLng ?? shopLatLng;
 
     return PrimaryFrame(
       padding: EdgeInsets.zero,
       child: ClipRRect(
-        borderRadius: AppDimensions.mediumBorderRadius,
+        borderRadius: AppDimensions.largeBorderRadius,
         child: SizedBox(
           height: height,
           width: double.infinity,
           child: PrimaryMapView(
-            currentLocation: deliveryLatLng,
+            key: ValueKey(
+              "${initialLocation.latitude},${initialLocation.longitude},"
+              "${deliveryLatLng != null}",
+            ),
+            currentLocation: initialLocation,
             shopLocation: shopLatLng,
+            showCurrentLocation: deliveryLatLng != null,
           ),
         ),
       ),
