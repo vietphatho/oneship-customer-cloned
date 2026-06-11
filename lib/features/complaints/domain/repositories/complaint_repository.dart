@@ -4,7 +4,10 @@ import 'package:oneship_customer/features/complaints/domain/entities/complaint_e
 abstract class ComplaintRepository {
   Future<Resource<List<ComplaintEntity>>> getComplaints({
     required String category,
-    String? shopId,
+    required String shopId,
+    String? status,
+    int? page,
+    int? limit,
   });
 
   Future<Resource<ComplaintEntity>> createComplaint({
@@ -14,10 +17,20 @@ abstract class ComplaintRepository {
     required String description,
     required String referenceType,
     required String referenceId,
-    String? shopId,
+    required String shopId,
   });
 
   Future<Resource<bool>> deleteComplaint(String id);
 
-  Future<Resource<dynamic>> getComplaintSummary({String? shopId});
+  Future<Resource<dynamic>> getComplaintSummary({required String shopId});
+
+  Future<Resource<dynamic>> getComplaintsTotal({
+    required String category,
+    required String shopId,
+    String? status,
+  });
+
+  Future<Resource<dynamic>> getAssignedPackagesTotal({required String shopId});
+
+  Future<Resource<dynamic>> getActivePackagesTotal({required String shopId});
 }

@@ -17,6 +17,7 @@ abstract class ComplaintModel with _$ComplaintModel {
     @JsonKey(name: "referenceType") String? referenceType,
     @JsonKey(name: "referenceId") String? referenceId,
     @JsonKey(name: "status") String? status,
+    @JsonKey(name: "creator") dynamic creator,
   }) = ComplaintModelData;
 
   factory ComplaintModel.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +37,7 @@ extension ComplaintModelExt on ComplaintModel {
       referenceType: referenceType ?? "",
       referenceCode: referenceId ?? '',
       status: status ?? '',
+      creatorName: creator != null && creator is Map ? creator['displayName'] : null,
     );
   }
 }

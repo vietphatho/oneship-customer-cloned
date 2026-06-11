@@ -15,5 +15,6 @@ abstract class ComplaintEntity with _$ComplaintEntity {
     required String referenceType,
     required String referenceCode,
     required String status,
+    required String creatorName,
   }) = ComplaintEntityData;
 }
