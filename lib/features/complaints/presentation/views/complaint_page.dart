@@ -1,12 +1,19 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/base/components/primary_text_field.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/components/primary_app_bar.dart';
 import 'package:oneship_customer/core/base/components/primary_chip_tab_bar.dart';
-import 'package:oneship_customer/core/base/components/primary_pagination.dart';
 import 'package:oneship_customer/core/base/components/primary_summary_card.dart';
+import 'package:oneship_customer/core/base/components/primary_text.dart';
+import 'package:oneship_customer/core/base/components/primary_text_field.dart';
 import 'package:oneship_customer/core/base/constants/svg_path.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_customer/core/themes/app_dimensions.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_bloc.dart';
+import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_state.dart';
 import 'package:oneship_customer/features/complaints/presentation/widgets/complaint_list_view.dart';
+import 'package:oneship_customer/features/shop_master/presentation/widgets/primary_bottom_navigation_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class ComplaintPage extends StatefulWidget {
@@ -17,22 +24,24 @@ class ComplaintPage extends StatefulWidget {
 }
 
 class _ComplaintPageState extends State<ComplaintPage> {
-  int _selectedTabIndex = 0;
+  final ComplaintBloc _complaintBloc = getIt.get();
   final TextEditingController _searchController = TextEditingController();
-
-  final List<String> _tabs = [
-    'Tất cả (32)',
-    'Đang xử lý (12)',
-    'Đã xử lý (18)',
-    'Đã hủy (2)'
-  ];
-
   final RefreshController _refreshController = RefreshController();
+
+  int _selectedTabIndex = 0;
+
+  List<String> get _tabs => [
+    'Tất cả',
+    'Đang xử lý',
+    'Đã xử lý',
+    'Đã hủy',
+  ];
 
   @override
   void dispose() {
     _searchController.dispose();
     _refreshController.dispose();
+    _complaintBloc.close();
     super.dispose();
   }
 
@@ -41,6 +50,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: _buildAppBar(context),
+      bottomNavigationBar: const PrimaryBottomNavigationBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,6 +60,12 @@ class _ComplaintPageState extends State<ComplaintPage> {
           const SizedBox(height: 16),
           PrimaryChipTabBar(
             tabs: _tabs,
+            tabColors: const [
+              AppColors.orange,
+              AppColors.secondary,
+              AppColors.green,
+              AppColors.grey500,
+            ],
             selectedIndex: _selectedTabIndex,
             onChanged: (index) {
               setState(() {
@@ -61,11 +77,12 @@ class _ComplaintPageState extends State<ComplaintPage> {
           const SizedBox(height: 16),
           Expanded(
             child: ComplaintListView(
-              category: 'all', // Or appropriate category based on tab
+              bloc: _complaintBloc,
+              category: 'order_issue',
+              status: _getStatusFromTabIndex(_selectedTabIndex),
               refreshController: _refreshController,
             ),
           ),
-          _buildPagination(),
         ],
       ),
     );
@@ -73,7 +90,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return PrimaryAppBar(
-      title: 'Khiếu nại – Sự cố',
+      title: 'Khiếu nại - Sự cố',
       actions: [
         IconButton(
           icon: const Icon(Icons.search, color: AppColors.grey500),
@@ -88,115 +105,139 @@ class _ComplaintPageState extends State<ComplaintPage> {
   }
 
   Widget _buildSummaryCards() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: PrimarySummaryCard(
-              title: 'Tổng khiếu nại',
-              count: '32',
-              subtitle: 'Yêu cầu',
-              backgroundColor: AppColors.orange100.withValues(alpha: 0.1),
-              iconColor: AppColors.orange,
-              iconAsset: SvgPath.icShopHomePackage, // Placeholder icon
-              watermarkAsset: SvgPath.icShopHomePackage,
-            ),
+    return BlocBuilder<ComplaintBloc, ComplaintState>(
+      bloc: _complaintBloc,
+      builder: (context, state) {
+        final summary = state.summaryResource.data as Map<String, dynamic>? ?? {};
+        final openCount = (summary['open'] as num?)?.toInt() ?? 0;
+        final resolvedCount = (summary['resolved'] as num?)?.toInt() ?? 0;
+        final closedCount = (summary['closed'] as num?)?.toInt() ?? 0;
+        
+        final processingStr = openCount.toString();
+        final processedStr = (resolvedCount + closedCount).toString();
+        
+        final totalCount = (summary['total'] as num?)?.toInt() ?? 
+            (summary.values.fold<int>(0, (sum, val) => sum + ((val as num?)?.toInt() ?? 0)));
+        final totalStr = totalCount.toString();
+        
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: PrimarySummaryCard(
+                  title: 'Tổng khiếu nại',
+                  count: totalStr,
+                  subtitle: 'Yêu cầu',
+                  backgroundColor: AppColors.orange100.withValues(alpha: 0.1),
+                  iconColor: AppColors.orange,
+                  iconAsset: SvgPath.icShopHomePackage,
+                  watermarkAsset: SvgPath.icShopHomePackage,
+                  backgroundImageAsset: 'assets/images/bg_total_complaints.png',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: PrimarySummaryCard(
+                  title: 'Đang xử lý',
+                  count: processingStr,
+                  subtitle: 'Yêu cầu',
+                  backgroundColor: AppColors.blue100.withValues(alpha: 0.3),
+                  iconColor: AppColors.secondary,
+                  iconAsset: SvgPath.icOrderProcessing,
+                  watermarkAsset: SvgPath.icOrderProcessing,
+                  backgroundImageAsset: 'assets/images/bg_processing_complaints.png',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: PrimarySummaryCard(
+                  title: 'Đã xử lý',
+                  count: processedStr,
+                  subtitle: 'Yêu cầu',
+                  backgroundColor: AppColors.green100.withValues(alpha: 0.3),
+                  iconColor: AppColors.green,
+                  iconAsset: SvgPath.icOrderProcessed,
+                  watermarkAsset: SvgPath.icOrderProcessed,
+                  backgroundImageAsset: 'assets/images/bg_processed_complaints.png',
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: PrimarySummaryCard(
-              title: 'Đang xử lý',
-              count: '12',
-              subtitle: 'Yêu cầu',
-              backgroundColor: AppColors.blue100.withValues(alpha: 0.3),
-              iconColor: AppColors.secondary,
-              iconAsset: SvgPath.icOrderProcessing, // Placeholder icon
-              watermarkAsset: SvgPath.icOrderProcessing,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: PrimarySummaryCard(
-              title: 'Đã xử lý',
-              count: '18',
-              subtitle: 'Yêu cầu',
-              backgroundColor: AppColors.green100.withValues(alpha: 0.3),
-              iconColor: AppColors.green,
-              iconAsset: SvgPath.icOrderProcessed, // Placeholder icon
-              watermarkAsset: SvgPath.icOrderProcessed,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildFilterBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: PrimaryTextField(
-              hintText: 'Tìm kiếm theo mã, đơn hàng, người gửi...',
-              controller: _searchController,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: PrimaryTextField(
+                hintText: 'Tìm kiếm theo mã, đơn hàng, người gửi...',
+                controller: _searchController,
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 1,
-            child: InkWell(
+            const SizedBox(width: 8),
+            InkWell(
               onTap: () async {
-                final dateRange = await showDateRangePicker(
+                await showDateRangePicker(
                   context: context,
                   firstDate: DateTime(2020),
                   lastDate: DateTime.now(),
                 );
-                if (dateRange != null) {
-                  // Handle date range
-                }
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.grey300),
-                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.neutral7),
+                  borderRadius: AppDimensions.largeBorderRadius,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.calendar_today, size: 16, color: AppColors.grey500),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Chọn thời gian',
-                        style: TextStyle(color: AppColors.grey500, fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    const Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: AppColors.grey500,
                     ),
-                    const Icon(Icons.keyboard_arrow_down, size: 16, color: AppColors.grey500),
+                    const SizedBox(width: 8),
+                    PrimaryText(
+                      'Chọn thời gian',
+                      style: TextStyle(color: AppColors.grey500, fontSize: 12),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 16,
+                      color: AppColors.grey500,
+                    ),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildPagination() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: PrimaryPagination(
-        currentPage: 1,
-        totalPages: 5,
-        totalItems: 32,
-        itemsPerPage: 6,
-        onPageChanged: (page) {},
-      ),
-    );
+  String? _getStatusFromTabIndex(int index) {
+    switch (index) {
+      case 1:
+        return 'open';
+      case 2:
+        return 'resolved';
+      case 3:
+        return 'closed';
+      case 0:
+      default:
+        return null;
+    }
   }
 }

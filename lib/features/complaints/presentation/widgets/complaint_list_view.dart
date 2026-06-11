@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_refreshable_list_v
 import 'package:oneship_customer/core/base/components/primary_dismissible.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
+import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_bloc.dart';
@@ -11,17 +12,23 @@ import 'package:oneship_customer/features/complaints/presentation/bloc/complaint
 import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_event.dart';
 import 'package:oneship_customer/features/complaints/presentation/widgets/complaint_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class ComplaintListView extends StatefulWidget {
+  final ComplaintBloc bloc;
   final String category;
+  final String? status;
   final RefreshController refreshController;
 
   const ComplaintListView({
     super.key,
+    required this.bloc,
     required this.category,
+    this.status,
     required this.refreshController,
   });
 
@@ -30,27 +37,33 @@ class ComplaintListView extends StatefulWidget {
 }
 
 class _ComplaintListViewState extends State<ComplaintListView> {
-  final ComplaintBloc _complaintBloc = getIt.get();
 
   @override
   void initState() {
     super.initState();
-    _complaintBloc.add(ComplaintStarted(
+    widget.bloc.add(ComplaintStarted(
       category: widget.category,
       shopId: getIt<ShopBloc>().state.currentShop?.shopId,
+      status: widget.status,
     ));
   }
 
   @override
-  void dispose() {
-    _complaintBloc.close();
-    super.dispose();
+  void didUpdateWidget(covariant ComplaintListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.status != widget.status) {
+      widget.bloc.add(ComplaintStarted(
+        category: widget.category,
+        shopId: getIt<ShopBloc>().state.currentShop?.shopId,
+        status: widget.status,
+      ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ComplaintBloc, ComplaintState>(
-      bloc: _complaintBloc,
+      bloc: widget.bloc,
       builder: (context, state) {
         final resource = state.complaintsResource;
         final complaints = resource.data ?? <ComplaintEntity>[];
@@ -61,8 +74,14 @@ class _ComplaintListViewState extends State<ComplaintListView> {
 
         if (resource.state == Result.success || complaints.isNotEmpty) {
           widget.refreshController.refreshCompleted();
+          widget.refreshController.loadComplete();
         } else if (resource.state == Result.error) {
           widget.refreshController.refreshFailed();
+          widget.refreshController.loadFailed();
+        }
+
+        if (!state.canLoadMore && complaints.isNotEmpty) {
+          widget.refreshController.loadNoData();
         }
 
         if (resource.state == Result.error) {
@@ -85,14 +104,19 @@ class _ComplaintListViewState extends State<ComplaintListView> {
           return Center(
             child: PrimaryText(
               'complaints.empty_list'.tr(),
-              style: const TextStyle(color: Colors.grey),
+              style: AppTextStyles.labelLarge.copyWith(
+                color: AppColors.grey500,
+                fontSize: 16,
+              ),
             ),
           );
         }
 
         return PrimaryRefreshabelListView(
           controller: widget.refreshController,
-          onRefresh: _complaintBloc.fetchComplaints,
+          onRefresh: widget.bloc.fetchComplaints,
+          enablePullUp: true,
+          onLoading: () => widget.bloc.add(const ComplaintLoadMore()),
           itemCount: complaints.length,
           itemBuilder: (context, index) {
             final complaint = complaints[index];
@@ -100,12 +124,12 @@ class _ComplaintListViewState extends State<ComplaintListView> {
               key: ValueKey(complaint.id),
               confirmMessage: 'complaints.delete_confirm'.tr(),
               onDismissed: (direction) {
-                _complaintBloc.deleteComplaint(complaint.id);
+                widget.bloc.deleteComplaint(complaint.id);
               },
               child: ComplaintCard(
                 complaint: complaint,
                 onTap: () {
-                  // Navigate to detail or perform action
+                  context.push(RouteName.complaintDetailPage, extra: complaint);
                 },
               ),
             );
