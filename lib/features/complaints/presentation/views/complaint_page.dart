@@ -126,7 +126,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             children: [
               Expanded(
                 child: PrimarySummaryCard(
-                  title: 'Tổng khiếu nại',
+                  title: 'Tổng yêu cầu',
                   count: totalStr,
                   subtitle: 'Yêu cầu',
                   backgroundColor: AppColors.orange100.withValues(alpha: 0.1),
