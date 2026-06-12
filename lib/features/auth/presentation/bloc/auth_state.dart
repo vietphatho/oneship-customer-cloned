@@ -73,6 +73,12 @@ class AuthVerifySecondaryPasswordState extends AuthState {
   AuthVerifySecondaryPasswordState(this.resource);
 }
 
+class AuthDeleteAccountState extends AuthState {
+  final Resource resource;
+
+  AuthDeleteAccountState(this.resource);
+}
+
 // class AuthUpdatedFcmTokenState extends AuthState {
 //   final Resource resource;
 

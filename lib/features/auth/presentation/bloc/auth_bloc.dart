@@ -4,14 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/create_second_password_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/delete_account_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_in_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case.dart';
@@ -33,6 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._createSecondPasswordUseCase,
     this._updateSecondPasswordUseCase,
     this._verifySecondaryPasswordUseCase,
+    this._deleteAccountUseCase,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
     on<AuthFetchingUserProfileEvent>(_onProfileFetchedEvent);
@@ -42,6 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCreateSecondPasswordEvent>(_onSecondPasswordCreatedEvent);
     on<AuthUpdateSecondPasswordEvent>(_onSecondPasswordUpdatedEvent);
     on<AuthVerifySecondaryPasswordEvent>(_onVerifySecondaryPassword);
+    on<AuthDeleteAccountEvent>(_onDeleteAccountEvent);
   }
 
   final LogInUseCase _logInUseCase;
@@ -52,6 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CreateSecondPasswordUseCase _createSecondPasswordUseCase;
   final UpdateSecondPasswordUseCase _updateSecondPasswordUseCase;
   final VerifySecondaryPasswordUseCase _verifySecondaryPasswordUseCase;
+  final DeleteAccountUseCase _deleteAccountUseCase;
 
   late UserProfileResponse _userProfile;
   UserProfileResponse get userProfile => _userProfile;
@@ -133,6 +137,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthUpdatedPasswordState(response));
   }
 
+  FutureOr<void> _onDeleteAccountEvent(
+    AuthDeleteAccountEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthDeleteAccountState(Resource.loading()));
+
+    final response = await _deleteAccountUseCase.call();
+
+    emit(AuthDeleteAccountState(response));
+  }
+
   void updatePassword(UpdatePasswordRequest body) {
     add(AuthUpdatePasswordEvent(body));
   }
@@ -156,8 +171,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthVerifySecondaryPasswordState(response));
   }
 
-  void verifySecondaryPassword({required String secondPassword}){
-    add(AuthVerifySecondaryPasswordEvent(VerifySecondaryPasswordRequest(secondPassword: secondPassword)));
+  void verifySecondaryPassword({required String secondPassword}) {
+    add(
+      AuthVerifySecondaryPasswordEvent(
+        VerifySecondaryPasswordRequest(secondPassword: secondPassword),
+      ),
+    );
   }
 
   void updateUserProfile({String? displayName, String? userPhone}) {
@@ -181,5 +200,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void fetchUserProfile() {
     add(const AuthFetchingUserProfileEvent());
+  }
+
+  void deleteAccount() {
+    add(const AuthDeleteAccountEvent());
   }
 }

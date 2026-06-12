@@ -86,7 +86,7 @@ class _SupportsContainer extends StatelessWidget {
     );
   }
 
-  void _handleLogOutListener(context, state) {
+  void _handleLogOutListener(BuildContext context, state) {
     if (state is AuthLogOutState) {
       switch (state.resource.state) {
         case Result.loading:
@@ -100,6 +100,29 @@ class _SupportsContainer extends StatelessWidget {
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showErrorDialog(context);
+          break;
+      }
+    } else if (state is AuthDeleteAccountState) {
+      switch (state.resource.state) {
+        case Result.loading:
+          PrimaryDialog.showLoadingDialog(context);
+          break;
+        case Result.success:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showSuccessDialog(
+            context,
+            message: "account_deleted".tr(),
+            onClosed: () {
+              context.go(RouteName.homePage);
+            },
+          );
+          break;
+        case Result.error:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
           break;
       }
     }
