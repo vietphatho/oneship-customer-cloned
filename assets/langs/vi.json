@@ -1061,5 +1061,7 @@
   "contact_admin_to_delete_account": "Vui lòng liên hệ quản trị viên để được hỗ trợ xoá tài khoản\nnhut.nguyen@onexway.io",
   "create_shop_success": "Tạo cửa hàng thành công",
   "contact_admin_to_deactive_account": "Vui lòng liên hệ quản trị viên để được hỗ trợ vô hiện hoá tài khoản\nnhut.nguyen@onexway.io",
-  "deactive_account": "Vô hiệu hoá tài khoản"
+  "deactive_account": "Vô hiệu hoá tài khoản",
+  "do_you_want_to_delete_account": "Bạn có chắc chắn muốn xoá tài khoản này không?",
+  "account_deleted": "Tài khoản đã xoá"
 }

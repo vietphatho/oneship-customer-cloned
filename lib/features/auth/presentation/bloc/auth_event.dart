@@ -1,8 +1,8 @@
-import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_user_profile_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/verify_secondary_password_request.dart';
 
 abstract class AuthEvent {
@@ -55,6 +55,10 @@ class AuthVerifySecondaryPasswordEvent extends AuthEvent {
   final VerifySecondaryPasswordRequest request;
 
   AuthVerifySecondaryPasswordEvent(this.request);
+}
+
+class AuthDeleteAccountEvent extends AuthEvent {
+  const AuthDeleteAccountEvent();
 }
 
 // class GenOtpCodeEvent extends AuthEvent {

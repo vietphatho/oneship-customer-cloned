@@ -403,9 +403,9 @@ extension ErrorCodeEnumExt on ErrorCodeEnum {
   String? get message => _mapValue[this];
 
   static String? getMessage(String? value) {
-    if (value == null) return ErrorCodeEnum.unknown.message;
-    return (_mapKey.entries.firstWhereOrNull((e) => e.value == value)?.key ??
-            ErrorCodeEnum.unknown)
-        .message;
+    final errorType = _mapKey.entries
+        .firstWhereOrNull((e) => e.value == value)
+        ?.key;
+    return errorType?.message;
   }
 }
