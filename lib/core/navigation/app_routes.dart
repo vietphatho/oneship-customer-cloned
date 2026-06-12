@@ -7,6 +7,8 @@ import 'package:oneship_customer/features/auth/presentation/views/register_page.
 import 'package:oneship_customer/features/auth/presentation/views/verify_email_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/complaint_detail_page.dart';
+import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
 import 'package:oneship_customer/features/customer/home/presentation/views/customer_home_page.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_period_detail_page.dart';
@@ -148,6 +150,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.createComplaintPage,
       builder: (context, state) => const CreateComplaintPage(),
+    ),
+    GoRoute(
+      path: RouteName.complaintDetailPage,
+      builder: (context, state) => const ComplaintDetailPage(),
     ),
     GoRoute(
       path: RouteName.financeDetailByDayPage,

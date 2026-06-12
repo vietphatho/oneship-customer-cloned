@@ -42,6 +42,7 @@ class RouteName {
   static const String ordersHistoryPage = '/shop_master/orders_history';
   static const String complaintPage = '/complaints';
   static const String createComplaintPage = '/complaints/create';
+  static const String complaintDetailPage = '/complaints/detail';
 
   static const String staffManagementPage = '/staff_management_page';
   static const String shopManagementPage = '/shop_management_page';
