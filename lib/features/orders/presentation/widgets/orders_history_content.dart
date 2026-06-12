@@ -74,6 +74,23 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                 controller: widget.controller,
                 children: [
                   OrdersHistoryListCard(
+                    status: OrderStatus.allProcessing,
+                    orders: state.allOrdersHistoryList,
+                    onRefresh:
+                        () => _ordersBloc.fetchOrderHistory(
+                          OrderStatus.allProcessing,
+                        ),
+                    onLoadMore:
+                        () => _ordersBloc.loadMoreOrderHistory(
+                          OrderStatus.allProcessing,
+                        ),
+                    onOrderTap: _onOrderTap,
+                    isLoading: widget.isLoadingFor(
+                      OrderStatus.allProcessing,
+                      state,
+                    ),
+                  ),
+                  OrdersHistoryListCard(
                     status: OrderStatus.delivered,
                     orders: state.deliveredOrdersHistoryList,
                     onRefresh:

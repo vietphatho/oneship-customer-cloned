@@ -38,7 +38,7 @@ abstract class OrdersApi {
 
   @GET("/api/v1/archives/orders")
   Future<BaseResponse<OrdersListResponse, BaseError>> fetchOrderHistory({
-    @Query("status") required String status,
+    @Query("status") String? status,
     @Query("shopId") required String shopId,
     @Query("page") int page = Constants.defaultPage,
     @Query("limit") int limit = Constants.defaultLimitPerPage,

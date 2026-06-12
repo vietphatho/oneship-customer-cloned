@@ -16,7 +16,7 @@ class OrdersHistoryTabBar extends StatelessWidget {
     return PrimaryTabBar(
       controller: controller,
       onTap: onTap,
-      items: ["delivered".tr(), "returned".tr()],
+      items: ["all".tr(), "delivered".tr(), "returned".tr()],
     );
   }
 }
