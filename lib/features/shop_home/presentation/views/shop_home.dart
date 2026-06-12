@@ -40,6 +40,10 @@ class _ShopHomeState extends State<ShopHome> {
   void initState() {
     super.initState();
     // _shopBloc.init(shopId);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (!mounted) return;
+    //   CustomerCreditLimitDialog.show(context);
+    // });
   }
 
   @override
@@ -61,7 +65,9 @@ class _ShopHomeState extends State<ShopHome> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: AppDimensions.safeBottomSpacing),
+          padding: const EdgeInsets.only(
+            bottom: AppDimensions.safeBottomSpacing,
+          ),
           child: Column(
             children: [
               _buildHeaderWithBriefInfo(context),
@@ -189,11 +195,7 @@ class _ShopHomeState extends State<ShopHome> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Color(0xCCFFFFFF),
-                    Colors.white,
-                  ],
+                  colors: [Colors.transparent, Color(0xCCFFFFFF), Colors.white],
                   stops: [0, 0.72, 1],
                 ),
               ),
@@ -253,9 +255,8 @@ class _ShopHomeState extends State<ShopHome> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: features
           .map(
-            (feature) => Expanded(
-              child: ShopHomeFeatureButton(feature: feature),
-            ),
+            (feature) =>
+                Expanded(child: ShopHomeFeatureButton(feature: feature)),
           )
           .toList(),
     );

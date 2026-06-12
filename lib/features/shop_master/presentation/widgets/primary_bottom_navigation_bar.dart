@@ -57,7 +57,7 @@ class _PrimaryBottomNavigationBarState
                     child: Container(
                       height: AppDimensions.bottomNavBarHeight,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.mediumSpacing,
+                        horizontal: AppDimensions.smallSpacing,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.background,
@@ -194,14 +194,14 @@ class _NavigationItem extends StatelessWidget {
           children: [
             SvgPicture.asset(
               item.icon,
-              width: AppDimensions.largeIconSize,
-              height: AppDimensions.largeIconSize,
+              width: AppDimensions.smallIconSize,
+              height: AppDimensions.smallIconSize,
               colorFilter: ColorFilter.mode(
                 isSelected ? AppColors.primary : AppColors.neutral7,
                 BlendMode.srcIn,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppDimensions.xxxSmallSpacing),
             PrimaryText(
               item.title,
               style: AppTextStyles.labelSmall.copyWith(

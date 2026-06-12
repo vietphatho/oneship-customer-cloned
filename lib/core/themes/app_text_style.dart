@@ -111,6 +111,20 @@ class AppTextStyles {
     color: AppColors.onBackground,
   );
 
+  static const TextStyle bodyXSmall = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.onBackground,
+  );
+
+  static const TextStyle bodyXXSmall = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.onBackground,
+  );
+
   static const TextStyle buttonText = TextStyle(
     fontFamily: fontFamily,
     fontSize: 18,
