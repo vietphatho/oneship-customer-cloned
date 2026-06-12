@@ -24,6 +24,8 @@ class VerifyEmailPage extends StatefulWidget {
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   final RegisterBloc _registerBloc = getIt<RegisterBloc>();
   final PinInputController _inputCtrl = PinInputController();
+  bool _isVerifying = false;
+  String? _verifyError;
 
   @override
   void dispose() {
@@ -36,6 +38,9 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     return Scaffold(
       body: BlocListener<RegisterBloc, RegisterState>(
         bloc: _registerBloc,
+        listenWhen:
+            (previous, current) =>
+                previous.verifyEmailResult != current.verifyEmailResult,
         listener: _handleVerifyEmailListener,
         child: Padding(
           padding: const EdgeInsets.all(AppDimensions.mediumSpacing),
@@ -71,13 +76,24 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
+              if (_verifyError != null) ...[
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                PrimaryText(
+                  _verifyError!.tr(),
+                  color: AppColors.expenseRed,
+                  textAlign: TextAlign.center,
+                ),
+              ],
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
               PrimaryButton.filled(
-                onPressed: () {
-                  if (_inputCtrl.text.length == 6) {
-                    _onVerifyEmailPressed();
-                  }
-                },
+                onPressed:
+                    _isVerifying
+                        ? null
+                        : () {
+                          if (_inputCtrl.text.length == 6) {
+                            _onVerifyEmailPressed();
+                          }
+                        },
                 label: "verify".tr(),
               ),
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
@@ -104,17 +120,28 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 
   void _handleVerifyEmailListener(BuildContext context, RegisterState state) {
-    switch (state.verifyEmailResult!.state) {
+    final result = state.verifyEmailResult;
+    if (result == null) return;
+
+    switch (result.state) {
       case Result.loading:
-        PrimaryDialog.showLoadingDialog(context);
+        setState(() {
+          _isVerifying = true;
+          _verifyError = null;
+        });
         break;
       case Result.success:
-        PrimaryDialog.hideLoadingDialog(context);
+        setState(() => _isVerifying = false);
         context.pushReplacement(RouteName.loginPage);
         break;
       case Result.error:
-        PrimaryDialog.hideLoadingDialog(context);
-        PrimaryDialog.showErrorDialog(context);
+        setState(() {
+          _isVerifying = false;
+          _verifyError =
+              result.statusCode == 400
+                  ? 'error_code.auth.otp_invalid'
+                  : result.message;
+        });
         break;
     }
   }
@@ -158,8 +185,15 @@ class __ResendVerificationEmailWidgetState
   Widget build(BuildContext context) {
     return BlocListener<RegisterBloc, RegisterState>(
       bloc: _registerBloc,
+      listenWhen:
+          (previous, current) =>
+              previous.resendVerificationEmailResult !=
+              current.resendVerificationEmailResult,
       listener: (context, state) {
-        switch (state.resendVerificationEmailResult!.state) {
+        final result = state.resendVerificationEmailResult;
+        if (result == null) return;
+
+        switch (result.state) {
           case Result.loading:
             PrimaryDialog.showLoadingDialog(context);
             break;
@@ -168,7 +202,7 @@ class __ResendVerificationEmailWidgetState
             break;
           case Result.error:
             PrimaryDialog.hideLoadingDialog(context);
-            PrimaryDialog.showErrorDialog(context);
+            PrimaryDialog.showErrorDialog(context, message: result.message);
             break;
         }
       },
