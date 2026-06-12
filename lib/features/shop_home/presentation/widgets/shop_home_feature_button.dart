@@ -7,46 +7,47 @@ import '../../data/enum.dart' show ShopHomeFeature, ShopHomeFeatureExt;
 class ShopHomeFeatureButton extends StatelessWidget {
   const ShopHomeFeatureButton({super.key, required this.feature});
 
-  static const double _iconSize = 38;
+  static const double _iconSize = 56;
+  static const double _labelWidth = 76;
+  static const double _labelHeight = 30;
 
   final ShopHomeFeature feature;
 
   @override
   Widget build(BuildContext context) {
+    final routeName = feature.routeName;
+
     return PrimaryAnimatedPressableWidget(
-      onTap: () {
-        context.push(feature.routeName);
-      },
-      child: Column(
-        children: [
-          Container(
-            width: AppDimensions.shopHomeButtonSize,
-            height: AppDimensions.shopHomeButtonSize,
-            decoration: BoxDecoration(
-              gradient: AppColors.shopHomeButtonGradBg,
-              shape: BoxShape.circle,
-            ),
-            padding: AppDimensions.xSmallPaddingAll,
-            child: Center(
-              child: SizedBox.square(
-                dimension: _iconSize,
-                child: SvgPicture.asset(feature.icon),
+      onTap: routeName == null ? null : () => context.push(routeName),
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox.square(
+              dimension: _iconSize,
+              child: Image.asset(
+                feature.icon,
+                fit: BoxFit.contain,
               ),
             ),
-          ),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          SizedBox(
-            width: double.infinity,
-            height: AppDimensions.xxLargeSpacing + AppDimensions.smallSpacing,
-            child: PrimaryText(
-              feature.title.tr(),
-              maxLine: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.labelXSmall,
+            AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+            SizedBox(
+              width: _labelWidth,
+              height: _labelHeight,
+              child: PrimaryText(
+                feature.title.tr(),
+                maxLine: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.labelXSmall.copyWith(
+                  fontSize: 10,
+                  height: 1.1,
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
