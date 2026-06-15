@@ -62,6 +62,19 @@ class _SupportsContainer extends StatelessWidget {
         Divider(height: 1, color: AppColors.neutral7),
         _ProfileSelectedItem(label: 'support_request'.tr(), onTap: () {}),
         Divider(height: 1, color: AppColors.neutral7),
+
+        _ProfileSelectedItem(
+          label: 'delete_account'.tr(),
+          textColor: AppColors.expenseRed,
+          onTap: () {
+            PrimaryDialog.showQuestionDialog(
+              context,
+              message: "do_you_want_to_delete_account".tr(),
+              onPositiveTapped: _authBloc.deleteAccount,
+            );
+          },
+        ),
+        Divider(height: 1, color: AppColors.neutral7),
         BlocListener<AuthBloc, AuthState>(
           bloc: _authBloc,
           listener: _handleLogOutListener,
@@ -79,6 +92,7 @@ class _SupportsContainer extends StatelessWidget {
             textColor: AppColors.expenseRed,
           ),
         ),
+
         Divider(height: 1, color: AppColors.neutral7),
         const AppVersion(),
         AppSpacing.vertical(AppDimensions.largeSpacing),
