@@ -25,7 +25,13 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
   final ShopMasterBloc _shopMasterBloc = getIt.get();
   final AuthBloc _authBloc = getIt.get();
 
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _shopMasterBloc.currentTab.index);
+  }
 
   @override
   Widget build(BuildContext context) {

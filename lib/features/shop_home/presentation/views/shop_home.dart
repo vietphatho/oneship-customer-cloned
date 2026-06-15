@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
@@ -15,6 +14,7 @@ import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_app_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_brief_info.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_content_sections.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_button.dart';
 
 class ShopHome extends StatefulWidget {
@@ -25,7 +25,9 @@ class ShopHome extends StatefulWidget {
 }
 
 class _ShopHomeState extends State<ShopHome> {
-  static const List<String> _banners = [ImagePath.customerHomeSlider1];
+  static const double _heroHeight = 230;
+  static const double _headerContentHeight = 303;
+  static const double _trackingInputHeight = 42;
 
   final ShopBloc _shopBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
@@ -38,6 +40,10 @@ class _ShopHomeState extends State<ShopHome> {
   void initState() {
     super.initState();
     // _shopBloc.init(shopId);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (!mounted) return;
+    //   CustomerCreditLimitDialog.show(context);
+    // });
   }
 
   @override
@@ -57,63 +63,28 @@ class _ShopHomeState extends State<ShopHome> {
         ),
       ],
       child: Scaffold(
+        backgroundColor: AppColors.background,
         body: SingleChildScrollView(
-          child: Stack(
+          padding: const EdgeInsets.only(
+            bottom: AppDimensions.safeBottomSpacing,
+          ),
+          child: Column(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                // height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(ImagePath.shopHomeBackground),
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter,
-                  ),
+              _buildHeaderWithBriefInfo(context),
+              AppSpacing.vertical(AppDimensions.xSmallSpacing),
+              Padding(
+                padding: AppDimensions.smallPaddingHorizontal,
+                child: Column(
+                  children: [
+                    _buildFeaturePanel(),
+                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                    const ShopHomePromotionBanner(),
+                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                    const ShopHomeOfferSection(),
+                    AppSpacing.vertical(AppDimensions.smallSpacing),
+                    const ShopHomeNewsSection(),
+                  ],
                 ),
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    top: AppDimensions.shopHomeTopSpacing,
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  // height: MediaQuery.of(context).size.height,
-                  height: AppDimensions.xxLargeRadius,
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(AppDimensions.xxLargeRadius),
-                    ),
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  const ShopAppBar(),
-                  AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                  _buildTrackingInput(context),
-                  AppSpacing.vertical(AppDimensions.smallSpacing),
-                  const ShopBriefInfo(),
-                  AppSpacing.vertical(AppDimensions.mediumSpacing),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 0.76,
-                      mainAxisSpacing: AppDimensions.smallSpacing,
-                      crossAxisSpacing: AppDimensions.smallSpacing,
-                    ),
-                    itemCount: ShopHomeFeature.values.length,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppDimensions.mediumSpacing,
-                      vertical: AppDimensions.smallSpacing,
-                    ),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => ShopHomeFeatureButton(
-                      feature: ShopHomeFeature.values[index],
-                    ),
-                  ),
-                  _buildPromotionSlider(),
-                  AppSpacing.vertical(AppDimensions.mediumSpacing),
-                ],
               ),
             ],
           ),
@@ -137,53 +108,157 @@ class _ShopHomeState extends State<ShopHome> {
 
   Widget _buildTrackingInput(BuildContext context) {
     return Padding(
-      padding: AppDimensions.mediumPaddingHorizontal,
-      child: PrimaryTextField(
-        controller: _trackingNumberCtrl,
-        hintText: "input_tracking_number".tr(),
-        textInputAction: TextInputAction.search,
-        textCapitalization: TextCapitalization.characters,
-        prefixIcon: Icon(
-          Icons.search_rounded,
-          color: AppColors.primary,
-          size: AppDimensions.smallIconSize,
+      padding: AppDimensions.smallPaddingHorizontal,
+      child: Container(
+        height: _trackingInputHeight,
+        padding: const EdgeInsets.fromLTRB(12, 0, 4, 0),
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          borderRadius: AppDimensions.largeBorderRadius,
+          border: Border.all(color: AppColors.neutral8),
+          boxShadow: [PrimaryBoxShadows.defaultShadow],
         ),
-        onFieldSubmitted: (_) => _onSearch(context),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.search_rounded,
+              color: AppColors.primary,
+              size: AppDimensions.xSmallIconSize,
+            ),
+            AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+            Expanded(
+              child: TextField(
+                controller: _trackingNumberCtrl,
+                textInputAction: TextInputAction.search,
+                textCapitalization: TextCapitalization.characters,
+                style: AppTextStyles.bodySmall.copyWith(fontSize: 13),
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  hintText: "input_tracking_number".tr(),
+                  hintStyle: AppTextStyles.bodySmall.copyWith(
+                    fontSize: 12,
+                    color: AppColors.neutral5,
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                ),
+                onSubmitted: (_) => _onSearch(context),
+              ),
+            ),
+            Container(
+              width: 34,
+              height: 34,
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: AppDimensions.smallBorderRadius,
+              ),
+              child: const Icon(
+                Icons.qr_code_scanner_rounded,
+                color: AppColors.onPrimary,
+                size: AppDimensions.smallIconSize,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildPromotionSlider() {
-    return Padding(
-      padding: AppDimensions.mediumPaddingHorizontal,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildHeroHeader(BuildContext context) {
+    return SizedBox(
+      height: _heroHeight,
+      child: Stack(
         children: [
-          PrimaryText(
-            'Chương trình khuyến mãi',
-            style: AppTextStyles.labelSmall,
-          ),
-          AppSpacing.vertical(AppDimensions.smallSpacing),
-          CarouselSlider(
-            options: CarouselOptions(
-              height: 120,
-              autoPlay: true,
-              enlargeCenterPage: false,
-              viewportFraction: 1,
+          const Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(gradient: AppColors.shopHomeGradBg),
             ),
-            items: _banners.map((banner) {
-              return ClipRRect(
-                borderRadius: AppDimensions.smallBorderRadius,
-                child: Image.asset(
-                  banner,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+          ),
+          Positioned(
+            left: -64,
+            right: -64,
+            bottom: 0,
+            child: Image.asset(
+              ImagePath.shopHomeHeaderOzoShipGenerated,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              alignment: Alignment.centerRight,
+            ),
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 72,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Color(0xCCFFFFFF), Colors.white],
+                  stops: [0, 0.72, 1],
                 ),
-              );
-            }).toList(),
+              ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.topCenter,
+            child: ShopAppBar(useDarkContent: true),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: AppDimensions.xSmallSpacing,
+            child: _buildTrackingInput(context),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHeaderWithBriefInfo(BuildContext context) {
+    return SizedBox(
+      height: _headerContentHeight,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          _buildHeroHeader(context),
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: -3,
+            child: ShopBriefInfo(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturePanel() {
+    final features = ShopHomeFeature.values;
+
+    return PrimaryPanel(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+      borderRadius: AppDimensions.largeBorderRadius,
+      child: Column(
+        children: [
+          _buildFeatureRow(features.take(4).toList()),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          _buildFeatureRow(features.skip(4).take(4).toList()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeatureRow(List<ShopHomeFeature> features) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: features
+          .map(
+            (feature) =>
+                Expanded(child: ShopHomeFeatureButton(feature: feature)),
+          )
+          .toList(),
     );
   }
 

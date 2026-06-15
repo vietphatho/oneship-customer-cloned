@@ -8,7 +8,6 @@ part 'complaint_list_response.g.dart';
 @freezed
 abstract class ComplaintListResponse with _$ComplaintListResponse {
   const factory ComplaintListResponse({
-    @JsonKey(name: "data") List<ComplaintModel>? data,
     @JsonKey(name: "items") List<ComplaintModel>? items,
     @JsonKey(name: "meta") BaseMetaResponse? meta,
   }) = _ComplaintListResponse;

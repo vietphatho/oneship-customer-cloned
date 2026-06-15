@@ -478,6 +478,57 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderCalculateFeeEvent(calculateFeeRequest));
   }
 
+  void completeCreateOrderForm({
+    required String customerName,
+    required String phoneNumber,
+    required String address,
+    int codAmount = 0,
+    required int weight,
+    int? height = 0,
+    int? width = 0,
+    int? length = 0,
+    String? note,
+    required List<SelectedProductEntity> selectedProducts,
+  }) {
+    final currentReq = state.request;
+    final draftReq = state.draftRequest;
+    final newReq = currentReq.copyWith(
+      customerName: customerName,
+      phone: phoneNumber,
+      province: draftReq.province,
+      ward: draftReq.ward,
+      fullAddress: address,
+      isNewAddress: draftReq.isNewAddress,
+      codAmount: codAmount,
+      serviceConfig: draftReq.serviceConfig,
+      detail: currentReq.detail?.copyWith(
+        weight: weight.toDouble(),
+        height: height,
+        width: width,
+        length: length,
+        note: note,
+      ),
+      selectedProducts: selectedProducts,
+    );
+
+    add(
+      CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),
+    );
+
+    final routingDistance =
+        state.routingToShopResource.data?.distance ?? newReq.router?.distance;
+    add(
+      CreateOrderCalculateFeeEvent(
+        CalculateDeliveryFeeRequest(
+          shopId: state.shopInfo.shopId ?? newReq.shopId,
+          distance: routingDistance,
+          serviceCode: newReq.serviceConfig?.serviceCode,
+          weight: newReq.detail?.weight?.toInt(),
+        ),
+      ),
+    );
+  }
+
   void changePickUpDate({DateTime? date, OrderPickUpSession? session}) {
     var draftRequest = state.draftRequest;
     add(

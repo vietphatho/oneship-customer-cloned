@@ -17,6 +17,38 @@ class ImagePath {
   static const String shopHomeAvatarBackground =
       'assets/images/shop_home_avatar_background.png';
   static const String shopHomeStore = 'assets/images/shop_home_store.png';
+  static const String shopHomeHeaderOzoShipGenerated =
+      'assets/images/shop_home_header_ozoship_generated_v3.png';
+  static const String shopHomePromotionOzoShipNoCtaGenerated =
+      'assets/images/shop_home_promotion_ozoship_no_cta_generated_v1.png';
+  static const String shopHomeAvatarOzoShipGenerated =
+      'assets/images/shop_home_avatar_ozoship_generated_v1.png';
+  static const String shopHomeOfferShippingGenerated =
+      'assets/images/shop_home_offer_shipping_generated_v1.png';
+  static const String shopHomeOfferSurchargeGenerated =
+      'assets/images/shop_home_offer_surcharge_generated_v1.png';
+  static const String shopHomeOfferFreeshipGenerated =
+      'assets/images/shop_home_offer_freeship_generated_v1.png';
+  static const String shopHomeNewsPartnerGenerated =
+      'assets/images/shop_home_news_partner_generated_v1.png';
+  static const String shopHomeNewsPolicyGenerated =
+      'assets/images/shop_home_news_policy_generated_v1.png';
+  static const String shopHomeIconCreateOrderGenerated =
+      'assets/images/shop_home_icon_create_order_generated_v1.png';
+  static const String shopHomeIconPackageGenerated =
+      'assets/images/shop_home_icon_package_generated_v1.png';
+  static const String shopHomeIconOrderProcessedGenerated =
+      'assets/images/shop_home_icon_order_processed_generated_v1.png';
+  static const String shopHomeIconPickupAddressGenerated =
+      'assets/images/shop_home_icon_pickup_address_generated_v1.png';
+  static const String shopHomeIconStaffGenerated =
+      'assets/images/shop_home_icon_staff_generated_v1.png';
+  static const String shopHomeIconShopGenerated =
+      'assets/images/shop_home_icon_shop_generated_v1.png';
+  static const String shopHomeIconSupportGenerated =
+      'assets/images/shop_home_icon_support_generated_v1.png';
+  static const String shopHomeIconSettingsGenerated =
+      'assets/images/shop_home_icon_settings_generated_v1.png';
   static const String profileAvatarBackground =
       'assets/images/profile_avatar_background.png';
   static const String profileAvatarUser =
@@ -52,6 +84,7 @@ class ImagePath {
   static const String iconCusLocation =
       'assets/images/icon_customer_location.png';
   static const String iconShopLocation = 'assets/images/icon_shop_location.png';
+  static const String moneyBag = 'assets/images/money_bag.png';
 
   //icon
   static const String iconCall = 'assets/icons/icon_call.svg';

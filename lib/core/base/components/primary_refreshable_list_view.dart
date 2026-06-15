@@ -15,6 +15,8 @@ class PrimaryRefreshabelListView extends StatelessWidget {
     this.onLoading,
     this.separatorBuilder,
     this.padding = AppDimensions.smallPaddingAll,
+    this.footerBottomSpacing = 0.0,
+    this.noMoreText,
   });
 
   final RefreshController controller;
@@ -22,11 +24,13 @@ class PrimaryRefreshabelListView extends StatelessWidget {
   final Widget Function(BuildContext context, int index)? separatorBuilder;
   final int itemCount;
   final EdgeInsetsGeometry padding;
+  final double footerBottomSpacing;
 
   final bool enablePullDown;
   final bool enablePullUp;
   final void Function()? onRefresh;
   final void Function()? onLoading;
+  final String? noMoreText;
 
   @override
   Widget build(BuildContext context) {
@@ -70,18 +74,21 @@ class PrimaryRefreshabelListView extends StatelessWidget {
         ),
       ),
       footer: CustomFooter(
-        height: 152,
+        height: 72 + footerBottomSpacing,
         builder: (context, mode) {
           final currentMode = mode ?? LoadStatus.loading;
-          return AnimatedSwitcher(
-            duration: Durations.short4,
-            reverseDuration: Durations.long1,
-            switchInCurve: Curves.easeIn,
-            switchOutCurve: Curves.easeOut,
-            transitionBuilder:
-                (child, animation) =>
-                    FadeTransition(opacity: animation, child: child),
-            child: _CustomFooter(key: ValueKey(currentMode), mode: currentMode),
+          return Container(
+            padding: EdgeInsets.only(bottom: footerBottomSpacing),
+            child: AnimatedSwitcher(
+              duration: Durations.short4,
+              reverseDuration: Durations.long1,
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
+              transitionBuilder:
+                  (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+              child: _CustomFooter(key: ValueKey(currentMode), mode: currentMode, noMoreText: noMoreText),
+            ),
           );
         },
       ),
@@ -100,30 +107,23 @@ class PrimaryRefreshabelListView extends StatelessWidget {
 }
 
 class _CustomFooter extends StatelessWidget {
-  const _CustomFooter({super.key, required this.mode});
+  const _CustomFooter({super.key, required this.mode, this.noMoreText});
 
   final LoadStatus mode;
+  final String? noMoreText;
 
   @override
   Widget build(BuildContext context) {
-    Widget child;
     switch (mode) {
       case LoadStatus.loading:
-        child = const _FooterLoading();
-        break;
+        return const _FooterLoading();
       case LoadStatus.failed:
-        child = const _FooterFailed();
-        break;
+        return const _FooterFailed();
       case LoadStatus.noMore:
-        child = const _FooterNoMore();
-        break;
+        return _FooterNoMore(text: noMoreText);
       default:
-        child = const SizedBox.shrink();
+        return const SizedBox.shrink();
     }
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 80),
-      child: child,
-    );
   }
 }
 
@@ -172,7 +172,9 @@ class _FooterFailed extends StatelessWidget {
 }
 
 class _FooterNoMore extends StatelessWidget {
-  const _FooterNoMore();
+  const _FooterNoMore({this.text});
+
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +189,7 @@ class _FooterNoMore extends StatelessWidget {
         ),
         AppSpacing.vertical(AppDimensions.xSmallSpacing),
         PrimaryText(
-          "no_more_data".tr(),
+          text ?? "no_more_data".tr(),
           style: AppTextStyles.bodySmall,
           color: AppColors.neutral6,
         ),

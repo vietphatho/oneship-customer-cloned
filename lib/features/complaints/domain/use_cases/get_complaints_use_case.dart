@@ -11,8 +11,11 @@ class GetComplaintsUseCase {
 
   Future<Resource<List<ComplaintEntity>>> call({
     required String category,
-    String? shopId,
+    required String shopId,
+    String? status,
+    int? page,
+    int? limit,
   }) {
-    return _repository.getComplaints(category: category, shopId: shopId);
+    return _repository.getComplaints(category: category, shopId: shopId, status: status, page: page, limit: limit);
   }
 }

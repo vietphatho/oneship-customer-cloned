@@ -36,9 +36,8 @@ class _ShopManagementPageState extends State<ShopManagementPage> {
       listeners: [
         BlocListener<ShopBloc, ShopState>(
           bloc: _shopBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.shopsResource != current.shopsResource,
+          listenWhen: (previous, current) =>
+              previous.shopsResource != current.shopsResource,
           listener: _listenLoadShopsState,
         ),
       ],
@@ -55,7 +54,6 @@ class _ShopManagementPageState extends State<ShopManagementPage> {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: PrimaryAppBar(
               title: "shop".tr(),
-              canPop: false,
               actions: [
                 IconButton(
                   onPressed: _onAddShop,
@@ -82,14 +80,12 @@ class _ShopManagementPageState extends State<ShopManagementPage> {
                       ),
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
-                      itemBuilder:
-                          (context, index) => ShopCard(
-                            index: index + 1,
-                            shop: state.shopsList[index],
-                          ),
-                      separatorBuilder:
-                          (context, index) =>
-                              AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                      itemBuilder: (context, index) => ShopCard(
+                        index: index + 1,
+                        shop: state.shopsList[index],
+                      ),
+                      separatorBuilder: (context, index) =>
+                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
                       itemCount: state.shopsList.length,
                     ),
                   ),

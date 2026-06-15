@@ -1,74 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_text_style.dart';
-import 'package:oneship_customer/core/base/components/primary_card.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ComplaintCard extends StatelessWidget {
-  final ComplaintEntity complaint;
-  final int index;
-  final VoidCallback? onDelete;
-
   const ComplaintCard({
     super.key,
     required this.complaint,
-    required this.index,
-    this.onDelete,
+    this.onTap,
   });
+
+  final ComplaintEntity complaint;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: PrimaryCard(
-        child: Column(
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.grey200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                PrimaryText(
-                  '${(index + 1).toString().padLeft(2, '0')} | ',
-                  style: AppTextStyles.titleLarge.copyWith(
-                    color: AppColors.outline,
-                  ),
-                ),
-                Expanded(
-                  child: PrimaryText(
+            _buildIcon(),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PrimaryText(
                     complaint.code,
-                    style: AppTextStyles.titleLarge,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _buildInfoRow('complaints.created_at'.tr(), DateFormat('dd/MM/yyyy').format(complaint.createdAt)),
-            _buildInfoRow('complaints.category'.tr(), 'complaints.${complaint.category}'.tr()),
-            _buildInfoRow('complaints.priority'.tr(), 'complaints.priority_${complaint.priority}'.tr()),
-            _buildInfoRow('complaints.title'.tr(), complaint.title),
-            _buildInfoRow('complaints.description'.tr(), complaint.description),
-            _buildInfoRow('complaints.reference_type'.tr(), 'complaints.reference_type_${complaint.referenceType}'.tr()),
-            _buildInfoRow('complaints.reference_code'.tr(), complaint.referenceCode),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                PrimaryText('complaints.status'.tr(), style: AppTextStyles.bodyMedium),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(complaint.status).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: PrimaryText(
-                    'complaints.status_${complaint.status}'.tr(),
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: _getStatusColor(complaint.status),
+                    style: AppTextStyles.labelLarge.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  _buildDetailRow('Đơn hàng:', '#${complaint.referenceCode}'),
+                  const SizedBox(height: 4),
+                  _buildDetailRow('Nội dung:', complaint.title),
+                  const SizedBox(height: 4),
+                  _buildDetailRow('Người gửi:', complaint.creatorName ?? 'N/A'),
+                  const SizedBox(height: 4),
+                  _buildDetailRow('Thời gian:', DateFormat('dd/MM/yyyy • HH:mm').format(complaint.createdAt.toLocal())),
+                ],
+              ),
             ),
           ],
         ),
@@ -76,29 +65,52 @@ class ComplaintCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          PrimaryText(label, style: AppTextStyles.bodyMedium),
-          PrimaryText(value, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500)),
-        ],
-      ),
+  Widget _buildDetailRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PrimaryText(
+          label,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppColors.grey600,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Expanded(
+          child: PrimaryText(
+            value,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.grey900,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status) {
+  Widget _buildIcon() {
+    String iconPath;
+
+    switch (complaint.status.toLowerCase()) {
+      case 'processing':
       case 'open':
-        return AppColors.primary;
+        iconPath = 'assets/icons/ic_status_processing.png';
+        break;
       case 'resolved':
-        return AppColors.success;
       case 'closed':
-        return AppColors.outline;
+        iconPath = 'assets/icons/ic_status_delivering.png';
+        break;
+      case 'cancelled':
+        iconPath = 'assets/icons/ic_status_cancelled.png';
+        break;
       default:
-        return AppColors.primary;
+        iconPath = 'assets/icons/ic_status_processing.png';
     }
+
+    return Image.asset(
+      iconPath,
+      width: 48,
+      height: 48,
+    );
   }
 }

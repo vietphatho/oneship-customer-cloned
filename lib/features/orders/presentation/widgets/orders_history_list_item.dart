@@ -20,7 +20,8 @@ class OrdersHistoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final address = order.fullAddress ?? order.fullAddressOld ?? "--";
-    final createdAt = DateTimeUtils.formatDateTime(order.createdAt) ?? "--";
+    final createdAt =
+        DateTimeUtils.formatDateTime(order.createdAt?.toLocal()) ?? "--";
     final cod = Utils.formatCurrencyWithUnit(order.codAmount);
 
     return PrimaryAnimatedPressableWidget(
@@ -50,6 +51,7 @@ class OrdersHistoryListItem extends StatelessWidget {
                           text: order.orderNumber ?? "--",
                           style: AppTextStyles.titleMedium.copyWith(
                             color: AppColors.neutral2,
+                            fontSize: 16,
                           ),
                         ),
                       ],

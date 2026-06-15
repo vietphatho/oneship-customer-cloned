@@ -15,6 +15,14 @@ enum BottomNavigationItem {
 }
 
 extension BottomNavigationItemExt on BottomNavigationItem {
+  static const _mapTitle = {
+    BottomNavigationItem.home: 'Trang chủ',
+    BottomNavigationItem.orderList: 'Đơn hàng',
+    BottomNavigationItem.createOrder: '',
+    BottomNavigationItem.finance: 'Thống kê',
+    BottomNavigationItem.menu: 'Menu',
+  };
+
   static const _mapIcon = {
     BottomNavigationItem.home: SvgPath.iconHome,
     BottomNavigationItem.orderList: SvgPath.iconOrderList,
@@ -32,6 +40,8 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     // BottomNavigationItem.shopManagement: ShopManagementPage(),
     BottomNavigationItem.menu: GeneralProfilePage(),
   };
+
+  String get title => _mapTitle[this]!;
 
   String get icon => _mapIcon[this]!;
 

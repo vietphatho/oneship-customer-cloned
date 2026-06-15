@@ -8,6 +8,7 @@ import 'package:oneship_customer/features/complaints/data/models/response/compla
 import 'package:oneship_customer/features/complaints/data/models/request/create_complaint_request.dart';
 import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
 import 'package:oneship_customer/features/complaints/domain/repositories/complaint_repository.dart';
+import 'package:oneship_customer/features/packages/data/models/response/packages_list_response.dart';
 
 @LazySingleton(as: ComplaintRepository)
 class ComplaintRepositoryImpl extends BaseRepository implements ComplaintRepository {
@@ -18,13 +19,16 @@ class ComplaintRepositoryImpl extends BaseRepository implements ComplaintReposit
   @override
   Future<Resource<List<ComplaintEntity>>> getComplaints({
     required String category,
-    String? shopId,
+    required String shopId,
+    String? status,
+    int? page,
+    int? limit,
   }) async {
     final response = await request<ComplaintListResponse, BaseError>(
-      () => _api.getComplaints(category: category, shopId: shopId),
+      () => _api.getComplaints(category: category, shopId: shopId, status: status, page: page, limit: limit),
     );
 
-    return response.parse((listResponse) => (listResponse.data ?? listResponse.items ?? []).map((e) => e.toEntity()).toList());
+    return response.parse((listResponse) => (listResponse.items ?? []).map((e) => e.toEntity()).toList());
   }
 
   @override
@@ -57,5 +61,40 @@ class ComplaintRepositoryImpl extends BaseRepository implements ComplaintReposit
   @override
   Future<Resource<bool>> deleteComplaint(String id) {
     return request<bool, BaseError>(() => _api.deleteComplaint(id));
+  }
+
+  @override
+  Future<Resource<dynamic>> getComplaintSummary({required String shopId}) {
+    return request<dynamic, BaseError>(
+      () => _api.getComplaintSummary(shopId: shopId),
+    );
+  }
+
+  @override
+  Future<Resource<dynamic>> getComplaintsTotal({
+    required String category,
+    required String shopId,
+    String? status,
+  }) async {
+    final response = await request<ComplaintListResponse, BaseError>(
+      () => _api.getComplaints(category: category, shopId: shopId, status: status, limit: 1, page: 1),
+    );
+    return response.parse((res) => res.meta?.total ?? 0);
+  }
+
+  @override
+  Future<Resource<dynamic>> getAssignedPackagesTotal({required String shopId}) async {
+    final response = await request<PackagesListResponse, BaseError>(
+      () => _api.getAssignedPackages(shopId: shopId, status: 'assigned', limit: 1),
+    );
+    return response.parse((res) => res.meta?.total ?? 0);
+  }
+
+  @override
+  Future<Resource<dynamic>> getActivePackagesTotal({required String shopId}) async {
+    final response = await request<PackagesListResponse, BaseError>(
+      () => _api.getActivePackages(shopId: shopId, limit: 10, page: 1),
+    );
+    return response.parse((res) => res.meta?.total ?? 0);
   }
 }

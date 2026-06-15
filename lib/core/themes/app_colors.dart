@@ -22,6 +22,12 @@ class AppColors {
   static const Color warning = Color(0xFFFF9800);
   static const Color error = Color(0xFFF44336);
   static const Color info = Color(0xFF2196F3);
+  static const Color warningBackground = Color(0xFFFFF8EE);
+  static const Color successBackground = Color(0xFFF1FCF7);
+  static const Color errorBackground = Color(0xFFFFF4F3);
+  static const Color warningForeground = Color(0xFFF58220);
+  static const Color successForeground = Color(0xFF12B76A);
+  static const Color errorForeground = Color(0xFFF44336);
 
   static const Color open = Color(0xFFFF9800);
   static const Color locked = Color(0xFF2196F3);

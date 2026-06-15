@@ -3,12 +3,11 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/views/confirmation_info_page_view.dart';
-import 'package:oneship_customer/features/orders/presentation/views/order_info_page_view.dart';
-import 'package:oneship_customer/features/orders/presentation/views/receiver_info_page_view.dart';
+import 'package:oneship_customer/features/orders/presentation/views/create_order_form_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class CreateOrderPage extends StatefulWidget {
@@ -64,15 +63,18 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                       : "create_order_title".tr(),
               confirmPop: true,
             ),
-            body: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                // const PickUpTimePageView(),
-                const ReceiverInfoPageView(),
-                const OrderInfoPageView(),
-                const ConfirmationInfoPageView(),
-              ],
+            // Previous create-order page is kept here for quick rollback.
+            // body: PageView(
+            //   controller: _pageController,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   children: [
+            //     const ReceiverInfoPageView(),
+            //     const OrderInfoPageView(),
+            //     const ConfirmationInfoPageView(),
+            //   ],
+            // ),
+            body: CreateOrderFormPage(
+              pageController: _pageController,
             ),
           );
         },
@@ -83,7 +85,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   void _handleListener(BuildContext context, CreateOrderState state) {
     if (state is CreateOrderRequestChangedState) {
       _pageController.animateToPage(
-        state.step.index,
+        state.step == CreateOrderStep.confirmation ? state.step.index : 0,
         duration: Constants.pageViewTransitionDur,
         curve: Curves.easeInOut,
       );

@@ -57,7 +57,7 @@ class _PrimaryBottomNavigationBarState
                     child: Container(
                       height: AppDimensions.bottomNavBarHeight,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.mediumSpacing,
+                        horizontal: AppDimensions.smallSpacing,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.background,
@@ -131,6 +131,10 @@ class _PrimaryBottomNavigationBarState
 
   void _onItemTapped(BottomNavigationItem item) {
     _shopMasterBloc.changeTab(item);
+    final String location = GoRouterState.of(context).matchedLocation;
+    if (location != RouteName.shopMasterPage) {
+      context.go(RouteName.shopMasterPage);
+    }
   }
 }
 
@@ -185,14 +189,28 @@ class _NavigationItem extends StatelessWidget {
     return PrimaryAnimatedPressableWidget(
       onTap: () => onTap?.call(item),
       child: Center(
-        child: SvgPicture.asset(
-          item.icon,
-          width: AppDimensions.largeIconSize,
-          height: AppDimensions.largeIconSize,
-          colorFilter: ColorFilter.mode(
-            isSelected ? AppColors.primary : AppColors.neutral7,
-            BlendMode.srcIn,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              item.icon,
+              width: AppDimensions.smallIconSize,
+              height: AppDimensions.smallIconSize,
+              colorFilter: ColorFilter.mode(
+                isSelected ? AppColors.primary : AppColors.neutral7,
+                BlendMode.srcIn,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.xxxSmallSpacing),
+            PrimaryText(
+              item.title,
+              style: AppTextStyles.labelSmall.copyWith(
+                fontSize: 10,
+                color: isSelected ? AppColors.primary : AppColors.neutral7,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
         ),
       ),
     );

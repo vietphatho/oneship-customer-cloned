@@ -128,7 +128,7 @@ class _Header extends StatelessWidget {
                   ),
                 ),
                 PrimaryText(
-                  DateTimeUtils.formatDateTime(ordDtl.createdAt),
+                  DateTimeUtils.formatDateTime(ordDtl.createdAt?.toLocal()),
                   style: AppTextStyles.bodySmall,
                 ),
                 AppSpacing.vertical(AppDimensions.xSmallSpacing),

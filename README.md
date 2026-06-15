@@ -21,3 +21,7 @@ gcloud auth application-default print-access-token
 
 flutter pub run build_runner build --delete-conflicting-outputs
 dart run build_runner build --delete-conflicting-outputs
+
+# build aab
+
+flutter build appbundle --release

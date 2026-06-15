@@ -10,12 +10,17 @@ abstract class ComplaintState with _$ComplaintState {
     required Resource<List<ComplaintEntity>> complaintsResource,
     required String selectedCategory,
     required Resource<bool> deleteResource,
+    required Resource<dynamic> summaryResource,
     String? shopId,
+    String? selectedStatus,
+    @Default(1) int page,
+    @Default(true) bool canLoadMore,
   }) = _ComplaintState;
 
   factory ComplaintState.initial() => ComplaintState(
         complaintsResource: Resource.loading(),
-        selectedCategory: 'complaints.order_issues',
+        selectedCategory: 'order_issue',
         deleteResource: Resource.loading(),
+        summaryResource: Resource.loading(),
       );
 }
