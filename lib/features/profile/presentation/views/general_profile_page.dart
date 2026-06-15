@@ -8,6 +8,7 @@ import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/app_version.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_header.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_info_section.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_menu_section.dart';
@@ -72,6 +73,8 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
                       color: AppColors.neutral5,
                     ),
                   ),
+                  const AppVersion(),
+                  AppSpacing.vertical(AppDimensions.largeSpacing),
                 ],
               ),
             ),
