@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oneship_customer/core/base/components/icon_label_tab_bar.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:flutter/material.dart';
 
 extension OrderStatusIconExt on OrderStatus {
   String get iconPath {
@@ -31,16 +31,15 @@ extension OrderStatusIconExt on OrderStatus {
     }
   }
 
-  Widget buildIcon({double width = 24, double height = 24}) {
+  Widget buildIcon({double width = 24, double height = 24, Color? color}) {
     final path = iconPath;
     if (path.endsWith('.svg')) {
-      return SvgPicture.asset(path, width: width, height: height);
+      return SvgPicture.asset(path, width: width, height: height, color: color);
     } else {
-      return Image.asset(path, width: width, height: height);
+      return Image.asset(path, width: width, height: height, color: color);
     }
   }
 }
-
 
 class OrderStatusTabBar extends StatelessWidget {
   const OrderStatusTabBar({
@@ -59,10 +58,14 @@ class OrderStatusTabBar extends StatelessWidget {
     return IconLabelTabBar(
       controller: controller,
       onTap: onTap,
-      items: items.map((status) => IconLabelTabItem(
-        label: status.value.tr(),
-        iconPath: status.iconPath,
-      )).toList(),
+      items: items
+          .map(
+            (status) => IconLabelTabItem(
+              label: status.value.tr(),
+              iconPath: status.iconPath,
+            ),
+          )
+          .toList(),
     );
   }
 }

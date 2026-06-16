@@ -51,6 +51,7 @@ class _PrimaryBottomNavigationBarState
                         offset: const Offset(0, -8),
                       ),
                     ],
+                    color: Colors.transparent,
                   ),
                   child: ClipPath(
                     clipper: _BottomNavigationBarClipper(),
@@ -154,6 +155,7 @@ class _CenterNavigationItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.primary,
           shape: BoxShape.circle,
+          boxShadow: PrimaryBoxShadows.bottomNavShadow,
         ),
         child: Center(
           child: SizedBox(

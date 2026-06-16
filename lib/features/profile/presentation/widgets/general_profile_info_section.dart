@@ -35,9 +35,9 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
     return PrimaryPanel(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(
-        AppDimensions.mediumSpacing,
-        AppDimensions.mediumSpacing,
-        AppDimensions.mediumSpacing,
+        AppDimensions.smallSpacing,
+        AppDimensions.smallSpacing,
+        AppDimensions.smallSpacing,
         AppDimensions.largeSpacing,
       ),
       child: Column(

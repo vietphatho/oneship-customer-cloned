@@ -41,7 +41,7 @@ class OrderInfoItem extends StatelessWidget {
         onTap: () => onTap?.call(order),
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.smallSpacing,
+            // horizontal: AppDimensions.smallSpacing,
             vertical: AppDimensions.smallSpacing,
           ),
           decoration: const BoxDecoration(
@@ -55,14 +55,16 @@ class OrderInfoItem extends StatelessWidget {
 
               // Circular Status Icon
               Container(
-                width: 48,
-                height: 48,
+                padding: EdgeInsets.all(AppDimensions.smallSpacing),
                 decoration: BoxDecoration(
                   color: bgColor,
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
-                child: statusEnum.buildIcon(width: 24, height: 24),
+                child: statusEnum.buildIcon(
+                  width: AppDimensions.smallIconSize,
+                  height: AppDimensions.smallIconSize,
+                ),
               ),
               const SizedBox(width: AppDimensions.smallSpacing),
 
@@ -152,7 +154,9 @@ class OrderInfoItem extends StatelessWidget {
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  order.fullAddress ?? order.address ?? "Không có địa chỉ",
+                                  order.fullAddress ??
+                                      order.address ??
+                                      "Không có địa chỉ",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -171,7 +175,9 @@ class OrderInfoItem extends StatelessWidget {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: Utils.formatCurrencyWithUnit(order.codAmount).replaceAll('đ', '').trim(),
+                                text: Utils.formatCurrencyWithUnit(
+                                  order.codAmount,
+                                ).replaceAll('đ', '').trim(),
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
@@ -204,49 +210,72 @@ class OrderInfoItem extends StatelessWidget {
   String _formatDateAndTime(DateTime? date) {
     if (date == null) return "--";
     final localDate = date.toLocal();
-    final dateStr = "${localDate.day.toString().padLeft(2, '0')}/${localDate.month.toString().padLeft(2, '0')}/${localDate.year}";
-    final timeStr = "${localDate.hour.toString().padLeft(2, '0')}:${localDate.minute.toString().padLeft(2, '0')}";
+    final dateStr =
+        "${localDate.day.toString().padLeft(2, '0')}/${localDate.month.toString().padLeft(2, '0')}/${localDate.year}";
+    final timeStr =
+        "${localDate.hour.toString().padLeft(2, '0')}:${localDate.minute.toString().padLeft(2, '0')}";
     return "$dateStr • $timeStr";
   }
 
   OrderStatus _parseStatus(String? statusStr) {
     if (statusStr == null) return OrderStatus.pending;
     switch (statusStr.toLowerCase()) {
-      case 'at_hub': return OrderStatus.atHub;
-      case 'pending': return OrderStatus.pending;
-      case 'processing': return OrderStatus.processing;
-      case 'batched': return OrderStatus.batched;
-      case 'shipping': return OrderStatus.shipping;
-      case 'delayed': return OrderStatus.delayed;
-      case 'delivered': return OrderStatus.delivered;
-      case 'cancelled': return OrderStatus.cancelled;
-      case 'returned': return OrderStatus.returned;
-      case 'return_in_progress': return OrderStatus.returnInProgress;
-      default: return OrderStatus.pending;
+      case 'at_hub':
+        return OrderStatus.atHub;
+      case 'pending':
+        return OrderStatus.pending;
+      case 'processing':
+        return OrderStatus.processing;
+      case 'batched':
+        return OrderStatus.batched;
+      case 'shipping':
+        return OrderStatus.shipping;
+      case 'delayed':
+        return OrderStatus.delayed;
+      case 'delivered':
+        return OrderStatus.delivered;
+      case 'cancelled':
+        return OrderStatus.cancelled;
+      case 'returned':
+        return OrderStatus.returned;
+      case 'return_in_progress':
+        return OrderStatus.returnInProgress;
+      default:
+        return OrderStatus.pending;
     }
   }
 
   Color _getBgColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.pending:
-      case OrderStatus.shipping: return AppColors.orange.withValues(alpha: 0.1);
-      case OrderStatus.cancelled: return AppColors.error.withValues(alpha: 0.1);
-      case OrderStatus.batched: return AppColors.green.withValues(alpha: 0.1);
+      case OrderStatus.shipping:
+        return AppColors.orange.withValues(alpha: 0.1);
+      case OrderStatus.cancelled:
+        return AppColors.error.withValues(alpha: 0.1);
+      case OrderStatus.batched:
+        return AppColors.green.withValues(alpha: 0.1);
       case OrderStatus.returned:
-      case OrderStatus.returnInProgress: return AppColors.investmentPurple.withValues(alpha: 0.1);
-      default: return AppColors.secondary.withValues(alpha: 0.1);
+      case OrderStatus.returnInProgress:
+        return AppColors.investmentPurple.withValues(alpha: 0.1);
+      default:
+        return AppColors.secondary.withValues(alpha: 0.1);
     }
   }
 
   Color _getTextColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.pending:
-      case OrderStatus.shipping: return AppColors.orange;
-      case OrderStatus.cancelled: return AppColors.error;
-      case OrderStatus.batched: return AppColors.green;
+      case OrderStatus.shipping:
+        return AppColors.orange;
+      case OrderStatus.cancelled:
+        return AppColors.error;
+      case OrderStatus.batched:
+        return AppColors.green;
       case OrderStatus.returned:
-      case OrderStatus.returnInProgress: return AppColors.investmentPurple;
-      default: return AppColors.secondary;
+      case OrderStatus.returnInProgress:
+        return AppColors.investmentPurple;
+      default:
+        return AppColors.secondary;
     }
   }
 }

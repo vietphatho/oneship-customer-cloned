@@ -76,20 +76,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        AbsorbPointer(
-                          child: PrimaryDropdown<UserRole>(
-                            label: "user_role".tr(),
-                            isRequired: true,
-                            menu: UserRole.values,
-                            initialValue: UserRole.shop,
-                            toLabel: (item) => item.roleName.tr(),
-                            requestFocusOnTap: false,
-                            onSelected: (value) {
-                              if (value != null) _userRole = value;
-                            },
-                          ),
-                        ),
-                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        // AbsorbPointer(
+                        //   child: PrimaryDropdown<UserRole>(
+                        //     label: "user_role".tr(),
+                        //     isRequired: true,
+                        //     menu: UserRole.values,
+                        //     initialValue: UserRole.shop,
+                        //     toLabel: (item) => item.roleName.tr(),
+                        //     requestFocusOnTap: false,
+                        //     onSelected: (value) {
+                        //       if (value != null) _userRole = value;
+                        //     },
+                        //   ),
+                        // ),
+                        // AppSpacing.vertical(AppDimensions.smallSpacing),
                         PrimaryTextField(
                           controller: usernameController,
                           label: "user_name".tr(),

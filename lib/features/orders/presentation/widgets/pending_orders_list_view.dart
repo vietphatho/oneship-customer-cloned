@@ -10,9 +10,8 @@ import 'package:oneship_customer/features/orders/data/models/response/orders_lis
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/pending_orders_action_card.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
-import 'package:oneship_customer/core/base/components/filter_dropdown.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -32,7 +31,6 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   // Selection & Sorting state
   final Set<String> _selectedOrderKeys = {};
   ProcessingOrdersSortOption _sortOption = ProcessingOrdersSortOption.newest;
-
 
   @override
   void initState() {
@@ -70,12 +68,17 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
           BlocBuilder<OrdersBloc, OrdersState>(
             bloc: _ordersBloc,
             buildWhen: (pre, cur) =>
-                pre.pendingOrdersList != cur.pendingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+                pre.pendingOrdersList != cur.pendingOrdersList ||
+                pre.processingOrdersFilters != cur.processingOrdersFilters,
             builder: (context, state) {
-              final visibleOrders = sortOrders(state.filteredPendingOrdersList, _sortOption);
+              final visibleOrders = sortOrders(
+                state.filteredPendingOrdersList,
+                _sortOption,
+              );
               if (visibleOrders.isEmpty) return const SizedBox.shrink();
 
-              final allSelected = _selectedOrderKeys.length == visibleOrders.length &&
+              final allSelected =
+                  _selectedOrderKeys.length == visibleOrders.length &&
                   visibleOrders.isNotEmpty;
 
               return Column(
@@ -111,9 +114,13 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
             child: BlocBuilder<OrdersBloc, OrdersState>(
               bloc: _ordersBloc,
               buildWhen: (pre, cur) =>
-                  pre.pendingOrdersList != cur.pendingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+                  pre.pendingOrdersList != cur.pendingOrdersList ||
+                  pre.processingOrdersFilters != cur.processingOrdersFilters,
               builder: (context, state) {
-                final orders = sortOrders(state.filteredPendingOrdersList, _sortOption);
+                final orders = sortOrders(
+                  state.filteredPendingOrdersList,
+                  _sortOption,
+                );
 
                 if (orders.isEmpty) {
                   return SafeArea(top: false, child: const PrimaryEmptyData());
@@ -136,8 +143,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                     showSelectionControl: true,
                     onTap: _onOrderTap,
                     onLongPress: _toggleOrderSelection,
-                    onRemoved:
-                        _selectedOrderKeys.isEmpty ? _onRemoved : null,
+                    onRemoved: _selectedOrderKeys.isEmpty ? _onRemoved : null,
                   ),
                   separatorBuilder: (context, index) =>
                       AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -206,8 +212,10 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
-    final visibleOrderKeys =
-        state.filteredPendingOrdersList.map(_orderKey).whereType<String>().toSet();
+    final visibleOrderKeys = state.filteredPendingOrdersList
+        .map(_orderKey)
+        .whereType<String>()
+        .toSet();
     _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
 
     switch (state.orderListByStatusResource.state) {
@@ -241,4 +249,3 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
     }
   }
 }
-

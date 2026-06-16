@@ -30,7 +30,9 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _shopMasterBloc.currentTab.index);
+    _pageController = PageController(
+      initialPage: _shopMasterBloc.currentTab.index,
+    );
   }
 
   @override
@@ -49,7 +51,7 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: AppDimensions.bottomNavBarHeight,
+                    // bottom: AppDimensions.bottomNavBarHeight,
                   ),
                   child: Column(
                     children: [

@@ -65,66 +65,68 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Container(
-            width: AppDimensions.getSize(context).width,
-            height: AppDimensions.getSize(context).height,
-            padding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.mediumSpacing,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // SafeArea(
-                //   child: AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-                // ),
-                // PrimaryText(
-                //   'delivery_solutions'.tr(),
-                //   style: AppTextStyles.titleXXXLarge.copyWith(
-                //     color: Colors.white,
-                //   ),
-                // ),
-                // AppSpacing.vertical(AppDimensions.smallSpacing),
-                // PrimaryText(
-                //   'company_slogan'.tr(),
-                //   style: AppTextStyles.titleLarge.copyWith(color: Colors.white),
-                // ),
-                Spacer(),
-                LiquidGlassView(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppDimensions.largeRadius),
-                    topRight: Radius.circular(AppDimensions.largeRadius),
-                  ),
-                  opacity: 0.2,
-                  blurness: 6,
-                  child: Padding(
-                    padding: AppDimensions.mediumPaddingAll,
-                    child: Column(
-                      children: [
-                        AppSpacing.vertical(AppDimensions.smallSpacing),
-                        Image.asset(
-                          ImagePath.oneshipLogo,
-                          height: AppDimensions.smallHeightButton,
-                        ),
-                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                        const OrderTrackingInputContainer(),
-                        AppSpacing.vertical(AppDimensions.xxLargeSpacing),
-                        _AuthActionButtons(),
-                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                        AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                        PrimaryText(
-                          'company_name'.tr(),
-                          style: AppTextStyles.titleMedium.copyWith(
-                            color: Colors.white,
+        SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Container(
+              width: AppDimensions.getSize(context).width,
+              height: AppDimensions.getSize(context).height,
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.mediumSpacing,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // SafeArea(
+                  //   child: AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+                  // ),
+                  // PrimaryText(
+                  //   'delivery_solutions'.tr(),
+                  //   style: AppTextStyles.titleXXXLarge.copyWith(
+                  //     color: Colors.white,
+                  //   ),
+                  // ),
+                  // AppSpacing.vertical(AppDimensions.smallSpacing),
+                  // PrimaryText(
+                  //   'company_slogan'.tr(),
+                  //   style: AppTextStyles.titleLarge.copyWith(color: Colors.white),
+                  // ),
+                  Spacer(),
+                  LiquidGlassView(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(AppDimensions.largeRadius),
+                      topRight: Radius.circular(AppDimensions.largeRadius),
+                    ),
+                    opacity: 0.2,
+                    blurness: 6,
+                    child: Padding(
+                      padding: AppDimensions.mediumPaddingAll,
+                      child: Column(
+                        children: [
+                          AppSpacing.vertical(AppDimensions.smallSpacing),
+                          Image.asset(
+                            ImagePath.oneshipLogo,
+                            height: AppDimensions.smallHeightButton,
                           ),
-                        ),
-                        AppSpacing.vertical(AppDimensions.largeSpacing),
-                      ],
+                          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                          const OrderTrackingInputContainer(),
+                          AppSpacing.vertical(AppDimensions.xxLargeSpacing),
+                          _AuthActionButtons(),
+                          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                          PrimaryText(
+                            'company_name'.tr(),
+                            style: AppTextStyles.titleMedium.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          AppSpacing.vertical(AppDimensions.largeSpacing),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

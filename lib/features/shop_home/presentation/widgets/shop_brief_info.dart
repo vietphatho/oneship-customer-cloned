@@ -14,9 +14,8 @@ class ShopBriefInfo extends StatelessWidget {
 
     return BlocBuilder<ShopBloc, ShopState>(
       bloc: shopBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.dailySummaryResource != current.dailySummaryResource,
+      buildWhen: (previous, current) =>
+          previous.dailySummaryResource != current.dailySummaryResource,
       builder: (context, state) {
         final data = state.dailySummaryResource.data;
 
@@ -43,9 +42,7 @@ class ShopBriefInfo extends StatelessWidget {
                   child: _InfoField(
                     label: "shop_home.today_cod".tr(),
                     icon: Icons.money_rounded,
-                    value: _formatAmount(
-                      data?.totalCodAmountToday,
-                    ),
+                    value: _formatAmount(data?.totalCodAmountToday),
                     unit: "shop_home.currency_unit".tr(),
                     color: AppColors.secondary,
                   ),
@@ -55,9 +52,7 @@ class ShopBriefInfo extends StatelessWidget {
                   child: _InfoField(
                     label: "shop_home.delivery_fee".tr(),
                     icon: Icons.attach_money_rounded,
-                    value: _formatAmount(
-                      data?.totalDeliveryFeeToday,
-                    ),
+                    value: _formatAmount(data?.totalDeliveryFeeToday),
                     unit: "shop_home.currency_unit".tr(),
                     color: AppColors.successForeground,
                   ),
@@ -96,36 +91,20 @@ class _InfoField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          height: 28,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(5),
-                child: Icon(
-                  icon,
-                  color: AppColors.onPrimary,
-                  size: 16,
-                ),
-              ),
-              AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-              Expanded(
-                child: PrimaryText(
-                  label,
-                  maxLine: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.labelXSmall,
-                  color: AppColors.neutral2,
-                ),
-              ),
-            ],
-          ),
+        Container(
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          padding: const EdgeInsets.all(5),
+          child: Icon(icon, color: AppColors.onPrimary, size: 16),
         ),
+        AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+        PrimaryText(
+          label,
+          // maxLine: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.labelXSmall,
+          color: AppColors.neutral2,
+        ),
+        AppSpacing.vertical(AppDimensions.xxSmallSpacing),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -138,7 +117,7 @@ class _InfoField extends StatelessWidget {
                 color: color,
               ),
             ),
-            AppSpacing.horizontal(AppDimensions.xxxSmallSpacing),
+            AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
             Padding(
               padding: const EdgeInsets.only(bottom: 1),
               child: PrimaryText(
@@ -162,7 +141,7 @@ class _VerticalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: AppDimensions.smallBorderStroke,
-      height: 50,
+      height: 68,
       margin: AppDimensions.xxSmallPaddingHorizontal,
       color: AppColors.neutral8,
     );

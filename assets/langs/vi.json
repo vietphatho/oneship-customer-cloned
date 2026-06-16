@@ -1107,5 +1107,6 @@
   "invalid_surcharge_value": "Giá trị dịch vụ cộng thêm không hợp lệ",
   "chargeable_weight": "Khối lượng tính cước",
   "delivery_fee": "Cước giao hàng",
-  "extra_services": "Phí dịch vụ thêm"
+  "extra_services": "Phí dịch vụ thêm",
+  "created_at": "Ngày tạo"
 }

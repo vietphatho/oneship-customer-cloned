@@ -5,10 +5,7 @@ import 'package:oneship_customer/core/themes/app_dimensions.dart';
 import 'package:oneship_customer/core/themes/app_text_style.dart';
 
 class IconLabelTabItem {
-  const IconLabelTabItem({
-    required this.label,
-    required this.iconPath,
-  });
+  const IconLabelTabItem({required this.label, required this.iconPath});
 
   final String label;
 

@@ -48,9 +48,9 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
             bottom: false,
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(
-                AppDimensions.largeSpacing,
-                AppDimensions.largeSpacing,
-                AppDimensions.largeSpacing,
+                AppDimensions.smallSpacing,
+                AppDimensions.smallSpacing,
+                AppDimensions.smallSpacing,
                 AppDimensions.safeBottomSpacing,
               ),
               child: Column(
@@ -66,14 +66,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
                   AppSpacing.vertical(AppDimensions.largeSpacing),
                   GeneralProfileLogoutButton(authBloc: _authBloc),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
-                  Center(
-                    child: PrimaryText(
-                      'Phiên bản 2.1.0',
-                      style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
-                      color: AppColors.neutral5,
-                    ),
-                  ),
-                  const AppVersion(),
+                  Center(child: const AppVersion()),
                   AppSpacing.vertical(AppDimensions.largeSpacing),
                 ],
               ),
@@ -81,20 +74,6 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
           ),
         ),
       ),
-    );
-  }
-
-  void _onDeleteAccountTap(BuildContext context) {
-    PrimaryDialog.showAlertDialog(
-      context,
-      message: "contact_admin_to_delete_account".tr(),
-    );
-  }
-
-  void _onDeactiveAccountTap(BuildContext context) {
-    PrimaryDialog.showAlertDialog(
-      context,
-      message: "contact_admin_to_deactive_account".tr(),
     );
   }
 
