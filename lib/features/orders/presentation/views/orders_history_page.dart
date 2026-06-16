@@ -7,16 +7,13 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
-import 'package:oneship_customer/features/finance/enum.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
-import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_state.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_content.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/orders_history_tab_bar.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/processed_orders_summary_card.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_master/presentation/widgets/primary_bottom_navigation_bar.dart';
 
@@ -32,7 +29,6 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
   final OrdersBloc _ordersBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
 
-  final FinanceOverviewBloc _financeBloc = getIt.get();
   final ShopMasterBloc _shopMasterBloc = getIt.get();
 
   late List<OrderStatus> _tabList;
@@ -50,14 +46,6 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
     _ordersBloc.fetchOrderHistory(OrderStatus.delivered);
     _ordersBloc.fetchOrderHistory(OrderStatus.returned);
 
-    final now = DateTime.now();
-    _financeBloc.fetchFinancialData(
-      filter: FinanceFilter.thirtyDay,
-      startDate: DateTime(now.year, now.month, now.day).subtract(const Duration(days: 30)),
-      endDate: DateTime(now.year, now.month, now.day),
-      shopId: shopId,
-      requestSource: FinanceRequestSource.page,
-    );
   }
 
   @override
@@ -83,7 +71,30 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
           IconButton(
             icon: const Icon(Icons.filter_alt_outlined, color: AppColors.neutral2),
             onPressed: () {
-              _ordersBloc.toggleOrdersHistoryFilters();
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (context) => Padding(
+                  padding: EdgeInsets.only(
+                    top: 16,
+                    bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: ProcessingOrdersFilterPanel(
+                    initialFilters: _ordersBloc.state.processingOrdersFilters,
+                    onApply: (filters) {
+                      _ordersBloc.applyProcessingOrdersFilters(filters);
+                      Navigator.pop(context);
+                    },
+                    onReset: () {
+                      _ordersBloc.applyProcessingOrdersFilters(ProcessingOrdersFilters.empty());
+                    },
+                  ),
+                ),
+              );
             },
           ),
         ],
@@ -105,19 +116,6 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
                 previous.orderDetailResource != current.orderDetailResource,
             listener: _listenLoadDetailOrder,
           ),
-          BlocListener<FinanceOverviewBloc, FinanceOverviewState>(
-            bloc: _financeBloc,
-            listenWhen: (previous, current) =>
-                previous.shopFinancialData.state != current.shopFinancialData.state,
-            listener: (context, state) {
-              if (state.shopFinancialData.state == Result.error) {
-                PrimaryDialog.showErrorDialog(
-                  context,
-                  message: "Lỗi tải doanh thu: ${state.shopFinancialData.message}",
-                );
-              }
-            },
-          ),
         ],
         child: Column(
           children: [
@@ -131,40 +129,36 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage>
                       onTap: _onTabChanged,
                     ),
                     
-                    BlocBuilder<OrdersBloc, OrdersState>(
-                      bloc: _ordersBloc,
-                      builder: (context, ordersState) {
-                        return BlocBuilder<FinanceOverviewBloc, FinanceOverviewState>(
-                          bloc: _financeBloc,
-                          builder: (context, financeState) {
-                            final data = financeState.shopFinancialData.data;
-                            final meta = ordersState.ordersHistoryResource.data?.meta;
-                            return ProcessedOrdersSummaryCard(
-                              totalOrders: meta?.total ?? 0,
-                              revenue: data?.netAmount ?? 0,
-                              returnedAmount: data?.totalOut ?? 0,
+                    AnimatedBuilder(
+                      animation: _tabCtrl,
+                      builder: (context, _) {
+                        return BlocBuilder<OrdersBloc, OrdersState>(
+                          bloc: _ordersBloc,
+                          builder: (context, state) {
+                            final currentStatus = _tabList[_tabCtrl.index];
+                            final totalCount = state.getHistoryOrdersCountForStatus(currentStatus);
+
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                left: AppDimensions.largeSpacing,
+                                right: AppDimensions.largeSpacing,
+                                top: AppDimensions.mediumSpacing,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: PrimaryText(
+                                  "Danh sách đơn hàng ($totalCount)",
+                                  style: AppTextStyles.titleMedium.copyWith(
+                                    color: AppColors.neutral1,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
                             );
                           },
                         );
                       },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: AppDimensions.largeSpacing,
-                        right: AppDimensions.largeSpacing,
-                        top: AppDimensions.mediumSpacing,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: PrimaryText(
-                          "Danh sách đơn hàng",
-                          style: AppTextStyles.titleMedium.copyWith(
-                            color: AppColors.neutral1,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
                     ),
                     Expanded(
                       child: OrdersHistoryContent(
