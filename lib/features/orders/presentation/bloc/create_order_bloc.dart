@@ -9,12 +9,12 @@ import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/fetch_visible_surcharges_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/update_ord_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
@@ -28,6 +28,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   // final UpdateProductQuantityUseCase _updateProductQuantityUseCase;
   final ValidateCreateOrderInfoUseCase _validateCreateOrderInfoUseCase;
   final UpdateOrdUseCase _updateOrdUseCase;
+  final FetchVisibleSurchargesUseCase _fetchVisibleSurchargesUseCase;
 
   CreateOrderBloc(
     this._repository,
@@ -35,21 +36,20 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     // this._updateProductQuantityUseCase,
     this._validateCreateOrderInfoUseCase,
     this._updateOrdUseCase,
-  ) : super(
-        CreateOrderRequestChangedState(
-          request: CreateOrderRequestEntity.empty(),
-          draftRequest: CreateOrderRequestEntity.empty(),
-          shopInfo: const BriefShopEntity(),
-          routingToShopResource: Resource.loading(),
-          productEntitySelected: [],
-        ),
-      ) {
+    this._fetchVisibleSurchargesUseCase,
+  ) : super(CreateOrderState.initial()) {
     on<CreateOrderInitShopEvent>(_onInitEvent);
+    on<CreateOrderFetchVisibleSurchargesEvent>(_onFetchVisibleSurchargesEvent);
     on<CreateOrderChangeRequestEvent>(_onRequestChangedEvent);
     on<CreateOrderChangePickUpTimeEvent>(_onPickUpDateChangedEvent);
     on<CreateOrderChangeCustomerInfoEvent>(_onCustomerInfoChangedEvent);
     on<CreateOrderChangeOrderInfoEvent>(_onOrderInfoChangedEvent);
     on<CreateOrderChangeAcceptTermsEvent>(_onChangedAcceptTerms);
+    on<CreateOrderToggleSurchargeEvent>(_onToggleSurchargeEvent);
+    on<CreateOrderUpdateSurchargeValueEvent>(_onUpdateSurchargeValueEvent);
+    on<CreateOrderSurchargeValidationChangedEvent>(
+      _onSurchargeValidationChangedEvent,
+    );
     on<CreateOrderCalculateFeeEvent>(_onCalculateDeliveryFeeEvent);
     on<CreateOrderGetRoutingToShopEvent>(_onGetRoutingEvent);
     on<CreateOrderCreateEvent>(_onCreateOrderEvent);
@@ -67,14 +67,51 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     // Preserve existing request data, only inject shopId if not already set
     final shopId = state.request.shopId ?? event.shop.shopId;
     emit(
-      CreateOrderRequestChangedState(
+      state.copyWith(
         shopInfo: event.shop,
         request: state.request.copyWith(shopId: shopId),
         draftRequest: state.draftRequest.copyWith(shopId: shopId),
-        step: state.step,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+        errorMessage: null,
+      ),
+    );
+    if (shopId != null && shopId.isNotEmpty) {
+      add(CreateOrderFetchVisibleSurchargesEvent(shopId));
+    }
+  }
+
+  FutureOr<void> _onFetchVisibleSurchargesEvent(
+    CreateOrderFetchVisibleSurchargesEvent event,
+    Emitter<CreateOrderState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        surchargeGroupsResource: Resource.loading(data: state.surchargeGroups),
+        errorMessage: null,
+      ),
+    );
+
+    final response = await _fetchVisibleSurchargesUseCase.call(
+      shopId: event.shopId,
+    );
+    final availableCodes =
+        response.data
+            ?.expand((group) => group.surcharges)
+            .map((surcharge) => surcharge.code)
+            .toSet() ??
+        <String>{};
+
+    emit(
+      state.copyWith(
+        surchargeGroupsResource: response,
+        selectedSurchargeCodes: state.selectedSurchargeCodes
+            .where(availableCodes.contains)
+            .toList(),
+        surchargeInputValues: Map.fromEntries(
+          state.surchargeInputValues.entries.where(
+            (entry) => availableCodes.contains(entry.key),
+          ),
+        ),
+        surchargeValidationErrors: const {},
       ),
     );
   }
@@ -84,15 +121,11 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     Emitter<CreateOrderState> emit,
   ) {
     emit(
-      CreateOrderRequestChangedState(
-        shopInfo: state.shopInfo,
+      state.copyWith(
         request: event.request,
         draftRequest: event.request,
         step: event.step,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
-        acceptTerms: state.acceptTerms,
-        updateOrdId: state.updateOrdId,
+        errorMessage: null,
       ),
     );
   }
@@ -102,19 +135,14 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     Emitter<CreateOrderState> emit,
   ) {
     emit(
-      CreateOrderPickUpTimeChangedState(
-        shopInfo: state.shopInfo,
-        request: state.request,
-        routingToShopResource: state.routingToShopResource,
-        pickUpDate: event.pickUpDate,
+      state.copyWith(
         draftRequest: state.draftRequest.copyWith(
           detail: state.draftRequest.detail?.copyWith(
             pickupDate: event.pickUpDate,
             pickupSession: event.pickUpSession,
           ),
         ),
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+        errorMessage: null,
       ),
     );
   }
@@ -124,10 +152,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     Emitter<CreateOrderState> emit,
   ) {
     emit(
-      CreateOrderCustomerInfoChangedState(
-        shopInfo: state.shopInfo,
-        request: state.request,
-        routingToShopResource: state.routingToShopResource,
+      state.copyWith(
         draftRequest: state.draftRequest.copyWith(
           customerName: event.customerName,
           phone: event.phoneNumber,
@@ -136,8 +161,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           fullAddress: event.address,
           isNewAddress: event.isNewAddress ?? false,
         ),
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+        errorMessage: null,
       ),
     );
   }
@@ -147,12 +171,10 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     Emitter<CreateOrderState> emit,
   ) {
     emit(
-      CreateOrderInfoChangedState(
-        shopInfo: state.shopInfo,
-        request: state.request,
-        routingToShopResource: state.routingToShopResource,
+      state.copyWith(
         draftRequest: state.draftRequest.copyWith(
           codAmount: event.cod,
+          packageSize: event.packageSize,
           detail: state.draftRequest.detail?.copyWith(
             weight: event.weight?.toDouble(),
             width: event.width,
@@ -162,8 +184,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           ),
           serviceConfig: event.serviceConfig,
         ),
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+        errorMessage: null,
       ),
     );
   }
@@ -173,33 +194,23 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     Emitter<CreateOrderState> emit,
   ) async {
     emit(
-      CreateOrderCalculatedFeeState(
-        Resource.loading(),
-        shopInfo: state.shopInfo,
-        request: state.request,
-        draftRequest: state.draftRequest,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+      state.copyWith(
+        calculatedFeeResource: Resource.loading(
+          data: state.calculatedFeeResource?.data,
+        ),
+        errorMessage: null,
       ),
     );
     final response = await _repository.calculateDeliveryFee(event.request);
-    final entity = response.parse<CalculatedDeliveryFeeEntity>(
-      (e) => CalculatedDeliveryFeeEntity.from(e),
-    );
 
     var newReq = state.request.copyWith(
       // deliveryFee: response.data?.deliveryFee,
     );
     emit(
-      CreateOrderCalculatedFeeState(
-        entity,
-        shopInfo: state.shopInfo,
+      state.copyWith(
+        calculatedFeeResource: response,
         request: newReq,
         draftRequest: newReq,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
       ),
     );
   }
@@ -208,16 +219,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     CreateOrderGetRoutingToShopEvent event,
     Emitter<CreateOrderState> emit,
   ) async {
-    emit(
-      CreateOrderGetRoutingToShopState(
-        request: state.request,
-        draftRequest: state.draftRequest,
-        shopInfo: state.shopInfo,
-        routingToShopResource: Resource.loading(),
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
-      ),
-    );
+    emit(state.copyWith(routingToShopResource: Resource.loading()));
     final response = await _repository.getRoutingToShop(
       shopCoordinates: event.shopCoor,
       destinationRefId: event.destinationRefId,
@@ -225,17 +227,14 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
     GetRoutingToShopResponse? data = response.data;
     emit(
-      CreateOrderGetRoutingToShopState(
+      state.copyWith(
         request: state.request.copyWith(
           router: data != null ? RoutingEntity.from(data) : null,
         ),
         draftRequest: state.draftRequest.copyWith(
           router: data != null ? RoutingEntity.from(data) : null,
         ),
-        shopInfo: state.shopInfo,
         routingToShopResource: response,
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
       ),
     );
   }
@@ -249,14 +248,11 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     final currentRequest = state.request;
 
     emit(
-      CreateOrderCreatedState(
-        Resource.loading(),
-        shopInfo: state.shopInfo,
+      state.copyWith(
+        createOrderResource: Resource.loading(),
         request: currentRequest,
-        draftRequest: state.draftRequest,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
         updateOrdId: updateOrdId,
+        errorMessage: null,
       ),
     );
 
@@ -265,7 +261,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       response = await _repository.createOrder(currentRequest.toDto());
     } else {
       // Strip system-managed fields that server rejects on update
-      // and filter products with invalid productId (empty string or null)
+      // and filter products with invalid productId (empty string)
       final cleanRequest = currentRequest.copyWith(
         paymentStatus: null,
         paymentMethod: null,
@@ -273,7 +269,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         externalOrderId: null,
         orderNumber: null,
         selectedProducts: currentRequest.selectedProducts
-            .where((p) => p.id != null && p.id!.isNotEmpty)
+            .where((p) => p.id.isNotEmpty)
             .toList(),
       );
       response = await _updateOrdUseCase.call(
@@ -283,15 +279,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     }
 
     emit(
-      CreateOrderCreatedState(
-        response,
-        shopInfo: state.shopInfo,
-        request: state.request,
-        draftRequest: state.draftRequest,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: updateOrdId,
-      ),
+      state.copyWith(createOrderResource: response, updateOrdId: updateOrdId),
     );
   }
 
@@ -317,37 +305,77 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     CreateOrderChangeAcceptTermsEvent event,
     Emitter<CreateOrderState> emit,
   ) {
+    emit(state.copyWith(acceptTerms: event.accept, errorMessage: null));
+  }
+
+  FutureOr<void> _onToggleSurchargeEvent(
+    CreateOrderToggleSurchargeEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    final selectedCodes = [...state.selectedSurchargeCodes];
+    final inputValues = Map<String, int>.from(state.surchargeInputValues);
+    var errors = Map<String, String>.from(state.surchargeValidationErrors);
+
+    if (event.isSelected) {
+      if (!selectedCodes.contains(event.code)) {
+        selectedCodes.add(event.code);
+      }
+    } else {
+      selectedCodes.remove(event.code);
+      inputValues.remove(event.code);
+      errors.remove(event.code);
+    }
+    errors = _buildSurchargeValidationErrors(
+      selectedCodes: selectedCodes,
+      inputValues: inputValues,
+    );
+
     emit(
-      CreateOrderRequestChangedState(
-        request: state.request,
-        draftRequest: state.draftRequest,
-        shopInfo: state.shopInfo,
-        routingToShopResource: state.routingToShopResource,
-        step: state.step,
-        acceptTerms: event.accept,
-        productEntitySelected: state.productEntitySelected,
-        updateOrdId: state.updateOrdId,
+      _applySurchargePayload(
+        state.copyWith(
+          selectedSurchargeCodes: selectedCodes,
+          surchargeInputValues: inputValues,
+          surchargeValidationErrors: errors,
+          errorMessage: null,
+        ),
       ),
     );
+  }
+
+  FutureOr<void> _onUpdateSurchargeValueEvent(
+    CreateOrderUpdateSurchargeValueEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    final inputValues = Map<String, int>.from(state.surchargeInputValues);
+    if (event.value == null) {
+      inputValues.remove(event.code);
+    } else {
+      inputValues[event.code] = event.value!;
+    }
+
+    final nextState = state.copyWith(
+      surchargeInputValues: inputValues,
+      surchargeValidationErrors: _buildSurchargeValidationErrors(
+        inputValues: inputValues,
+        selectedCodes: state.selectedSurchargeCodes,
+      ),
+      errorMessage: null,
+    );
+    emit(_applySurchargePayload(nextState));
+  }
+
+  FutureOr<void> _onSurchargeValidationChangedEvent(
+    CreateOrderSurchargeValidationChangedEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(state.copyWith(surchargeValidationErrors: event.errors));
   }
 
   FutureOr<void> _onErrorEvent(
     CreateOrderErrorEvent event,
     Emitter<CreateOrderState> emit,
   ) {
-    emit(
-      CreateOrderErrorState(
-        errorMessage: event.message,
-        request: state.request,
-        draftRequest: state.draftRequest,
-        shopInfo: state.shopInfo,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
-        acceptTerms: state.acceptTerms,
-        step: state.step,
-        updateOrdId: state.updateOrdId,
-      ),
-    );
+    emit(state.copyWith(errorMessage: event.message));
   }
 
   FutureOr<void> _onInitUpdateOrdEvent(
@@ -355,19 +383,51 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     Emitter<CreateOrderState> emit,
   ) {
     emit(
-      CreateOrderRequestChangedState(
+      state.copyWith(
         request: event.request,
         draftRequest: event.request,
-        shopInfo: state.shopInfo,
-        routingToShopResource: state.routingToShopResource,
-        productEntitySelected: state.productEntitySelected,
+        selectedSurchargeCodes: event.request.surchargeCodes,
+        surchargeInputValues: event.request.surchargeValues,
         updateOrdId: event.ordId,
+        errorMessage: null,
       ),
     );
   }
 
   void _error(String message) {
     add(CreateOrderErrorEvent(message));
+  }
+
+  CreateOrderState _applySurchargePayload(CreateOrderState source) {
+    return source.copyWith(
+      request: source.request.copyWith(
+        surchargeCodes: source.selectedSurchargeCodes,
+        surchargeValues: source.selectedSurchargeValues,
+      ),
+      draftRequest: source.draftRequest.copyWith(
+        surchargeCodes: source.selectedSurchargeCodes,
+        surchargeValues: source.selectedSurchargeValues,
+      ),
+    );
+  }
+
+  Map<String, String> _buildSurchargeValidationErrors({
+    required List<String> selectedCodes,
+    required Map<String, int> inputValues,
+  }) {
+    final errors = <String, String>{};
+    for (final code in selectedCodes) {
+      final surcharge = state.findSurcharge(code);
+      if (surcharge == null || !surcharge.requiresValue) continue;
+
+      final value = inputValues[code];
+      if (value == null) {
+        errors[code] = "validate.text_required";
+      } else if (!surcharge.isValidValue(value)) {
+        errors[code] = "invalid_surcharge_value";
+      }
+    }
+    return errors;
   }
 
   // void addProductToOrder(Map<String, ProductEntity> selectedMap) async {
@@ -392,8 +452,23 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   //   add(CreateOrderChangeProductEvent(newProduct));
   // }
 
+  void init() {
+    final shopId = state.shopInfo.shopId ?? state.request.shopId;
+    if (shopId != null && shopId.isNotEmpty) {
+      add(CreateOrderFetchVisibleSurchargesEvent(shopId));
+    }
+  }
+
   void setShop(BriefShopEntity shop) {
     add(CreateOrderInitShopEvent(shop));
+  }
+
+  void toggleSurcharge(String code, bool isSelected) {
+    add(CreateOrderToggleSurchargeEvent(code: code, isSelected: isSelected));
+  }
+
+  void updateSurchargeValue(String code, int? value) {
+    add(CreateOrderUpdateSurchargeValueEvent(code: code, value: value));
   }
 
   void backToStep(CreateOrderStep step) {
@@ -441,6 +516,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     int? height = 0,
     int? width = 0,
     int? length = 0,
+    PackageSize? packageSize,
     String? note,
     String? externalOrderId,
     String? orderSource,
@@ -453,6 +529,9 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       externalOrderId: externalOrderId,
       codAmount: codAmount,
       serviceConfig: draftReq.serviceConfig,
+      packageSize: packageSize ?? draftReq.packageSize,
+      surchargeCodes: state.selectedSurchargeCodes,
+      surchargeValues: state.selectedSurchargeValues,
       detail: currentReq.detail?.copyWith(
         weight: weight.toDouble(),
         height: height,
@@ -469,11 +548,14 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
     final routingDistance =
         state.routingToShopResource.data?.distance ?? newReq.router?.distance;
+
     final calculateFeeRequest = CalculateDeliveryFeeRequest(
       shopId: state.shopInfo.shopId ?? newReq.shopId,
       distance: routingDistance,
       serviceCode: newReq.serviceConfig?.serviceCode,
       weight: newReq.detail?.weight?.toInt(),
+      surcharges: state.selectedSurchargeCodes,
+      surchargesValues: state.selectedSurchargeValues,
     );
     add(CreateOrderCalculateFeeEvent(calculateFeeRequest));
   }
@@ -487,6 +569,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     int? height = 0,
     int? width = 0,
     int? length = 0,
+    PackageSize? packageSize,
     String? note,
     required List<SelectedProductEntity> selectedProducts,
   }) {
@@ -501,6 +584,9 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       isNewAddress: draftReq.isNewAddress,
       codAmount: codAmount,
       serviceConfig: draftReq.serviceConfig,
+      packageSize: packageSize ?? draftReq.packageSize,
+      surchargeCodes: state.selectedSurchargeCodes,
+      surchargeValues: state.selectedSurchargeValues,
       detail: currentReq.detail?.copyWith(
         weight: weight.toDouble(),
         height: height,
@@ -524,6 +610,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
           distance: routingDistance,
           serviceCode: newReq.serviceConfig?.serviceCode,
           weight: newReq.detail?.weight?.toInt(),
+          surcharges: state.selectedSurchargeCodes,
+          surchargesValues: state.selectedSurchargeValues,
         ),
       ),
     );
@@ -577,6 +665,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     int? length,
     int? width,
     int? height,
+    PackageSize? packageSize,
     String? note,
     ShippingServiceConfigEntity? serviceConfig,
   }) {
@@ -588,6 +677,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         length: length ?? draftRequest.detail?.length,
         width: width ?? draftRequest.detail?.width,
         height: height ?? draftRequest.detail?.height,
+        packageSize: packageSize ?? draftRequest.packageSize,
         note: note ?? draftRequest.detail?.note,
         serviceConfig: serviceConfig ?? draftRequest.serviceConfig,
       ),
@@ -609,6 +699,16 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   }
 
   void createOrder() {
+    final surchargeErrors = _buildSurchargeValidationErrors(
+      selectedCodes: state.selectedSurchargeCodes,
+      inputValues: state.surchargeInputValues,
+    );
+    if (surchargeErrors.isNotEmpty) {
+      add(CreateOrderSurchargeValidationChangedEvent(surchargeErrors));
+      _error("invalid_surcharge_value");
+      return;
+    }
+
     final validatedResult = _validateCreateOrderInfoUseCase
         .validateConfirmInfoStep(state.acceptTerms);
 

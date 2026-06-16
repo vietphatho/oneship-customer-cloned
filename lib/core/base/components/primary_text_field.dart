@@ -125,7 +125,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
           if (widget.label != null)
             Padding(
               padding: const EdgeInsets.only(
-                bottom: AppDimensions.xSmallSpacing,
+                bottom: AppDimensions.xxSmallSpacing,
               ),
               child: Row(
                 children: [

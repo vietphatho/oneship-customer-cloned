@@ -146,48 +146,47 @@ class _PrimaryAutoCompleteTextFieldState<T>
     if (renderBox == null) return;
     final size = renderBox.size;
     _overlayEntry = OverlayEntry(
-      builder:
-          (context) => Positioned(
-            width: size.width,
-            child: CompositedTransformFollower(
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(0, size.height + 4),
-              child: Material(
-                elevation: 4,
-                borderRadius: AppDimensions.largeBorderRadius,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 250),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: _options.length,
-                    itemBuilder: (context, index) {
-                      final item = _options[index];
-                      return ListTile(
-                        title: Text(
-                          widget.displayStringForOption != null
-                              ? widget.displayStringForOption!(item)
-                              : item.toString(),
-                        ),
-                        onTap: () {
-                          _controller?.text =
-                              widget.displayStringForOption?.call(item) ??
-                              item.toString();
-                          _selectedDisplay = _controller?.text;
-                          widget.onSelected?.call(item);
-                          setState(() {
-                            _options = [];
-                          });
-                          _removeOverlay();
-                        },
-                      );
+      builder: (context) => Positioned(
+        width: size.width,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(0, size.height + 4),
+          child: Material(
+            elevation: 4,
+            borderRadius: AppDimensions.largeBorderRadius,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 250),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: _options.length,
+                itemBuilder: (context, index) {
+                  final item = _options[index];
+                  return ListTile(
+                    title: Text(
+                      widget.displayStringForOption != null
+                          ? widget.displayStringForOption!(item)
+                          : item.toString(),
+                    ),
+                    onTap: () {
+                      _controller?.text =
+                          widget.displayStringForOption?.call(item) ??
+                          item.toString();
+                      _selectedDisplay = _controller?.text;
+                      widget.onSelected?.call(item);
+                      setState(() {
+                        _options = [];
+                      });
+                      _removeOverlay();
                     },
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ),
+        ),
+      ),
     );
     overlay.insert(_overlayEntry!);
   }
@@ -244,10 +243,11 @@ class _PrimaryAutoCompleteTextFieldState<T>
                 cursorColor: Colors.black,
                 textInputAction: widget.textInputAction,
                 textCapitalization: widget.textCapitalization,
-                style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontFamily: AppTextStyles.fontFamily,
-                ),
+                // style: TextStyle(
+                //   fontWeight: FontWeight.w300,
+                //   fontFamily: AppTextStyles.fontFamily,
+                // ),
+                style: AppTextStyles.bodyMedium,
                 validator: (value) {
                   if (widget.validator == null) return null;
                   final result = widget.validator!(value!);
@@ -289,17 +289,16 @@ class _PrimaryAutoCompleteTextFieldState<T>
                   errorBorder: _outlineField,
                   focusedErrorBorder: _outlineField,
                   disabledBorder: _outlineField,
-                  suffixIcon:
-                      _isLoading
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          )
-                          : widget.suffixIcon,
+                  suffixIcon: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        )
+                      : widget.suffixIcon,
                   prefixIcon: widget.prefixIcon,
                   prefix: widget.prefix,
                   suffixText: widget.suffixText,

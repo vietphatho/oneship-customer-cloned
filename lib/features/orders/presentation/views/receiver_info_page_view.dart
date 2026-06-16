@@ -24,7 +24,6 @@ class ReceiverInfoPageView extends StatefulWidget {
 class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
-  static final RegExp _vnPhoneRegex = RegExp(r'^0\d{9}$');
 
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _phoneCtrl = TextEditingController();
@@ -44,7 +43,14 @@ class _ReceiverInfoPageViewState extends State<ReceiverInfoPageView> {
   Widget build(BuildContext context) {
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
       bloc: _createOrderBloc,
-      buildWhen: (_, state) => state is CreateOrderCustomerInfoChangedState,
+      buildWhen: (previous, current) =>
+          previous.draftRequest.customerName !=
+              current.draftRequest.customerName ||
+          previous.draftRequest.phone != current.draftRequest.phone ||
+          previous.draftRequest.fullAddress !=
+              current.draftRequest.fullAddress ||
+          previous.draftRequest.province != current.draftRequest.province ||
+          previous.draftRequest.ward != current.draftRequest.ward,
       builder: (context, state) {
         // final phone = _phoneCtrl.text.trim();
         // final hasValidPhone = _vnPhoneRegex.hasMatch(phone);

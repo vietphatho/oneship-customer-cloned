@@ -199,9 +199,20 @@ extension PackageSizeExt on PackageSize {
     PackageSize.xxxLarge: "Size 3XL",
   };
 
+  static const _mapDimensions = {
+    PackageSize.small: "25x32x12",
+    PackageSize.medium: "50x40x50",
+    PackageSize.large: "60x50x60",
+    PackageSize.xLarge: "70x60x70",
+    PackageSize.xxLarge: "90x70x90",
+    PackageSize.xxxLarge: "90x70x90",
+  };
+
   String get requestValue => _mapValue[this]!;
 
   String get displayName => _mapName[this]!;
+
+  String get dimensions => _mapDimensions[this]!;
 }
 
 PackageSize? findPackageSize(String? value) {

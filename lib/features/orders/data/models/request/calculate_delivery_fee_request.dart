@@ -10,7 +10,8 @@ abstract class CalculateDeliveryFeeRequest with _$CalculateDeliveryFeeRequest {
     @JsonKey(name: "distance") double? distance,
     @JsonKey(name: "serviceCode") String? serviceCode,
     @JsonKey(name: "weight") int? weight,
-    @JsonKey(name: "surchargeCodes") @Default([]) List<dynamic> surcharges,
+    @JsonKey(name: "surchargeCodes") @Default([]) List<String> surcharges,
+    @JsonKey(name: "surchargeValues") Map<String, dynamic>? surchargesValues,
   }) = _CalculateDeliveryFeeRequest;
 
   factory CalculateDeliveryFeeRequest.fromJson(Map<String, dynamic> json) =>

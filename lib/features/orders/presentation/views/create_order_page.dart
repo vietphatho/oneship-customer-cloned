@@ -44,11 +44,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   Widget build(BuildContext context) {
     return BlocListener<CreateOrderBloc, CreateOrderState>(
       bloc: _createOrderBloc,
-      listenWhen:
-          (pre, cur) =>
-              pre.step != cur.step ||
-              pre.request != cur.request ||
-              cur is CreateOrderErrorState,
+      listenWhen: (pre, cur) =>
+          pre.step != cur.step || pre.errorMessage != cur.errorMessage,
       listener: _handleListener,
       child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
         bloc: _createOrderBloc,
@@ -57,10 +54,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
           final isUpdate = state.updateOrdId != null;
           return Scaffold(
             appBar: PrimaryAppBar(
-              title:
-                  isUpdate
-                      ? "update_order_title".tr()
-                      : "create_order_title".tr(),
+              title: isUpdate
+                  ? "update_order_title".tr()
+                  : "create_order_title".tr(),
               confirmPop: true,
             ),
             // Previous create-order page is kept here for quick rollback.
@@ -73,9 +69,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
             //     const ConfirmationInfoPageView(),
             //   ],
             // ),
-            body: CreateOrderFormPage(
-              pageController: _pageController,
-            ),
+            body: CreateOrderFormPage(pageController: _pageController),
           );
         },
       ),
@@ -83,13 +77,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   }
 
   void _handleListener(BuildContext context, CreateOrderState state) {
-    if (state is CreateOrderRequestChangedState) {
-      _pageController.animateToPage(
-        state.step == CreateOrderStep.confirmation ? state.step.index : 0,
-        duration: Constants.pageViewTransitionDur,
-        curve: Curves.easeInOut,
-      );
-    } else if (state is CreateOrderErrorState && state.errorMessage != null) {
+    _pageController.animateToPage(
+      state.step == CreateOrderStep.confirmation ? state.step.index : 0,
+      duration: Constants.pageViewTransitionDur,
+      curve: Curves.easeInOut,
+    );
+
+    if (state.errorMessage != null) {
       PrimaryDialog.showErrorDialog(context, message: state.errorMessage);
     }
   }

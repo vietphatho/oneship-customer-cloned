@@ -2,14 +2,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
+import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/views/confirmation_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_bottom_bar.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/create_order_cod_bottom_sheet.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_goods_section.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_product_selector.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_receiver_section.dart';
@@ -48,10 +49,9 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _phoneCtrl = TextEditingController();
   final TextEditingController _addressCtrl = TextEditingController();
-  final TextEditingController _codCtrl = TextEditingController();
   final TextEditingController _weightCtrl = TextEditingController();
-  final TextEditingController _dimensionsCtrl = TextEditingController();
   final TextEditingController _noteCtrl = TextEditingController();
+  PackageSize? _packageSize;
 
   @override
   void initState() {
@@ -60,14 +60,10 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
     _nameCtrl.text = request.customerName ?? "";
     _phoneCtrl.text = request.phone ?? "";
     _addressCtrl.text = request.fullAddress ?? "";
-    _codCtrl.text = Utils.formatCurrencyInput(request.codAmount);
     _weightCtrl.text = request.detail?.weight?.toInt().toString() ?? "";
-    _dimensionsCtrl.text = [
-      request.detail?.length,
-      request.detail?.width,
-      request.detail?.height,
-    ].whereType<num>().map((value) => value.toInt()).join(" x ");
     _noteCtrl.text = request.detail?.note ?? "";
+    _packageSize = request.packageSize ?? _findPackageSizeFromDimensions();
+    _createOrderBloc.init();
   }
 
   @override
@@ -75,9 +71,7 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
     _nameCtrl.dispose();
     _phoneCtrl.dispose();
     _addressCtrl.dispose();
-    _codCtrl.dispose();
     _weightCtrl.dispose();
-    _dimensionsCtrl.dispose();
     _noteCtrl.dispose();
     super.dispose();
   }
@@ -118,11 +112,10 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
                         title: "order_info".tr(),
                         child: CreateOrderGoodsSection(
                           weightController: _weightCtrl,
-                          dimensionsController: _dimensionsCtrl,
-                          codController: _codCtrl,
+                          packageSize: _packageSize,
                           noteController: _noteCtrl,
                           onChanged: _refresh,
-                          onCodTap: _showCodInput,
+                          onPackageSizeChanged: _changePackageSize,
                         ),
                       ),
                     ],
@@ -158,33 +151,33 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
     );
   }
 
-  Future<void> _showCodInput() async {
-    await showCreateOrderCodBottomSheet(
-      context,
-      controller: _codCtrl,
-    );
-    _refresh();
-  }
-
   void _refresh() => setState(() {});
 
+  void _changePackageSize(PackageSize? packageSize) {
+    setState(() => _packageSize = packageSize);
+  }
+
   bool _isValid(CreateOrderState state) {
+    bool isValidPhoneNum =
+        Validators.validatePhoneNumber(_phoneCtrl.text.trim()) == null;
     return _nameCtrl.text.trim().isNotEmpty &&
-        RegExp(r'^0\d{9}$').hasMatch(_phoneCtrl.text.trim()) &&
+        isValidPhoneNum &&
         _addressCtrl.text.trim().isNotEmpty &&
         state.draftRequest.province != null &&
         state.draftRequest.ward != null &&
-        Utils.parseCurrencyInput(_weightCtrl.text) > 0;
+        state.draftRequest.serviceConfig != null &&
+        Utils.parseCurrencyInput(_weightCtrl.text) > 0 &&
+        !state.hasInvalidSelectedSurcharges;
   }
 
   void _onNext() {
-    final dimensions = _parseDimensions();
+    final dimensions = _parseDimensions(_packageSize);
     _createOrderBloc.completeCreateOrderForm(
       customerName: _nameCtrl.text,
       phoneNumber: _phoneCtrl.text,
       address: _addressCtrl.text,
-      codAmount: Utils.parseCurrencyInput(_codCtrl.text),
       weight: Utils.parseCurrencyInput(_weightCtrl.text),
+      packageSize: _packageSize,
       length: dimensions.$1,
       width: dimensions.$2,
       height: dimensions.$3,
@@ -193,12 +186,27 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
     );
   }
 
-  (int?, int?, int?) _parseDimensions() {
+  PackageSize? _findPackageSizeFromDimensions() {
+    final request = _createOrderBloc.state.request;
+    final dimensions = [
+      request.detail?.length,
+      request.detail?.width,
+      request.detail?.height,
+    ].whereType<num>().map((value) => value.toInt()).join("x");
+
+    if (dimensions.isEmpty) return null;
+    return PackageSize.values.firstWhereOrNull(
+      (item) => item.dimensions == dimensions,
+    );
+  }
+
+  (int?, int?, int?) _parseDimensions(PackageSize? packageSize) {
     final values =
-        _dimensionsCtrl.text
-            .split(RegExp(r"[xX*]"))
+        packageSize?.dimensions
+            .split("x")
             .map((value) => int.tryParse(value.trim()))
-            .toList();
+            .toList() ??
+        [];
     return (
       values.isNotEmpty ? values[0] : null,
       values.length > 1 ? values[1] : null,

@@ -35,6 +35,7 @@ class AppTheme {
     dialogTheme: const DialogThemeData(
       barrierColor: AppColors.dialogBarrierColor,
     ),
+    fontFamily: AppTextStyles.fontFamily,
     primaryTextTheme: const TextTheme(bodyMedium: AppTextStyles.bodyMedium),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.background,
@@ -158,6 +159,7 @@ class AppTheme {
     dialogTheme: const DialogThemeData(
       barrierColor: AppColors.dialogBarrierColorDark,
     ),
+    fontFamily: AppTextStyles.fontFamily,
     primaryTextTheme: TextTheme(
       bodyMedium: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
     ),

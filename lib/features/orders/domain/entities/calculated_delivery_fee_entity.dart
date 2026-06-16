@@ -9,16 +9,46 @@ abstract class CalculatedDeliveryFeeEntity with _$CalculatedDeliveryFeeEntity {
     FeeEntity? baseFee,
     FeeEntity? surchargesFee,
     @Default(0) int deliveryFee,
-    @Default([]) List<dynamic> surcharges,
+    @Default([]) List<CalculatedSurchargeEntity> surcharges,
   }) = _CalculatedDeliveryFeeEntity;
 
   factory CalculatedDeliveryFeeEntity.from(CalculateDeliveryFeeResponse dto) {
     return CalculatedDeliveryFeeEntity(
       baseFee: dto.baseFee != null ? FeeEntity.from(dto.baseFee!) : null,
-      surchargesFee:
-          dto.surchargesFee != null ? FeeEntity.from(dto.surchargesFee!) : null,
+      surchargesFee: dto.surchargesFee != null
+          ? FeeEntity.from(dto.surchargesFee!)
+          : null,
       deliveryFee: dto.deliveryFee ?? 0,
-      surcharges: dto.surcharges ?? [],
+      surcharges: dto.surcharges.map(CalculatedSurchargeEntity.from).toList(),
+    );
+  }
+}
+
+@freezed
+abstract class CalculatedSurchargeEntity with _$CalculatedSurchargeEntity {
+  const factory CalculatedSurchargeEntity({
+    @Default("") String code,
+    @Default("") String name,
+    @Default(0) int fee,
+    num? feePercent,
+    @Default(0) int vatRate,
+    @Default(0) int vatAmount,
+    @Default(0) int totalAmount,
+    @Default("") String feeType,
+    int? value,
+  }) = _CalculatedSurchargeEntity;
+
+  factory CalculatedSurchargeEntity.from(CalculatedSurchargeResponse dto) {
+    return CalculatedSurchargeEntity(
+      code: dto.code ?? "",
+      name: dto.name ?? "",
+      fee: dto.fee ?? 0,
+      feePercent: dto.feePercent,
+      vatRate: dto.vatRate ?? 0,
+      vatAmount: dto.vatAmount ?? 0,
+      totalAmount: dto.totalAmount ?? 0,
+      feeType: dto.feeType ?? "",
+      value: dto.value,
     );
   }
 }

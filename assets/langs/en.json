@@ -67,5 +67,12 @@
     "sort_cod_lowest": "COD lowest",
     "sort_label": "Sort",
     "processing_orders_title": "Processing orders",
-    "find_shipper_count": "Find shipper ({count})"
+    "find_shipper_count": "Find shipper ({count})",
+    "loading": "Loading...",
+    "no_surcharge_services": "No surcharge services",
+    "enter_surcharge_value": "Enter value",
+    "invalid_surcharge_value": "Invalid surcharge value",
+    "chargeable_weight": "Chargeable weight",
+    "delivery_fee": "Delivery fee",
+    "extra_services": "Additional service fees"
 }

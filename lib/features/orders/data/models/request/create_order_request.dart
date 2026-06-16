@@ -9,6 +9,7 @@ abstract class CreateOrderRequest with _$CreateOrderRequest {
     @JsonKey(name: "externalId", includeIfNull: false) String? externalOrderId,
     @JsonKey(name: "serviceCode") String? serviceCode,
     @JsonKey(name: "surchargeCodes") List<String>? surchargeCodes,
+    @JsonKey(name: "surchargeValues") Map<String, int>? surchargeValues,
     @JsonKey(name: "orderNumber", includeIfNull: false) String? orderNumber,
     @JsonKey(name: "codAmount") int? codAmount,
     @JsonKey(name: "status", includeIfNull: false) String? status,
