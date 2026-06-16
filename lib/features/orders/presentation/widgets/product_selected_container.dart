@@ -25,6 +25,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               flex: 3,
@@ -67,15 +68,13 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
 
         BlocBuilder<ProductBloc, ProductState>(
           bloc: _productBloc,
-          buildWhen:
-              (pre, cur) =>
-                  pre.productsListSelected != cur.productsListSelected,
+          buildWhen: (pre, cur) =>
+              pre.productsListSelected != cur.productsListSelected,
           builder: (context, state) {
             return Column(
-              children:
-                  state.productsListSelected
-                      .map((product) => _productSelectedItem(product))
-                      .toList(),
+              children: state.productsListSelected
+                  .map((product) => _productSelectedItem(product))
+                  .toList(),
             );
           },
         ),
@@ -110,9 +109,8 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
             ),
             BlocBuilder<ProductBloc, ProductState>(
               bloc: _productBloc,
-              buildWhen:
-                  (pre, cur) =>
-                      pre.productsListSelected != cur.productsListSelected,
+              buildWhen: (pre, cur) =>
+                  pre.productsListSelected != cur.productsListSelected,
               builder: (context, state) {
                 return Expanded(
                   flex: 3,
@@ -130,9 +128,8 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
 
             BlocBuilder<ProductBloc, ProductState>(
               bloc: _productBloc,
-              buildWhen:
-                  (pre, cur) =>
-                      pre.productsListSelected != cur.productsListSelected,
+              buildWhen: (pre, cur) =>
+                  pre.productsListSelected != cur.productsListSelected,
               builder: (context, state) {
                 return Expanded(
                   flex: 2,
@@ -163,11 +160,8 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PrimaryText(
-                product.name,
-                style: AppTextStyles.bodyMedium,
-              ),
-              PrimaryText(product.sku, style: AppTextStyles.bodySmall),
+              PrimaryText(product.name, style: AppTextStyles.bodyXSmall),
+              PrimaryText(product.sku, style: AppTextStyles.bodyXSmall),
             ],
           ),
         ),
@@ -176,7 +170,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
           child: Center(
             child: PrimaryText(
               Utils.formatCurrencyWithUnit(product.price),
-              style: AppTextStyles.bodyMedium,
+              style: AppTextStyles.bodyXSmall,
             ),
           ),
         ),
@@ -207,8 +201,8 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                     }
                   },
                   child: Container(
-                    width: 20,
-                    height: 20,
+                    width: AppDimensions.xSmallIconSize,
+                    height: AppDimensions.xSmallIconSize,
                     decoration: BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
@@ -219,7 +213,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                 AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                 PrimaryText(
                   product.quantity.toString(),
-                  style: AppTextStyles.bodyMedium,
+                  style: AppTextStyles.bodyXSmall,
                 ),
                 AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                 InkWell(
@@ -230,8 +224,8 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
                     );
                   },
                   child: Container(
-                    width: 20,
-                    height: 20,
+                    width: AppDimensions.xSmallIconSize,
+                    height: AppDimensions.xSmallIconSize,
                     decoration: BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
@@ -248,7 +242,7 @@ class _ProductSelectedContainerState extends State<ProductSelectedContainer> {
           child: Center(
             child: PrimaryText(
               Utils.formatCurrencyWithUnit(product.calculatedTotalAmount),
-              style: AppTextStyles.bodyMedium,
+              style: AppTextStyles.bodyXSmall,
             ),
           ),
         ),

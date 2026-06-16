@@ -53,5 +53,12 @@
     "feature_routing": "Intuitive routing, fast KYC and delivery confirmation process",
     "personal_info_title": "Personal Information",
     "personal_info_description": "We need some details to help verify your identity.",
-    "driver_license_card": "Driver’s License"
+    "driver_license_card": "Driver’s License",
+    "loading": "Loading...",
+    "no_surcharge_services": "No surcharge services",
+    "enter_surcharge_value": "Enter value",
+    "invalid_surcharge_value": "Invalid surcharge value",
+    "chargeable_weight": "Chargeable weight",
+    "delivery_fee": "Delivery fee",
+    "extra_services": "Additional service fees"
 }

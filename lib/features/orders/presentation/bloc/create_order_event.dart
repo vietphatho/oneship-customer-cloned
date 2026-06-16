@@ -23,6 +23,12 @@ class CreateOrderInitShopEvent extends CreateOrderEvent {
   CreateOrderInitShopEvent(this.shop);
 }
 
+class CreateOrderFetchVisibleSurchargesEvent extends CreateOrderEvent {
+  final String shopId;
+
+  const CreateOrderFetchVisibleSurchargesEvent(this.shopId);
+}
+
 class UpdateOrderInitEvent extends CreateOrderEvent {
   final String ordId;
   final CreateOrderRequestEntity request;
@@ -71,6 +77,7 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
   final int? length;
   final int? width;
   final int? height;
+  final PackageSize? packageSize;
   final String? note;
   final ShippingServiceConfigEntity? serviceConfig;
 
@@ -80,6 +87,7 @@ class CreateOrderChangeOrderInfoEvent extends CreateOrderEvent {
     this.length,
     this.width,
     this.height,
+    this.packageSize,
     this.note,
     this.serviceConfig,
   });
@@ -89,6 +97,32 @@ class CreateOrderChangeAcceptTermsEvent extends CreateOrderEvent {
   final bool accept;
 
   CreateOrderChangeAcceptTermsEvent(this.accept);
+}
+
+class CreateOrderToggleSurchargeEvent extends CreateOrderEvent {
+  final String code;
+  final bool isSelected;
+
+  const CreateOrderToggleSurchargeEvent({
+    required this.code,
+    required this.isSelected,
+  });
+}
+
+class CreateOrderUpdateSurchargeValueEvent extends CreateOrderEvent {
+  final String code;
+  final int? value;
+
+  const CreateOrderUpdateSurchargeValueEvent({
+    required this.code,
+    required this.value,
+  });
+}
+
+class CreateOrderSurchargeValidationChangedEvent extends CreateOrderEvent {
+  final Map<String, String> errors;
+
+  const CreateOrderSurchargeValidationChangedEvent(this.errors);
 }
 
 class CreateOrderCreateEvent extends CreateOrderEvent {

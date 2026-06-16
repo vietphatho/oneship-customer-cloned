@@ -36,15 +36,6 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
       listener: _handleListener,
       builder: (context, state) {
         final request = state.request;
-        final isStepValid =
-            request.detail?.pickupDate != null &&
-            request.detail?.pickupSession != null &&
-            (request.customerName?.trim().isNotEmpty ?? false) &&
-            (request.phone?.trim().isNotEmpty ?? false) &&
-            (request.fullAddress?.trim().isNotEmpty ?? false) &&
-            request.province != null &&
-            request.ward != null &&
-            (request.detail?.weight ?? 0) > 0;
 
         return Column(
           children: [
@@ -97,10 +88,9 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                           ),
                           _InfoField(
                             label: "address_type".tr(),
-                            value:
-                                (request.isNewAddress ?? true)
-                                    ? "new_address".tr()
-                                    : "old_address".tr(),
+                            value: request.isNewAddress
+                                ? "new_address".tr()
+                                : "old_address".tr(),
                           ),
                           _InfoField(
                             label: "province".tr(),
@@ -205,8 +195,9 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
   }
 
   void _handleListener(BuildContext context, CreateOrderState state) {
-    if (state is CreateOrderCreatedState) {
-      switch (state.resource.state) {
+    final resource = state.createOrderResource;
+    if (resource != null) {
+      switch (resource.state) {
         case Result.loading:
           PrimaryDialog.showLoadingDialog(context);
           break;
@@ -214,10 +205,9 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showSuccessDialog(
             context,
-            message:
-                state.updateOrdId != null
-                    ? "update_order_successfully".tr()
-                    : "create_order_successfully".tr(),
+            message: state.updateOrdId != null
+                ? "update_order_successfully".tr()
+                : "create_order_successfully".tr(),
             onClosed: () {
               getIt.get<OrdersBloc>().fetchOrdersByStatus();
               context.pop();
@@ -226,21 +216,18 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(
-            context,
-            message: state.resource.message,
-          );
+          PrimaryDialog.showErrorDialog(context, message: resource.message);
       }
     }
   }
 }
 
 class _BottomActionButtons extends StatelessWidget {
-  const _BottomActionButtons({super.key});
+  const _BottomActionButtons();
 
   @override
   Widget build(BuildContext context) {
-    final CreateOrderBloc _createOrderBloc = getIt.get();
+    final CreateOrderBloc createOrderBloc = getIt.get();
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -253,22 +240,21 @@ class _BottomActionButtons extends StatelessWidget {
             child: PrimaryButton.outlined(
               label: "previous".tr(),
               onPressed: () {
-                _createOrderBloc.backToStep(CreateOrderStep.orderInfo);
+                createOrderBloc.backToStep(CreateOrderStep.orderInfo);
               },
             ),
           ),
           AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(
             child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
-              bloc: _createOrderBloc,
+              bloc: createOrderBloc,
               buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
               builder: (context, state) {
                 return SecondaryButton.filled(
-                  label:
-                      state.updateOrdId != null
-                          ? "update_order".tr()
-                          : "create_order".tr(),
-                  onPressed: _createOrderBloc.createOrder,
+                  label: state.updateOrdId != null
+                      ? "update_order".tr()
+                      : "create_order".tr(),
+                  onPressed: createOrderBloc.createOrder,
                 );
               },
             ),
@@ -280,10 +266,25 @@ class _BottomActionButtons extends StatelessWidget {
 }
 
 class _InfoField extends StatelessWidget {
-  const _InfoField({required this.label, required this.value});
+  const _InfoField({
+    required this.label,
+    required this.value,
+    this.subtitle,
+    this.labelColor,
+    this.valueColor,
+    this.labelWeight,
+    this.valueWeight,
+    this.valueStyle,
+  });
 
   final String label;
   final String? value;
+  final String? subtitle;
+  final Color? labelColor;
+  final Color? valueColor;
+  final FontWeight? labelWeight;
+  final FontWeight? valueWeight;
+  final TextStyle? valueStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -294,18 +295,31 @@ class _InfoField extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PrimaryText(
-            "$label: ",
-            style: AppTextStyles.bodyMedium,
-            color: AppColors.neutral5,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PrimaryText(
+                label,
+                style: AppTextStyles.bodyMedium,
+                color: labelColor ?? AppColors.neutral5,
+                fontWeight: labelWeight,
+              ),
+              if (subtitle != null)
+                PrimaryText(
+                  subtitle,
+                  style: AppTextStyles.bodyXSmall,
+                  color: AppColors.neutral5,
+                ),
+            ],
           ),
+          AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(
             child: PrimaryText(
               value ?? "--",
               textAlign: TextAlign.right,
-              style: AppTextStyles.bodyMedium,
-              color: AppColors.neutral2,
-              fontWeight: FontWeight.w600,
+              style: valueStyle ?? AppTextStyles.bodyMedium,
+              color: valueColor ?? AppColors.neutral2,
+              fontWeight: valueWeight ?? FontWeight.w600,
             ),
           ),
         ],
@@ -323,51 +337,138 @@ class _FeeSession extends StatelessWidget {
 
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
       bloc: createOrderBloc,
-      buildWhen: (_, state) => state is CreateOrderCalculatedFeeState,
+      buildWhen: (previous, current) =>
+          previous.calculatedFeeResource != current.calculatedFeeResource ||
+          previous.request != current.request,
       builder: (context, state) {
         var request = state.request;
-        if (state is! CreateOrderCalculatedFeeState) return SizedBox();
 
-        CalculatedDeliveryFeeEntity? fee = state.resource.data;
+        CalculatedDeliveryFeeEntity? fee = state.calculatedFeeResource?.data;
         final distance =
             state.routingToShopResource.data?.distance ??
             request.router?.distance;
+        final weight = request.detail?.weight;
+        final baseFee = fee?.baseFee;
+        final calculatedSurcharges =
+            fee?.surcharges ?? const <CalculatedSurchargeEntity>[];
+        final surchargeFee = fee?.surchargesFee;
+        final surchargeOriginalAmount = surchargeFee?.originalAmount ?? 0;
+        final temporaryTotal =
+            (baseFee?.originalAmount ?? 0) + surchargeOriginalAmount;
+        final deliveryTotal =
+            fee?.deliveryFee ??
+            (baseFee?.totalAmount ?? 0) + (surchargeFee?.totalAmount ?? 0);
+
         return PrimaryCard(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _InfoField(
-                label: "distance".tr(),
-                value: "${Utils.mToKm(distance)?.toStringAsFixed(1)} km",
-              ),
-              _InfoField(
-                label: "cod".tr(),
-                value: Utils.formatCurrencyWithUnit(request.codAmount),
-              ),
-              _InfoField(
-                label: "gross_fee".tr(),
-                value: Utils.formatCurrencyWithUnit(
-                  fee?.baseFee?.originalAmount,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: PrimaryText(
+                  "fee".tr(),
+                  style: AppTextStyles.labelLarge,
+                  color: AppColors.neutral2,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
+              AppSpacing.vertical(AppDimensions.smallSpacing),
               _InfoField(
-                label: "VAT (${fee?.baseFee?.vatRate ?? 0}%)",
-                value: Utils.formatCurrencyWithUnit(fee?.baseFee?.vatAmount),
+                label: "distance".tr(),
+                value: distance == null
+                    ? null
+                    : "${Utils.mToKm(distance)?.toStringAsFixed(1)} km",
               ),
               _InfoField(
-                label: "total".tr(),
-                value: Utils.formatCurrencyWithUnit(fee?.deliveryFee),
+                label: "chargeable_weight".tr(),
+                value: weight != null ? "${weight.toInt()} gr" : "--",
               ),
-              // _InfoField(
-              //   label: "total".tr(),
-              //   value: Utils.formatCurrencyWithUnit(
-              //     ( ?? 0) +
-              //         (state.resource.data?.vat ?? 0),
-              //   ),
-              // ),
+              _InfoField(
+                label: _withPercent("delivery_fee".tr(), baseFee?.vatRate),
+                value: Utils.formatCurrencyWithUnit(baseFee?.originalAmount),
+              ),
+              if (calculatedSurcharges.isNotEmpty) ...[
+                const Divider(color: AppColors.neutral8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: PrimaryText(
+                    "extra_services".tr(),
+                    style: AppTextStyles.bodyMedium,
+                    color: AppColors.neutral2,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                ...calculatedSurcharges.map(
+                  (surcharge) =>
+                      _CalculatedSurchargeFeeRow(surcharge: surcharge),
+                ),
+              ],
+              const Divider(color: AppColors.neutral8),
+              _InfoField(
+                label: "temporary_total".tr(),
+                value: Utils.formatCurrencyWithUnit(temporaryTotal),
+              ),
+              if ((surchargeFee?.vatAmount ?? 0) > 0)
+                _InfoField(
+                  label: _withPercent("VAT", surchargeFee?.vatRate),
+                  value: Utils.formatCurrencyWithUnit(surchargeFee?.vatAmount),
+                ),
+              if ((baseFee?.vatAmount ?? 0) > 0)
+                _InfoField(
+                  label: _withPercent("VAT", baseFee?.vatRate),
+                  value: Utils.formatCurrencyWithUnit(baseFee?.vatAmount),
+                ),
+              _InfoField(
+                label: "include_vat".tr(),
+                subtitle: request.payer.nameValue.tr(),
+                value: Utils.formatCurrencyWithUnit(deliveryTotal),
+                labelColor: AppColors.neutral2,
+                valueColor: AppColors.neutral2,
+                labelWeight: FontWeight.w700,
+                valueWeight: FontWeight.w700,
+                valueStyle: AppTextStyles.labelMedium,
+              ),
+              const Divider(color: AppColors.neutral8),
+              _InfoField(
+                label: "cod".tr(),
+                value: Utils.formatCurrencyWithUnit(state.codAmount),
+                labelColor: AppColors.neutral2,
+                valueColor: AppColors.neutral2,
+                labelWeight: FontWeight.w700,
+                valueWeight: FontWeight.w700,
+              ),
+              _InfoField(
+                label: "total_collect_amount".tr(),
+                value: Utils.formatCurrencyWithUnit(state.totalCollectAmount),
+                labelColor: AppColors.primary,
+                valueColor: AppColors.primary,
+                labelWeight: FontWeight.w700,
+                valueWeight: FontWeight.w700,
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  String _withPercent(String label, int? percent) {
+    if (percent == null || percent <= 0) return label;
+    return "$label ($percent%)";
+  }
+}
+
+class _CalculatedSurchargeFeeRow extends StatelessWidget {
+  const _CalculatedSurchargeFeeRow({required this.surcharge});
+
+  final CalculatedSurchargeEntity surcharge;
+
+  @override
+  Widget build(BuildContext context) {
+    return _InfoField(
+      label: "${surcharge.name} (${surcharge.vatRate}%)",
+      value: Utils.formatCurrencyWithUnit(surcharge.totalAmount),
     );
   }
 }

@@ -1008,7 +1008,7 @@
   "pick_up_session": "Thời gian hẹn lấy",
   "fee": "Cước phí",
   "exclude_vat": "Tạm tính (Chưa VAT)",
-  "include_vat": "Tổng cước phí giao hàng (Đã gồm VAT)",
+  "include_vat": "Tổng cước phí giao hàng \n(Đã gồm VAT)",
   "total_collect_amount": "Tổng tiền thu người nhận",
   "shipper_info": "Thông tin shipper",
   "shipper_id": "Mã shipper",
@@ -1063,5 +1063,12 @@
   "contact_admin_to_deactive_account": "Vui lòng liên hệ quản trị viên để được hỗ trợ vô hiện hoá tài khoản\nnhut.nguyen@onexway.io",
   "deactive_account": "Vô hiệu hoá tài khoản",
   "do_you_want_to_delete_account": "Bạn có chắc chắn muốn xoá tài khoản này không?",
-  "account_deleted": "Tài khoản đã xoá"
+  "account_deleted": "Tài khoản đã xoá",
+  "loading": "Đang tải...",
+  "no_surcharge_services": "Không có dịch vụ cộng thêm",
+  "enter_surcharge_value": "Nhập giá trị",
+  "invalid_surcharge_value": "Giá trị dịch vụ cộng thêm không hợp lệ",
+  "chargeable_weight": "Khối lượng tính cước",
+  "delivery_fee": "Cước giao hàng",
+  "extra_services": "Phí dịch vụ thêm"
 }

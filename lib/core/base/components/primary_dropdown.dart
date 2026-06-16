@@ -55,7 +55,7 @@ class PrimaryDropdown<T> extends StatelessWidget {
                     const PrimaryText(" *", color: AppColors.primary),
                 ],
               ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xxSmallSpacing),
             DropdownMenu<T>(
               enabled: enabled,
               requestFocusOnTap: requestFocusOnTap,

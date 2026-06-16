@@ -7,13 +7,14 @@ import 'package:oneship_customer/features/orders/data/models/request/calculate_d
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/validate_ord_at_hub_request.dart';
-import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
+import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/products_list_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/surcharge_entity.dart';
 
 abstract class OrdersRepository extends BaseRepository {
   Future<Resource<OrdersListResponse>> fetchOrdersByStatus({
@@ -33,9 +34,13 @@ abstract class OrdersRepository extends BaseRepository {
     required String destinationRefId,
   });
 
-  Future<Resource<CalculateDeliveryFeeResponse>> calculateDeliveryFee(
+  Future<Resource<CalculatedDeliveryFeeEntity>> calculateDeliveryFee(
     CalculateDeliveryFeeRequest requestBody,
   );
+
+  Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
+    required String shopId,
+  });
 
   Future<Resource> createOrder(CreateOrderRequest requestBody);
 

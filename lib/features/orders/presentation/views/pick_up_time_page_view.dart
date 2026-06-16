@@ -63,8 +63,8 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
                 isRequired: true,
                 initialDateTime: request.detail?.pickupDate,
                 firstDate: DateTime.now(),
-                onChanged:
-                    (date) => _createOrderBloc.changePickUpDate(date: date),
+                onChanged: (date) =>
+                    _createOrderBloc.changePickUpDate(date: date),
               ),
               AppSpacing.vertical(AppDimensions.smallSpacing),
               PrimaryDropdown(
@@ -74,16 +74,16 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
                 menu: OrderPickUpSession.values,
                 hintText: "select_time".tr(),
                 toLabel: (item) => item.label.tr(),
-                onSelected:
-                    (value) =>
-                        _createOrderBloc.changePickUpDate(session: value),
+                onSelected: (value) =>
+                    _createOrderBloc.changePickUpDate(session: value),
               ),
               const Spacer(),
               SafeArea(
                 child: SecondaryButton.filled(
                   label: "next".tr(),
-                  onPressed:
-                      isStepValid ? _createOrderBloc.completeDateStep : null,
+                  onPressed: isStepValid
+                      ? _createOrderBloc.completeDateStep
+                      : null,
                 ),
               ),
             ],
@@ -93,7 +93,5 @@ class _PickUpTimePageViewState extends State<PickUpTimePageView> {
     );
   }
 
-  void _handleListener(BuildContext context, CreateOrderState state) {
-    if (state is CreateOrderPickUpTimeChangedState) {}
-  }
+  void _handleListener(BuildContext context, CreateOrderState state) {}
 }
