@@ -40,6 +40,8 @@ class RouteName {
   static const String changeSecondaryPasswordPage =
       '/change_secondary_password';
   static const String ordersHistoryPage = '/shop_master/orders_history';
+  static const String supportPage = '/support';
+  static const String supportCategoryPage = '/support/category';
   static const String complaintPage = '/complaints';
   static const String createComplaintPage = '/complaints/create';
   static const String complaintDetailPage = '/complaints/detail';
