@@ -11,6 +11,8 @@ class ResolveOrdersByStatusUseCase {
     required OrdersByStatusLists current,
   }) {
     switch (status) {
+      case OrderStatus.allProcessing:
+        return current.copyWith(allProcessingOrdersList: orders);
       case OrderStatus.atHub:
         return current.copyWith(atHubOrdersList: orders);
       case OrderStatus.pending:
@@ -38,6 +40,10 @@ class ResolveOrdersByStatusUseCase {
     required OrdersByStatusLists current,
   }) {
     switch (status) {
+      case OrderStatus.allProcessing:
+        return current.copyWith(
+          allProcessingOrdersList: [...current.allProcessingOrdersList, ...orders],
+        );
       case OrderStatus.atHub:
         return current.copyWith(
           atHubOrdersList: [...current.atHubOrdersList, ...orders],

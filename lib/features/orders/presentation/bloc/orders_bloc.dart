@@ -22,6 +22,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/validate_ord_a
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_history_filters.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
 
 @lazySingleton
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
@@ -54,6 +55,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     // on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterAppliedEvent>(_onApplyOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterClearedEvent>(_onClearOrdersHistoryFilterEvent);
+    on<ProcessingOrdersFilterAppliedEvent>(_onApplyProcessingOrdersFilterEvent);
   }
 
   final FetchOrdersByStatusUseCase _fetchOrdersByStatusUseCase;
@@ -97,6 +99,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       status: _currentOrderStatus,
       orders: response.data?.data ?? [],
       current: OrdersByStatusLists(
+        allProcessingOrdersList: state.allProcessingOrdersList,
         atHubOrdersList: state.atHubOrdersList,
         pendingOrdersList: state.pendingOrdersList,
         processingOrdersList: state.processingOrdersList,
@@ -111,6 +114,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(
       state.copyWith(
         orderListByStatusResource: response,
+        allProcessingOrdersList: ordersByStatus.allProcessingOrdersList,
         atHubOrdersList: ordersByStatus.atHubOrdersList,
         pendingOrdersList: ordersByStatus.pendingOrdersList,
         processingOrdersList: ordersByStatus.processingOrdersList,
@@ -296,6 +300,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       status: _currentOrderStatus,
       orders: response.data?.data ?? [],
       current: OrdersByStatusLists(
+        allProcessingOrdersList: state.allProcessingOrdersList,
         atHubOrdersList: state.atHubOrdersList,
         pendingOrdersList: state.pendingOrdersList,
         processingOrdersList: state.processingOrdersList,
@@ -310,6 +315,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(
       state.copyWith(
         orderListByStatusResource: response,
+        allProcessingOrdersList: ordersByStatus.allProcessingOrdersList,
         atHubOrdersList: ordersByStatus.atHubOrdersList,
         pendingOrdersList: ordersByStatus.pendingOrdersList,
         processingOrdersList: ordersByStatus.processingOrdersList,
@@ -460,6 +466,17 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   void clearOrdersHistoryFilters() {
     add(const OrdersHistoryFilterClearedEvent());
+  }
+
+  void applyProcessingOrdersFilters(ProcessingOrdersFilters filters) {
+    add(ProcessingOrdersFilterAppliedEvent(filters));
+  }
+
+  FutureOr<void> _onApplyProcessingOrdersFilterEvent(
+    ProcessingOrdersFilterAppliedEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    emit(state.copyWith(processingOrdersFilters: event.filters));
   }
 
   void init(String shopId) {

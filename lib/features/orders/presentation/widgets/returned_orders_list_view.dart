@@ -8,7 +8,8 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class ReturnedOrdersListView extends StatefulWidget {
@@ -21,6 +22,10 @@ class ReturnedOrdersListView extends StatefulWidget {
 class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
   final OrdersBloc _ordersBloc = getIt.get();
   final RefreshController _refreshController = RefreshController();
+
+  // Selection & Sorting state
+  final Set<String> _selectedOrderKeys = {};
+  ProcessingOrdersSortOption _sortOption = ProcessingOrdersSortOption.newest;
 
   @override
   void initState() {
@@ -49,15 +54,38 @@ class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
       child: BlocBuilder<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         buildWhen: (pre, cur) =>
-            pre.returnedOrdersList != cur.returnedOrdersList,
+            pre.returnedOrdersList != cur.returnedOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
         builder: (context, state) {
-          List<OrderInfo> orders = state.returnedOrdersList;
+          List<OrderInfo> orders = sortOrders(state.filteredReturnedOrdersList, _sortOption);
 
           if (orders.isEmpty) {
             return SafeArea(top: false, child: const PrimaryEmptyData());
           }
 
-          return PrimaryRefreshabelListView(
+          return Column(
+            children: [
+              ProcessingOrdersSortSelectBar(
+                totalCount: orders.length,
+                selectedCount: _selectedOrderKeys.length,
+                isAllSelected: _selectedOrderKeys.length == orders.length && orders.isNotEmpty,
+                sortOption: _sortOption,
+                onSelectAll: (val) {
+                  setState(() {
+                    if (val == true) {
+                      _selectedOrderKeys.addAll(orders.map(_orderKey).whereType<String>());
+                    } else {
+                      _selectedOrderKeys.clear();
+                    }
+                  });
+                },
+                onSortChanged: (val) {
+                  if (val != null) {
+                    setState(() => _sortOption = val);
+                  }
+                },
+              ),
+              Expanded(
+                child: PrimaryRefreshabelListView(
             controller: _refreshController,
             onRefresh: _onRefresh,
             onLoading: _onLoading,
@@ -67,13 +95,20 @@ class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
               horizontal: AppDimensions.smallSpacing,
             ),
             itemCount: orders.length,
-            itemBuilder: (context, index) => OrderInfoItem(
-              index: index + 1,
-              order: orders[index],
-              onTap: _ordersBloc.openOrderDetail,
-            ),
+            itemBuilder: (context, index) => SelectableOrderInfoItem(
+                    index: index + 1,
+                    order: orders[index],
+                    isSelected: _isSelected(orders[index]),
+                    showSelectionControl: true,
+                    onTap: _onOrderTap,
+                    onLongPress: _toggleOrderSelection,
+                    
+                  ),
             separatorBuilder: (context, index) =>
                 AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          )
+              ),
+            ],
           );
         },
       ),
@@ -93,7 +128,34 @@ class _ReturnedOrdersListViewState extends State<ReturnedOrdersListView> {
     _ordersBloc.loadMoreOrders();
   }
 
+  
+  String? _orderKey(OrderInfo order) => order.id;
+
+  bool _isSelected(OrderInfo order) {
+    final key = _orderKey(order);
+    return key != null && _selectedOrderKeys.contains(key);
+  }
+
+  void _toggleOrderSelection(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+    setState(() {
+      if (_selectedOrderKeys.contains(key)) {
+        _selectedOrderKeys.remove(key);
+      } else {
+        _selectedOrderKeys.add(key);
+      }
+    });
+  }
+
+  void _onOrderTap(OrderInfo order) {
+    _ordersBloc.openOrderDetail(order);
+  }
+
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
+    final visibleOrderKeys = state.filteredReturnedOrdersList.map(_orderKey).whereType<String>().toSet();
+    _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
+
     switch (state.orderListByStatusResource.state) {
       case Result.success:
         _refreshController

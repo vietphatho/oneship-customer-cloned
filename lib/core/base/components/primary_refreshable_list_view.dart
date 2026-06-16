@@ -96,12 +96,12 @@ class PrimaryRefreshabelListView extends StatelessWidget {
           itemCount == 0
               ? const SizedBox.expand(child: Center(child: PrimaryEmptyData()))
               : ListView.separated(
-                padding: padding,
-                itemBuilder: itemBuilder,
-                itemCount: itemCount,
-                separatorBuilder:
-                    separatorBuilder ?? (_, __) => const SizedBox(),
-              ),
+                  padding: padding,
+                  itemBuilder: itemBuilder,
+                  itemCount: itemCount,
+                  separatorBuilder:
+                      separatorBuilder ?? (_, __) => const SizedBox(),
+                ),
     );
   }
 }
