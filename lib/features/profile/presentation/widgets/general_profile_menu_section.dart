@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 
 class GeneralProfileMenuPanel extends StatelessWidget {
@@ -52,6 +53,21 @@ class GeneralProfileMenuPanel extends StatelessWidget {
         iconColor: AppColors.primary,
         label: 'Giới thiệu về OneShip',
       ),
+      PrimaryMenuItemData(
+        icon: Icons.account_circle_rounded,
+        iconColor: AppColors.red500,
+        label: 'delete_account'.tr(),
+        onTap: () {
+          PrimaryDialog.showQuestionDialog(
+            context,
+            message: "do_you_want_to_delete_account".tr(),
+            onPositiveTapped: () {
+              final AuthBloc _authBloc = getIt.get();
+              _authBloc.deleteAccount();
+            },
+          );
+        },
+      ),
     ];
   }
 
@@ -65,10 +81,7 @@ class GeneralProfileMenuPanel extends StatelessWidget {
       child: Column(
         children: [
           for (var i = 0; i < items.length; i++)
-            PrimaryMenuItem(
-              data: items[i],
-              showDivider: i != items.length - 1,
-            ),
+            PrimaryMenuItem(data: items[i], showDivider: i != items.length - 1),
         ],
       ),
     );

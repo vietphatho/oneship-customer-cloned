@@ -8,6 +8,7 @@ import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/app_version.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_header.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_info_section.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_menu_section.dart';
@@ -72,6 +73,8 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
                       color: AppColors.neutral5,
                     ),
                   ),
+                  const AppVersion(),
+                  AppSpacing.vertical(AppDimensions.largeSpacing),
                 ],
               ),
             ),
@@ -95,7 +98,7 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
     );
   }
 
-  void _handleLogOutListener(context, state) {
+  void _handleLogOutListener(BuildContext context, state) {
     if (state is AuthLogOutState) {
       switch (state.resource.state) {
         case Result.loading:
@@ -109,6 +112,29 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showErrorDialog(context);
+          break;
+      }
+    } else if (state is AuthDeleteAccountState) {
+      switch (state.resource.state) {
+        case Result.loading:
+          PrimaryDialog.showLoadingDialog(context);
+          break;
+        case Result.success:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showSuccessDialog(
+            context,
+            message: "account_deleted".tr(),
+            onClosed: () {
+              context.go(RouteName.homePage);
+            },
+          );
+          break;
+        case Result.error:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
           break;
       }
     }

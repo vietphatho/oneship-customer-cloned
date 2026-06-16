@@ -14,6 +14,7 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/delete_account_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopPendingApprovalPage extends StatelessWidget {
@@ -34,10 +35,9 @@ class ShopPendingApprovalPage extends StatelessWidget {
 
       child: BlocBuilder<ShopBloc, ShopState>(
         bloc: shopBloc,
-        buildWhen:
-            (previous, current) =>
-                previous.createShopResource != current.createShopResource ||
-                previous.briefShopsResource != current.briefShopsResource,
+        buildWhen: (previous, current) =>
+            previous.createShopResource != current.createShopResource ||
+            previous.briefShopsResource != current.briefShopsResource,
         builder: (context, state) {
           final shopName =
               state.createShopResource.data?.shopName ??
@@ -94,12 +94,11 @@ class ShopPendingApprovalPage extends StatelessWidget {
                             child: Image.asset(
                               ImagePath.shopPendingApproval,
                               fit: BoxFit.contain,
-                              errorBuilder:
-                                  (_, __, ___) => const Icon(
-                                    Icons.local_shipping_outlined,
-                                    size: 120,
-                                    color: AppColors.primary,
-                                  ),
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.local_shipping_outlined,
+                                size: 120,
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
                           AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
@@ -120,6 +119,7 @@ class ShopPendingApprovalPage extends StatelessWidget {
                             padding: EdgeInsets.all(AppDimensions.largeSpacing),
                             onPressed: _onBack,
                           ),
+                          const DeleteAccountButton(),
                         ],
                       ),
                     ),

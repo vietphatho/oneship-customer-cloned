@@ -84,6 +84,7 @@ class ImagePath {
   static const String iconCusLocation =
       'assets/images/icon_customer_location.png';
   static const String iconShopLocation = 'assets/images/icon_shop_location.png';
+  static const String moneyBag = 'assets/images/money_bag.png';
 
   //icon
   static const String iconCall = 'assets/icons/icon_call.svg';

@@ -10,6 +10,7 @@ import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/delete_account_button.dart';
 
 class EmptyShopPage extends StatelessWidget {
   const EmptyShopPage({super.key});
@@ -92,12 +93,11 @@ class _Body extends StatelessWidget {
                 child: Image.asset(
                   ImagePath.shopOnboarding,
                   fit: BoxFit.contain,
-                  errorBuilder:
-                      (_, __, ___) => const Icon(
-                        Icons.storefront_outlined,
-                        size: 120,
-                        color: AppColors.primary,
-                      ),
+                  errorBuilder: (_, __, ___) => const Icon(
+                    Icons.storefront_outlined,
+                    size: 120,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
@@ -117,6 +117,7 @@ class _Body extends StatelessWidget {
                 padding: EdgeInsets.all(AppDimensions.largeSpacing),
                 onPressed: _onBack,
               ),
+              const DeleteAccountButton(),
             ],
           ),
         ),
