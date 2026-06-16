@@ -112,6 +112,7 @@ class AppColors {
   ];
 
   static const Color backgroundColor = Color(0xFFFDFDFD);
+  static const Color financePageBackground = Color(0xFFF8FAFC);
   static const Color grey600 = Color(0xFF535862);
   static const Color blue950 = Color(0xFF101A24);
   static const Color grey100 = Color(0xFFF5F5F5);
@@ -131,6 +132,11 @@ class AppColors {
   static const Color red500 = Color(0xFFC03E35);
   static const Color grey800 = Color(0xFF252B37);
   static const Color blue100 = Color(0xFFBAE0FF);
+  static const Color blue600 = Color(0xFF2563EB);
+  static const Color financeBalanceBackground = Color(0xFFF3EEFF);
+  static const Color financeCodBackground = Color(0xFFEAF3FF);
+  static const Color financeExpenseBackground = Color(0xFFFFE9EF);
+  static const Color financeDiscountBackground = Color(0xFFD6FAF0);
 
   static const Color bottomNavBarBackgroundDark = Color(0xFF101A24);
   static const Color bottomNavBarBackground = neutral9;

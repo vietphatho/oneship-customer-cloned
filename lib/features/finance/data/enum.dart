@@ -1,1 +1,1 @@
-enum FinanceSubFeature { overview, reconciliation }
+enum FinanceSubFeature { overview, reconciliation, settlementCycle }

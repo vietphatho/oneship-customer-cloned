@@ -16,95 +16,143 @@ class PeriodsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
-    return Padding(
-      padding: AppDimensions.mediumPaddingAll,
-      child: Column(
-        children: [
-          PrimaryText('period'.tr(), style: AppTextStyles.titleXXLarge),
-          AppSpacing.vertical(AppDimensions.smallSpacing),
-          PrimaryDropdown<PeriodStatus>(
-            menu: PeriodStatus.values,
-            toLabel: (item) => item.name.tr(),
-            initialValue: financeReconciliationBloc.state.periodStatus,
-            onSelected: (value) {
-              financeReconciliationBloc.changedPeriodStatus(value!);
-            },
-          ),
-          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-          MultiBlocListener(
-            listeners: [
-              BlocListener<
-                FinanceReconciliationBloc,
-                FinanceReconciliationState
-              >(
-                bloc: financeReconciliationBloc,
-                listenWhen:
-                    (pre, cur) =>
-                        pre.settlementPeriodsResource.state !=
-                        cur.settlementPeriodsResource.state,
-                listener: _handleChangePeriodStatus,
-              ),
-              BlocListener<
-                FinanceReconciliationBloc,
-                FinanceReconciliationState
-              >(
-                bloc: financeReconciliationBloc,
-                listenWhen:
-                    (pre, cur) =>
-                        pre.periodDetailEntity.state !=
-                        cur.periodDetailEntity.state,
-                listener: _handleFetchPeriodDetail,
-              ),
-            ],
-            child: BlocBuilder<
-              FinanceReconciliationBloc,
-              FinanceReconciliationState
-            >(
-              bloc: financeReconciliationBloc,
+    final bloc = getIt.get<FinanceReconciliationBloc>();
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<FinanceReconciliationBloc, FinanceReconciliationState>(
+          bloc: bloc,
+          listenWhen:
+              (previous, current) =>
+                  previous.settlementPeriodsResource.state !=
+                  current.settlementPeriodsResource.state,
+          listener: _handleChangePeriodStatus,
+        ),
+        BlocListener<FinanceReconciliationBloc, FinanceReconciliationState>(
+          bloc: bloc,
+          listenWhen:
+              (previous, current) =>
+                  previous.periodDetailEntity.state !=
+                  current.periodDetailEntity.state,
+          listener: _handleFetchPeriodDetail,
+        ),
+      ],
+      child: BlocBuilder<FinanceReconciliationBloc, FinanceReconciliationState>(
+        bloc: bloc,
+        buildWhen:
+            (previous, current) =>
+                previous.periodsData != current.periodsData ||
+                previous.periodStatus != current.periodStatus,
+        builder: (context, state) {
+          if (state.settlementPeriodsResource.state == Result.error) {
+            return PrimaryEmptyData(onRetry: bloc.fetchSettlementPeriods);
+          }
 
-              buildWhen: (pre, cur) => pre.periodsData != cur.periodsData,
-              builder: (context, state) {
-                if (state.settlementPeriodsResource.state == Result.error) {
-                  return Expanded(
-                    child: PrimaryEmptyData(
-                      onRetry:
-                          () =>
-                              financeReconciliationBloc
-                                  .fetchSettlementPeriods(),
-                    ),
-                  );
-                }
-
-                final periods = state.periodsData;
-
-                if (periods.isEmpty) return Expanded(child: PrimaryEmptyData());
-
-                return Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return FinancePeriodCard(
-                        periodEntity: periods[index],
-                        onTap: () {
-                          financeReconciliationBloc.fetchPeriodDetail(
-                            shopId: periods[index].shopId ?? "",
-                            id: periods[index].id ?? "",
-                          );
-                        },
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return AppSpacing.vertical(AppDimensions.mediumSpacing);
-                    },
-                    itemCount: periods.length,
+          return ColoredBox(
+            color: AppColors.financePageBackground,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'reconciliation_overview'.tr(),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      PopupMenuButton<PeriodStatus>(
+                        initialValue: state.periodStatus,
+                        onSelected: bloc.changedPeriodStatus,
+                        position: PopupMenuPosition.under,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        itemBuilder:
+                            (context) =>
+                                PeriodStatus.values
+                                    .map(
+                                      (status) => PopupMenuItem(
+                                        value: status,
+                                        child: Text(_statusFilterText(status)),
+                                      ),
+                                    )
+                                    .toList(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 9,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.grey200),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                _statusFilterText(state.periodStatus),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 17,
+                                color: AppColors.grey500,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child:
+                      state.periodsData.isEmpty
+                          ? const PrimaryEmptyData()
+                          : ListView.separated(
+                            padding: const EdgeInsets.fromLTRB(16, 6, 16, 112),
+                            itemCount: state.periodsData.length,
+                            separatorBuilder:
+                                (context, index) => const SizedBox(height: 14),
+                            itemBuilder: (context, index) {
+                              final period = state.periodsData[index];
+                              return FinancePeriodCard(
+                                periodEntity: period,
+                                onTap: () {
+                                  bloc.fetchPeriodDetail(
+                                    shopId: period.shopId ?? '',
+                                    id: period.id ?? '',
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
+  }
+
+  static String _statusFilterText(PeriodStatus status) {
+    return switch (status) {
+      PeriodStatus.all => 'status_all'.tr(),
+      PeriodStatus.open => 'status_open'.tr(),
+      PeriodStatus.locked => 'status_locked'.tr(),
+      PeriodStatus.approved => 'status_approved'.tr(),
+      PeriodStatus.cancelled => 'status_cancelled'.tr(),
+    };
   }
 
   void _handleChangePeriodStatus(
@@ -114,14 +162,11 @@ class PeriodsPage extends StatelessWidget {
     switch (state.settlementPeriodsResource.state) {
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
-        break;
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
-        break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
         PrimaryDialog.showErrorDialog(context);
-        break;
     }
   }
 
@@ -132,15 +177,12 @@ class PeriodsPage extends StatelessWidget {
     switch (state.periodDetailEntity.state) {
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
-        break;
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
         context.push(RouteName.financePeriodDetailPage);
-        break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
         PrimaryDialog.showErrorDialog(context);
-        break;
     }
   }
 }
