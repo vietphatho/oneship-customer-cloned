@@ -19,13 +19,13 @@ class OrderDetailInfoTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OrdersBloc _ordersBloc = getIt.get();
-    final ShopBloc _shopBloc = getIt.get();
+    final OrdersBloc ordersBloc = getIt.get();
+    final ShopBloc shopBloc = getIt.get();
 
-    var currentShop = _shopBloc.state.currentShop;
+    var currentShop = shopBloc.state.currentShop;
 
     return BlocBuilder<OrdersBloc, OrdersState>(
-      bloc: _ordersBloc,
+      bloc: ordersBloc,
       builder: (context, state) {
         var ordDtl = state.orderDetailResource.data;
         final shouldShowShipperInfo =
@@ -196,7 +196,12 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         ),
                       ),
                       const Divider(),
-                      _OrdersFeeListView(fees: ordDtl?.orderFees ?? []),
+                      _OrdersFeeListView(
+                        fees: state.resolveOrderFeeDisplays(
+                          shopId: ordDtl?.shopId,
+                          fees: ordDtl?.orderFees ?? [],
+                        ),
+                      ),
                       const Divider(),
                       _buildInfoField(
                         label: "cod".tr(),
@@ -266,10 +271,9 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         SecondaryButton.iconFilled(
                           label: "call_right_now".tr(),
                           icon: Icon(Icons.call_rounded, color: Colors.white),
-                          onPressed:
-                              shipperPhone?.isNotEmpty == true
-                                  ? () => _callShipper(context, shipperPhone!)
-                                  : null,
+                          onPressed: shipperPhone?.isNotEmpty == true
+                              ? () => _callShipper(context, shipperPhone!)
+                              : null,
                         ),
                       ],
                     ),
@@ -290,9 +294,9 @@ class OrderDetailInfoTabView extends StatelessWidget {
 
     if (phoneNumber.isEmpty || !await launchUrl(uri)) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('network_error_mess'.tr())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('network_error_mess'.tr())));
     }
   }
 
@@ -327,9 +331,9 @@ class OrderDetailInfoTabView extends StatelessWidget {
 }
 
 class _OrdersFeeListView extends StatelessWidget {
-  const _OrdersFeeListView({super.key, required this.fees});
+  const _OrdersFeeListView({required this.fees});
 
-  final List<OrderFeeEntity> fees;
+  final List<OrderFeeDisplayEntity> fees;
 
   @override
   Widget build(BuildContext context) {
@@ -337,25 +341,32 @@ class _OrdersFeeListView extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
-      itemBuilder:
-          (context, index) => Column(
-            children: [
-              _buildInfoField(
-                label: "exclude_vat".tr(),
-                value: Utils.formatCurrencyWithUnit(fees[index].baseAmount),
-              ),
-              _buildInfoField(
-                label: "VAT (${fees[index].vatRate}%)".tr(),
-                value: Utils.formatCurrencyWithUnit(fees[index].vatAmount),
-              ),
-              _buildInfoField(
-                label: "include_vat".tr(),
-                value: Utils.formatCurrencyWithUnit(fees[index].totalAmount),
-              ),
-            ],
+      itemBuilder: (context, index) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText(
+            fees[index].label,
+            style: AppTextStyles.bodyMedium,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral1,
           ),
-      separatorBuilder:
-          (_, __) => AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+          _buildInfoField(
+            label: "exclude_vat".tr(),
+            value: Utils.formatCurrencyWithUnit(fees[index].baseAmount),
+          ),
+          _buildInfoField(
+            label: "VAT (${fees[index].vatRate}%)".tr(),
+            value: Utils.formatCurrencyWithUnit(fees[index].vatAmount),
+          ),
+          _buildInfoField(
+            label: "include_vat".tr(),
+            value: Utils.formatCurrencyWithUnit(fees[index].totalAmount),
+          ),
+        ],
+      ),
+      separatorBuilder: (context, index) =>
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
       itemCount: fees.length,
     );
   }

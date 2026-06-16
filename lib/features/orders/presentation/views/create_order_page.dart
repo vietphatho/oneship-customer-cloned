@@ -6,6 +6,8 @@ import 'package:oneship_customer/features/location_service/bloc/location_service
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_order_form_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -19,6 +21,7 @@ class CreateOrderPage extends StatefulWidget {
 
 class _CreateOrderPageState extends State<CreateOrderPage> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final OrdersBloc _ordersBloc = getIt.get();
   final LocationServiceBloc _locationServiceBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
   final PageController _pageController = PageController();
@@ -29,6 +32,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     var shop = _shopBloc.state.currentShop;
     if (shop != null) {
       _createOrderBloc.setShop(shop);
+      _syncVisibleSurcharges(
+        _createOrderBloc.state.request.shopId ?? shop.shopId,
+      );
     }
   }
 
@@ -42,11 +48,22 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CreateOrderBloc, CreateOrderState>(
-      bloc: _createOrderBloc,
-      listenWhen: (pre, cur) =>
-          pre.step != cur.step || pre.errorMessage != cur.errorMessage,
-      listener: _handleListener,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CreateOrderBloc, CreateOrderState>(
+          bloc: _createOrderBloc,
+          listenWhen: (pre, cur) =>
+              pre.step != cur.step || pre.errorMessage != cur.errorMessage,
+          listener: _handleListener,
+        ),
+        BlocListener<OrdersBloc, OrdersState>(
+          bloc: _ordersBloc,
+          listenWhen: (previous, current) =>
+              previous.visibleSurchargeGroupsByShopId !=
+              current.visibleSurchargeGroupsByShopId,
+          listener: _handleVisibleSurchargesChanged,
+        ),
+      ],
       child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
         bloc: _createOrderBloc,
         buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
@@ -86,5 +103,21 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     if (state.errorMessage != null) {
       PrimaryDialog.showErrorDialog(context, message: state.errorMessage);
     }
+  }
+
+  void _handleVisibleSurchargesChanged(
+    BuildContext context,
+    OrdersState state,
+  ) {
+    final shopId =
+        _createOrderBloc.state.shopInfo.shopId ??
+        _createOrderBloc.state.request.shopId;
+    _syncVisibleSurcharges(shopId);
+  }
+
+  void _syncVisibleSurcharges(String? shopId) {
+    _createOrderBloc.setVisibleSurchargeGroups(
+      _ordersBloc.state.visibleSurchargeGroupsResource(shopId),
+    );
   }
 }

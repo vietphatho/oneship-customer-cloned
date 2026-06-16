@@ -83,17 +83,30 @@ abstract class OrderFee with _$OrderFee {
     @JsonKey(name: "shopId") String? shopId,
     @JsonKey(name: "orderId") String? orderId,
     @JsonKey(name: "feeGroup") String? feeGroup,
-    @JsonKey(name: "feeSubtype") dynamic feeSubtype,
+    @JsonKey(name: "feeSubtype") String? feeSubtype,
     @JsonKey(name: "baseAmount") int? baseAmount,
     @JsonKey(name: "vatRate") int? vatRate,
     @JsonKey(name: "vatAmount") int? vatAmount,
     @JsonKey(name: "totalAmount") int? totalAmount,
-    @JsonKey(name: "snapshot") dynamic snapshot,
+    @JsonKey(name: "snapshot") OrderFeeSnapshot? snapshot,
+    @JsonKey(name: "value") int? value,
+    @JsonKey(name: "feeType") String? feeType,
     @JsonKey(name: "createdAt") DateTime? createdAt,
   }) = _OrderFee;
 
   factory OrderFee.fromJson(Map<String, dynamic> json) =>
       _$OrderFeeFromJson(json);
+}
+
+@freezed
+abstract class OrderFeeSnapshot with _$OrderFeeSnapshot {
+  const factory OrderFeeSnapshot({
+    @JsonKey(name: "name") String? name,
+    @JsonKey(name: "feePercent") int? feePercent,
+  }) = _OrderFeeSnapshot;
+
+  factory OrderFeeSnapshot.fromJson(Map<String, dynamic> json) =>
+      _$OrderFeeSnapshotFromJson(json);
 }
 
 @freezed

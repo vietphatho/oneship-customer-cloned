@@ -18,6 +18,8 @@ import 'package:oneship_customer/features/orders/presentation/views/order_detail
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_transportation_history_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_tab_bar.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({super.key});
@@ -102,7 +104,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
 }
 
 class _Header extends StatelessWidget {
-  const _Header({super.key, required this.ordDtl});
+  const _Header({required this.ordDtl});
 
   final OrderDetailEntity ordDtl;
 
@@ -148,7 +150,11 @@ class _Header extends StatelessWidget {
               onPressed: () {
                 final CreateOrderBloc createOrderBloc = getIt.get();
                 final ProductBloc productBloc = getIt.get();
-                createOrderBloc.initUpdateOrdData(ordDtl);
+                final ShopBloc shopBloc = getIt.get();
+                createOrderBloc.initUpdateOrdData(
+                  ordDtl,
+                  shippingServices: shopBloc.state.shippingServices,
+                );
                 productBloc.initUpdateSelectedProduct(ordDtl.items);
                 context.push(RouteName.createOrderPage);
               },

@@ -125,3 +125,23 @@ abstract class SurchargeTierEntity with _$SurchargeTierEntity {
     return isAboveMin && isBelowMax;
   }
 }
+
+extension SurchargeGroupListX on List<SurchargeGroupEntity> {
+  List<SurchargeEntity> get visibleSurcharges =>
+      expand((group) => group.surcharges)
+          .where(
+            (surcharge) => surcharge.isEnabled && surcharge.isVisibleOnShop,
+          )
+          .toList();
+
+  String? findSurchargeLabel(String? code) {
+    if (code == null || code.isEmpty) return null;
+
+    for (final surcharge in visibleSurcharges) {
+      if (surcharge.code == code && surcharge.label.isNotEmpty) {
+        return surcharge.label;
+      }
+    }
+    return null;
+  }
+}

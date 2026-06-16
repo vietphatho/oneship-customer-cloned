@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
@@ -85,13 +86,23 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
     );
   }
 
-  factory CreateOrderRequestEntity.fromResponseModel(OrderDetailEntity model) {
+  factory CreateOrderRequestEntity.fromResponseModel(
+    OrderDetailEntity model, {
+    List<ShippingServiceConfigEntity> shippingServices = const [],
+  }) {
+    final serviceConfig =
+        shippingServices.findByServiceCode(model.serviceCode) ??
+        (model.serviceCode != null
+            ? ShippingServiceConfigEntity.fromValue(model.serviceCode!)
+            : null);
+
     return CreateOrderRequestEntity(
       externalOrderId: model.externalOrderId,
 
-      serviceConfig: model.serviceCode != null
-          ? ShippingServiceConfigEntity.fromValue(model.serviceCode!)
-          : null,
+      serviceConfig: serviceConfig,
+
+      surchargeCodes: model.orderFees.surchargeCodes,
+      surchargeValues: model.orderFees.surchargeValues,
 
       orderNumber: model.orderNumber,
 

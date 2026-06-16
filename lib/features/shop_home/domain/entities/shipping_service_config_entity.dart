@@ -41,3 +41,14 @@ abstract class ShippingServiceConfigEntity with _$ShippingServiceConfigEntity {
     );
   }
 }
+
+extension ShippingServiceConfigListX on List<ShippingServiceConfigEntity> {
+  ShippingServiceConfigEntity? findByServiceCode(String? serviceCode) {
+    if (serviceCode == null || serviceCode.isEmpty) return null;
+
+    for (final service in this) {
+      if (service.serviceCode == serviceCode) return service;
+    }
+    return null;
+  }
+}

@@ -50,12 +50,12 @@ class CreateOrderSurchargeSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PrimaryText(
-              "surcharge".tr(),
-              style: AppTextStyles.bodySmall,
-              bold: true,
-            ),
-            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+            // PrimaryText(
+            //   "surcharge".tr(),
+            //   style: AppTextStyles.bodySmall,
+            //   bold: true,
+            // ),
+            // AppSpacing.vertical(AppDimensions.xSmallSpacing),
             ...List.generate(
               state.surchargeGroups.length,
               (index) => _SurchargeGroupView(groupIndex: index),
@@ -100,12 +100,7 @@ class _SurchargeGroupView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (group.groupName.isNotEmpty) ...[
-                PrimaryText(
-                  group.groupName,
-                  style: AppTextStyles.bodySmall,
-                  color: AppColors.neutral5,
-                  fontWeight: FontWeight.w600,
-                ),
+                PrimaryText(group.groupName, style: AppTextStyles.labelSmall),
                 AppSpacing.vertical(AppDimensions.xxSmallSpacing),
               ],
               ListView.separated(

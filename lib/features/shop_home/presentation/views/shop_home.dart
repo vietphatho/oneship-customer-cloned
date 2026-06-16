@@ -8,6 +8,7 @@ import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -32,6 +33,7 @@ class _ShopHomeState extends State<ShopHome> {
   final ShopBloc _shopBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
   final OrderTrackingBloc _orderTrackingBloc = getIt.get();
+  final OrdersBloc _ordersBloc = getIt.get();
   final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
   final TextEditingController _trackingNumberCtrl = TextEditingController();
@@ -103,6 +105,7 @@ class _ShopHomeState extends State<ShopHome> {
       _financeReconciliationBloc.initPeriods(
         shopId: state.currentShop?.shopId ?? "",
       );
+      _ordersBloc.init(state.currentShop?.shopId ?? "");
     }
   }
 
