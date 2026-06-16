@@ -27,7 +27,10 @@ class ShopHome extends StatefulWidget {
 
 class _ShopHomeState extends State<ShopHome> {
   static const double _heroHeight = 230;
-  static const double _headerContentHeight = 332;
+  static const double _briefInfoHeight = 84;
+  static const double _headerContentSpacing = 8;
+  static const double _headerContentHeight =
+      _heroHeight + _headerContentSpacing + _briefInfoHeight;
   static const double _trackingInputHeight = 42;
 
   final ShopBloc _shopBloc = getIt.get();
@@ -229,7 +232,7 @@ class _ShopHomeState extends State<ShopHome> {
           const Positioned(
             left: 0,
             right: 0,
-            bottom: -0,
+            top: _heroHeight + _headerContentSpacing,
             child: ShopBriefInfo(),
           ),
         ],
