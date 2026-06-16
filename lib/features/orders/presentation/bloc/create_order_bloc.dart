@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/province.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
@@ -28,6 +29,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   // final UpdateProductQuantityUseCase _updateProductQuantityUseCase;
   final ValidateCreateOrderInfoUseCase _validateCreateOrderInfoUseCase;
   final UpdateOrdUseCase _updateOrdUseCase;
+  CalculateDeliveryFeeRequest? _lastFeeCalculationRequest;
 
   CreateOrderBloc(
     this._repository,
@@ -74,12 +76,20 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         errorMessage: null,
       ),
     );
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onVisibleSurchargesChangedEvent(
     CreateOrderVisibleSurchargesChangedEvent event,
     Emitter<CreateOrderState> emit,
   ) {
+    if (event.resource.state != Result.success &&
+        (event.resource.data?.isEmpty ?? true)) {
+      emit(state.copyWith(surchargeGroupsResource: event.resource));
+      _syncDeliveryFeeCalculation(emit);
+      return null;
+    }
+
     final availableCodes =
         event.resource.data
             ?.expand((group) => group.surcharges)
@@ -100,6 +110,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       surchargeValidationErrors: const {},
     );
     emit(_applySurchargePayload(nextState));
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onRequestChangedEvent(
@@ -114,6 +125,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         errorMessage: null,
       ),
     );
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onPickUpDateChangedEvent(
@@ -131,25 +143,42 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         errorMessage: null,
       ),
     );
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onCustomerInfoChangedEvent(
     CreateOrderChangeCustomerInfoEvent event,
     Emitter<CreateOrderState> emit,
   ) {
+    final previousDraft = state.draftRequest;
+    final hasLocationChanged =
+        event.province != previousDraft.province ||
+        event.ward != previousDraft.ward ||
+        event.address != previousDraft.fullAddress;
+
     emit(
       state.copyWith(
-        draftRequest: state.draftRequest.copyWith(
+        request: hasLocationChanged
+            ? state.request.copyWith(router: null)
+            : state.request,
+        draftRequest: previousDraft.copyWith(
           customerName: event.customerName,
           phone: event.phoneNumber,
           province: event.province,
           ward: event.ward,
           fullAddress: event.address,
           isNewAddress: event.isNewAddress ?? false,
+          router: hasLocationChanged ? null : previousDraft.router,
         ),
+        routingToShopResource: hasLocationChanged
+            ? Resource.loading()
+            : state.routingToShopResource,
         errorMessage: null,
       ),
     );
+    if (hasLocationChanged) {
+      _syncDeliveryFeeCalculation(emit);
+    }
   }
 
   FutureOr<void> _onOrderInfoChangedEvent(
@@ -189,23 +218,21 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     );
     final response = await _repository.calculateDeliveryFee(event.request);
 
-    var newReq = state.request.copyWith(
-      // deliveryFee: response.data?.deliveryFee,
-    );
-    emit(
-      state.copyWith(
-        calculatedFeeResource: response,
-        request: newReq,
-        draftRequest: newReq,
-      ),
-    );
+    emit(state.copyWith(calculatedFeeResource: response));
   }
 
   FutureOr<void> _onGetRoutingEvent(
     CreateOrderGetRoutingToShopEvent event,
     Emitter<CreateOrderState> emit,
   ) async {
-    emit(state.copyWith(routingToShopResource: Resource.loading()));
+    emit(
+      state.copyWith(
+        request: state.request.copyWith(router: null),
+        draftRequest: state.draftRequest.copyWith(router: null),
+        routingToShopResource: Resource.loading(),
+      ),
+    );
+    _syncDeliveryFeeCalculation(emit);
     final response = await _repository.getRoutingToShop(
       shopCoordinates: event.shopCoor,
       destinationRefId: event.destinationRefId,
@@ -223,6 +250,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         routingToShopResource: response,
       ),
     );
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onCreateOrderEvent(
@@ -326,6 +354,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         ),
       ),
     );
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onUpdateSurchargeValueEvent(
@@ -348,6 +377,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       errorMessage: null,
     );
     emit(_applySurchargePayload(nextState));
+    _syncDeliveryFeeCalculation(emit);
   }
 
   FutureOr<void> _onSurchargeValidationChangedEvent(
@@ -414,6 +444,21 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       }
     }
     return errors;
+  }
+
+  void _syncDeliveryFeeCalculation(Emitter<CreateOrderState> emit) {
+    final request = state.feeCalculationRequest;
+    if (request == null) {
+      _lastFeeCalculationRequest = null;
+      if (state.calculatedFeeResource != null) {
+        emit(state.copyWith(calculatedFeeResource: null));
+      }
+      return;
+    }
+
+    if (request == _lastFeeCalculationRequest) return;
+    _lastFeeCalculationRequest = request;
+    add(CreateOrderCalculateFeeEvent(request));
   }
 
   // void addProductToOrder(Map<String, ProductEntity> selectedMap) async {
@@ -535,19 +580,6 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),
     );
-
-    final routingDistance =
-        state.routingToShopResource.data?.distance ?? newReq.router?.distance;
-
-    final calculateFeeRequest = CalculateDeliveryFeeRequest(
-      shopId: state.shopInfo.shopId ?? newReq.shopId,
-      distance: routingDistance,
-      serviceCode: newReq.serviceConfig?.serviceCode,
-      weight: newReq.detail?.weight?.toInt(),
-      surcharges: state.selectedSurchargeCodes,
-      surchargesValues: state.selectedSurchargeValues,
-    );
-    add(CreateOrderCalculateFeeEvent(calculateFeeRequest));
   }
 
   void completeCreateOrderForm({
@@ -589,21 +621,6 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),
-    );
-
-    final routingDistance =
-        state.routingToShopResource.data?.distance ?? newReq.router?.distance;
-    add(
-      CreateOrderCalculateFeeEvent(
-        CalculateDeliveryFeeRequest(
-          shopId: state.shopInfo.shopId ?? newReq.shopId,
-          distance: routingDistance,
-          serviceCode: newReq.serviceConfig?.serviceCode,
-          weight: newReq.detail?.weight?.toInt(),
-          surcharges: state.selectedSurchargeCodes,
-          surchargesValues: state.selectedSurchargeValues,
-        ),
-      ),
     );
   }
 

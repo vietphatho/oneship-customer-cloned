@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
@@ -95,6 +96,31 @@ abstract class CreateOrderState with _$CreateOrderState {
     }
     return false;
   }
+
+  CalculateDeliveryFeeRequest? get feeCalculationRequest {
+    final shopId = shopInfo.shopId ?? draftRequest.shopId;
+    final distance =
+        routingToShopResource.data?.distance ?? draftRequest.router?.distance;
+    final serviceCode = draftRequest.serviceConfig?.serviceCode;
+    final weight = draftRequest.detail?.weight?.toInt();
+
+    if (shopId == null || shopId.isEmpty) return null;
+    if (distance == null || distance <= 0) return null;
+    if (serviceCode == null || serviceCode.isEmpty) return null;
+    if (weight == null || weight <= 0) return null;
+    if (hasInvalidSelectedSurcharges) return null;
+
+    return CalculateDeliveryFeeRequest(
+      shopId: shopId,
+      distance: distance,
+      serviceCode: serviceCode,
+      weight: weight,
+      surcharges: selectedSurchargeCodes,
+      surchargesValues: selectedSurchargeValues,
+    );
+  }
+
+  bool get canCalculateFee => feeCalculationRequest != null;
 
   SurchargeEntity? findSurcharge(String code) {
     return surcharges.firstWhereOrNull((surcharge) => surcharge.code == code);

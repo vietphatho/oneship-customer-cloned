@@ -115,6 +115,7 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
                           packageSize: _packageSize,
                           noteController: _noteCtrl,
                           onChanged: _refresh,
+                          onWeightChanged: _changeWeight,
                           onPackageSizeChanged: _changePackageSize,
                         ),
                       ),
@@ -155,6 +156,10 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
 
   void _changePackageSize(PackageSize? packageSize) {
     setState(() => _packageSize = packageSize);
+  }
+
+  void _changeWeight(String value) {
+    _createOrderBloc.changeOrderInfo(weight: Utils.parseCurrencyInput(value));
   }
 
   bool _isValid(CreateOrderState state) {

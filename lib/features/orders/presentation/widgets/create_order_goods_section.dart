@@ -10,6 +10,7 @@ class CreateOrderGoodsSection extends StatelessWidget {
     required this.packageSize,
     required this.noteController,
     required this.onChanged,
+    required this.onWeightChanged,
     required this.onPackageSizeChanged,
   });
 
@@ -17,6 +18,7 @@ class CreateOrderGoodsSection extends StatelessWidget {
   final PackageSize? packageSize;
   final TextEditingController noteController;
   final VoidCallback onChanged;
+  final ValueChanged<String> onWeightChanged;
   final ValueChanged<PackageSize?> onPackageSizeChanged;
 
   @override
@@ -30,7 +32,10 @@ class CreateOrderGoodsSection extends StatelessWidget {
           controller: weightController,
           keyboardType: TextInputType.number,
           suffixText: Constants.weightUnit,
-          onChanged: (_) => onChanged(),
+          onChanged: (value) {
+            onWeightChanged(value);
+            onChanged();
+          },
         ),
         AppSpacing.vertical(AppDimensions.mediumSpacing),
         _PackageSizeDropdown(
