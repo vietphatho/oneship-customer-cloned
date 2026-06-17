@@ -36,55 +36,52 @@ class FilterDropdown<T> extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 11,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
             color: AppColors.neutral3,
           ),
         ),
         const SizedBox(height: 3),
-        SizedBox(
-          height: 36,
-          child: DropdownButtonFormField<T>(
-            initialValue: value,
-            isDense: true,
-            isExpanded: true,
-            style: const TextStyle(fontSize: 12, color: AppColors.neutral2),
-            hint: Text(
-              hintText,
-              style: const TextStyle(fontSize: 12, color: AppColors.grey400),
-            ),
-            icon: const Icon(
-              Icons.keyboard_arrow_down,
-              size: 16,
-              color: AppColors.neutral5,
-            ),
-            decoration: const InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppDimensions.xSmallSpacing,
-                vertical: AppDimensions.xxSmallSpacing,
-              ),
-              border: _border,
-              enabledBorder: _border,
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.secondary),
-                borderRadius: AppDimensions.xSmallBorderRadius,
-              ),
-            ),
-            items: items.map((item) {
-              return DropdownMenuItem<T>(
-                value: item,
-                child: Text(
-                  itemLabel(item),
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              );
-            }).toList(),
-            onChanged: onChanged,
+        DropdownButtonFormField<T>(
+          initialValue: value,
+          isDense: true,
+          isExpanded: true,
+          style: const TextStyle(fontSize: 14, color: AppColors.neutral2),
+          hint: Text(
+            hintText,
+            style: const TextStyle(fontSize: 14, color: AppColors.grey400),
           ),
+          icon: const Icon(
+            Icons.keyboard_arrow_down,
+            size: 16,
+            color: AppColors.neutral5,
+          ),
+          decoration: const InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            isDense: true,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.smallSpacing,
+              vertical: 10,
+            ),
+            border: _border,
+            enabledBorder: _border,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.secondary),
+              borderRadius: AppDimensions.xSmallBorderRadius,
+            ),
+          ),
+          items: items.map((item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              child: Text(
+                itemLabel(item),
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 14),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
         ),
       ],
     );

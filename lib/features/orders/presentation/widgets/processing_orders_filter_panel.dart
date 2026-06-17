@@ -297,12 +297,12 @@ class _ProcessingOrdersFilterPanelState
                     shape: RoundedRectangleBorder(
                       borderRadius: AppDimensions.xSmallBorderRadius,
                     ),
-                    minimumSize: const Size(0, 36),
+                    minimumSize: const Size(0, 40),
                   ),
                   child: Text(
                     'reset'.tr(),
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.neutral4,
                     ),
@@ -312,18 +312,18 @@ class _ProcessingOrdersFilterPanelState
                 // Áp dụng
                 Expanded(
                   child: SizedBox(
-                    height: 36,
+                    height: 40,
                     child: ElevatedButton.icon(
                       onPressed: _onApply,
                       icon: const Icon(
                         Icons.filter_list_rounded,
-                        size: 14,
+                        size: 16,
                         color: Colors.white,
                       ),
                       label: Text(
                         'filter_result'.tr(),
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -344,18 +344,18 @@ class _ProcessingOrdersFilterPanelState
                 const SizedBox(width: AppDimensions.xxSmallSpacing),
                 // Xuất Excel
                 SizedBox(
-                  height: 36,
+                  height: 40,
                   child: OutlinedButton.icon(
                     onPressed: widget.onExportExcel,
                     icon: const Icon(
                       Icons.file_download_outlined,
-                      size: 14,
+                      size: 16,
                       color: AppColors.green,
                     ),
                     label: Text(
                       'export_excel'.tr(),
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: AppColors.green,
                       ),
