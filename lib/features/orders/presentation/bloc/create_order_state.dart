@@ -30,7 +30,7 @@ abstract class CreateOrderState with _$CreateOrderState {
     @Default({}) Map<String, String> surchargeValidationErrors,
     Resource<CalculatedDeliveryFeeEntity>? calculatedFeeResource,
     Resource? createOrderResource,
-    @Default(true) bool acceptTerms,
+    @Default(false) bool acceptTerms,
     String? errorMessage,
     String? updateOrdId,
   }) = _CreateOrderState;

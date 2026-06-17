@@ -56,6 +56,25 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     PrimaryCard(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PrimaryText(
+                            "payer".tr(),
+                            style: AppTextStyles.labelMedium,
+                          ),
+                          PrimaryRadioGroup<Payer>(
+                            direction: Axis.horizontal,
+                            options: Payer.values,
+                            value: request.payer,
+                            displayLabel: (item) => item.nameValue.tr(),
+                            onChanged: _createOrderBloc.changePayer,
+                          ),
+                        ],
+                      ),
+                    ),
+                    AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    PrimaryCard(
+                      child: Column(
                         children: [
                           _InfoField(
                             label: "shop_name".tr(),
@@ -144,25 +163,6 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                     ),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     const _FeeSession(),
-                    AppSpacing.vertical(AppDimensions.mediumSpacing),
-                    PrimaryCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PrimaryText(
-                            "payer".tr(),
-                            style: AppTextStyles.labelMedium,
-                          ),
-                          PrimaryRadioGroup<Payer>(
-                            direction: Axis.horizontal,
-                            options: Payer.values,
-                            value: request.payer,
-                            displayLabel: (item) => item.nameValue.tr(),
-                            onChanged: _createOrderBloc.changePayer,
-                          ),
-                        ],
-                      ),
-                    ),
                     AppSpacing.vertical(AppDimensions.largeSpacing),
                     // Checkbox(
                     //   value: state.acceptTerms,
