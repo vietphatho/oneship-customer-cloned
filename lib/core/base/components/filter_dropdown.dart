@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 
 /// A compact labeled dropdown used in filter panels.
 ///
@@ -33,13 +32,11 @@ class FilterDropdown<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        PrimaryText(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: AppColors.neutral3,
-          ),
+          size: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.neutral3,
         ),
         const SizedBox(height: 3),
         DropdownButtonFormField<T>(
@@ -47,9 +44,10 @@ class FilterDropdown<T> extends StatelessWidget {
           isDense: true,
           isExpanded: true,
           style: const TextStyle(fontSize: 14, color: AppColors.neutral2),
-          hint: Text(
+          hint: PrimaryText(
             hintText,
-            style: const TextStyle(fontSize: 14, color: AppColors.grey400),
+            size: 14,
+            color: AppColors.grey400,
           ),
           icon: const Icon(
             Icons.keyboard_arrow_down,
@@ -74,10 +72,10 @@ class FilterDropdown<T> extends StatelessWidget {
           items: items.map((item) {
             return DropdownMenuItem<T>(
               value: item,
-              child: Text(
+              child: PrimaryText(
                 itemLabel(item),
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 14),
+                size: 14,
               ),
             );
           }).toList(),
