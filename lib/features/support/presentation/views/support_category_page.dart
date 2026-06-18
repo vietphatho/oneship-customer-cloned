@@ -29,6 +29,7 @@ class _SupportCategoryPageState extends State<SupportCategoryPage> {
     final category = widget.category;
 
     return Scaffold(
+      extendBody: true,
       backgroundColor: AppColors.backgroundColor,
       appBar: PrimaryAppBar(
         title: category.detailTitleKey.tr(),
@@ -37,8 +38,9 @@ class _SupportCategoryPageState extends State<SupportCategoryPage> {
       bottomNavigationBar: const PrimaryBottomNavigationBar(),
       body: SafeArea(
         top: false,
+        bottom: false,
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 112),
           children: [
             _SupportCategoryHeader(category: category),
             const SizedBox(height: 24),

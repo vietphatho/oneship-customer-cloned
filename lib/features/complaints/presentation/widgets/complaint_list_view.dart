@@ -118,6 +118,7 @@ class _ComplaintListViewState extends State<ComplaintListView> {
           enablePullUp: true,
           onLoading: () => widget.bloc.add(const ComplaintLoadMore()),
           itemCount: complaints.length,
+          footerBottomSpacing: 112.0,
           itemBuilder: (context, index) {
             final complaint = complaints[index];
             return PrimaryDismissible(
