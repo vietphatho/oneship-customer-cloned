@@ -208,7 +208,7 @@ class _OrderStatusAndDate extends StatelessWidget {
             color: AppColors.neutral4,
           ),
         ),
-        _OrderStatusIcon(status: status),
+        // _OrderStatusIcon(status: status),
       ],
     );
   }
