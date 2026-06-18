@@ -16,54 +16,62 @@ class ShopStaffShopSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   final ShopBloc shopBloc = getIt.get();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PrimaryText(
-          "shop_management.staff_select_shop".tr(),
-          style: AppTextStyles.labelMedium,
-        ),
-        AppSpacing.vertical(AppDimensions.xSmallSpacing),
-        PrimaryAnimatedPressableWidget(
-          onTap: () {
-            context.push(RouteName.shopSelectionPage);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(AppDimensions.smallSpacing),
-            decoration: BoxDecoration(
-              borderRadius: AppDimensions.largeBorderRadius,
-              border: Border.all(color: AppColors.neutral7),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: BlocBuilder<ShopBloc, ShopState>(
-                    bloc: shopBloc,
-                    buildWhen: (previous, current) =>
-                        previous.briefShopsResource !=
-                            current.briefShopsResource ||
-                        previous.currentShop != current.currentShop,
-                    builder: (context, state) {
-                      return PrimaryText(
-                        (state.currentShop?.shopName ?? 'select_shop').tr(),
-                        maxLine: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.bodyMedium,
-                      );
-                    },
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppDimensions.mediumSpacing,
+        0,
+        AppDimensions.mediumSpacing,
+        AppDimensions.mediumSpacing,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText(
+            "shop_management.staff_select_shop".tr(),
+            style: AppTextStyles.labelMedium,
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          PrimaryAnimatedPressableWidget(
+            onTap: () {
+              context.push(RouteName.shopSelectionPage);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(AppDimensions.smallSpacing),
+              decoration: BoxDecoration(
+                borderRadius: AppDimensions.largeBorderRadius,
+                border: Border.all(color: AppColors.neutral7),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: BlocBuilder<ShopBloc, ShopState>(
+                      bloc: shopBloc,
+                      buildWhen: (previous, current) =>
+                          previous.briefShopsResource !=
+                              current.briefShopsResource ||
+                          previous.currentShop != current.currentShop,
+                      builder: (context, state) {
+                        return PrimaryText(
+                          (state.currentShop?.shopName ?? 'select_shop').tr(),
+                          maxLine: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.bodyMedium,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: AppDimensions.xSmallIconSize,
-                  color: AppColors.neutral7,
-                ),
-              ],
+                  AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: AppDimensions.xSmallIconSize,
+                    color: AppColors.neutral7,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
