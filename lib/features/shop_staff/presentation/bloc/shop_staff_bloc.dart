@@ -24,8 +24,7 @@ class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {
     this._createShopStaffUseCase,
     this._addStaffToShopUseCase,
     this._toggleDisableShopStaffUseCase,
-  )
-    : super(
+  ) : super(
         ShopStaffState(
           staffsResource: Resource.loading(),
           createStaffResource: Resource.loading(),
@@ -94,10 +93,9 @@ class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {
       userStatus: _userStatus,
     );
 
-    final nextStaffs =
-        event.refresh
-            ? response.data?.items ?? []
-            : [...state.staffs, ...?response.data?.items];
+    final nextStaffs = event.refresh
+        ? response.data?.items ?? []
+        : [...state.staffs, ...?response.data?.items];
 
     emit(
       state.copyWith(
@@ -206,10 +204,7 @@ class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {
     add(const ShopStaffLoadMoreEvent());
   }
 
-  void fetchDetail({
-    required String shopId,
-    required String staffId,
-  }) {
+  void fetchDetail({required String shopId, required String staffId}) {
     add(ShopStaffFetchDetailEvent(shopId: shopId, staffId: staffId));
   }
 
@@ -254,10 +249,7 @@ class ShopStaffBloc extends Bloc<ShopStaffEvent, ShopStaffState> {
   void toggleDisableStaff(ShopStaffEntity staff) {
     if (staff.shopId.isEmpty || staff.staffId.isEmpty) return;
     add(
-      ShopStaffToggleDisableEvent(
-        shopId: staff.shopId,
-        staffId: staff.staffId,
-      ),
+      ShopStaffToggleDisableEvent(shopId: staff.shopId, staffId: staff.staffId),
     );
   }
 

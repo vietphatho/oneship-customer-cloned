@@ -31,7 +31,8 @@
     "partner_news": "OzoShip kết hợp cùng đối tác mới",
     "partner_news_description": "Mở rộng mạng lưới - Nâng tầm dịch vụ",
     "policy_news": "Cập nhật chính sách giao hàng mới",
-    "policy_news_description": "Hiệu lực từ 01/06/2025"
+    "policy_news_description": "Hiệu lực từ 01/06/2025",
+    "scan_patient_code": "Quét mã bệnh nhân"
   },
   "package_number": "Mã kiện hàng",
   "filter_results": "Lọc kết quả",
@@ -1183,6 +1184,8 @@
   "zone": "Khu vực",
   "select_zone": "Chọn khu vực",
   "reset": "Đặt lại",
+  "retry": "Thử lại",
+  "open_settings": "Mở cài đặt",
   "export_excel": "Xuất Excel",
   "select_all": "Chọn tất cả",
   "deselect": "Bỏ chọn",
@@ -1205,5 +1208,13 @@
   "chargeable_weight": "Khối lượng tính cước",
   "delivery_fee": "Cước giao hàng",
   "extra_services": "Phí dịch vụ thêm",
-  "created_at": "Ngày tạo"
+  "created_at": "Ngày tạo",
+  "scan_patient_code": {
+    "title": "Quét mã bệnh án",
+    "instruction": "Đưa mã bệnh án vào khung quét",
+    "updating": "Đang cập nhật mã bệnh án...",
+    "update_success": "Cập nhật thành công.",
+    "camera_permission_error": "Không thể mở camera. Vui lòng kiểm tra quyền truy cập camera.",
+    "no_shop_selected": "Vui lòng chọn cửa hàng trước khi quét mã bệnh án"
+  }
 }

@@ -13,7 +13,8 @@ enum ShopHomeFeature {
   staffManagement,
   shopManagement,
   supporting,
-  settings,
+  // settings,
+  scanPatientCode,
 }
 
 extension ShopHomeFeatureExt on ShopHomeFeature {
@@ -25,7 +26,8 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.staffManagement: RouteName.staffManagementPage,
     ShopHomeFeature.shopManagement: RouteName.shopManagementPage,
     ShopHomeFeature.supporting: RouteName.supportPage,
-    ShopHomeFeature.settings: null,
+    // ShopHomeFeature.settings: null,
+    ShopHomeFeature.scanPatientCode: RouteName.scanPatientCodePage,
   };
 
   static const _mapIcon = {
@@ -33,12 +35,12 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.package: ImagePath.shopHomeIconPackageGenerated,
     ShopHomeFeature.ordersProcessed:
         ImagePath.shopHomeIconOrderProcessedGenerated,
-    ShopHomeFeature.pickupAddress:
-        ImagePath.shopHomeIconPickupAddressGenerated,
+    ShopHomeFeature.pickupAddress: ImagePath.shopHomeIconPickupAddressGenerated,
     ShopHomeFeature.staffManagement: ImagePath.shopHomeIconStaffGenerated,
     ShopHomeFeature.shopManagement: ImagePath.shopHomeIconShopGenerated,
     ShopHomeFeature.supporting: ImagePath.shopHomeIconSupportGenerated,
-    ShopHomeFeature.settings: ImagePath.shopHomeIconSettingsGenerated,
+    // ShopHomeFeature.settings: ImagePath.shopHomeIconSettingsGenerated,
+    ShopHomeFeature.scanPatientCode: ImagePath.iconPatientScan,
   };
 
   static const _mapTitle = {
@@ -49,7 +51,8 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.staffManagement: "shop_home.feature_staff_management",
     ShopHomeFeature.shopManagement: "shop_home.feature_shop_management",
     ShopHomeFeature.supporting: "shop_home.feature_complaint_incident",
-    ShopHomeFeature.settings: "shop_home.feature_settings",
+    // ShopHomeFeature.settings: "shop_home.feature_settings",
+    ShopHomeFeature.scanPatientCode: "shop_home.scan_patient_code",
   };
 
   String? get routeName => _mapRouteName[this];

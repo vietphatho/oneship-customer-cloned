@@ -24,8 +24,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<!-- <key>NSCameraUsageDescription</key>
-	<string>Cho phép ứng dụng sử dụng camera để thực hiện chức năng chụp ảnh</string> -->
+	<key>NSCameraUsageDescription</key>
+	<string>Cho phép ứng dụng sử dụng camera để quét mã bệnh án</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Ứng dụng cần truy cập vị trí để hiển thị vị trí hiện tại của bạn và hỗ trợ theo dõi hành trình vận đơn trên bản đồ khi sử dụng ứng dụng.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

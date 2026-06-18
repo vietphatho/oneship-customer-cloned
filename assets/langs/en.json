@@ -57,6 +57,8 @@
     "zone": "Zone",
     "select_zone": "Select zone",
     "reset": "Reset",
+    "retry": "Retry",
+    "open_settings": "Open settings",
     "export_excel": "Export Excel",
     "select_all": "Select all",
     "deselect": "Deselect",
@@ -74,5 +76,13 @@
     "invalid_surcharge_value": "Invalid surcharge value",
     "chargeable_weight": "Chargeable weight",
     "delivery_fee": "Delivery fee",
-    "extra_services": "Additional service fees"
+    "extra_services": "Additional service fees",
+    "scan_patient_code": {
+        "title": "Scan patient code",
+        "instruction": "Place the patient code inside the scanner frame",
+        "updating": "Updating patient code...",
+        "update_success": "Updated successfully.",
+        "camera_permission_error": "Unable to open the camera. Please check camera permission.",
+        "no_shop_selected": "Please select a shop before scanning a patient code"
+    }
 }
