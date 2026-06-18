@@ -24,7 +24,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.pickupAddress: null,
     ShopHomeFeature.staffManagement: RouteName.staffManagementPage,
     ShopHomeFeature.shopManagement: RouteName.shopManagementPage,
-    ShopHomeFeature.supporting: RouteName.complaintPage,
+    ShopHomeFeature.supporting: RouteName.supportPage,
     ShopHomeFeature.settings: null,
   };
 

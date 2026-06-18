@@ -37,6 +37,9 @@ import 'package:oneship_customer/features/shop_staff/presentation/views/create_s
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_management_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
+import 'package:oneship_customer/features/support/presentation/models/support_category_data.dart';
+import 'package:oneship_customer/features/support/presentation/views/support_category_page.dart';
+import 'package:oneship_customer/features/support/presentation/views/support_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -142,6 +145,16 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.ordersHistoryPage,
       builder: (context, state) => const OrdersHistoryPage(),
+    ),
+    GoRoute(
+      path: RouteName.supportPage,
+      builder: (context, state) => const SupportPage(),
+    ),
+    GoRoute(
+      path: RouteName.supportCategoryPage,
+      builder: (context, state) => SupportCategoryPage(
+        category: state.extra as SupportCategoryData,
+      ),
     ),
     GoRoute(
       path: RouteName.complaintPage,
