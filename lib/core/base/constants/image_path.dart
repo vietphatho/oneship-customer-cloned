@@ -85,7 +85,13 @@ class ImagePath {
       'assets/images/icon_customer_location.png';
   static const String iconShopLocation = 'assets/images/icon_shop_location.png';
   static const String moneyBag = 'assets/images/money_bag.png';
-
+  static const String walletBalanceIcon = 'assets/icons/wallet_balance_icon.svg';
+  static const String walletChartIcon = 'assets/icons/wallet_chart_icon.svg';
+  static const String walletWithdrawIcon = 'assets/icons/wallet_withdraw_icon.svg';
+  static const String iconBarChartSvg = 'assets/icons/bar-chart.svg';
+  static const String iconWalletNewSvg = 'assets/icons/wallet.svg';
+  static const String iconDollarSvg = 'assets/icons/dollar.svg';
+  static const String iconClockSvg = 'assets/icons/clock.svg';
   //icon
   static const String iconCall = 'assets/icons/icon_call.svg';
   static const String iconCalling = 'assets/icons/icon_calling.svg';
