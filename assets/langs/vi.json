@@ -978,6 +978,103 @@
     "delete": "Xoá",
     "fetch_error": "Có lỗi xảy ra khi tải dữ liệu"
   },
+  "support_help": {
+    "page_title": "Hỗ trợ",
+    "hero_title": "Chúng tôi luôn\nsẵn sàng hỗ trợ bạn",
+    "hero_description": "Chọn chủ đề hoặc liên hệ với chúng tôi để được hỗ trợ nhanh nhất.",
+    "search_hint": "Bạn cần hỗ trợ vấn đề gì?",
+    "popular_topics": "Chủ đề phổ biến",
+    "no_search_result": "Không tìm thấy chủ đề phù hợp",
+    "popular_questions": "Các câu hỏi phổ biến",
+    "still_need_support": "Vẫn cần hỗ trợ?",
+    "contact_title": "Liên hệ với chúng tôi",
+    "contact_description": "Chọn kênh phù hợp để được hỗ trợ nhanh chóng",
+    "chat_title": "Chat với chúng tôi",
+    "chat_subtitle": "Thời gian phản hồi: trong vài phút",
+    "call_title": "Gọi cho chúng tôi",
+    "call_subtitle": "8:00 - 20:00, tất cả các ngày",
+    "faq_title": "Câu hỏi thường gặp",
+    "view_all": "Xem tất cả",
+    "answer_placeholder": "Nội dung hướng dẫn cho vấn đề này sẽ được cập nhật chi tiết. Bạn có thể liên hệ hỗ trợ nếu cần xử lý nhanh hơn.",
+    "categories": {
+      "account": {
+        "title": "Tài khoản\n& bảo mật",
+        "detail_title": "Tài khoản & bảo mật",
+        "description": "Các vấn đề liên quan đến tài khoản, đăng nhập và bảo mật.",
+        "questions": {
+          "login_failed": "Không đăng nhập được tài khoản",
+          "forgot_password": "Quên mật khẩu",
+          "change_phone": "Thay đổi số điện thoại",
+          "kyc": "Xác minh danh tính (KYC)",
+          "locked": "Tài khoản bị khóa"
+        }
+      },
+      "income": {
+        "title": "Thu nhập\n& thanh toán",
+        "detail_title": "Thu nhập & thanh toán",
+        "description": "Các vấn đề liên quan đến thu nhập, rút tiền và thanh toán.",
+        "questions": {
+          "receive_money_time": "Khi nào tôi nhận được tiền?",
+          "withdraw": "Rút tiền về tài khoản",
+          "wrong_income": "Sai số tiền thu nhập",
+          "transaction_history": "Lịch sử giao dịch",
+          "service_fee": "Phí dịch vụ"
+        }
+      },
+      "package": {
+        "title": "Túi hàng\n& giao hàng",
+        "detail_title": "Túi hàng & giao hàng",
+        "description": "Các vấn đề liên quan đến túi hàng và quá trình giao hàng.",
+        "questions": {
+          "missing_or_error": "Túi hàng bị lỗi/thiếu",
+          "how_to_use": "Cách sử dụng túi hàng",
+          "delivery_failed": "Giao hàng thất bại",
+          "change_address": "Thay đổi địa chỉ giao hàng",
+          "delivery_time": "Thời gian giao hàng"
+        }
+      },
+      "app_feature": {
+        "title": "Ứng dụng\n& tính năng",
+        "detail_title": "Ứng dụng & tính năng",
+        "description": "Các vấn đề liên quan đến ứng dụng và tính năng.",
+        "questions": {
+          "app_error": "Ứng dụng bị lỗi, không hoạt động",
+          "update_app": "Cập nhật ứng dụng",
+          "scan_failed": "Quét mã không hoạt động",
+          "notification_missing": "Thông báo không hiển thị",
+          "suggestion": "Gợi ý cải thiện ứng dụng"
+        }
+      },
+      "complaint": {
+        "title": "Khiếu nại",
+        "detail_title": "Khiếu nại",
+        "description": "Gửi và theo dõi các khiếu nại cần được hỗ trợ.",
+        "questions": {
+          "create": "Tạo khiếu nại mới",
+          "tracking": "Theo dõi khiếu nại",
+          "order": "Khiếu nại đơn hàng",
+          "payment": "Khiếu nại thanh toán",
+          "general": "Khiếu nại chung"
+        }
+      },
+      "other": {
+        "title": "Khác",
+        "detail_title": "Khác",
+        "description": "Các vấn đề khác không thuộc các chủ đề trên.",
+        "questions": {
+          "feedback": "Góp ý, phản hồi",
+          "promotion": "Chương trình khuyến mãi",
+          "partner": "Hợp tác & đối tác",
+          "policy": "Điều khoản & chính sách",
+          "general_complaint": "Khiếu nại chung"
+        }
+      }
+    },
+    "faq": {
+      "withdraw": "Làm thế nào để rút tiền về tài khoản?",
+      "cancelled_order_payment": "Đơn hàng bị hủy thì tôi sẽ nhận được tiền khi nào?"
+    }
+  },
   "secondary_password": {
     "create_page_title": "Tạo mật khẩu cấp 2",
     "change_page_title": "Đổi mật khẩu cấp 2",

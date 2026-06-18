@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -33,7 +34,7 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
   final TextEditingController _emailController = TextEditingController();
 
   bool _isLoadingMore = false;
-  bool _showFilters = false;
+
   String? _selectedStatus;
 
   @override
@@ -61,15 +62,65 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
       backgroundColor: AppColors.background,
       appBar: PrimaryAppBar(
         title: "shop_management.staff_title".tr(),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () => setState(() => _showFilters = !_showFilters),
-        //     icon: const Icon(
-        //       Icons.filter_alt,
-        //       color: AppColors.secondary,
-        //     ),
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: const Icon(
+              CupertinoIcons.search,
+              color: AppColors.neutral2,
+            ),
+            tooltip: 'search'.tr(),
+            onPressed: () {
+              // TODO: implement staff search
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.filter_alt_outlined,
+              color: AppColors.neutral2,
+            ),
+            tooltip: 'filter'.tr(),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (context) => Padding(
+                  padding: EdgeInsets.only(
+                    top: 16,
+                    bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const ShopStaffShopSelector(),
+                      ShopStaffFilterPanel(
+                        nameController: _nameController,
+                        emailController: _emailController,
+                        selectedStatus: _selectedStatus,
+                        onStatusSelected: (value) {
+                          _selectedStatus = value;
+                        },
+                        onApply: () {
+                          _applyFilters();
+                          Navigator.pop(context);
+                        },
+                        onClear: () {
+                          _clearFilters();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ).then((_) {
+                setState(() {});
+              });
+            },
+          ),
+        ],
       ),
       body: MultiBlocListener(
         listeners: [
@@ -116,13 +167,6 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                     ),
                     child: Column(
                       children: [
-                        ShopStaffManagementHeader(
-                          onBack: () => context.pop(),
-                          onSearch: _applyFilters,
-                          onFilter: () =>
-                              setState(() => _showFilters = !_showFilters),
-                          hasActiveFilter: _showFilters,
-                        ),
                         AppSpacing.vertical(AppDimensions.smallSpacing),
                         ShopStaffStats(
                           total: state.total,
@@ -130,54 +174,19 @@ class _ShopStaffManagementPageState extends State<ShopStaffManagementPage> {
                           locked: lockedCount,
                         ),
                         AppSpacing.vertical(AppDimensions.smallSpacing),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: PrimaryTextField(
-                                controller: _nameController,
-                                hintText:
-                                    'Tìm kiếm nhân viên, SĐT, email...',
-                                prefixIcon: const Icon(Icons.search_rounded),
-                                textInputAction: TextInputAction.search,
-                                onFieldSubmitted: (_) => _applyFilters(),
-                              ),
-                            ),
-                            AppSpacing.horizontal(
-                              AppDimensions.xSmallSpacing,
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: PrimaryActionButton(
-                                label: 'shop_management.staff_add'.tr(),
-                                icon: const Icon(Icons.add_rounded, size: 18),
-                                height: AppDimensions.mediumHeightButton,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppDimensions.xxSmallSpacing,
-                                ),
-                                onPressed: () =>
-                                    context.push(RouteName.createShopStaffPage),
-                              ),
-                            ),
-                          ],
+                        SizedBox(
+                          width: double.infinity,
+                          child: PrimaryActionButton(
+                            label: 'shop_management.staff_add'.tr(),
+                            icon: const Icon(Icons.add_rounded, size: 18),
+                            height: AppDimensions.mediumHeightButton,
+                            onPressed: () =>
+                                context.push(RouteName.createShopStaffPage),
+                          ),
                         ),
-                        if (_showFilters) ...[
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          ShopStaffShopSelector(),
-                        ],
                       ],
                     ),
                   ),
-                  if (_showFilters)
-                    ShopStaffFilterPanel(
-                      nameController: _nameController,
-                      emailController: _emailController,
-                      selectedStatus: _selectedStatus,
-                      onStatusSelected: (value) =>
-                          setState(() => _selectedStatus = value),
-                      onApply: _applyFilters,
-                      onClear: _clearFilters,
-                    ),
                   Expanded(
                     child: isInitialLoading
                         ? const Center(child: CircularProgressIndicator())

@@ -60,7 +60,6 @@ class ShopStaffFilterPanel extends StatelessWidget {
                 child: SecondaryButton.filled(
                   label: "shop_management.filter_result".tr(),
                   onPressed: onApply,
-                  height: AppDimensions.smallHeightButton,
                 ),
               ),
               AppSpacing.horizontal(AppDimensions.smallSpacing),

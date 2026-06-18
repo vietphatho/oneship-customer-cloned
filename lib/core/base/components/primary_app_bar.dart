@@ -7,6 +7,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.leading,
     this.actions,
+    this.leading,
     this.confirmPop = false,
     this.canPop = true,
     this.backgroundColor = Colors.white,
@@ -17,6 +18,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final Widget? leading;
   final List<Widget>? actions;
+  final Widget? leading;
 
   final bool confirmPop;
   final bool canPop;

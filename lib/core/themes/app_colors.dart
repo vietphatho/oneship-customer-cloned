@@ -154,4 +154,14 @@ class AppColors {
     end: Alignment.bottomCenter,
     // stops: [0.0, 0.3],
   );
+
+  static const Color supportAccountBackground = Color(0xFFEAF3FF);
+  static const Color supportIncomeBackground = Color(0xFFE9FBF1);
+  static const Color supportPackageBackground = Color(0xFFF4EAFE);
+  static const Color supportAppFeatureBackground = Color(0xFFEAF4FF);
+  static const Color supportComplaintBackground = Color(0xFFFFEEEE);
+  static const Color supportOtherBackground = Color(0xFFF0F1F5);
+  static const Color supportEnvelope = Color(0xFF8DBBFF);
+  static const Color supportEnvelopeFold = Color(0xFF5F9CFA);
+  static const Color supportHeroBubble = Color(0xFFDCEBFF);
 }
