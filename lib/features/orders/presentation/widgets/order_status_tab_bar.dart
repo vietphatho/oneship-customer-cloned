@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:oneship_customer/core/base/components/icon_label_tab_bar.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 
 extension OrderStatusIconExt on OrderStatus {
@@ -55,17 +55,91 @@ class OrderStatusTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconLabelTabBar(
-      controller: controller,
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(
+        AppDimensions.smallSpacing,
+        AppDimensions.xxSmallSpacing,
+        AppDimensions.smallSpacing,
+        AppDimensions.xSmallSpacing,
+      ),
+      child: Container(
+        height: 42,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: AppDimensions.largeBorderRadius,
+          border: Border.all(color: AppColors.shopHomeV2InputBorder),
+        ),
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (context, child) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (var index = 0; index < items.length; index++) ...[
+                    _OrderStatusTabItem(
+                      status: items[index],
+                      isSelected: controller.index == index,
+                      onTap: () {
+                        onTap?.call(index);
+                        controller.animateTo(index);
+                      },
+                    ),
+                    if (index != items.length - 1) AppSpacing.horizontal(4),
+                  ],
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _OrderStatusTabItem extends StatelessWidget {
+  const _OrderStatusTabItem({
+    required this.status,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final OrderStatus status;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isSelected ? AppColors.primary : AppColors.neutral5;
+
+    return InkWell(
       onTap: onTap,
-      items: items
-          .map(
-            (status) => IconLabelTabItem(
-              label: status.value.tr(),
-              iconPath: status.iconPath,
-            ),
-          )
-          .toList(),
+      borderRadius: AppDimensions.mediumBorderRadius,
+      child: Container(
+        constraints: const BoxConstraints(minWidth: 76),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.shopHomeV2SelectedTabBackground
+              : Colors.transparent,
+          borderRadius: AppDimensions.mediumBorderRadius,
+          border: isSelected
+              ? Border.all(color: AppColors.shopHomeV2SelectedTabBorder)
+              : null,
+        ),
+        child: PrimaryText(
+          status.value.tr(),
+          maxLine: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.labelXSmall.copyWith(
+            color: color,
+            fontSize: 11,
+          ),
+        ),
+      ),
     );
   }
 }

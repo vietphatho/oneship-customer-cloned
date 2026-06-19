@@ -141,6 +141,27 @@ class AppColors {
   static const Color bottomNavBarBackgroundDark = Color(0xFF101A24);
   static const Color bottomNavBarBackground = neutral9;
 
+  // Shop home V2 colors
+  static const Color shopHomeV2Background = Color(0xFFFFFBF7);
+  static const Color shopHomeV2SoftOrangeBackground = Color(0xFFFFE7CC);
+  static const Color shopHomeV2MerchantBrown = Color(0xFF9B5C18);
+  static const Color shopHomeV2LightBorder = Color(0xFFF0E9E2);
+  static const Color shopHomeV2InputBorder = Color(0xFFEFE8E0);
+  static const Color shopHomeV2ProgressBackground = Color(0xFFEDEDED);
+  static const Color shopHomeV2QuickActionGreen = Color(0xFF2EBE55);
+  static const Color shopHomeV2QuickActionOffer = Color(0xFFFF3F67);
+  static const Color shopHomeV2QuickActionWallet = Color(0xFF8E49E8);
+  static const Color shopHomeV2MedalBorder = Color(0xFFFFD98A);
+  static const Color shopHomeV2WalletDot = Color(0xFF7C5CFF);
+  static const Color shopHomeV2IconCutoutBackground = Color(0xFFFFF4EE);
+  static const Color shopHomeV2SelectedTabBackground = Color(0xFFFFF4EA);
+  static const Color shopHomeV2SelectedTabBorder = Color(0xFFFFC897);
+  static const Color shopHomeV2Delivery = Color(0xFF2E86DE);
+  static const Color shopHomeV2TimelineLine = Color(0xFFE8E2DC);
+  static const Color shopHomeV2PromoButtonText = Color(0xFF532E1C);
+  static const Color shopHomeV2StatsPurple = Color(0xFF9C57D6);
+  static const Color shopHomeV2StatsGold = Color(0xFFE8A400);
+
   static const LinearGradient shopHomeGradBg = LinearGradient(
     colors: [Color(0xFFFFB16F), Colors.white],
     begin: Alignment.topCenter,

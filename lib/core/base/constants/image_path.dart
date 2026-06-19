@@ -17,6 +17,31 @@ class ImagePath {
   static const String shopHomeAvatarBackground =
       'assets/images/shop_home_avatar_background.png';
   static const String shopHomeStore = 'assets/images/shop_home_store.png';
+  static const String shopHomeV2Market = 'assets/images/shop_home_v2_market.png';
+  static const String shopHomeV2Medal = 'assets/images/shop_home_v2_medal.png';
+  static const String shopHomeV2Wallet = 'assets/images/shop_home_v2_wallet.png';
+  static const String shopHomeV2IconOrder =
+      'assets/images/shop_home_v2_icon_order.png';
+  static const String shopHomeV2IconOffer =
+      'assets/images/shop_home_v2_icon_offer.png';
+  static const String shopHomeV2IconWallet =
+      'assets/images/shop_home_v2_icon_wallet.png';
+  static const String shopHomeV2IconDelivery =
+      'assets/images/shop_home_v2_icon_delivery.png';
+  static const String shopHomeV2IconDone =
+      'assets/images/shop_home_v2_icon_done.png';
+  static const String shopHomeV2OrderStatusWaiting =
+      'assets/images/shop_home_v2_order_status_waiting.png';
+  static const String shopHomeV2OrderStatusDelivery =
+      'assets/images/shop_home_v2_order_status_delivery.png';
+  static const String shopHomeV2OrderStatusDone =
+      'assets/images/shop_home_v2_order_status_done.png';
+  static const String shopHomeV2RefPromoBannerHd =
+      'assets/images/shop_home_v2_ref_promo_banner_hd.png';
+  static const String shopHomeV2IconPointsFromRef =
+      'assets/images/shop_home_v2_icon_points_from_ref.png';
+  static const String shopHomeV2AvatarReference =
+      'assets/images/shop_home_v2_avatar_reference.png';
   static const String shopHomeHeaderOzoShipGenerated =
       'assets/images/shop_home_header_ozoship_generated_v3.png';
   static const String shopHomePromotionOzoShipNoCtaGenerated =
