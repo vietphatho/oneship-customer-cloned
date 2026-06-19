@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -110,6 +111,8 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final orderNumber = ordDtl.orderNumber ?? "--";
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.primaryLight,
@@ -117,50 +120,136 @@ class _Header extends StatelessWidget {
         borderRadius: AppDimensions.largeBorderRadius,
       ),
       padding: AppDimensions.smallPaddingAll,
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FittedBox(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
                   child: PrimaryText(
-                    ordDtl.orderNumber,
+                    orderNumber,
                     style: AppTextStyles.labelLarge,
                   ),
                 ),
-                PrimaryText(
-                  DateTimeUtils.formatDateTime(ordDtl.createdAt?.toLocal()),
-                  style: AppTextStyles.bodySmall,
+              ),
+              AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: "copy".tr(),
+                onPressed: () => _copyOrderNumber(context, orderNumber),
+                icon: Icon(
+                  Icons.content_copy,
+                  color: AppColors.secondary,
+                  size: 22,
                 ),
-                AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                OrderStatusTag(status: ordDtl.status ?? "--"),
-              ],
-            ),
+              ),
+            ],
           ),
-          AppSpacing.horizontal(AppDimensions.mediumSpacing),
-          // IconButton(
-          //   visualDensity: VisualDensity.compact,
-          //   onPressed: () {},
-          //   icon: Icon(Icons.print, color: AppColors.secondary),
-          // ),
-          if (ordDtl.status.canEditOrder)
-            IconButton(
-              visualDensity: VisualDensity.compact,
-              onPressed: () {
-                final CreateOrderBloc createOrderBloc = getIt.get();
-                final ProductBloc productBloc = getIt.get();
-                final ShopBloc shopBloc = getIt.get();
-                createOrderBloc.initUpdateOrdData(
-                  ordDtl,
-                  shippingServices: shopBloc.state.shippingServices,
-                );
-                productBloc.initUpdateSelectedProduct(ordDtl.items);
-                context.push(RouteName.createOrderPage);
-              },
-              icon: Icon(Icons.edit_document, color: AppColors.secondary),
-            ),
+          PrimaryText(
+            DateTimeUtils.formatDateTime(ordDtl.createdAt?.toLocal()),
+            style: AppTextStyles.bodySmall,
+          ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+          Row(
+            children: [
+              OrderStatusTag(status: ordDtl.status ?? "--"),
+              const Spacer(),
+              _EditButton(onPressed: () => _editOrder(context)),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  void _copyOrderNumber(BuildContext context, String orderNumber) {
+    Clipboard.setData(ClipboardData(text: orderNumber));
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          margin: EdgeInsets.all(AppDimensions.mediumSpacing),
+          backgroundColor: AppColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: AppDimensions.mediumBorderRadius,
+          ),
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,
+                size: 20,
+              ),
+              AppSpacing.horizontal(AppDimensions.smallSpacing),
+              PrimaryText(
+                "order_code_copied".tr(),
+                color: Colors.white,
+                style: AppTextStyles.labelXSmall,
+                bold: true,
+              ),
+            ],
+          ),
+        ),
+      );
+  }
+
+  void _editOrder(BuildContext context) {
+    final CreateOrderBloc createOrderBloc = getIt.get();
+    final ProductBloc productBloc = getIt.get();
+    final ShopBloc shopBloc = getIt.get();
+    createOrderBloc.initUpdateOrdData(
+      ordDtl,
+      shippingServices: shopBloc.state.shippingServices,
+    );
+    productBloc.initUpdateSelectedProduct(ordDtl.items);
+    context.push(RouteName.createOrderPage);
+  }
+}
+
+class _EditButton extends StatelessWidget {
+  const _EditButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: AppDimensions.mediumBorderRadius,
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppDimensions.mediumSpacing,
+          vertical: AppDimensions.xxSmallSpacing,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: AppDimensions.mediumBorderRadius,
+          border: Border.all(color: AppColors.primary),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.edit_outlined,
+              size: 14,
+              color: AppColors.primary,
+            ),
+            AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
+            PrimaryText(
+              "edit".tr(),
+              style: AppTextStyles.labelXSmall,
+              color: AppColors.primary,
+              bold: true,
+            ),
+          ],
+        ),
       ),
     );
   }
