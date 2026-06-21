@@ -36,55 +36,52 @@ class FilterTextField extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 11,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
             color: AppColors.neutral3,
           ),
         ),
         const SizedBox(height: 3),
-        SizedBox(
-          height: 36,
-          child: TextField(
-            controller: controller,
-            keyboardType: keyboardType,
-            inputFormatters: inputFormatters,
-            readOnly: readOnly,
-            onTap: onTap,
-            style: const TextStyle(fontSize: 12, color: AppColors.neutral2),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(fontSize: 12, color: AppColors.grey400),
-              filled: true,
-              fillColor: Colors.white,
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.xSmallSpacing,
-                vertical: AppDimensions.xxSmallSpacing,
-              ),
-              prefixIcon: prefixIcon == null
-                  ? null
-                  : SizedBox(
-                      width: 28,
-                      child: Center(child: prefixIcon),
-                    ),
-              prefixIconConstraints:
-                  const BoxConstraints(minWidth: 28, maxWidth: 28),
-              suffixIcon: suffixIcon == null
-                  ? null
-                  : SizedBox(
-                      width: 28,
-                      child: Center(child: suffixIcon),
-                    ),
-              suffixIconConstraints:
-                  const BoxConstraints(minWidth: 28, maxWidth: 28),
-              border: _border,
-              enabledBorder: _border,
-              focusedBorder: _border.copyWith(
-                borderSide: const BorderSide(color: AppColors.secondary),
-              ),
-              disabledBorder: _border.copyWith(
-                borderSide: const BorderSide(color: AppColors.neutral8),
-              ),
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          readOnly: readOnly,
+          onTap: onTap,
+          style: const TextStyle(fontSize: 14, color: AppColors.neutral2),
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: const TextStyle(fontSize: 14, color: AppColors.grey400),
+            filled: true,
+            fillColor: Colors.white,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.smallSpacing,
+              vertical: 10,
+            ),
+            prefixIcon: prefixIcon == null
+                ? null
+                : SizedBox(
+                    width: 28,
+                    child: Center(child: prefixIcon),
+                  ),
+            prefixIconConstraints:
+                const BoxConstraints(minWidth: 28, maxWidth: 28),
+            suffixIcon: suffixIcon == null
+                ? null
+                : SizedBox(
+                    width: 28,
+                    child: Center(child: suffixIcon),
+                  ),
+            suffixIconConstraints:
+                const BoxConstraints(minWidth: 28, maxWidth: 28),
+            border: _border,
+            enabledBorder: _border,
+            focusedBorder: _border.copyWith(
+              borderSide: const BorderSide(color: AppColors.secondary),
+            ),
+            disabledBorder: _border.copyWith(
+              borderSide: const BorderSide(color: AppColors.neutral8),
             ),
           ),
         ),

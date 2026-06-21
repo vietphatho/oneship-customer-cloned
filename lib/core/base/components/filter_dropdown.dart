@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 
 /// A compact labeled dropdown used in filter panels.
 ///
@@ -33,58 +32,54 @@ class FilterDropdown<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        PrimaryText(
           label,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: AppColors.neutral3,
-          ),
+          size: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.neutral3,
         ),
         const SizedBox(height: 3),
-        SizedBox(
-          height: 36,
-          child: DropdownButtonFormField<T>(
-            initialValue: value,
-            isDense: true,
-            isExpanded: true,
-            style: const TextStyle(fontSize: 12, color: AppColors.neutral2),
-            hint: Text(
-              hintText,
-              style: const TextStyle(fontSize: 12, color: AppColors.grey400),
-            ),
-            icon: const Icon(
-              Icons.keyboard_arrow_down,
-              size: 16,
-              color: AppColors.neutral5,
-            ),
-            decoration: const InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppDimensions.xSmallSpacing,
-                vertical: AppDimensions.xxSmallSpacing,
-              ),
-              border: _border,
-              enabledBorder: _border,
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.secondary),
-                borderRadius: AppDimensions.xSmallBorderRadius,
-              ),
-            ),
-            items: items.map((item) {
-              return DropdownMenuItem<T>(
-                value: item,
-                child: Text(
-                  itemLabel(item),
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              );
-            }).toList(),
-            onChanged: onChanged,
+        DropdownButtonFormField<T>(
+          initialValue: value,
+          isDense: true,
+          isExpanded: true,
+          style: const TextStyle(fontSize: 14, color: AppColors.neutral2),
+          hint: PrimaryText(
+            hintText,
+            size: 14,
+            color: AppColors.grey400,
           ),
+          icon: const Icon(
+            Icons.keyboard_arrow_down,
+            size: 16,
+            color: AppColors.neutral5,
+          ),
+          decoration: const InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            isDense: true,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.smallSpacing,
+              vertical: 10,
+            ),
+            border: _border,
+            enabledBorder: _border,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.secondary),
+              borderRadius: AppDimensions.xSmallBorderRadius,
+            ),
+          ),
+          items: items.map((item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              child: PrimaryText(
+                itemLabel(item),
+                overflow: TextOverflow.ellipsis,
+                size: 14,
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
         ),
       ],
     );
