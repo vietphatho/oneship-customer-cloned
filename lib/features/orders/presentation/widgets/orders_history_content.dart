@@ -30,36 +30,6 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
 
   @override
   Widget build(BuildContext context) {
-    final isFilterExpanded = _ordersBloc.state.showOrdersHistoryFilters;
-
-    if (isFilterExpanded) {
-      return SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: AppDimensions.mediumSpacing),
-        child: Column(
-          children: [
-            // _OrdersHistoryListHeader(
-            //   isExpanded: true,
-            //   onToggle: ordersBloc.toggleOrdersHistoryFilters,
-            // ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppDimensions.mediumSpacing,
-                0,
-                AppDimensions.mediumSpacing,
-                AppDimensions.smallSpacing,
-              ),
-              child: OrdersHistoryFilterPanel(
-                initialFilters: _ordersBloc.state.ordersHistoryFilters,
-                maxCodAmount: _ordersBloc.state.ordersHistoryMaxCodAmount,
-                onApply: _ordersBloc.applyOrdersHistoryFilters,
-                onClear: _ordersBloc.clearOrdersHistoryFilters,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
     return BlocBuilder<OrdersBloc, OrdersState>(
       bloc: _ordersBloc,
       builder: (context, state) {
@@ -75,7 +45,7 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                 children: [
                   OrdersHistoryListCard(
                     status: OrderStatus.allProcessing,
-                    orders: state.allOrdersHistoryList,
+                    orders: state.filteredAllOrdersHistoryList,
                     onRefresh:
                         () => _ordersBloc.fetchOrderHistory(
                           OrderStatus.allProcessing,
@@ -92,7 +62,7 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                   ),
                   OrdersHistoryListCard(
                     status: OrderStatus.delivered,
-                    orders: state.deliveredOrdersHistoryList,
+                    orders: state.filteredDeliveredOrdersHistoryList,
                     onRefresh:
                         () => _ordersBloc.fetchOrderHistory(
                           OrderStatus.delivered,
@@ -109,7 +79,7 @@ class _OrdersHistoryContentState extends State<OrdersHistoryContent> {
                   ),
                   OrdersHistoryListCard(
                     status: OrderStatus.returned,
-                    orders: state.returnedOrdersHistoryList,
+                    orders: state.filteredReturnedOrdersHistoryList,
                     onRefresh:
                         () =>
                             _ordersBloc.fetchOrderHistory(OrderStatus.returned),

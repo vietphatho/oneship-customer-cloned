@@ -14,7 +14,8 @@ import 'package:oneship_customer/features/packages/presentation/bloc/packages_bl
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
-
+import 'package:oneship_customer/features/shop_master/data/enum.dart';
+import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -28,6 +29,7 @@ class _OrdersPageState extends State<OrdersPage>
   final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
+  final ShopMasterBloc _shopMasterBloc = getIt.get();
 
   late List<OrderStatus> _tabList;
   late TabController _tabCtrl;
@@ -67,6 +69,11 @@ class _OrdersPageState extends State<OrdersPage>
     return Scaffold(
       appBar: PrimaryAppBar(
         title: 'processing_orders_title'.tr(),
+        leading: BackButton(
+          onPressed: () {
+            _shopMasterBloc.changeTab(BottomNavigationItem.home);
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(

@@ -5,12 +5,15 @@ import 'package:oneship_customer/features/orders/presentation/views/create_order
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home_v2.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
+import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
 
 enum BottomNavigationItem {
   home,
   orderList,
   createOrder,
   finance,
+  wallet,
   menu,
 }
 
@@ -20,6 +23,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     BottomNavigationItem.orderList: 'Đơn hàng',
     BottomNavigationItem.createOrder: '',
     BottomNavigationItem.finance: 'Thống kê',
+    BottomNavigationItem.wallet: 'Ví',
     BottomNavigationItem.menu: 'Menu',
   };
 
@@ -28,6 +32,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     BottomNavigationItem.orderList: SvgPath.iconOrderList,
     BottomNavigationItem.createOrder: SvgPath.iconAdd,
     BottomNavigationItem.finance: SvgPath.iconFinance,
+    BottomNavigationItem.wallet: SvgPath.wallet, // Ensure this exists, or use a default one like SvgPath.iconWallet
     BottomNavigationItem.menu: SvgPath.iconMenu,
   };
 
@@ -36,6 +41,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
     BottomNavigationItem.orderList: OrdersPage(),
     BottomNavigationItem.createOrder: CreateOrderPage(),
     BottomNavigationItem.finance: FinancePage(),
+    BottomNavigationItem.wallet: WalletPage(),
     // BottomNavigationItem.staffManagement: ShopStaffManagementPage(),
     // BottomNavigationItem.shopManagement: ShopManagementPage(),
     BottomNavigationItem.menu: GeneralProfilePage(),
