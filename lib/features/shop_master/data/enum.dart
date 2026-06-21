@@ -4,6 +4,7 @@ import 'package:oneship_customer/features/finance/presentation/views/finance_pag
 import 'package:oneship_customer/features/orders/presentation/views/create_order_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_home_v2.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
 
@@ -36,7 +37,7 @@ extension BottomNavigationItemExt on BottomNavigationItem {
   };
 
   static const _mapPage = {
-    BottomNavigationItem.home: ShopHome(),
+    BottomNavigationItem.home: ShopHomeV2(),
     BottomNavigationItem.orderList: OrdersPage(),
     BottomNavigationItem.createOrder: CreateOrderPage(),
     BottomNavigationItem.finance: FinancePage(),

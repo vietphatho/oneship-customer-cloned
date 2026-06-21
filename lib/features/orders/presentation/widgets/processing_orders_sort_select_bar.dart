@@ -53,7 +53,6 @@ class ProcessingOrdersSortSelectBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Checkbox + label
           GestureDetector(
             onTap: () => onSelectAll(!isAllSelected),
             child: Row(
@@ -70,36 +69,32 @@ class ProcessingOrdersSortSelectBar extends StatelessWidget {
                     visualDensity: VisualDensity.compact,
                   ),
                 ),
-                const SizedBox(width: 6),
-                Text(
+                AppSpacing.horizontal(6),
+                PrimaryText(
                   '${'select_all'.tr()} ($totalCount)',
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: AppTextStyles.labelXSmall.copyWith(
                     color: AppColors.neutral2,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
                   ),
                 ),
               ],
             ),
           ),
           const Spacer(),
-          // Sort label
-          Text(
+          PrimaryText(
             '${'sort_label'.tr()}: ',
-            style: const TextStyle(
-              fontSize: 12,
+            style: AppTextStyles.bodySmall.copyWith(
               color: AppColors.neutral4,
+              fontSize: 12,
             ),
           ),
-          // Sort dropdown
           DropdownButton<ProcessingOrdersSortOption>(
             value: sortOption,
             isDense: true,
             underline: const SizedBox.shrink(),
-            style: const TextStyle(
-              fontSize: 12,
+            style: AppTextStyles.labelXSmall.copyWith(
               color: AppColors.neutral2,
-              fontWeight: FontWeight.w600,
+              fontSize: 12,
             ),
             icon: const Icon(
               Icons.keyboard_arrow_down,
@@ -109,7 +104,13 @@ class ProcessingOrdersSortSelectBar extends StatelessWidget {
             items: ProcessingOrdersSortOption.values.map((opt) {
               return DropdownMenuItem(
                 value: opt,
-                child: Text(opt.label),
+                child: PrimaryText(
+                  opt.label,
+                  style: AppTextStyles.labelXSmall.copyWith(
+                    color: AppColors.neutral2,
+                    fontSize: 12,
+                  ),
+                ),
               );
             }).toList(),
             onChanged: onSortChanged,
@@ -119,7 +120,6 @@ class ProcessingOrdersSortSelectBar extends StatelessWidget {
     );
   }
 }
-
 /// Sort helper - sorts a list of [OrderInfo] by the given [ProcessingOrdersSortOption].
 List<OrderInfo> sortOrders(
   List<OrderInfo> orders,
