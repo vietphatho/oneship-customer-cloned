@@ -342,6 +342,8 @@
   "weekly": "Hằng tuần",
   "monthly": "Hằng tháng",
   "copy": "Sao chép",
+  "edit": "Chỉnh sửa",
+  "order_code_copied": "Đã copy mã đơn",
   "top_up_cod": "Nộp lại số tiền thu hộ",
   "example": "Ví dụ",
   "acount_owner_name_hint_text": "Không dấu, viết hoa, viết cách.",
