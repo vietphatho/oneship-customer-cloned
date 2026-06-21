@@ -48,4 +48,7 @@ class RouteName {
 
   static const String staffManagementPage = '/staff_management_page';
   static const String shopManagementPage = '/shop_management_page';
+
+  static const String walletPage = '/wallet';
+  static const String withdrawSuccessPage = '/wallet/withdraw_success';
 }
