@@ -21,6 +21,11 @@ import 'package:oneship_customer/features/orders/presentation/widgets/order_deta
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
+import 'package:oneship_customer/core/services/bluetooth_print_service.dart';
+import 'package:oneship_customer/core/utils/esc_pos_generator.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/bluetooth_printer_selection_dialog.dart';
 
 class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({super.key});
@@ -51,7 +56,38 @@ class _OrderDetailPageState extends State<OrderDetailPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(title: "order_detail".tr()),
+      appBar: PrimaryAppBar(
+        title: "order_detail".tr(),
+        actions: [
+          IconButton(
+            icon: const Icon(CupertinoIcons.printer, color: AppColors.neutral2),
+            tooltip: 'Print Order',
+            onPressed: () {
+              BluetoothPrinterSelectionDialog.show(
+                context,
+                onPrinterConnected: () async {
+                  final orderData = _ordersBloc.state.orderDetailResource.data;
+                  if (orderData != null) {
+                    final bytes = await EscPosGenerator.generateOrderReceipt(
+                      orderData,
+                    );
+                    await BluetoothPrintService.instance.printBytes(bytes);
+                    PrimaryDialog.showSuccessDialog(
+                      context,
+                      message: 'Đã gửi lệnh in',
+                    );
+                  } else {
+                    PrimaryDialog.showErrorDialog(
+                      context,
+                      message: 'Chưa tải xong dữ liệu đơn hàng',
+                    );
+                  }
+                },
+              );
+            },
+          ),
+        ],
+      ),
       body: BlocConsumer<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         listener: _handleListener,
@@ -236,11 +272,7 @@ class _EditButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.edit_outlined,
-              size: 14,
-              color: AppColors.primary,
-            ),
+            Icon(Icons.edit_outlined, size: 14, color: AppColors.primary),
             AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
             PrimaryText(
               "edit".tr(),
