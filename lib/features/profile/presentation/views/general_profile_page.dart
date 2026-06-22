@@ -12,6 +12,8 @@ import 'package:oneship_customer/features/profile/presentation/widgets/app_versi
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_header.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_info_section.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/general_profile_menu_section.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class GeneralProfilePage extends StatefulWidget {
   const GeneralProfilePage({super.key});
@@ -21,7 +23,29 @@ class GeneralProfilePage extends StatefulWidget {
 }
 
 class _GeneralProfilePageState extends State<GeneralProfilePage> {
+  static const _shopId = '019eed2d-431c-7f5c-8a69-3d6bc9746dab';
+  static const _vendorId = '019eed48-76e7-7584-9f0b-49d30f727403';
+
   final AuthBloc _authBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
+
+  ShopVendorEntity? _vendor;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchVendor();
+  }
+
+  Future<void> _fetchVendor() async {
+    final response = await _shopBloc.fetchShopVendor(
+      shopId: _shopId,
+      vendorId: _vendorId,
+    );
+    if (!mounted || response.data == null) return;
+
+    setState(() => _vendor = response.data);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +82,16 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
                 children: [
                   const GeneralProfileTopBar(),
                   AppSpacing.vertical(AppDimensions.largeSpacing),
-                  const GeneralProfileSummaryCard(),
-                  AppSpacing.vertical(AppDimensions.mediumSpacing),
-                  const GeneralProfileShopInfoCard(),
+                  Column(
+                    children: [
+                      GeneralProfileSummaryCard(vendor: _vendor),
+                      AppSpacing.vertical(AppDimensions.mediumSpacing),
+                      GeneralProfileShopInfoCard(
+                        vendor: _vendor,
+                        userProfile: _authBloc.userProfile,
+                      ),
+                    ],
+                  ),
                   AppSpacing.vertical(AppDimensions.mediumSpacing),
                   const GeneralProfileMenuPanel(),
                   AppSpacing.vertical(AppDimensions.largeSpacing),

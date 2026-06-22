@@ -143,6 +143,7 @@ class AppColors {
 
   // Shop home V2 colors
   static const Color shopHomeV2Background = Color(0xFFFFFBF7);
+  static const Color shopHomeV2HeaderBackground = Color(0xFFFFF0E3);
   static const Color shopHomeV2SoftOrangeBackground = Color(0xFFFFE7CC);
   static const Color shopHomeV2MerchantBrown = Color(0xFF9B5C18);
   static const Color shopHomeV2LightBorder = Color(0xFFF0E9E2);

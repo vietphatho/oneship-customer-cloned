@@ -1,22 +1,48 @@
 ﻿part of '../views/vendor_home_page.dart';
 
 class _HomeHeader extends StatelessWidget {
-  const _HomeHeader();
+  const _HomeHeader({this.vendor});
+
+  static const _emptyText = '--';
+
+  final ShopVendorEntity? vendor;
 
   @override
   Widget build(BuildContext context) {
+    final userProfile = getIt.get<AuthBloc>().userProfile;
+
     return SizedBox(
-      height: 162,
+      height: 136,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            right: -12,
-            top: 36,
+            left: -16,
+            right: -16,
+            top: -14,
+            bottom: 0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    AppColors.shopHomeV2HeaderBackground,
+                    AppColors.shopHomeV2Background,
+                    AppColors.shopHomeV2HeaderBackground,
+                  ],
+                  stops: [0, 0.58, 1],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: -28,
+            top: 14,
             child: Image.asset(
               ImagePath.shopHomeV2Market,
-              width: 252,
-              height: 96,
+              width: 276,
+              height: 108,
               fit: BoxFit.cover,
               alignment: Alignment.centerRight,
             ),
@@ -33,22 +59,19 @@ class _HomeHeader extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [PrimaryBoxShadows.defaultShadow],
                 ),
-                child: ClipOval(
-                  child: Image.asset(
-                    ImagePath.shopHomeV2AvatarReference,
-                    fit: BoxFit.cover,
-                  ),
+                child: _HeaderAvatarImage(
+                  avatarUrl: userProfile.avatarUrl,
                 ),
               ),
               AppSpacing.horizontal(12),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 12, right: 118),
+                  padding: const EdgeInsets.only(top: 12, right: 128),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PrimaryText(
-                        'Xin chào, Hạnh! 👋',
+                        'Xin chào, ${_vendorName(userProfile.displayName)}! 👋',
                         maxLine: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.titleMedium.copyWith(
@@ -86,7 +109,11 @@ class _HomeHeader extends StatelessWidget {
                           AppSpacing.horizontal(4),
                           Expanded(
                             child: PrimaryText(
-                              'Chợ Bình Tây, Quận 6',
+                              _vendorAddress(
+                                authAddress: userProfile.profile?.fullAddress,
+                                authWard: userProfile.profile?.wardName,
+                                authProvince: userProfile.profile?.provinceName,
+                              ),
                               maxLine: 1,
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.bodyXSmall.copyWith(
@@ -124,6 +151,66 @@ class _HomeHeader extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  String _vendorName(String? authDisplayName) {
+    final name = vendor?.vendorName.trim();
+    if (name == null || name.isEmpty) return _textOr(authDisplayName);
+    return name;
+  }
+
+  String _vendorAddress({
+    String? authAddress,
+    String? authWard,
+    String? authProvince,
+  }) {
+    final address = vendor?.fullAddress.trim();
+    if (address != null && address.isNotEmpty) return address;
+
+    final authFullAddress = authAddress?.trim();
+    if (authFullAddress != null && authFullAddress.isNotEmpty) {
+      return authFullAddress;
+    }
+
+    final joinedAddress = [authWard, authProvince]
+        .map((item) => item?.trim() ?? '')
+        .where((item) => item.isNotEmpty)
+        .join(', ');
+    return joinedAddress.isEmpty ? _emptyText : joinedAddress;
+  }
+
+  String _textOr(String? value) {
+    final text = value?.trim();
+    if (text != null && text.isNotEmpty) return text;
+    return _emptyText;
+  }
+}
+
+class _HeaderAvatarImage extends StatelessWidget {
+  const _HeaderAvatarImage({this.avatarUrl});
+
+  final String? avatarUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = avatarUrl?.trim();
+
+    return ClipOval(
+      child: url?.isNotEmpty == true
+          ? Image.network(
+              url!,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => _fallbackAvatar,
+            )
+          : _fallbackAvatar,
+    );
+  }
+
+  Widget get _fallbackAvatar {
+    return Image.asset(
+      ImagePath.shopHomeAvatarOzoShipGenerated,
+      fit: BoxFit.cover,
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_sh
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/repositories/shop_repository.dart';
 
 @LazySingleton(as: ShopRepository)
@@ -69,5 +70,16 @@ class ShopRepositoryImpl extends ShopRepository {
           dto.data?.map((e) => ShippingServiceConfigEntity.from(e)).toList() ??
           [],
     );
+  }
+
+  @override
+  Future<Resource<ShopVendorEntity>> fetchShopVendor({
+    required String shopId,
+    required String vendorId,
+  }) async {
+    final response = await request(
+      () => _api.fetchShopVendor(shopId: shopId, vendorId: vendorId),
+    );
+    return response.parse((dto) => ShopVendorEntity.from(dto));
   }
 }
