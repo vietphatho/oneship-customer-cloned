@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -55,13 +56,15 @@ class _PrimaryBottomNavigationBarState
                   ),
                   child: ClipPath(
                     clipper: _BottomNavigationBarClipper(),
-                    child: Container(
-                      height: AppDimensions.bottomNavBarHeight,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.smallSpacing,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        height: AppDimensions.bottomNavBarHeight,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimensions.smallSpacing,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.background.withValues(alpha: 0.85),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppDimensions.xxLargeRadius),
                           topRight: Radius.circular(
@@ -109,6 +112,7 @@ class _PrimaryBottomNavigationBarState
                         ],
                       ),
                     ),
+                  ),
                   ),
                 ),
               ),

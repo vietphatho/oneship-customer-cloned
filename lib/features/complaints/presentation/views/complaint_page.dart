@@ -48,6 +48,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: AppColors.backgroundColor,
       appBar: _buildAppBar(context),
       bottomNavigationBar: const PrimaryBottomNavigationBar(),

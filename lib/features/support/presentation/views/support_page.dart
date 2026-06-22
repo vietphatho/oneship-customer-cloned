@@ -54,6 +54,7 @@ class _SupportPageState extends State<SupportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: AppColors.backgroundColor,
       appBar: PrimaryAppBar(
         title: 'support_help.page_title'.tr(),
@@ -62,6 +63,7 @@ class _SupportPageState extends State<SupportPage> {
       bottomNavigationBar: const PrimaryBottomNavigationBar(),
       body: SafeArea(
         top: false,
+        bottom: false,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 112),
           children: [
