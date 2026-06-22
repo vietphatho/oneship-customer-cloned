@@ -32,6 +32,7 @@ abstract class ShopInfo with _$ShopInfo {
     @JsonKey(name: "hasSecondPassword") bool? hasSecondPassword,
     @JsonKey(name: "profile") ShopProfile? profile,
     @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "shopType") String? shopType,
   }) = _ShopInfo;
 
   factory ShopInfo.fromJson(Map<String, dynamic> json) =>

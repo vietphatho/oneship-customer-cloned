@@ -100,3 +100,15 @@ extension ShopStatusX on ShopStatus {
     }
   }
 }
+
+enum ShopType { df, market, hospital }
+
+extension ShopTypeX on ShopType {
+  static const _mapValue = {
+    ShopType.df: "default",
+    ShopType.hospital: "hospital",
+    ShopType.market: "market",
+  };
+
+  String get value => _mapValue[this]!;
+}

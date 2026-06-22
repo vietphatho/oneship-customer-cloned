@@ -10,13 +10,12 @@ import 'package:oneship_customer/features/finance/presentation/bloc/finance_reco
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
-import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_app_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_brief_info.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_content_sections.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_button.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_panel.dart';
 
 class ShopHome extends StatefulWidget {
   const ShopHome({super.key});
@@ -81,7 +80,7 @@ class _ShopHomeState extends State<ShopHome> {
                 padding: AppDimensions.smallPaddingHorizontal,
                 child: Column(
                   children: [
-                    _buildFeaturePanel(),
+                    const ShopHomeFeaturePanel(),
                     AppSpacing.vertical(AppDimensions.xSmallSpacing),
                     const ShopHomePromotionBanner(),
                     AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -237,34 +236,6 @@ class _ShopHomeState extends State<ShopHome> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildFeaturePanel() {
-    final features = ShopHomeFeature.values;
-
-    return PrimaryPanel(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
-      borderRadius: AppDimensions.largeBorderRadius,
-      child: Column(
-        children: [
-          _buildFeatureRow(features.take(4).toList()),
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          _buildFeatureRow(features.skip(4).take(4).toList()),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureRow(List<ShopHomeFeature> features) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: features
-          .map(
-            (feature) =>
-                Expanded(child: ShopHomeFeatureButton(feature: feature)),
-          )
-          .toList(),
     );
   }
 
