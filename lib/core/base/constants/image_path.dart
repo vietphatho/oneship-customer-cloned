@@ -17,9 +17,11 @@ class ImagePath {
   static const String shopHomeAvatarBackground =
       'assets/images/shop_home_avatar_background.png';
   static const String shopHomeStore = 'assets/images/shop_home_store.png';
-  static const String shopHomeV2Market = 'assets/images/shop_home_v2_market.png';
+  static const String shopHomeV2Market =
+      'assets/images/shop_home_v2_market.png';
   static const String shopHomeV2Medal = 'assets/images/shop_home_v2_medal.png';
-  static const String shopHomeV2Wallet = 'assets/images/shop_home_v2_wallet.png';
+  static const String shopHomeV2Wallet =
+      'assets/images/shop_home_v2_wallet.png';
   static const String shopHomeV2IconOrder =
       'assets/images/shop_home_v2_icon_order.png';
   static const String shopHomeV2IconOffer =
@@ -110,13 +112,17 @@ class ImagePath {
       'assets/images/icon_customer_location.png';
   static const String iconShopLocation = 'assets/images/icon_shop_location.png';
   static const String moneyBag = 'assets/images/money_bag.png';
-  static const String walletBalanceIcon = 'assets/icons/wallet_balance_icon.svg';
+  static const String walletBalanceIcon =
+      'assets/icons/wallet_balance_icon.svg';
   static const String walletChartIcon = 'assets/icons/wallet_chart_icon.svg';
-  static const String walletWithdrawIcon = 'assets/icons/wallet_withdraw_icon.svg';
+  static const String walletWithdrawIcon =
+      'assets/icons/wallet_withdraw_icon.svg';
   static const String iconBarChartSvg = 'assets/icons/bar-chart.svg';
   static const String iconWalletNewSvg = 'assets/icons/wallet.svg';
   static const String iconDollarSvg = 'assets/icons/dollar.svg';
   static const String iconClockSvg = 'assets/icons/clock.svg';
+  static const String iconPatientScan = 'assets/images/icon_scan_patient.png';
+
   //icon
   static const String iconCall = 'assets/icons/icon_call.svg';
   static const String iconCalling = 'assets/icons/icon_calling.svg';

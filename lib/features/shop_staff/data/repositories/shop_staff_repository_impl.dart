@@ -59,10 +59,8 @@ class ShopStaffRepositoryImpl extends ShopStaffRepository {
     required String staffId,
   }) async {
     final response = await request(
-      () => _shopStaffApi.fetchShopStaffDetail(
-        shopId: shopId,
-        staffId: staffId,
-      ),
+      () =>
+          _shopStaffApi.fetchShopStaffDetail(shopId: shopId, staffId: staffId),
     );
 
     return response.parse((data) => ShopStaffDetailEntity.fromResponse(data));

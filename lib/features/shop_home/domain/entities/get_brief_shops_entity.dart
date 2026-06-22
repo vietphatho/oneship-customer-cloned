@@ -42,6 +42,7 @@ abstract class BriefShopEntity with _$BriefShopEntity {
     String? email,
     String? address,
     DateTime? createdAt,
+    @Default(ShopType.df) ShopType shopType,
   }) = _BriefShopEntity;
 
   bool get isActive => status == ShopStatus.active;
@@ -53,6 +54,7 @@ abstract class BriefShopEntity with _$BriefShopEntity {
       shopId: dto.shopId,
       shopName: dto.shopName ?? "",
       status: _getStatus(dto.shopStatus),
+      shopType: _getShopType(dto.shopType),
       shopCoordinates: dto.shopCoordinates,
       shopLogo: dto.shopLogo,
       staffRole: dto.staffRole,
@@ -73,6 +75,11 @@ abstract class BriefShopEntity with _$BriefShopEntity {
   static ShopStatus _getStatus(String? rawValue) {
     return ShopStatus.values.firstWhereOrNull((e) => e.rawValue == rawValue) ??
         ShopStatus.unknown;
+  }
+
+  static ShopType _getShopType(String? rawValue) {
+    return ShopType.values.firstWhereOrNull((e) => e.value == rawValue) ??
+        ShopType.df;
   }
 }
 

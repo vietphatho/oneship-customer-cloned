@@ -5,10 +5,10 @@ import 'package:oneship_customer/core/navigation/route_observer_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/login_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/register_page.dart';
 import 'package:oneship_customer/features/auth/presentation/views/verify_email_page.dart';
+import 'package:oneship_customer/features/barcode_scanner/barcode_scanner.dart';
+import 'package:oneship_customer/features/complaints/presentation/views/complaint_detail_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
-import 'package:oneship_customer/features/complaints/presentation/views/complaint_detail_page.dart';
-import 'package:oneship_customer/features/complaints/domain/entities/complaint_entity.dart';
 import 'package:oneship_customer/features/customer/home/presentation/views/customer_home_page.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_period_detail_page.dart';
@@ -29,19 +29,19 @@ import 'package:oneship_customer/features/shop_home/presentation/views/create_sh
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_management_page.dart';
-import 'package:oneship_customer/features/shop_home/presentation/views/shop_selection_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/shop_selection_page.dart';
 import 'package:oneship_customer/features/shop_master/presentation/views/shop_master_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/add_shop_to_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/create_shop_staff_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_detail_page.dart';
 import 'package:oneship_customer/features/shop_staff/presentation/views/shop_staff_management_page.dart';
 import 'package:oneship_customer/features/splash/presentation/views/splash_page.dart';
-import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
-import 'package:oneship_customer/features/wallet/presentation/views/withdraw_success_page.dart';
 import 'package:oneship_customer/features/support/presentation/models/support_category_data.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_category_page.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_page.dart';
+import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
+import 'package:oneship_customer/features/wallet/presentation/views/withdraw_success_page.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: AppNavigator.globalKey,
@@ -154,9 +154,8 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: RouteName.supportCategoryPage,
-      builder: (context, state) => SupportCategoryPage(
-        category: state.extra as SupportCategoryData,
-      ),
+      builder: (context, state) =>
+          SupportCategoryPage(category: state.extra as SupportCategoryData),
     ),
     GoRoute(
       path: RouteName.complaintPage,
@@ -201,6 +200,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.withdrawSuccessPage,
       builder: (context, state) => const WithdrawSuccessPage(),
+    ),
+    GoRoute(
+      path: RouteName.scanPatientCodePage,
+      builder: (context, state) => const ScanPatientCodePage(),
     ),
   ],
 );
