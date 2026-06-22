@@ -1,4 +1,4 @@
-part of '../../views/shop_home_v2.dart';
+part of '../views/vendor_home_page.dart';
 
 class _TopCards extends StatelessWidget {
   const _TopCards();

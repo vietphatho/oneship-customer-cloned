@@ -71,6 +71,8 @@ class ApiInterceptor extends Interceptor {
             AppNavigator.globalContext.pushReplacement(RouteName.loginPage);
           } else {
             AppLogger().log("another error refresh token", detail: e);
+            await Future.delayed(Durations.medium4);
+            AppNavigator.globalContext.pushReplacement(RouteName.loginPage);
             return handler.next(e is DioException ? e : err);
           }
         }

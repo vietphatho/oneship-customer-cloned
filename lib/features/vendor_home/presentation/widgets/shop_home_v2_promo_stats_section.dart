@@ -1,4 +1,4 @@
-﻿part of '../../views/shop_home_v2.dart';
+﻿part of '../views/vendor_home_page.dart';
 
 class _PromoBanner extends StatelessWidget {
   const _PromoBanner();
@@ -60,7 +60,6 @@ class _PromoBanner extends StatelessWidget {
     );
   }
 }
-
 
 class _StatsPanel extends StatelessWidget {
   const _StatsPanel();
@@ -155,6 +154,3 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-
-
-

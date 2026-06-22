@@ -27,12 +27,15 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
 
   late final PageController _pageController;
 
+  late final List<BottomNavigationItem> _bottomNavBarList;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(
       initialPage: _shopMasterBloc.currentTab.index,
     );
+    _bottomNavBarList = _authBloc.getBottomNavBarList();
   }
 
   @override
@@ -59,9 +62,9 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
                         child: PageView.builder(
                           controller: _pageController,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: BottomNavigationItem.values.length,
+                          itemCount: _bottomNavBarList.length,
                           itemBuilder: (context, index) =>
-                              BottomNavigationItem.values[index].page,
+                              _bottomNavBarList[index].page,
                         ),
                       ),
                     ],
@@ -100,7 +103,7 @@ class _ShopMasterPageState extends State<ShopMasterPage> {
   void _handleListener(BuildContext context, ShopMasterState state) {
     if (state is ShopMasterMenuTabChangedState) {
       _pageController.jumpToPage(
-        _shopMasterBloc.currentTab.index,
+        _bottomNavBarList.indexOf(_shopMasterBloc.currentTab),
         // duration: Constants.pageViewTransitionDur,
         // curve: Curves.easeInOut,
       );

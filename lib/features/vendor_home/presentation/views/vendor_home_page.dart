@@ -1,12 +1,12 @@
 ﻿import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
-part '../widgets/shop_home_v2/shop_home_v2_header_section.dart';
-part '../widgets/shop_home_v2/shop_home_v2_overview_section.dart';
-part '../widgets/shop_home_v2/shop_home_v2_orders_section.dart';
-part '../widgets/shop_home_v2/shop_home_v2_promo_stats_section.dart';
+part '../widgets/shop_home_v2_header_section.dart';
+part '../widgets/shop_home_v2_overview_section.dart';
+part '../widgets/shop_home_v2_orders_section.dart';
+part '../widgets/shop_home_v2_promo_stats_section.dart';
 
-class ShopHomeV2 extends StatelessWidget {
-  const ShopHomeV2({super.key});
+class VendorHomePage extends StatelessWidget {
+  const VendorHomePage({super.key});
 
   static const _backgroundColor = AppColors.shopHomeV2Background;
 
@@ -70,6 +70,3 @@ class ShopHomeV2 extends StatelessWidget {
     );
   }
 }
-
-
-

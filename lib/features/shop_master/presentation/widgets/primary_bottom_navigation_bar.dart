@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_state.dart';
@@ -19,13 +20,15 @@ class PrimaryBottomNavigationBar extends StatefulWidget {
 class _PrimaryBottomNavigationBarState
     extends State<PrimaryBottomNavigationBar> {
   final ShopMasterBloc _shopMasterBloc = getIt.get();
+  final AuthBloc _authBloc = getIt.get();
 
-  static const List<BottomNavigationItem> _sideItems = [
-    BottomNavigationItem.home,
-    BottomNavigationItem.orderList,
-    BottomNavigationItem.wallet,
-    BottomNavigationItem.menu,
-  ];
+  late final List<BottomNavigationItem> _bottomNavBarList;
+
+  @override
+  void initState() {
+    super.initState();
+    _bottomNavBarList = _authBloc.getBottomNavBarList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,17 +76,19 @@ class _PrimaryBottomNavigationBarState
                         children: [
                           Expanded(
                             child: _NavigationItem(
-                              item: _sideItems[0],
+                              item: _bottomNavBarList[0],
                               isSelected:
-                                  _shopMasterBloc.currentTab == _sideItems[0],
+                                  _shopMasterBloc.currentTab ==
+                                  _bottomNavBarList[0],
                               onTap: _onItemTapped,
                             ),
                           ),
                           Expanded(
                             child: _NavigationItem(
-                              item: _sideItems[1],
+                              item: _bottomNavBarList[1],
                               isSelected:
-                                  _shopMasterBloc.currentTab == _sideItems[1],
+                                  _shopMasterBloc.currentTab ==
+                                  _bottomNavBarList[1],
                               onTap: _onItemTapped,
                             ),
                           ),
@@ -92,17 +97,19 @@ class _PrimaryBottomNavigationBarState
                           ),
                           Expanded(
                             child: _NavigationItem(
-                              item: _sideItems[2],
+                              item: _bottomNavBarList[2],
                               isSelected:
-                                  _shopMasterBloc.currentTab == _sideItems[2],
+                                  _shopMasterBloc.currentTab ==
+                                  _bottomNavBarList[2],
                               onTap: _onItemTapped,
                             ),
                           ),
                           Expanded(
                             child: _NavigationItem(
-                              item: _sideItems[3],
+                              item: _bottomNavBarList[3],
                               isSelected:
-                                  _shopMasterBloc.currentTab == _sideItems[3],
+                                  _shopMasterBloc.currentTab ==
+                                  _bottomNavBarList[3],
                               onTap: _onItemTapped,
                             ),
                           ),

@@ -1,4 +1,4 @@
-﻿part of '../../views/shop_home_v2.dart';
+﻿part of '../views/vendor_home_page.dart';
 
 class _HomeHeader extends StatelessWidget {
   const _HomeHeader();
@@ -127,5 +127,3 @@ class _HomeHeader extends StatelessWidget {
     );
   }
 }
-
-

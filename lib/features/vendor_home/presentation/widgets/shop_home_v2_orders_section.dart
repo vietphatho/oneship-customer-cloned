@@ -1,4 +1,4 @@
-﻿part of '../../views/shop_home_v2.dart';
+﻿part of '../views/vendor_home_page.dart';
 
 class _SectionTitle extends StatelessWidget {
   const _SectionTitle(this.title);
@@ -13,7 +13,6 @@ class _SectionTitle extends StatelessWidget {
     );
   }
 }
-
 
 class _SearchBox extends StatelessWidget {
   const _SearchBox();
@@ -306,7 +305,3 @@ class _OrderCard extends StatelessWidget {
     );
   }
 }
-
-
-
-
