@@ -25,6 +25,13 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     Emitter<SplashState> emit,
   ) async {
     TokenManager tokenManager = TokenManager();
+    bool isRememberMe = await tokenManager.getIsRememberMe();
+    
+    if (!isRememberMe && _isFirstApp) {
+      await tokenManager.clearTokens();
+    }
+    _isFirstApp = false;
+    
     String? accessToken = await tokenManager.getAccessToken();
 
     emit(

@@ -39,6 +39,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    _splashBloc.init();
   }
 
   @override
@@ -98,7 +99,9 @@ class _SplashPageState extends State<SplashPage> {
           break;
         case Result.success:
           String? userRole = state.resource.data?.userRole;
-          if (userRole == UserRole.shop.value) {
+          if (userRole == UserRole.customer.value) {
+            context.go(RouteName.customerHomePage);
+          } else if (userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
             break;
           } else if (userRole == UserRole.vendor.value) {
@@ -115,11 +118,13 @@ class _SplashPageState extends State<SplashPage> {
     }
   }
 
-  void _listenShopsListChanged(BuildContext context, ShopState state) async {
+  void _listenShopsListChanged(BuildContext context, ShopState state) {
     switch (state.briefShopsResource.state) {
       case Result.loading:
+        PrimaryDialog.showLoadingDialog(context);
         break;
       case Result.success:
+        PrimaryDialog.hideLoadingDialog(context);
         if (state.hasNoShops) {
           context.go(RouteName.shopEmptyPage);
         } else if (!state.hasApprovedShop) {
@@ -127,7 +132,6 @@ class _SplashPageState extends State<SplashPage> {
         } else {
           // await Future.delayed(Durations.medium1);
           // final String shopId = state.currentShop?.shopId ?? "";
-
           // financeOverviewBloc.init(
           //   shopId: shopId,
           //   requestSource: FinanceRequestSource.page,
@@ -137,9 +141,11 @@ class _SplashPageState extends State<SplashPage> {
           // if (state.currentShop != null) {
           //   _packagesBloc.init(state.currentShop!);
           // }
+
           context.go(RouteName.shopMasterPage);
         }
       case Result.error:
+        PrimaryDialog.hideLoadingDialog(context);
         PrimaryDialog.showErrorDialog(
           context,
           message: state.briefShopsResource.message,
