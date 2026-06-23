@@ -20,7 +20,7 @@ class GeneralProfileMenuPanel extends StatelessWidget {
       PrimaryMenuItemData(
         icon: Icons.lock_outline_rounded,
         iconColor: AppColors.info,
-        label: 'Cài đặt tài khoản',
+        label: 'Đổi mật khẩu',
         onTap: () => context.push(RouteName.changePasswordPage),
       ),
       const PrimaryMenuItemData(

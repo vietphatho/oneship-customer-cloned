@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/services/bluetooth_print_service.dart';
 import 'package:oneship_customer/core/themes/app_box_shadows.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/esc_pos_generator.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
@@ -17,15 +21,11 @@ import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_info_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_products_list_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_transportation_history_tab_view.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/bluetooth_printer_selection_dialog.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_tab_bar.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:oneship_customer/core/base/components/primary_dialog.dart';
-import 'package:oneship_customer/core/services/bluetooth_print_service.dart';
-import 'package:oneship_customer/core/utils/esc_pos_generator.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/bluetooth_printer_selection_dialog.dart';
 
 class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({super.key});
@@ -194,7 +194,12 @@ class _Header extends StatelessWidget {
             children: [
               OrderStatusTag(status: ordDtl.status ?? "--"),
               const Spacer(),
-              _EditButton(onPressed: () => _editOrder(context)),
+              if (![
+                OrderStatus.delivered.value,
+                OrderStatus.returned.value,
+                OrderStatus.cancelled.value,
+              ].contains(ordDtl.status))
+                _EditButton(onPressed: () => _editOrder(context)),
             ],
           ),
         ],

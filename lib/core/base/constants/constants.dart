@@ -109,7 +109,7 @@ class Constants {
   static const String defaultSortByCreatedAt = "createdAt";
   static const String defaultSortOrderDesc = "desc";
 
-  static const tpSwitchBoard = "0981191608";
+  static const hotline = "0981191608";
 
   static const ValueKey profileAvatarHeroKey = ValueKey(
     "profile_avatar_hero_key",
