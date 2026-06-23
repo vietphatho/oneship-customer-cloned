@@ -130,7 +130,7 @@ class FinancePeriodCard extends StatelessWidget {
     final days = endDate.difference(DateTime.now()).inDays;
     if (days < 0) return 'ended'.tr();
     if (days == 0) return 'ends_today'.tr();
-    return 'ends_in_days'.tr(namedArgs: {'days': '$days'});
+    return 'ends_in_days'.tr(namedArgs: {'count': '$days'});
   }
 }
 
