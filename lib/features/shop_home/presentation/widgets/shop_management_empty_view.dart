@@ -16,17 +16,16 @@ class ShopManagementEmptyView extends StatelessWidget {
           AppSpacing.vertical(16),
           Text(
             'shop_management.empty_title'.tr(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.neutral5,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: AppColors.neutral5),
           ),
           AppSpacing.vertical(8),
           Text(
             'shop_management.empty_subtitle'.tr(),
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: AppColors.neutral6),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.neutral6),
             textAlign: TextAlign.center,
           ),
         ],

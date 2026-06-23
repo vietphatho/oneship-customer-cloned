@@ -54,12 +54,11 @@ class ShopEmptyBody extends StatelessWidget {
                   child: Image.asset(
                     ImagePath.shopOnboarding,
                     fit: BoxFit.contain,
-                    errorBuilder:
-                        (_, __, ___) => const Icon(
-                          Icons.storefront_outlined,
-                          size: 120,
-                          color: AppColors.primary,
-                        ),
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.storefront_outlined,
+                      size: 120,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
                 AppSpacing.vertical(AppDimensions.xxxLargeSpacing),

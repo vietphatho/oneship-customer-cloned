@@ -1218,5 +1218,8 @@
     "update_success": "Cập nhật thành công.",
     "camera_permission_error": "Không thể mở camera. Vui lòng kiểm tra quyền truy cập camera.",
     "no_shop_selected": "Vui lòng chọn cửa hàng trước khi quét mã bệnh án"
-  }
+  },
+  "fixed": "Phí cố định",
+  "percent": "Phí theo phần trăm",
+  "from": "từ"
 }

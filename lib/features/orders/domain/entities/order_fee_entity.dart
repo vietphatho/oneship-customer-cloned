@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
-import 'package:oneship_customer/features/orders/domain/entities/surcharge_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 
 part 'order_fee_entity.freezed.dart';
 

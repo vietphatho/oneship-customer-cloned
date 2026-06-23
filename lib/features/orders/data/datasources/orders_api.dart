@@ -12,7 +12,6 @@ import 'package:oneship_customer/features/orders/data/models/response/get_routin
 import 'package:oneship_customer/features/orders/data/models/response/order_detail_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/products_list_response.dart';
-import 'package:oneship_customer/features/orders/data/models/response/visible_surcharges_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'orders_api.g.dart';
@@ -55,10 +54,6 @@ abstract class OrdersApi {
   @POST("/api/v1/orders/calculate-delivery-fee")
   Future<BaseResponse<CalculateDeliveryFeeResponse, BaseError>>
   calculateDeliveryFee(@Body() CalculateDeliveryFeeRequest body);
-
-  @GET("/api/v1/delivery/shops/{shopId}/surcharges/visible")
-  Future<BaseResponse<VisibleSurchargesResponse, BaseError>>
-  fetchVisibleSurcharges({@Path("shopId") required String shopId});
 
   @POST("/api/v1/orders")
   Future<BaseResponse> createOrder(@Body() CreateOrderRequest body);

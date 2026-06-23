@@ -15,7 +15,6 @@ import 'package:oneship_customer/features/orders/domain/entities/order_detail_en
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/products_list_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/surcharge_entity.dart';
 import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
 
 @LazySingleton(as: OrdersRepository)
@@ -56,19 +55,6 @@ class OrdersRepositoryImpl extends OrdersRepository {
     return response.parse<CalculatedDeliveryFeeEntity>(
       (e) => CalculatedDeliveryFeeEntity.from(e),
     );
-  }
-
-  @override
-  Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
-    required String shopId,
-  }) async {
-    final response = await request(
-      () => _ordersApi.fetchVisibleSurcharges(shopId: shopId),
-    );
-
-    return response.parse<List<SurchargeGroupEntity>>((dto) {
-      return dto.data.map((e) => SurchargeGroupEntity.from(e)).toList();
-    });
   }
 
   @override

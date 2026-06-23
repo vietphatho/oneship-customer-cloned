@@ -8,13 +8,18 @@ class TokenManager {
 
   Future<void> saveTokens({
     required String accessToken,
-    required String refreshToken,
+    required String? refreshToken,
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
-    await _storage.write(key: _refreshTokenKey, value: refreshToken);
+
+    if (refreshToken != null) {
+      await _storage.write(key: _refreshTokenKey, value: refreshToken);
+    }
   }
 
-  Future<void> saveSecondPasswordToken({required String secondPasswordToken}) async {
+  Future<void> saveSecondPasswordToken({
+    required String secondPasswordToken,
+  }) async {
     await _storage.write(
       key: _secondPasswordTokenKey,
       value: secondPasswordToken,

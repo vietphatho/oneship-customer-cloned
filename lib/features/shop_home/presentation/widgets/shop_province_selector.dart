@@ -38,8 +38,8 @@ class _ShopProvinceSelectorState extends State<ShopProvinceSelector> {
           menu: provinces,
           initialValue: widget.initialProvince,
           toLabel: (item) => item.name,
-          validator:
-              (value) => value == null ? "please_select_city".tr() : null,
+          validator: (value) =>
+              value == null ? "please_select_city".tr() : null,
           onSelected: (value) {
             widget.onChanged(value);
           },

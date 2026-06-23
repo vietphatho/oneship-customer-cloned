@@ -1,45 +1,54 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/currency_text_input_formatter.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class CreateOrderSurchargeSection extends StatelessWidget {
   const CreateOrderSurchargeSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = getIt.get<CreateOrderBloc>();
+    final shopBloc = getIt.get<ShopBloc>();
 
-    return BlocBuilder<CreateOrderBloc, CreateOrderState>(
-      bloc: bloc,
+    return BlocBuilder<ShopBloc, ShopState>(
+      bloc: shopBloc,
       buildWhen: (previous, current) =>
-          previous.surchargeGroupsResource != current.surchargeGroupsResource,
-      builder: (context, state) {
-        if (state.surchargeGroupsResource.state == Result.loading &&
-            state.surchargeGroups.isEmpty) {
-          return PrimaryText(
-            "loading".tr(),
-            style: AppTextStyles.bodySmall,
-            color: AppColors.neutral5,
-          );
-        }
+          previous.visibleSurchargeGroupsResource !=
+          current.visibleSurchargeGroupsResource,
+      builder: (context, shopState) {
+        final resource = shopState.visibleSurchargeGroupsResource;
+        final groups = shopState.visibleSurchargeGroups;
 
-        if (state.surchargeGroupsResource.state == Result.error) {
+        // if (resource.state == Result.loading && groups.isEmpty) {
+        //   return PrimaryText(
+        //     "loading".tr(),
+        //     style: AppTextStyles.bodySmall,
+        //     color: AppColors.neutral5,
+        //   );
+        // }
+
+        if (resource.state == Result.error) {
           return PrimaryText(
-            state.surchargeGroupsResource.message,
+            resource.message,
             style: AppTextStyles.bodySmall,
             color: AppColors.primary,
           );
         }
 
-        if (state.surchargeGroups.isEmpty) {
+        if (groups.isEmpty) {
           return PrimaryText(
             "no_surcharge_services".tr(),
             style: AppTextStyles.bodySmall,
@@ -57,8 +66,8 @@ class CreateOrderSurchargeSection extends StatelessWidget {
             // ),
             // AppSpacing.vertical(AppDimensions.xSmallSpacing),
             ...List.generate(
-              state.surchargeGroups.length,
-              (index) => _SurchargeGroupView(groupIndex: index),
+              groups.length,
+              (index) => _SurchargeGroupView(group: groups[index]),
             ),
           ],
         );
@@ -68,70 +77,53 @@ class CreateOrderSurchargeSection extends StatelessWidget {
 }
 
 class _SurchargeGroupView extends StatelessWidget {
-  const _SurchargeGroupView({required this.groupIndex});
+  const _SurchargeGroupView({required this.group});
 
-  final int groupIndex;
+  final SurchargeGroupEntity group;
 
   @override
   Widget build(BuildContext context) {
-    final bloc = getIt.get<CreateOrderBloc>();
+    final visibleSurcharges = group.surcharges
+        .where((surcharge) => surcharge.isEnabled && surcharge.isVisibleOnShop)
+        .toList();
 
-    return BlocBuilder<CreateOrderBloc, CreateOrderState>(
-      bloc: bloc,
-      buildWhen: (previous, current) =>
-          previous.surchargeGroupsResource != current.surchargeGroupsResource,
-      builder: (context, state) {
-        if (groupIndex >= state.surchargeGroups.length) {
-          return const SizedBox.shrink();
-        }
+    if (visibleSurcharges.isEmpty) return const SizedBox.shrink();
 
-        final group = state.surchargeGroups[groupIndex];
-        final visibleSurcharges = group.surcharges
-            .where(
-              (surcharge) => surcharge.isEnabled && surcharge.isVisibleOnShop,
-            )
-            .toList();
-
-        if (visibleSurcharges.isEmpty) return const SizedBox.shrink();
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppDimensions.smallSpacing),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (group.groupName.isNotEmpty) ...[
-                PrimaryText(group.groupName, style: AppTextStyles.labelSmall),
-                AppSpacing.vertical(AppDimensions.xxSmallSpacing),
-              ],
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                itemCount: visibleSurcharges.length,
-                separatorBuilder: (context, index) =>
-                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                itemBuilder: (context, index) {
-                  return _SurchargeItem(
-                    surchargeCode: visibleSurcharges[index].code,
-                  );
-                },
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimensions.smallSpacing),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (group.groupName.isNotEmpty) ...[
+            PrimaryText(group.groupName, style: AppTextStyles.labelSmall),
+            AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+          ],
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: visibleSurcharges.length,
+            separatorBuilder: (context, index) =>
+                AppSpacing.vertical(AppDimensions.xSmallSpacing),
+            itemBuilder: (context, index) {
+              return _SurchargeItem(surcharge: visibleSurcharges[index]);
+            },
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
 
 class _SurchargeItem extends StatelessWidget {
-  const _SurchargeItem({required this.surchargeCode});
+  const _SurchargeItem({required this.surcharge});
 
-  final String surchargeCode;
+  final SurchargeEntity surcharge;
 
   @override
   Widget build(BuildContext context) {
     final bloc = getIt.get<CreateOrderBloc>();
+    final surchargeCode = surcharge.code;
 
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
       bloc: bloc,
@@ -139,41 +131,79 @@ class _SurchargeItem extends StatelessWidget {
           previous.selectedSurchargeCodes != current.selectedSurchargeCodes ||
           previous.surchargeInputValues != current.surchargeInputValues ||
           previous.surchargeValidationErrors !=
-              current.surchargeValidationErrors ||
-          previous.surchargeGroupsResource != current.surchargeGroupsResource,
+              current.surchargeValidationErrors,
       builder: (context, state) {
-        final surcharge = state.findSurcharge(surchargeCode);
-        if (surcharge == null) return const SizedBox.shrink();
-
         final isSelected = state.selectedSurchargeCodes.contains(surchargeCode);
 
         return PrimaryFrame(
           padding: const EdgeInsets.all(AppDimensions.xSmallSpacing),
           child: Column(
             children: [
-              PrimaryAnimatedPressableWidget(
-                onTap: () => bloc.toggleSurcharge(surchargeCode, !isSelected),
-                child: Row(
-                  children: [
-                    Icon(
-                      isSelected
-                          ? Icons.check_box
-                          : Icons.check_box_outline_blank,
-                      size: AppDimensions.smallIconSize,
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.neutral5,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: PrimaryAnimatedPressableWidget(
+                      onTap: () =>
+                          bloc.toggleSurcharge(surchargeCode, !isSelected),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: AppDimensions.xxSmallSpacing,
+                            ),
+                            child: Icon(
+                              isSelected
+                                  ? CupertinoIcons.checkmark_square_fill
+                                  : CupertinoIcons.square,
+                              size: AppDimensions.smallIconSize,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : AppColors.neutral6,
+                            ),
+                          ),
+                          AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PrimaryText(
+                                  surcharge.label,
+                                  style: AppTextStyles.bodySmall,
+                                  color: AppColors.neutral2,
+                                ),
+                                PrimaryText(
+                                  surcharge.displayText,
+                                  style: AppTextStyles.bodyXSmall,
+                                  color: AppColors.neutral5,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
+                  if (surcharge.tiers.isNotEmpty) ...[
                     AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                    Expanded(
-                      child: PrimaryText(
-                        surcharge.label,
-                        style: AppTextStyles.bodySmall,
-                        color: AppColors.neutral2,
+                    InkWell(
+                      borderRadius: AppDimensions.smallBorderRadius,
+                      onTap: () => context.push(
+                        RouteName.surchargeDetailPage,
+                        extra: surcharge,
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(AppDimensions.xxSmallSpacing),
+                        child: Icon(
+                          Icons.info_outline_rounded,
+                          size: AppDimensions.xSmallIconSize,
+                          color: AppColors.neutral6,
+                        ),
                       ),
                     ),
                   ],
-                ),
+                ],
               ),
               if (isSelected && surcharge.requiresValue) ...[
                 AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -235,10 +265,12 @@ class _SurchargeValueFieldState extends State<_SurchargeValueField> {
           previous.surchargeInputValues[widget.surchargeCode] !=
               current.surchargeInputValues[widget.surchargeCode] ||
           previous.surchargeValidationErrors[widget.surchargeCode] !=
-              current.surchargeValidationErrors[widget.surchargeCode] ||
-          previous.surchargeGroupsResource != current.surchargeGroupsResource,
+              current.surchargeValidationErrors[widget.surchargeCode],
       builder: (context, state) {
-        final surcharge = state.findSurcharge(widget.surchargeCode);
+        final shopBloc = getIt.get<ShopBloc>();
+        final surcharge = shopBloc.state.visibleSurcharges.firstWhereOrNull(
+          (surcharge) => surcharge.code == widget.surchargeCode,
+        );
         final value = state.surchargeInputValues[widget.surchargeCode];
         final errorText = state.surchargeValidationErrors[widget.surchargeCode];
 

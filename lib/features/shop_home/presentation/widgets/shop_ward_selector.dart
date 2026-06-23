@@ -28,15 +28,13 @@ class _ShopWardSelectorState extends State<ShopWardSelector> {
   Widget build(BuildContext context) {
     return BlocBuilder<LocationServiceBloc, LocationServiceState>(
       bloc: _locationServiceBloc,
-      buildWhen:
-          (previous, current) =>
-              previous.wardsByProvince != current.wardsByProvince,
+      buildWhen: (previous, current) =>
+          previous.wardsByProvince != current.wardsByProvince,
       builder: (context, state) {
         final provinceCode = widget.provinceCode?.toString();
-        final wards =
-            provinceCode != null
-                ? (state.wardsByProvince[provinceCode] ?? const [])
-                : const <Ward>[];
+        final wards = provinceCode != null
+            ? (state.wardsByProvince[provinceCode] ?? const [])
+            : const <Ward>[];
 
         return PrimaryDropdown<Ward>(
           key: ValueKey(
@@ -48,8 +46,8 @@ class _ShopWardSelectorState extends State<ShopWardSelector> {
           menu: wards,
           initialValue: widget.initialWard,
           toLabel: (item) => item.name,
-          validator:
-              (value) => value == null ? "please_select_ward".tr() : null,
+          validator: (value) =>
+              value == null ? "please_select_ward".tr() : null,
           onSelected: (value) {
             widget.onChanged(value);
           },

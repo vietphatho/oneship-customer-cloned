@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/orders/domain/entities/order_fee_entit
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {
@@ -196,11 +197,22 @@ class OrderDetailInfoTabView extends StatelessWidget {
                         ),
                       ),
                       const Divider(),
-                      _OrdersFeeListView(
-                        fees: state.resolveOrderFeeDisplays(
-                          shopId: ordDtl?.shopId,
-                          fees: ordDtl?.orderFees ?? [],
-                        ),
+                      BlocBuilder<ShopBloc, ShopState>(
+                        bloc: shopBloc,
+                        buildWhen: (previous, current) =>
+                            previous.visibleSurchargeGroupsResource !=
+                            current.visibleSurchargeGroupsResource,
+                        builder: (context, shopState) {
+                          return _OrdersFeeListView(
+                            fees: (ordDtl?.orderFees ?? [])
+                                .map(
+                                  (fee) => fee.toDisplayEntity(
+                                    shopState.visibleSurchargeGroups,
+                                  ),
+                                )
+                                .toList(),
+                          );
+                        },
                       ),
                       const Divider(),
                       _buildInfoField(

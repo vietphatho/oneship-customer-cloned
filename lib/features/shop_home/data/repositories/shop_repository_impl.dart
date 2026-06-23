@@ -3,12 +3,14 @@ import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_home/data/data_sources/shop_api.dart';
 import 'package:oneship_customer/features/shop_home/data/models/request/create_shop_request.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/visible_surcharges_response.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/repositories/shop_repository.dart';
 
 @LazySingleton(as: ShopRepository)
@@ -69,5 +71,18 @@ class ShopRepositoryImpl extends ShopRepository {
           dto.data?.map((e) => ShippingServiceConfigEntity.from(e)).toList() ??
           [],
     );
+  }
+
+  @override
+  Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
+    required String shopId,
+  }) async {
+    final response = await request<VisibleSurchargesResponse, dynamic>(
+      () => _api.fetchVisibleSurcharges(shopId: shopId),
+    );
+
+    return response.parse<List<SurchargeGroupEntity>>((dto) {
+      return dto.data.map(SurchargeGroupEntity.from).toList();
+    });
   }
 }

@@ -248,13 +248,17 @@ class _BottomActionButtons extends StatelessWidget {
           Expanded(
             child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
               bloc: createOrderBloc,
-              buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
+              buildWhen: (pre, cur) =>
+                  pre.updateOrdId != cur.updateOrdId ||
+                  pre.acceptTerms != cur.acceptTerms,
               builder: (context, state) {
                 return SecondaryButton.filled(
                   label: state.updateOrdId != null
                       ? "update_order".tr()
                       : "create_order".tr(),
-                  onPressed: createOrderBloc.createOrder,
+                  onPressed: state.acceptTerms
+                      ? createOrderBloc.createOrder
+                      : null,
                 );
               },
             ),

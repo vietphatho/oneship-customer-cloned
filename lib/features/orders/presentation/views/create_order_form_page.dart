@@ -172,7 +172,7 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
         state.draftRequest.ward != null &&
         state.draftRequest.serviceConfig != null &&
         Utils.parseCurrencyInput(_weightCtrl.text) > 0 &&
-        !state.hasInvalidSelectedSurcharges;
+        !_createOrderBloc.hasInvalidSelectedSurcharges(state);
   }
 
   void _onNext() {

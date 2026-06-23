@@ -77,13 +77,3 @@ class ValidateOrdAtHubEvent extends OrdersEvent {
 
   ValidateOrdAtHubEvent({required this.hubId, required this.ordId});
 }
-
-class OrdersFetchVisibleSurchargesEvent extends OrdersEvent {
-  final String shopId;
-  final bool forceRefresh;
-
-  const OrdersFetchVisibleSurchargesEvent({
-    required this.shopId,
-    this.forceRefresh = false,
-  });
-}

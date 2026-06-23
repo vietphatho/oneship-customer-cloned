@@ -112,3 +112,35 @@ extension ShopTypeX on ShopType {
 
   String get value => _mapValue[this]!;
 }
+
+enum SurchargeFeeType { fixed, percent, tiered, negotiable, unknown }
+
+extension SurchargeFeeTypeX on SurchargeFeeType {
+  static const _mapValue = {
+    SurchargeFeeType.fixed: "fixed",
+    SurchargeFeeType.percent: "percent",
+    SurchargeFeeType.tiered: "tiered",
+    SurchargeFeeType.negotiable: "negotiable",
+    SurchargeFeeType.unknown: "",
+  };
+
+  static const _mapDisplayName = {
+    SurchargeFeeType.fixed: "fixed",
+    SurchargeFeeType.percent: "percent",
+    SurchargeFeeType.tiered: "tiered",
+    SurchargeFeeType.negotiable: "negotiable",
+    SurchargeFeeType.unknown: "",
+  };
+
+  String get value => _mapValue[this]!;
+
+  String get displayName => _mapDisplayName[this]!;
+
+  static SurchargeFeeType fromString(String? value) {
+    final normalized = value?.trim().toLowerCase();
+    return SurchargeFeeType.values.firstWhere(
+      (feeType) => feeType.value == normalized,
+      orElse: () => SurchargeFeeType.unknown,
+    );
+  }
+}

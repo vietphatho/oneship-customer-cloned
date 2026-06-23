@@ -8,6 +8,7 @@ import 'package:oneship_customer/features/shop_home/data/models/response/get_bri
 import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shipping_service_config_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/visible_surcharges_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'shop_api.g.dart';
@@ -20,7 +21,7 @@ abstract class ShopApi {
 
   @GET("/api/v1/shop-staff/users/{user_id}/shops")
   Future<BaseResponse<GetBriefShopsResponse, BaseError>> getBriefShops({
-    @Path("user_id") required  String userId,
+    @Path("user_id") required String userId,
     @Query("page") int? page,
     @Query("limit") int? limit,
   });
@@ -43,4 +44,8 @@ abstract class ShopApi {
   @GET("/api/v1/delivery/shops/{shopId}/shipping-config/services")
   Future<BaseResponse<ShippingServiceConfigResponse, BaseError>>
   getShippingServiceConfigs({@Path("shopId") required String shopId});
+
+  @GET("/api/v1/delivery/shops/{shopId}/surcharges/visible")
+  Future<BaseResponse<VisibleSurchargesResponse, BaseError>>
+  fetchVisibleSurcharges({@Path("shopId") required String shopId});
 }

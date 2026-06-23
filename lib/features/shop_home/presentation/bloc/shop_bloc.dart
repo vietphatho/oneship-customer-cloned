@@ -14,6 +14,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_sh
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_visible_surcharges_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/get_shipping_service_configs_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
@@ -27,6 +28,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     this._createShopUseCase,
     this._searchAddressUseCase,
     this._getShippingServiceConfigsUseCase,
+    this._fetchVisibleSurchargesUseCase,
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
@@ -34,6 +36,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           createShopResource: Resource.loading(),
           shopsResource: Resource.loading(),
           shippingServiceTypesResource: Resource.loading(),
+          visibleSurchargeGroupsResource: Resource.loading(data: const []),
         ),
       ) {
     on<ShopFetchBriefListEvent>(_onFetchBriefShops);
@@ -53,6 +56,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final CreateShopUseCase _createShopUseCase;
   final SearchAddressUseCase _searchAddressUseCase;
   final GetShippingServiceConfigsUseCase _getShippingServiceConfigsUseCase;
+  final FetchVisibleSurchargesUseCase _fetchVisibleSurchargesUseCase;
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -168,11 +172,29 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     final dailySumResponse = await _fetchShopDailySummaryUseCase.call(shopId);
     emit(state.copyWith(dailySummaryResource: dailySumResponse));
 
-    //
-    final getShippingServices = await _getShippingServiceConfigsUseCase.call(
+    emit(
+      state.copyWith(
+        shippingServiceTypesResource: Resource.loading(),
+        visibleSurchargeGroupsResource: Resource.loading(
+          data: state.visibleSurchargeGroups,
+        ),
+      ),
+    );
+
+    final shippingServicesFuture = _getShippingServiceConfigsUseCase.call(
       shopId: shopId,
     );
-    emit(state.copyWith(shippingServiceTypesResource: getShippingServices));
+    final visibleSurchargesFuture = _fetchVisibleSurchargesUseCase.call(
+      shopId: shopId,
+    );
+    final getShippingServices = await shippingServicesFuture;
+    final visibleSurcharges = await visibleSurchargesFuture;
+    emit(
+      state.copyWith(
+        shippingServiceTypesResource: getShippingServices,
+        visibleSurchargeGroupsResource: visibleSurcharges,
+      ),
+    );
   }
 
   FutureOr<void> _onCreateShop(
@@ -187,9 +209,35 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   FutureOr<void> _onChangeShopEvent(
     ShopChangeEvent event,
     Emitter<ShopState> emit,
-  ) {
+  ) async {
     emit(
       state.copyWith(currentShop: event.shop, draftSelectedShop: event.shop),
+    );
+
+    emit(
+      state.copyWith(
+        shippingServiceTypesResource: Resource.loading(),
+        visibleSurchargeGroupsResource: Resource.loading(
+          data: state.visibleSurchargeGroups,
+        ),
+      ),
+    );
+
+    final shopId = event.shop.shopId ?? "";
+    final shippingServicesFuture = _getShippingServiceConfigsUseCase.call(
+      shopId: shopId,
+    );
+    final visibleSurchargesFuture = _fetchVisibleSurchargesUseCase.call(
+      shopId: shopId,
+    );
+    final getShippingServices = await shippingServicesFuture;
+    final visibleSurcharges = await visibleSurchargesFuture;
+
+    emit(
+      state.copyWith(
+        shippingServiceTypesResource: getShippingServices,
+        visibleSurchargeGroupsResource: visibleSurcharges,
+      ),
     );
   }
 

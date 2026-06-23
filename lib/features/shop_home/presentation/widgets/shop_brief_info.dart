@@ -140,10 +140,7 @@ class _InfoField extends StatelessWidget {
           maxLine: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
-          style: AppTextStyles.bodySmall.copyWith(
-            fontSize: 12,
-            height: 1,
-          ),
+          style: AppTextStyles.bodySmall.copyWith(fontSize: 12, height: 1),
           color: AppColors.neutral5,
         ),
       ],

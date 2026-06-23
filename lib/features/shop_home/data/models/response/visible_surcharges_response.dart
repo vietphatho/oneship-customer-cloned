@@ -38,7 +38,7 @@ abstract class SurchargeResponse with _$SurchargeResponse {
     @JsonKey(name: "group") String? group,
     @JsonKey(name: "isEnabled") bool? isEnabled,
     @JsonKey(name: "fee") int? fee,
-    @JsonKey(name: "feePercent") String? feePercent,
+    @JsonKey(name: "feePercent") int? feePercent,
     @JsonKey(name: "customNote") String? customNote,
     @JsonKey(name: "isVisibleOnShop") bool? isVisibleOnShop,
     @JsonKey(name: "tiers") @Default([]) List<SurchargeTierResponse> tiers,

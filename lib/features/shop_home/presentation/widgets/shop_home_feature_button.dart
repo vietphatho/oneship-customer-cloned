@@ -26,10 +26,7 @@ class ShopHomeFeatureButton extends StatelessWidget {
           children: [
             SizedBox.square(
               dimension: _iconSize,
-              child: Image.asset(
-                feature.icon,
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset(feature.icon, fit: BoxFit.contain),
             ),
             AppSpacing.vertical(AppDimensions.xxSmallSpacing),
             SizedBox(
