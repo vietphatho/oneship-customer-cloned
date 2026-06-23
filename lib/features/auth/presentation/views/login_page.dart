@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneship_customer/core/base/components/primary_button.dart';
+import 'package:oneship_customer/core/base/components/primary_check_box.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/core/base/components/primary_text_field.dart';
@@ -11,6 +11,7 @@ import 'package:oneship_customer/core/base/components/shimmer_image.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/network/token_manager.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_dimensions.dart';
 import 'package:oneship_customer/core/themes/app_spacing.dart';
@@ -20,8 +21,6 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
-import 'package:oneship_customer/core/network/token_manager.dart';
-import 'package:oneship_customer/core/base/components/primary_check_box.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
@@ -157,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                               image: const AssetImage(ImagePath.logo),
                             ),
                           ),
-                          AppSpacing.vertical(84),
+                          AppSpacing.vertical(56),
                           PrimaryTextField(
                             controller: phoneController,
                             label: "user_name".tr(),
@@ -200,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                               _onLoginPressed();
                             },
                           ),
-                          const SizedBox(height: 24),
+                          AppSpacing.vertical(AppDimensions.smallSpacing),
                           ValueListenableBuilder<bool>(
                             valueListenable: isRememberMe,
                             builder: (context, value, child) {
@@ -213,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                           ),
-                          const SizedBox(height: 24),
+                          AppSpacing.vertical(AppDimensions.smallSpacing),
                           ValueListenableBuilder(
                             valueListenable: isFormValid,
                             builder: (context, bool value, _) {
@@ -267,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
-          
+
           TokenManager().saveLoginInfo(
             username: phoneController.text.trim(),
             password: pwdController.text.trim(),
