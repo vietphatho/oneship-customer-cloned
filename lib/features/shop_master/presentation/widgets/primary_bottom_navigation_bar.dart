@@ -32,12 +32,14 @@ class _PrimaryBottomNavigationBarState
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+
     return BlocBuilder<ShopMasterBloc, ShopMasterState>(
       bloc: _shopMasterBloc,
       builder: (context, state) {
         return Container(
           color: Colors.transparent,
-          height: AppDimensions.safeBottomSpacing,
+          height: AppDimensions.safeBottomSpacing + bottomInset,
           width: double.infinity,
           child: Stack(
             clipBehavior: Clip.none,
@@ -59,7 +61,7 @@ class _PrimaryBottomNavigationBarState
                   child: ClipPath(
                     clipper: _BottomNavigationBarClipper(),
                     child: Container(
-                      height: AppDimensions.bottomNavBarHeight,
+                      height: AppDimensions.bottomNavBarHeight + bottomInset,
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppDimensions.smallSpacing,
                       ),

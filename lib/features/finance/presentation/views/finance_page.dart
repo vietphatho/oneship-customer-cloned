@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/views/verify_secondary_password_page.dart';
@@ -13,7 +14,6 @@ import 'package:oneship_customer/features/finance/presentation/bloc/finance_over
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_state.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_overview_tab_view.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_reconciliation_tab_view.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/features/finance/presentation/views/reconciliation_cycle_page.dart';
 import 'package:oneship_customer/features/finance/presentation/widgets/finance_tab_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -46,8 +46,6 @@ class _FinancePageState extends State<FinancePage>
     return Scaffold(
       appBar: PrimaryAppBar(
         title: 'statistics_title'.tr(),
-        titleColor: AppColors.blue950,
-        centerTitle: false,
         actions: [
           BlocBuilder<FinanceOverviewBloc, FinanceOverviewState>(
             bloc: _financeOverviewBloc,
