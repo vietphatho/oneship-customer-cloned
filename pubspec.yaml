@@ -72,8 +72,6 @@ dependencies:
   pin_code_fields: ^9.3.0
   maplibre: ^0.3.3+2
   fl_chart: ^1.2.0
-  blue_thermal_printer: ^1.2.3
-  esc_pos_utils_plus: ^2.0.4
 
 dev_dependencies:
   flutter_test:

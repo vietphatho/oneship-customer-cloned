@@ -56,38 +56,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(
-        title: "order_detail".tr(),
-        actions: [
-          IconButton(
-            icon: const Icon(CupertinoIcons.printer, color: AppColors.neutral2),
-            tooltip: 'Print Order',
-            onPressed: () {
-              BluetoothPrinterSelectionDialog.show(
-                context,
-                onPrinterConnected: () async {
-                  final orderData = _ordersBloc.state.orderDetailResource.data;
-                  if (orderData != null) {
-                    final bytes = await EscPosGenerator.generateOrderReceipt(
-                      orderData,
-                    );
-                    await BluetoothPrintService.instance.printBytes(bytes);
-                    PrimaryDialog.showSuccessDialog(
-                      context,
-                      message: 'Đã gửi lệnh in',
-                    );
-                  } else {
-                    PrimaryDialog.showErrorDialog(
-                      context,
-                      message: 'Chưa tải xong dữ liệu đơn hàng',
-                    );
-                  }
-                },
-              );
-            },
-          ),
-        ],
-      ),
+      appBar: PrimaryAppBar(title: "order_detail".tr()),
       body: BlocConsumer<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
         listener: _handleListener,
@@ -277,7 +246,11 @@ class _EditButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.edit_outlined, size: 14, color: AppColors.primary),
+            Icon(
+              Icons.edit_outlined,
+              size: 14,
+              color: AppColors.primary,
+            ),
             AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
             PrimaryText(
               "edit".tr(),
