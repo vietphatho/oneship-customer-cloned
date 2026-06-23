@@ -6,6 +6,7 @@ import 'package:oneship_customer/core/base/components/primary_button.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/core/base/components/primary_text_field.dart';
+import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/components/shimmer_image.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
@@ -19,9 +20,12 @@ import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/register_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home_widget.dart';
+import 'package:oneship_customer/core/network/token_manager.dart';
+import 'package:oneship_customer/core/base/components/primary_check_box.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
@@ -36,6 +40,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthBloc _authBloc = getIt<AuthBloc>();
   final ShopBloc _shopBloc = getIt.get();
+  final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
   final FinanceOverviewBloc financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
@@ -49,12 +54,24 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   final isFormValid = ValueNotifier<bool>(false);
+  final isRememberMe = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
     phoneController.addListener(_validateForm);
     pwdController.addListener(_validateForm);
+    _loadLoginInfo();
+  }
+
+  Future<void> _loadLoginInfo() async {
+    final tokenManager = TokenManager();
+    final info = await tokenManager.getLoginInfo();
+    if (info['isRememberMe'] == 'true') {
+      isRememberMe.value = true;
+      phoneController.text = info['username'] ?? '';
+      pwdController.text = info['password'] ?? '';
+    }
   }
 
   void _validateForm() {
@@ -107,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        AppColors.primary,
+                        const Color.fromARGB(255, 111, 164, 221),
                         Theme.of(context).scaffoldBackgroundColor,
                       ],
                     ),
@@ -183,11 +200,24 @@ class _LoginPageState extends State<LoginPage> {
                               _onLoginPressed();
                             },
                           ),
-                          const SizedBox(height: 50),
+                          const SizedBox(height: 24),
+                          ValueListenableBuilder<bool>(
+                            valueListenable: isRememberMe,
+                            builder: (context, value, child) {
+                              return PrimaryCheckBox(
+                                value: value,
+                                onChanged: (val) {
+                                  isRememberMe.value = val ?? false;
+                                },
+                                label: "Ghi nhớ đăng nhập",
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 24),
                           ValueListenableBuilder(
                             valueListenable: isFormValid,
                             builder: (context, bool value, _) {
-                              return PrimaryButton.filled(
+                              return SecondaryButton.filled(
                                 onPressed: _onLoginPressed,
                                 label: "login".tr(),
                               );
@@ -207,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 child: PrimaryText(
                                   "register".tr(),
-                                  color: AppColors.primary,
+                                  color: AppColors.secondary,
                                   bold: true,
                                 ),
                               ),
@@ -237,6 +267,13 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          
+          TokenManager().saveLoginInfo(
+            username: phoneController.text.trim(),
+            password: pwdController.text.trim(),
+            isRememberMe: isRememberMe.value,
+          );
+
           if (state.resource.data?.refreshToken != null) {
             _authBloc.fetchUserProfile();
           } else {
@@ -263,21 +300,17 @@ class _LoginPageState extends State<LoginPage> {
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
           String? userRole = state.resource.data?.userRole;
-          if (userRole == UserRole.shop.value) {
+          if (userRole == UserRole.customer.value) {
+            context.go(RouteName.customerHomePage);
+          } else if (userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
-            break;
           } else if (userRole == UserRole.vendor.value) {
             context.go(RouteName.shopMasterPage);
           } else {
-            PrimaryDialog.showAlertDialog(
-              context,
-              message: "login_with_shop_owner_account".tr(),
-              onClosed: () {
-                _authBloc.logOut();
-              },
-            );
-            break;
+            _authBloc.logOut();
+            context.go(RouteName.splashPage);
           }
+          break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
           PrimaryDialog.showErrorDialog(
@@ -287,6 +320,13 @@ class _LoginPageState extends State<LoginPage> {
           break;
       }
     }
+  }
+
+  void _onLoginPressed() {
+    _authBloc.login(
+      userName: phoneController.text.trim(),
+      password: pwdController.text.trim(),
+    );
   }
 
   void _listenShopsListChanged(BuildContext context, ShopState state) {
@@ -315,17 +355,20 @@ class _LoginPageState extends State<LoginPage> {
 
           context.go(RouteName.shopMasterPage);
         }
+        break;
       case Result.error:
         PrimaryDialog.hideLoadingDialog(context);
         PrimaryDialog.showErrorDialog(
           context,
           message: state.briefShopsResource.message,
         );
+        break;
     }
   }
 
   void _listenCurrentShopChanged(BuildContext context, ShopState state) {
     final String shopId = state.currentShop?.shopId ?? "";
+
     financeOverviewBloc.init(
       shopId: shopId,
       requestSource: FinanceRequestSource.page,
@@ -335,13 +378,6 @@ class _LoginPageState extends State<LoginPage> {
     if (state.currentShop != null) {
       _packagesBloc.init(state.currentShop!);
     }
-  }
-
-  void _onLoginPressed() {
-    _authBloc.login(
-      userName: phoneController.text.trim(),
-      password: pwdController.text.trim(),
-    );
   }
 }
 
