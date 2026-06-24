@@ -299,9 +299,7 @@ class _LoginPageState extends State<LoginPage> {
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
           String? userRole = state.resource.data?.userRole;
-          if (userRole == UserRole.customer.value) {
-            context.go(RouteName.customerHomePage);
-          } else if (userRole == UserRole.shop.value) {
+          if (userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
           } else if (userRole == UserRole.vendor.value) {
             context.go(RouteName.shopMasterPage);

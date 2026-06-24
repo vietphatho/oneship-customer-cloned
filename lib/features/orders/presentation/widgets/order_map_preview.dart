@@ -74,10 +74,6 @@ class OrderMapPreview extends StatelessWidget {
           height: height,
           width: double.infinity,
           child: PrimaryMapView(
-            key: ValueKey(
-              "${initialLocation.latitude},${initialLocation.longitude},"
-              "${deliveryLatLng != null}",
-            ),
             currentLocation: initialLocation,
             shopLocation: shopLatLng,
             showCurrentLocation: deliveryLatLng != null,

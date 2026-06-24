@@ -9,7 +9,6 @@ import 'package:oneship_customer/features/barcode_scanner/barcode_scanner.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/complaint_detail_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/complaint_page.dart';
 import 'package:oneship_customer/features/complaints/presentation/views/create_complaint_page.dart';
-import 'package:oneship_customer/features/customer/home/presentation/views/customer_home_page.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_detail_by_day.dart';
 import 'package:oneship_customer/features/finance/presentation/views/finance_period_detail_page.dart';
 import 'package:oneship_customer/features/home/presentation/view/home_page.dart';
@@ -22,13 +21,13 @@ import 'package:oneship_customer/features/orders/presentation/views/orders_histo
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/product_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/surcharge_detail_page.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 import 'package:oneship_customer/features/packages/presentation/views/package_detail_page.dart';
 import 'package:oneship_customer/features/packages/presentation/views/packages_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/change_password_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/change_secondary_password_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/profile_detail_page.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_from_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
@@ -79,10 +78,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopEmptyPage,
       builder: (context, state) => const EmptyShopPage(),
-    ),
-    GoRoute(
-      path: RouteName.customerHomePage,
-      builder: (context, state) => const CustomerHomePage(),
     ),
     GoRoute(
       path: RouteName.createShopPage,

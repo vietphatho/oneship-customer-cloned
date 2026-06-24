@@ -117,25 +117,26 @@ class OrderTrackingDetailSession extends StatelessWidget {
                           stage == OrderTrackingStatus.delivered
                               ? deliveryHistory.status.name.tr()
                               : stage.statusName.tr(),
-                          style: AppTextStyles.labelLarge,
+                          style: AppTextStyles.labelSmall,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             PrimaryText(
                               time,
-                              style: AppTextStyles.bodySmall,
+                              style: AppTextStyles.bodyXXSmall,
                               color: AppColors.neutral6,
                             ),
                             PrimaryText(
                               date,
-                              style: AppTextStyles.bodySmall,
+                              style: AppTextStyles.bodyXXSmall,
                               color: AppColors.neutral6,
                             ),
                           ],
                         ),
                       ],
                     ),
+
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     //   children: [
@@ -151,14 +152,15 @@ class OrderTrackingDetailSession extends StatelessWidget {
                     //     ),
                     //   ],
                     // ),
-                    AppSpacing.vertical(AppDimensions.mediumSpacing),
                     if (stage == OrderTrackingStatus.pickedUp &&
                         (deliveryHistory.pickupImages?.isNotEmpty ??
                             false)) ...[
+                      AppSpacing.vertical(AppDimensions.mediumSpacing),
                       _ImageSession(imgs: deliveryHistory.pickupImages!),
                     ] else if (stage == OrderTrackingStatus.delivered &&
                         (deliveryHistory.confirmationImages?.isNotEmpty ??
                             false)) ...[
+                      AppSpacing.vertical(AppDimensions.mediumSpacing),
                       _ImageSession(imgs: deliveryHistory.confirmationImages!),
                     ],
                   ],

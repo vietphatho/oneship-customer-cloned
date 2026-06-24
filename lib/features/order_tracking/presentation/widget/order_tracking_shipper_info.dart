@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/themes/app_theme.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -36,40 +36,41 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
             children: [
               PrimaryText(
                 state.trackingResult!.data?.trackingCode,
-                style: AppTextStyles.labelLarge,
+                style: AppTextStyles.labelMedium,
               ),
-              AppSpacing.vertical(AppDimensions.smallSpacing),
-              Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.person_circle_fill,
-                    size: AppDimensions.defaultAvatarRadius,
-                    color: AppColors.neutral2,
-                  ),
-                  AppSpacing.horizontal(AppDimensions.smallSpacing),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PrimaryText(
-                        state.trackingResult!.data?.shipper?.name,
-                        style: AppTextStyles.labelLarge,
-                        color: AppColors.primary,
-                      ),
-                      PrimaryText(
-                        state.trackingResult!.data?.shipper?.phone,
-                        // style: AppTextStyles.labelLarge,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              if (state.trackingResult.data?.shipper != null) ...[
+                AppSpacing.vertical(AppDimensions.smallSpacing),
+                Row(
+                  children: [
+                    PrimaryAvatar(
+                      radius: AppDimensions.homeAvatarRadius,
+                      showStatusIndicator: false,
+                    ),
+                    AppSpacing.horizontal(AppDimensions.smallSpacing),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        PrimaryText(
+                          state.trackingResult!.data?.shipper?.name,
+                          style: AppTextStyles.labelMedium,
+                          color: AppColors.primary,
+                        ),
+                        PrimaryText(
+                          state.trackingResult!.data?.shipper?.phone,
+                          style: AppTextStyles.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
               AppSpacing.vertical(AppDimensions.smallSpacing),
               Row(
                 children: [
                   PrimaryText("${"service_type".tr()}: "),
                   PrimaryText(
                     state.trackingResult!.data?.serviceCode,
-                    style: AppTextStyles.labelLarge,
+                    style: AppTextStyles.labelMedium,
                   ),
                 ],
               ),
@@ -80,7 +81,7 @@ class OrderTrackingShipperInfoSession extends StatelessWidget {
                     Utils.formatWeightWithUnit(
                       state.trackingResult!.data?.weight,
                     ),
-                    style: AppTextStyles.labelLarge,
+                    style: AppTextStyles.labelMedium,
                   ),
                 ],
               ),

@@ -83,9 +83,9 @@ class AppDimensions {
 
   static const double tabBarHeight = 48.0;
   static const double bottomNavBarHeight = 48.0;
-  static const double centerButtonNavHeight = 52.0;
+  static const double centerButtonNavHeight = 48.0;
   static const double dropdownMenuHeight = 240.0;
-  static const double safeBottomSpacing = 76.0;
+  static const double safeBottomSpacing = 84.0;
   static const double shopHomeTopSpacing = 300.0;
 
   // Spacing

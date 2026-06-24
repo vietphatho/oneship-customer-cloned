@@ -168,8 +168,8 @@ class _CenterNavigationItem extends StatelessWidget {
         ),
         child: Center(
           child: SizedBox(
-            width: AppDimensions.largeIconSize,
-            height: AppDimensions.largeIconSize,
+            width: AppDimensions.smallIconSize,
+            height: AppDimensions.smallIconSize,
             child: SvgPicture.asset(
               item.icon,
               colorFilter: const ColorFilter.mode(
