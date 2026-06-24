@@ -8,7 +8,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -46,17 +46,21 @@ class _BatchedOrdersListViewState extends State<BatchedOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.batchedOrdersList != current.batchedOrdersList,
+          listenWhen: (previous, current) =>
+              previous.batchedOrdersList != current.batchedOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
       child: BlocBuilder<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
-        buildWhen: (pre, cur) => pre.batchedOrdersList != cur.batchedOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+        buildWhen: (pre, cur) =>
+            pre.batchedOrdersList != cur.batchedOrdersList ||
+            pre.processingOrdersFilters != cur.processingOrdersFilters,
         builder: (context, state) {
-          List<OrderInfo> orders = sortOrders(state.filteredBatchedOrdersList, _sortOption);
+          List<OrderInfo> orders = sortOrders(
+            state.filteredBatchedOrdersList,
+            _sortOption,
+          );
 
           if (orders.isEmpty) {
             return SafeArea(top: false, child: const PrimaryEmptyData());
@@ -67,12 +71,17 @@ class _BatchedOrdersListViewState extends State<BatchedOrdersListView> {
               ProcessingOrdersSortSelectBar(
                 totalCount: orders.length,
                 selectedCount: _selectedOrderKeys.length,
-                isAllSelected: _selectedOrderKeys.length == orders.length && orders.isNotEmpty,
+                isAllSelected:
+                    _selectedOrderKeys.length == orders.length &&
+                    orders.isNotEmpty,
                 sortOption: _sortOption,
+                isSelectionMode: _selectedOrderKeys.isNotEmpty,
                 onSelectAll: (val) {
                   setState(() {
                     if (val == true) {
-                      _selectedOrderKeys.addAll(orders.map(_orderKey).whereType<String>());
+                      _selectedOrderKeys.addAll(
+                        orders.map(_orderKey).whereType<String>(),
+                      );
                     } else {
                       _selectedOrderKeys.clear();
                     }
@@ -86,28 +95,27 @@ class _BatchedOrdersListViewState extends State<BatchedOrdersListView> {
               ),
               Expanded(
                 child: PrimaryRefreshabelListView(
-            controller: _refreshController,
-            onRefresh: _onRefresh,
-            onLoading: _onLoading,
-            enablePullUp: true,
-            padding: EdgeInsets.symmetric(
-              vertical: AppDimensions.smallSpacing,
-              horizontal: AppDimensions.smallSpacing,
-            ),
-            itemCount: orders.length,
-            itemBuilder: (context, index) => SelectableOrderInfoItem(
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  onLoading: _onLoading,
+                  enablePullUp: true,
+                  padding: EdgeInsets.symmetric(
+                    vertical: AppDimensions.smallSpacing,
+                    horizontal: AppDimensions.smallSpacing,
+                  ),
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) => OrderInfoItem(
                     index: index + 1,
                     order: orders[index],
                     isSelected: _isSelected(orders[index]),
-                    showSelectionControl: true,
+                    isSelectionMode: _selectedOrderKeys.isNotEmpty,
                     onTap: _onOrderTap,
-                    onLongPress: _toggleOrderSelection,
-                    
+                    onLongPress: _enterSelectionMode,
+                    onSelectionToggle: _toggleOrderSelection,
                   ),
-            separatorBuilder:
-                (context, index) =>
-                    AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          )
+                  separatorBuilder: (context, index) =>
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                ),
               ),
             ],
           );
@@ -129,7 +137,6 @@ class _BatchedOrdersListViewState extends State<BatchedOrdersListView> {
     _ordersBloc.loadMoreOrders();
   }
 
-  
   String? _orderKey(OrderInfo order) => order.id;
 
   bool _isSelected(OrderInfo order) {
@@ -149,12 +156,21 @@ class _BatchedOrdersListViewState extends State<BatchedOrdersListView> {
     });
   }
 
+  void _enterSelectionMode(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+    setState(() => _selectedOrderKeys.add(key));
+  }
+
   void _onOrderTap(OrderInfo order) {
     _ordersBloc.openOrderDetail(order);
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
-    final visibleOrderKeys = state.filteredBatchedOrdersList.map(_orderKey).whereType<String>().toSet();
+    final visibleOrderKeys = state.filteredBatchedOrdersList
+        .map(_orderKey)
+        .whereType<String>()
+        .toSet();
     _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
 
     switch (state.orderListByStatusResource.state) {

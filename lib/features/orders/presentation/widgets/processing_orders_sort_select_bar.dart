@@ -2,12 +2,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 
 /// Sort options for the processing orders list.
-enum ProcessingOrdersSortOption {
-  newest,
-  oldest,
-  codHighest,
-  codLowest,
-}
+enum ProcessingOrdersSortOption { newest, oldest, codHighest, codLowest }
 
 extension ProcessingOrdersSortOptionExt on ProcessingOrdersSortOption {
   String get label {
@@ -34,6 +29,7 @@ class ProcessingOrdersSortSelectBar extends StatelessWidget {
     required this.sortOption,
     required this.onSelectAll,
     required this.onSortChanged,
+    this.isSelectionMode = false,
   });
 
   final int totalCount;
@@ -42,84 +38,97 @@ class ProcessingOrdersSortSelectBar extends StatelessWidget {
   final ProcessingOrdersSortOption sortOption;
   final ValueChanged<bool?> onSelectAll;
   final ValueChanged<ProcessingOrdersSortOption?> onSortChanged;
+  final bool isSelectionMode;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.smallSpacing,
-        vertical: AppDimensions.xxSmallSpacing,
-      ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => onSelectAll(!isAllSelected),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: Checkbox(
-                    value: isAllSelected,
-                    tristate: selectedCount > 0 && !isAllSelected,
-                    onChanged: onSelectAll,
-                    activeColor: AppColors.secondary,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.mediumSpacing,
+          vertical: AppDimensions.xSmallSpacing,
+        ),
+        child: Row(
+          children: [
+            if (isSelectionMode)
+              GestureDetector(
+                onTap: () => onSelectAll(!isAllSelected),
+                child: Row(
+                  children: [
+                    SizedBox.square(
+                      dimension: AppDimensions.smallIconSize,
+                      child: Checkbox(
+                        value: isAllSelected,
+                        tristate: selectedCount > 0 && !isAllSelected,
+                        onChanged: onSelectAll,
+                        activeColor: AppColors.secondary,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                    AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                    PrimaryText(
+                      selectedCount > 0
+                          ? 'selected_orders_count'.tr(
+                              namedArgs: {'count': selectedCount.toString()},
+                            )
+                          : '${'select_all'.tr()} ($totalCount)',
+                      style: AppTextStyles.labelXSmall.copyWith(
+                        color: AppColors.neutral2,
+                      ),
+                    ),
+                  ],
                 ),
-                AppSpacing.horizontal(6),
-                PrimaryText(
-                  '${'select_all'.tr()} ($totalCount)',
-                  style: AppTextStyles.labelXSmall.copyWith(
-                    color: AppColors.neutral2,
-                    fontSize: 13,
-                  ),
+              )
+            else
+              PrimaryText(
+                'order_total_count'.tr(
+                  namedArgs: {'count': totalCount.toString()},
                 ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          PrimaryText(
-            '${'sort_label'.tr()}: ',
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.neutral4,
-              fontSize: 12,
-            ),
-          ),
-          DropdownButton<ProcessingOrdersSortOption>(
-            value: sortOption,
-            isDense: true,
-            underline: const SizedBox.shrink(),
-            style: AppTextStyles.labelXSmall.copyWith(
-              color: AppColors.neutral2,
-              fontSize: 12,
-            ),
-            icon: const Icon(
-              Icons.keyboard_arrow_down,
-              size: 16,
-              color: AppColors.neutral4,
-            ),
-            items: ProcessingOrdersSortOption.values.map((opt) {
-              return DropdownMenuItem(
-                value: opt,
-                child: PrimaryText(
-                  opt.label,
-                  style: AppTextStyles.labelXSmall.copyWith(
-                    color: AppColors.neutral2,
-                    fontSize: 12,
-                  ),
+                style: AppTextStyles.bodyXXSmall.copyWith(
+                  color: AppColors.neutral4,
                 ),
-              );
-            }).toList(),
-            onChanged: onSortChanged,
-          ),
-        ],
+              ),
+            const Spacer(),
+            PrimaryText(
+              '${'sort_label'.tr()}: ',
+              style: AppTextStyles.bodyXXSmall.copyWith(
+                color: AppColors.neutral4,
+              ),
+            ),
+            DropdownButton<ProcessingOrdersSortOption>(
+              value: sortOption,
+              isDense: true,
+              underline: const SizedBox.shrink(),
+              style: AppTextStyles.labelXSmall.copyWith(
+                color: AppColors.neutral2,
+              ),
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                size: AppDimensions.xSmallIconSize,
+                color: AppColors.neutral4,
+              ),
+              items: ProcessingOrdersSortOption.values.map((opt) {
+                return DropdownMenuItem(
+                  value: opt,
+                  child: PrimaryText(
+                    opt.label,
+                    style: AppTextStyles.labelXSmall.copyWith(
+                      color: AppColors.neutral2,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: onSortChanged,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
 /// Sort helper - sorts a list of [OrderInfo] by the given [ProcessingOrdersSortOption].
 List<OrderInfo> sortOrders(
   List<OrderInfo> orders,
@@ -129,16 +138,14 @@ List<OrderInfo> sortOrders(
   switch (option) {
     case ProcessingOrdersSortOption.newest:
       sorted.sort(
-        (a, b) => (b.createdAt ?? DateTime(0)).compareTo(
-          a.createdAt ?? DateTime(0),
-        ),
+        (a, b) =>
+            (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)),
       );
       break;
     case ProcessingOrdersSortOption.oldest:
       sorted.sort(
-        (a, b) => (a.createdAt ?? DateTime(0)).compareTo(
-          b.createdAt ?? DateTime(0),
-        ),
+        (a, b) =>
+            (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)),
       );
       break;
     case ProcessingOrdersSortOption.codHighest:

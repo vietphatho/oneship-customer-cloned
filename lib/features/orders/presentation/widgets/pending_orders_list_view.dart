@@ -9,9 +9,9 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/pending_orders_action_card.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -88,6 +88,7 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                     totalCount: visibleOrders.length,
                     isAllSelected: allSelected,
                     sortOption: _sortOption,
+                    isSelectionMode: _selectedOrderKeys.isNotEmpty,
                     onSelectAll: (val) {
                       setState(() {
                         if (val == true) {
@@ -136,13 +137,14 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
                     horizontal: AppDimensions.smallSpacing,
                   ),
                   itemCount: orders.length,
-                  itemBuilder: (context, index) => SelectableOrderInfoItem(
+                  itemBuilder: (context, index) => OrderInfoItem(
                     index: index + 1,
                     order: orders[index],
                     isSelected: _isSelected(orders[index]),
-                    showSelectionControl: true,
+                    isSelectionMode: _selectedOrderKeys.isNotEmpty,
                     onTap: _onOrderTap,
-                    onLongPress: _toggleOrderSelection,
+                    onLongPress: _enterSelectionMode,
+                    onSelectionToggle: _toggleOrderSelection,
                     onRemoved: _selectedOrderKeys.isEmpty ? _onRemoved : null,
                   ),
                   separatorBuilder: (context, index) =>
@@ -177,6 +179,12 @@ class _PendingOrdersListViewState extends State<PendingOrdersListView> {
         _selectedOrderKeys.add(key);
       }
     });
+  }
+
+  void _enterSelectionMode(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+    setState(() => _selectedOrderKeys.add(key));
   }
 
   void _onOrderTap(OrderInfo order) {

@@ -1,6 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 
@@ -34,7 +31,14 @@ extension OrderStatusIconExt on OrderStatus {
   Widget buildIcon({double width = 24, double height = 24, Color? color}) {
     final path = iconPath;
     if (path.endsWith('.svg')) {
-      return SvgPicture.asset(path, width: width, height: height, color: color);
+      return SvgPicture.asset(
+        path,
+        width: width,
+        height: height,
+        colorFilter: color != null
+            ? ColorFilter.mode(color, BlendMode.srcIn)
+            : null,
+      );
     } else {
       return Image.asset(path, width: width, height: height, color: color);
     }
@@ -64,8 +68,8 @@ class OrderStatusTabBar extends StatelessWidget {
         AppDimensions.xSmallSpacing,
       ),
       child: Container(
-        height: 42,
-        padding: const EdgeInsets.all(4),
+        height: AppDimensions.smallHeightButton + AppDimensions.xSmallSpacing,
+        padding: AppDimensions.xxSmallPaddingAll,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: AppDimensions.largeBorderRadius,
@@ -87,7 +91,8 @@ class OrderStatusTabBar extends StatelessWidget {
                         controller.animateTo(index);
                       },
                     ),
-                    if (index != items.length - 1) AppSpacing.horizontal(4),
+                    if (index != items.length - 1)
+                      AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
                   ],
                 ],
               ),
@@ -118,8 +123,10 @@ class _OrderStatusTabItem extends StatelessWidget {
       onTap: onTap,
       borderRadius: AppDimensions.mediumBorderRadius,
       child: Container(
-        constraints: const BoxConstraints(minWidth: 76),
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        constraints: const BoxConstraints(
+          minWidth: AppDimensions.shopHomeButtonSize,
+        ),
+        padding: AppDimensions.smallPaddingHorizontal,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isSelected
@@ -136,7 +143,7 @@ class _OrderStatusTabItem extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: AppTextStyles.labelXSmall.copyWith(
             color: color,
-            fontSize: 11,
+            fontSize: AppDimensions.smallSpacing,
           ),
         ),
       ),

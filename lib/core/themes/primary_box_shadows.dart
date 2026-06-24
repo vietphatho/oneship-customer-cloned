@@ -5,8 +5,8 @@ class PrimaryBoxShadows {
   PrimaryBoxShadows._();
 
   static final defaultShadow = BoxShadow(
-    color: Colors.black.withOpacity(0.04),
-    offset: const Offset(0, 4),
+    color: Colors.black.withOpacity(0.1),
+    offset: const Offset(0, 0),
     blurRadius: 12,
   );
 

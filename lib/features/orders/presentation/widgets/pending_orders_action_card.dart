@@ -11,6 +11,7 @@ class PendingOrdersActionCard extends StatelessWidget {
     required this.onSelectAll,
     required this.onSortChanged,
     required this.onFindShipper,
+    this.isSelectionMode = false,
   });
 
   final int selectedCount;
@@ -20,144 +21,153 @@ class PendingOrdersActionCard extends StatelessWidget {
   final ValueChanged<bool?> onSelectAll;
   final ValueChanged<ProcessingOrdersSortOption?> onSortChanged;
   final VoidCallback onFindShipper;
+  final bool isSelectionMode;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveCount = selectedCount > 0 ? selectedCount : totalCount;
+
     return Container(
       margin: const EdgeInsets.fromLTRB(
         AppDimensions.smallSpacing,
-        AppDimensions.smallSpacing,
+        0,
         AppDimensions.smallSpacing,
         0,
-      ),
-      padding: const EdgeInsets.all(AppDimensions.smallSpacing),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppDimensions.smallBorderRadius,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => onSelectAll(!isAllSelected),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Checkbox(
-                        value: isAllSelected
-                            ? true
-                            : (selectedCount > 0 ? null : false),
-                        tristate: true,
-                        onChanged: onSelectAll,
-                        activeColor: AppColors.primary,
-                        side: const BorderSide(color: AppColors.neutral4, width: 1.5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: AppDimensions.smallBorderRadius,
+              border: Border.all(color: AppColors.neutral8),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppDimensions.smallSpacing),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      if (isSelectionMode)
+                        GestureDetector(
+                          onTap: () => onSelectAll(!isAllSelected),
+                          child: Row(
+                            children: [
+                              SizedBox.square(
+                                dimension: AppDimensions.mediumIconSize,
+                                child: Checkbox(
+                                  value: isAllSelected
+                                      ? true
+                                      : (selectedCount > 0 ? null : false),
+                                  tristate: true,
+                                  onChanged: onSelectAll,
+                                  activeColor: AppColors.primary,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                  side: const BorderSide(
+                                    color: AppColors.neutral4,
+                                    width: AppDimensions.smallBorderStroke,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        AppDimensions.xSmallBorderRadius,
+                                  ),
+                                ),
+                              ),
+                              AppSpacing.horizontal(AppDimensions.smallSpacing),
+                              PrimaryText(
+                                selectedCount > 0
+                                    ? 'selected_orders_count'.tr(
+                                        namedArgs: {
+                                          'count': selectedCount.toString(),
+                                        },
+                                      )
+                                    : '${'select_all'.tr()} ($totalCount)',
+                                style: AppTextStyles.labelXSmall.copyWith(
+                                  color: AppColors.neutral1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        PrimaryText(
+                          'order_total_count'.tr(
+                            namedArgs: {'count': totalCount.toString()},
+                          ),
+                          style: AppTextStyles.bodyXXSmall.copyWith(
+                            color: AppColors.neutral4,
+                          ),
+                        ),
+                      const Spacer(),
+                      PrimaryText(
+                        '${'sort_label'.tr()}: ',
+                        style: AppTextStyles.bodyXXSmall.copyWith(
+                          color: AppColors.neutral4,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: AppDimensions.smallSpacing),
-                    Text(
-                      selectedCount > 0
-                          ? 'Đã chọn $selectedCount đơn'
-                          : 'Chọn tất cả ($totalCount)',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: selectedCount > 0
-                            ? FontWeight.w600
-                            : FontWeight.w500,
-                        color: selectedCount > 0
-                            ? AppColors.neutral1
-                            : AppColors.neutral2,
+                      DropdownButton<ProcessingOrdersSortOption>(
+                        value: sortOption,
+                        isDense: true,
+                        underline: const SizedBox.shrink(),
+                        style: AppTextStyles.labelXSmall.copyWith(
+                          color: AppColors.neutral2,
+                        ),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          size: AppDimensions.xSmallIconSize,
+                          color: AppColors.neutral4,
+                        ),
+                        items: ProcessingOrdersSortOption.values.map((opt) {
+                          return DropdownMenuItem(
+                            value: opt,
+                            child: PrimaryText(
+                              opt.label,
+                              style: AppTextStyles.labelXSmall.copyWith(
+                                color: AppColors.neutral2,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: onSortChanged,
                       ),
+                    ],
+                  ),
+                  const Divider(height: AppDimensions.largeSpacing),
+                  PrimaryButton.iconFilled(
+                    label: 'find_shipper_count'.tr(
+                      namedArgs: {'count': effectiveCount.toString()},
                     ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${'sort_label'.tr()}: ',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.neutral4,
-                ),
-              ),
-              DropdownButton<ProcessingOrdersSortOption>(
-                value: sortOption,
-                isDense: true,
-                underline: const SizedBox.shrink(),
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.neutral2,
-                  fontWeight: FontWeight.w600,
-                ),
-                icon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 16,
-                  color: AppColors.neutral4,
-                ),
-                items: ProcessingOrdersSortOption.values.map((opt) {
-                  return DropdownMenuItem(
-                    value: opt,
-                    child: Text(opt.label),
-                  );
-                }).toList(),
-                onChanged: onSortChanged,
-              ),
-            ],
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Divider(height: 1, color: AppColors.neutral6),
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: 36,
-            child: ElevatedButton.icon(
-              onPressed: onFindShipper,
-              icon: const Icon(
-                Icons.person_search_outlined,
-                size: 18,
-                color: Colors.white,
-              ),
-              label: Text(
-                'Tìm shipper (${selectedCount > 0 ? selectedCount : totalCount})',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondary,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                    height: AppDimensions.smallHeightButton,
+                    icon: const Icon(
+                      Icons.person_search_outlined,
+                      size: AppDimensions.xSmallIconSize,
+                      color: Colors.white,
+                    ),
+                    onPressed: onFindShipper,
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: AppDimensions.smallSpacing),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Icon(
                 Icons.info_outline,
-                size: 16,
+                size: AppDimensions.xSmallIconSize,
                 color: AppColors.neutral4,
               ),
-              const SizedBox(width: 6),
-              const Expanded(
-                child: Text(
-                  'Không chọn đơn nào để tìm shipper cho tất cả đơn hàng.',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.neutral3,
+              AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+              Expanded(
+                child: PrimaryText(
+                  'find_shipper_empty_selection_hint'.tr(),
+                  style: AppTextStyles.bodyXXSmall.copyWith(
+                    color: AppColors.neutral4,
                   ),
                 ),
               ),

@@ -12,195 +12,199 @@ class OrderInfoItem extends StatelessWidget {
     required this.order,
     required this.index,
     this.onTap,
+    this.onLongPress,
+    this.onSelectionToggle,
     this.onRemoved,
     this.onConfirmOrdAtHub,
-    this.leading,
+    this.isSelectionMode = false,
+    this.isSelected = false,
   });
 
   final int index;
   final OrderInfo order;
-  final Widget? leading;
   final void Function(OrderInfo order)? onTap;
+  final void Function(OrderInfo order)? onLongPress;
+  final void Function(OrderInfo order)? onSelectionToggle;
   final void Function(OrderInfo order)? onRemoved;
   final void Function(OrderInfo order)? onConfirmOrdAtHub;
+  final bool isSelectionMode;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     final OrderStatus statusEnum = _parseStatus(order.status);
     final Color bgColor = _getBgColor(statusEnum);
     final Color textColor = _getTextColor(statusEnum);
+    final String address =
+        order.fullAddress ?? order.address ?? "no_address".tr();
+    final String customerName = order.customerName?.trim().isNotEmpty == true
+        ? order.customerName!.trim()
+        : "--";
+    final String orderCode = order.orderNumber?.trim().isNotEmpty == true
+        ? order.orderNumber!.trim()
+        : (order.trackingCode?.trim().isNotEmpty == true
+              ? order.trackingCode!.trim()
+              : "--");
 
     return PrimaryDismissible(
       key: Key(order.id ?? ''),
-      enable: onRemoved != null,
+      enable: onRemoved != null && !isSelectionMode,
       confirmMessage: "are_you_want_to_delete_order".tr(),
       onDismissed: (direction) {
         onRemoved?.call(order);
       },
-      child: PrimaryAnimatedPressableWidget(
-        onTap: () => onTap?.call(order),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            // horizontal: AppDimensions.smallSpacing,
-            vertical: AppDimensions.smallSpacing,
-          ),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(bottom: BorderSide(color: AppColors.neutral8)),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (leading != null) leading!,
-
-              // Circular Status Icon
-              Container(
-                padding: EdgeInsets.all(AppDimensions.smallSpacing),
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: statusEnum.buildIcon(
-                  width: AppDimensions.smallIconSize,
-                  height: AppDimensions.smallIconSize,
-                ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onLongPress: () {
+          (onLongPress ?? onSelectionToggle)?.call(order);
+        },
+        child: PrimaryAnimatedPressableWidget(
+          onTap: () {
+            if (isSelectionMode) {
+              onSelectionToggle?.call(order);
+              return;
+            }
+            onTap?.call(order);
+          },
+          child: AnimatedContainer(
+            duration: Durations.short2,
+            padding: const EdgeInsets.all(AppDimensions.smallSpacing),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.primaryLight.withValues(alpha: 0.38)
+                  : Colors.white,
+              borderRadius: AppDimensions.smallBorderRadius,
+              border: Border.all(
+                color: isSelected ? AppColors.primary : AppColors.neutral8,
+                width: isSelected
+                    ? AppDimensions.mediumBorderStroke
+                    : AppDimensions.smallBorderStroke,
               ),
-              const SizedBox(width: AppDimensions.smallSpacing),
-
-              // Content Column: Order Details + Status + Amount
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ROW 1: Order Number
-                    Text(
-                      order.orderNumber ?? '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.neutral1,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                    // ROW 2: Date Time & Status Tag
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          _formatDateAndTime(order.createdAt),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.neutral4,
+              boxShadow: [PrimaryBoxShadows.defaultShadow],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedSwitcher(
+                  duration: Durations.short2,
+                  child: isSelectionMode
+                      ? Padding(
+                          key: const ValueKey("order_selection_checkbox"),
+                          padding: const EdgeInsets.only(
+                            right: AppDimensions.xSmallSpacing,
                           ),
-                        ),
-                        // Status Tag
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: bgColor,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              statusEnum.buildIcon(width: 12, height: 12),
-                              const SizedBox(width: 4),
-                              Text(
-                                statusEnum.value.tr(),
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: textColor,
-                                ),
+                          child: SizedBox.square(
+                            dimension: AppDimensions.mediumIconSize,
+                            child: Checkbox(
+                              value: isSelected,
+                              onChanged: (_) => onSelectionToggle?.call(order),
+                              activeColor: AppColors.primary,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity.compact,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: AppDimensions.xSmallBorderRadius,
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-
-                    // ROW 3: Name and Phone
-                    Text(
-                      "${order.customerName} • ${Utils.formatPhoneNumber(order.phone)}",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.neutral4,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                    // ROW 4: Address & Amount
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.location_on_outlined,
-                                size: 14,
-                                color: AppColors.neutral4,
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  order.fullAddress ??
-                                      order.address ??
-                                      "Không có địa chỉ",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.neutral4,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: AppDimensions.smallSpacing),
-                        // Amount
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: Utils.formatCurrencyWithUnit(
-                                  order.codAmount,
-                                ).replaceAll('đ', '').trim(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: textColor,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' vnd',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: textColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        )
+                      : const SizedBox.shrink(),
                 ),
-              ),
-            ],
+                Container(
+                  padding: const EdgeInsets.all(AppDimensions.xSmallSpacing),
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: statusEnum.buildIcon(
+                    width: AppDimensions.smallIconSize,
+                    height: AppDimensions.smallIconSize,
+                  ),
+                ),
+                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: PrimaryText(
+                              orderCode,
+                              style: AppTextStyles.labelXSmall.copyWith(
+                                color: AppColors.neutral1,
+                              ),
+                              maxLine: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                          _StatusPill(
+                            status: statusEnum,
+                            backgroundColor: bgColor,
+                            foregroundColor: textColor,
+                          ),
+                        ],
+                      ),
+                      AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _InlineInfo(
+                              icon: Icons.person_outline,
+                              value:
+                                  "$customerName • ${Utils.formatPhoneNumber(order.phone)}",
+                            ),
+                          ),
+                          AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                          PrimaryText(
+                            Utils.formatCurrencyWithUnit(order.codAmount),
+                            style: AppTextStyles.labelXSmall.copyWith(
+                              color: textColor,
+                            ),
+                            maxLine: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                      _InlineInfo(
+                        icon: Icons.location_on_outlined,
+                        value: address,
+                        maxLines: 2,
+                      ),
+                      AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _InlineInfo(
+                              icon: Icons.schedule_outlined,
+                              value: _formatDateAndTime(order.createdAt),
+                            ),
+                          ),
+                          if (order.trackingCode?.trim().isNotEmpty == true &&
+                              order.trackingCode != order.orderNumber) ...[
+                            AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+                            Flexible(
+                              child: PrimaryText(
+                                order.trackingCode,
+                                style: AppTextStyles.bodyXXSmall.copyWith(
+                                  color: AppColors.neutral5,
+                                ),
+                                maxLine: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -277,5 +281,89 @@ class OrderInfoItem extends StatelessWidget {
       default:
         return AppColors.secondary;
     }
+  }
+}
+
+class _StatusPill extends StatelessWidget {
+  const _StatusPill({
+    required this.status,
+    required this.backgroundColor,
+    required this.foregroundColor,
+  });
+
+  final OrderStatus status;
+  final Color backgroundColor;
+  final Color foregroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.xSmallSpacing,
+        vertical: AppDimensions.xxSmallSpacing,
+      ),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: AppDimensions.xSmallBorderRadius,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // status.buildIcon(
+          //   width: AppDimensions.xxSmallIconSize,
+          //   height: AppDimensions.xxSmallIconSize,
+          // ),
+          // AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
+          PrimaryText(
+            status.value.tr(),
+            style: AppTextStyles.bodyXXSmall.copyWith(
+              color: foregroundColor,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLine: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InlineInfo extends StatelessWidget {
+  const _InlineInfo({
+    required this.icon,
+    required this.value,
+    this.maxLines = 1,
+  });
+
+  final IconData icon;
+  final String value;
+  final int maxLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: maxLines > 1
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          size: AppDimensions.xSmallIconSize,
+          color: AppColors.neutral5,
+        ),
+        AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
+        Expanded(
+          child: PrimaryText(
+            value,
+            style: AppTextStyles.bodyXXSmall.copyWith(
+              color: AppColors.neutral4,
+            ),
+            maxLine: maxLines,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
   }
 }
