@@ -10,9 +10,10 @@ import 'package:oneship_customer/features/location_service/bloc/location_service
 import 'package:oneship_customer/features/order_tracking/domain/entities/order_tracking_entity.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
+import 'package:oneship_customer/features/order_tracking/presentation/widget/order_tracking_scan_suffix_button.dart';
 
 class OrderTrackingInputContainer extends StatefulWidget {
-  const OrderTrackingInputContainer();
+  const OrderTrackingInputContainer({super.key});
 
   @override
   State<OrderTrackingInputContainer> createState() =>
@@ -45,6 +46,9 @@ class _OrderTrackingInputContainerState
               textInputAction: TextInputAction.done,
               hintText: 'input'.tr(),
               textCapitalization: TextCapitalization.characters,
+              suffixIcon: OrderTrackingScanSuffixButton(
+                onScanned: _setTrackingText,
+              ),
               onFieldSubmitted: (value) {
                 _onSearch();
               },
@@ -72,11 +76,18 @@ class _OrderTrackingInputContainerState
     }
   }
 
+  void _setTrackingText(String scannedText) {
+    _trackingNumberCtrl.text = scannedText;
+    _trackingNumberCtrl.selection = TextSelection.collapsed(
+      offset: scannedText.length,
+    );
+  }
+
   void _handleOrderTrackingListener(
     BuildContext context,
     OrderTrackingState state,
   ) {
-    var currentRoute = RouteObserverPage.currentRoute;
+    final currentRoute = RouteObserverPage.currentRoute;
     if (currentRoute == RouteName.homePage) {
       switch (state.trackingResult!.state) {
         case Result.loading:
