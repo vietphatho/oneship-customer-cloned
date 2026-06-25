@@ -46,6 +46,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
     on<OrdersLoadMoreByStatusEvent>(_onLoadMoreOrdsEvent);
     on<OrderFetchDetailEvent>(_onFetchDetailEvent);
+    on<OrderDetailUpdatedEvent>(_onUpdateDetailEvent);
     on<OrderHistoryOpenDetailEvent>(_onOpenHistoryDetailEvent);
     on<OrderDeleteEvent>(_onDeleteOrderEvent);
     on<OrdersHistoryFetchingByStatusEvent>(_onFetchOrderHistoryEvent);
@@ -145,6 +146,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
 
     emit(state.copyWith(orderDetailResource: response));
+  }
+
+  FutureOr<void> _onUpdateDetailEvent(
+    OrderDetailUpdatedEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    emit(state.copyWith(orderDetailResource: Resource.success(event.order)));
   }
 
   FutureOr<void> _onDeleteOrderEvent(
@@ -400,6 +408,10 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     if ((shopId?.isNotEmpty ?? false) && (orderId?.isNotEmpty ?? false)) {
       add(OrderFetchDetailEvent(shopId: shopId!, orderId: orderId!));
     }
+  }
+
+  void setOrderDetail(OrderDetailEntity order) {
+    add(OrderDetailUpdatedEvent(order));
   }
 
   FutureOr<void> _onOpenHistoryDetailEvent(

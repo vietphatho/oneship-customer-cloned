@@ -49,6 +49,28 @@
     "wallet": "Ví",
     "profile": "Hồ sơ"
   },
+  "vendor_stats": {
+    "total_orders": "Tổng đơn",
+    "delivered_orders": "Đã giao",
+    "returned_orders": "Hoàn trả",
+    "success_rate": "Tỷ lệ thành công",
+    "delivery_fee": "Phí giao hàng",
+    "cod_amount": "Tiền COD",
+    "empty": "Chưa có dữ liệu thống kê"
+  },
+  "vendor_wallet": {
+    "title": "Ví tiểu thương",
+    "filters": {
+      "title": "Khoảng thời gian",
+      "this_week": "Tuần này",
+      "this_month": "Tháng này"
+    },
+    "chart": {
+      "title": "Biểu đồ thống kê",
+      "cod": "Tiền COD",
+      "delivery_fee": "Phí giao hàng"
+    }
+  },
   "vendor_profile": {
     "title": "Hồ sơ",
     "detail_title": "Thông tin tiểu thương",

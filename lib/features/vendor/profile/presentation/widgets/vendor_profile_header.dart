@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
@@ -57,7 +57,7 @@ class VendorProfileSummaryCard extends StatelessWidget {
           child: Row(
             children: [
               const _VendorProfileAvatar(),
-              AppSpacing.horizontal(AppDimensions.mediumSpacing),
+              AppSpacing.horizontal(AppDimensions.smallSpacing),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,11 +89,11 @@ class VendorProfileSummaryCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.neutral5,
-                size: AppDimensions.largeIconSize,
-              ),
+              // const Icon(
+              //   Icons.chevron_right_rounded,
+              //   color: AppColors.neutral5,
+              //   size: AppDimensions.largeIconSize,
+              // ),
             ],
           ),
         );
@@ -223,12 +223,9 @@ class _VendorProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PrimaryAssetAvatar(
-      image: ImagePath.shopHomeAvatarOzoShipGenerated,
-      backgroundImage: ImagePath.shopHomeAvatarBackground,
-      imageSize: 68,
-      overlayImage: ImagePath.profileEditBadge,
-      radius: 46,
+    return PrimaryAvatar(
+      radius: AppDimensions.defaultAvatarRadius,
+      showStatusIndicator: false,
     );
   }
 }

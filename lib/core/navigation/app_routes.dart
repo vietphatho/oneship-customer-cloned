@@ -44,6 +44,7 @@ import 'package:oneship_customer/features/support/presentation/models/support_ca
 import 'package:oneship_customer/features/support/presentation/views/support_category_page.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_page.dart';
 import 'package:oneship_customer/features/vendor/master/presentation/views/vendor_master_page.dart';
+import 'package:oneship_customer/features/vendor/orders/presentation/views/vendor_order_detail_page.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/views/vendor_profile_detail_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/withdraw_success_page.dart';
@@ -80,6 +81,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.vendorMasterPage,
       builder: (context, state) => const VendorMasterPage(),
+    ),
+    GoRoute(
+      path: RouteName.vendorOrderDetailPage,
+      builder: (context, state) => const VendorOrderDetailPage(),
     ),
     GoRoute(
       path: RouteName.vendorProfileDetailPage,

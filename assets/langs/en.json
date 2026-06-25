@@ -103,6 +103,28 @@
         "wallet": "Wallet",
         "profile": "Profile"
     },
+    "vendor_stats": {
+        "total_orders": "Total orders",
+        "delivered_orders": "Delivered",
+        "returned_orders": "Returned",
+        "success_rate": "Success rate",
+        "delivery_fee": "Delivery fee",
+        "cod_amount": "COD amount",
+        "empty": "No statistics data yet"
+    },
+    "vendor_wallet": {
+        "title": "Vendor wallet",
+        "filters": {
+            "title": "Date range",
+            "this_week": "This week",
+            "this_month": "This month"
+        },
+        "chart": {
+            "title": "Statistics chart",
+            "cod": "COD amount",
+            "delivery_fee": "Delivery fee"
+        }
+    },
     "vendor_profile": {
         "title": "Profile",
         "detail_title": "Vendor information",

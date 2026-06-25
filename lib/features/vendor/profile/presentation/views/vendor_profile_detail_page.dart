@@ -141,17 +141,16 @@ class _VendorProfileDetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppDimensions.smallSpacing),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.xSmallSpacing,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 2,
-            child: PrimaryText(
-              label,
-              style: AppTextStyles.bodySmall,
-              color: AppColors.neutral4,
-            ),
+          PrimaryText(
+            label,
+            style: AppTextStyles.bodySmall,
+            color: AppColors.neutral4,
           ),
           AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(

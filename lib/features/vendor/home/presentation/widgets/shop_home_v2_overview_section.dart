@@ -20,91 +20,107 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 104,
-      padding: const EdgeInsets.fromLTRB(14, 11, 8, 9),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: AppDimensions.largeBorderRadius,
-        boxShadow: [PrimaryBoxShadows.defaultShadow],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -14,
-            bottom: -4,
-            child: Image.asset(
-              ImagePath.shopHomeV2Wallet,
-              width: 66,
-              height: 62,
-              fit: BoxFit.contain,
+    return PrimaryAnimatedPressableWidget(
+      onTap: () {
+        getIt<WalletBloc>().add(WithdrawReset());
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
+            child: const WithdrawBottomSheet(),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  PrimaryText(
-                    'Số dư khả dụng',
-                    style: AppTextStyles.bodyXSmall.copyWith(
-                      color: Colors.white.withAlpha(235),
-                      fontSize: 13,
-                    ),
-                  ),
-                  AppSpacing.horizontal(5),
-                  const Icon(
-                    Icons.visibility_rounded,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ],
+        );
+      },
+      child: Container(
+        height: 104,
+        padding: const EdgeInsets.fromLTRB(14, 11, 8, 9),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: AppDimensions.largeBorderRadius,
+          boxShadow: [PrimaryBoxShadows.defaultShadow],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -14,
+              bottom: -4,
+              child: Image.asset(
+                ImagePath.shopHomeV2Wallet,
+                width: 66,
+                height: 62,
+                fit: BoxFit.contain,
               ),
-              AppSpacing.vertical(6),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: PrimaryText(
-                  '2.560.000đ',
-                  style: AppTextStyles.titleXXLarge.copyWith(
-                    color: Colors.white,
-                    fontSize: 23,
-                    height: 1,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Container(
-                height: 26,
-                width: 82,
-                margin: const EdgeInsets.only(left: 2, bottom: 1),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: AppDimensions.mediumBorderRadius,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
                     PrimaryText(
-                      'Rút tiền',
-                      style: AppTextStyles.labelXSmall.copyWith(
-                        color: AppColors.primary,
-                        fontSize: 12,
+                      'Số dư khả dụng',
+                      style: AppTextStyles.bodyXSmall.copyWith(
+                        color: Colors.white.withAlpha(235),
+                        fontSize: 13,
                       ),
                     ),
                     AppSpacing.horizontal(5),
                     const Icon(
-                      Icons.arrow_forward_rounded,
-                      color: AppColors.primary,
-                      size: 13,
+                      Icons.visibility_rounded,
+                      color: Colors.white,
+                      size: 16,
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ],
+                AppSpacing.vertical(6),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: PrimaryText(
+                    '0 đ',
+                    style: AppTextStyles.titleXXLarge.copyWith(
+                      color: Colors.white,
+                      fontSize: 23,
+                      height: 1,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  height: 26,
+                  width: 82,
+                  margin: const EdgeInsets.only(left: 2, bottom: 1),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: AppDimensions.mediumBorderRadius,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PrimaryText(
+                        'Rút tiền',
+                        style: AppTextStyles.labelXSmall.copyWith(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                        ),
+                      ),
+                      AppSpacing.horizontal(5),
+                      const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: AppColors.primary,
+                        size: 13,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -208,6 +224,8 @@ class _QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final VendorMasterBloc _vendorMasterBloc = getIt.get();
+
     return Container(
       height: 78,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
@@ -223,6 +241,9 @@ class _QuickActions extends StatelessWidget {
             label: 'Đơn hàng',
             color: AppColors.primary,
             assetPath: ImagePath.shopHomeV2IconOrder,
+            onTap: () {
+              _vendorMasterBloc.changeTab(VendorNavigationItem.orders);
+            },
           ),
           _QuickAction(
             label: 'Tích điểm',
@@ -238,6 +259,9 @@ class _QuickActions extends StatelessWidget {
             label: 'Số dư',
             color: AppColors.shopHomeV2QuickActionWallet,
             assetPath: ImagePath.shopHomeV2IconWallet,
+            onTap: () {
+              _vendorMasterBloc.changeTab(VendorNavigationItem.wallet);
+            },
           ),
         ],
       ),
@@ -250,40 +274,49 @@ class _QuickAction extends StatelessWidget {
     required this.label,
     required this.color,
     required this.assetPath,
+    this.onTap,
   });
 
   final String label;
   final Color color;
   final String assetPath;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              SizedBox(
-                width: 40,
-                height: 40,
-                child: Center(
-                  child: SizedBox.square(
-                    dimension: 38,
-                    child: Image.asset(assetPath, fit: BoxFit.contain),
+      child: PrimaryAnimatedPressableWidget(
+        onTap: onTap != null
+            ? onTap
+            : () {
+                // context.push(RouteName.)
+              },
+        child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: SizedBox.square(
+                      dimension: 38,
+                      child: Image.asset(assetPath, fit: BoxFit.contain),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          PrimaryText(
-            label,
-            maxLine: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.labelXSmall.copyWith(fontSize: 13),
-          ),
-        ],
+              ],
+            ),
+            const Spacer(),
+            PrimaryText(
+              label,
+              maxLine: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.labelXSmall,
+            ),
+          ],
+        ),
       ),
     );
   }

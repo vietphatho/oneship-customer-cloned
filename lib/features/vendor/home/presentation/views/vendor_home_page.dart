@@ -1,11 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_bloc.dart';
+import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_state.dart';
+import 'package:oneship_customer/features/vendor/master/data/vendor_navigation_item.dart';
+import 'package:oneship_customer/features/vendor/master/presentation/bloc/vendor_master_bloc.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_bloc.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_state.dart';
+import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_event.dart';
+import 'package:oneship_customer/features/wallet/presentation/widgets/withdraw_bottom_sheet.dart';
 
 part '../widgets/shop_home_v2_header_section.dart';
 part '../widgets/shop_home_v2_overview_section.dart';
@@ -22,11 +31,13 @@ class _VendorHomePageState extends State<VendorHomePage> {
   static const _backgroundColor = AppColors.shopHomeV2Background;
 
   final VendorProfileBloc _vendorProfileBloc = getIt.get();
+  final VendorStatsBloc _vendorStatsBloc = getIt.get();
 
   @override
   void initState() {
     super.initState();
     _vendorProfileBloc.init();
+    _vendorStatsBloc.init();
   }
 
   @override
@@ -35,15 +46,19 @@ class _VendorHomePageState extends State<VendorHomePage> {
       backgroundColor: _backgroundColor,
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 150),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeaderSection(),
-              AppSpacing.vertical(AppDimensions.largeSpacing),
-              _buildPromoStatsSection(),
-            ],
+        child: RefreshIndicator(
+          onRefresh: () async => _vendorStatsBloc.refresh(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 150),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeaderSection(),
+                AppSpacing.vertical(AppDimensions.largeSpacing),
+                _buildPromoStatsSection(),
+              ],
+            ),
           ),
         ),
       ),

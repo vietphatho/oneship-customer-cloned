@@ -54,102 +54,95 @@ class _HomeHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => context.push(RouteName.vendorProfileDetailPage),
-                    child: Container(
-                      width: 72,
-                      height: 72,
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [PrimaryBoxShadows.defaultShadow],
-                      ),
-                      child: const _HeaderAvatarImage(),
-                    ),
+                    onTap: () =>
+                        context.push(RouteName.vendorProfileDetailPage),
+                    // child: Container(
+                    //   width: 72,
+                    //   height: 72,
+                    //   padding: const EdgeInsets.all(3),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     shape: BoxShape.circle,
+                    //     boxShadow: [PrimaryBoxShadows.defaultShadow],
+                    //   ),
+                    //   child: const _HeaderAvatarImage(),
+                    // ),
+                    child: const PrimaryAvatar(showStatusIndicator: false),
                   ),
                   AppSpacing.horizontal(12),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PrimaryText(
-                            'vendor_home.greeting'.tr(
-                              namedArgs: {'name': _textOr(profile?.vendorName)},
-                            ),
-                            maxLine: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.titleMedium,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        PrimaryText(
+                          'vendor_home.greeting'.tr(
+                            namedArgs: {'name': _textOr(profile?.vendorName)},
                           ),
-                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.smallSpacing,
-                              vertical: AppDimensions.xxSmallSpacing,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.shopHomeV2SoftOrangeBackground,
-                              borderRadius: AppDimensions.mediumBorderRadius,
-                            ),
-                            child: PrimaryText(
-                              'vendor_profile.merchant'.tr(),
-                              style: AppTextStyles.labelXSmall.copyWith(
-                                color: AppColors.shopHomeV2MerchantBrown,
+                          maxLine: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.titleMedium,
+                        ),
+                        AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.xSmallSpacing,
+                            vertical: AppDimensions.xxxSmallSpacing,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.shopHomeV2SoftOrangeBackground,
+                            borderRadius: AppDimensions.mediumBorderRadius,
+                          ),
+                          child: PrimaryText(
+                            'vendor_profile.merchant'.tr(),
+                            style: AppTextStyles.labelXSmall,
+                            color: AppColors.shopHomeV2MerchantBrown,
+                          ),
+                        ),
+                        AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 114),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(
+                                Icons.location_on_rounded,
+                                color: AppColors.primary,
+                                size: AppDimensions.smallIconSize,
                               ),
-                            ),
-                          ),
-                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 126),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on_rounded,
-                                  color: AppColors.primary,
-                                  size: AppDimensions.smallIconSize,
-                                ),
-                                AppSpacing.horizontal(
-                                  AppDimensions.xxxSmallSpacing,
-                                ),
-                                Expanded(
-                                  child: PrimaryText(
-                                    _textOr(profile?.fullAddress),
-                                    maxLine: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppTextStyles.bodyXSmall.copyWith(
-                                      color: AppColors.neutral4,
-                                    ),
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.chevron_right_rounded,
+                              AppSpacing.horizontal(
+                                AppDimensions.xxxSmallSpacing,
+                              ),
+                              Expanded(
+                                child: PrimaryText(
+                                  _textOr(profile?.fullAddress),
+                                  maxLine: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.bodyXXSmall,
                                   color: AppColors.neutral4,
-                                  size: AppDimensions.smallIconSize,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              Positioned(
-                right: -2,
-                top: 14,
-                child: PrimaryIconButton(
-                  icon: const Icon(Icons.notifications_none_rounded),
-                  size: 44,
-                  iconColor: AppColors.neutral1,
-                  backgroundColor: Colors.white,
-                  borderColor: Colors.transparent,
-                  borderRadius: AppDimensions.largeBorderRadius,
-                  showBadgeDot: true,
-                  boxShadow: [PrimaryBoxShadows.defaultShadow],
-                ),
-              ),
+              // Positioned(
+              //   right: -2,
+              //   top: 14,
+              //   child: PrimaryIconButton(
+              //     icon: const Icon(Icons.notifications_none_rounded),
+              //     size: 44,
+              //     iconColor: AppColors.neutral1,
+              //     backgroundColor: Colors.white,
+              //     borderColor: Colors.transparent,
+              //     borderRadius: AppDimensions.largeBorderRadius,
+              //     showBadgeDot: true,
+              //     boxShadow: [PrimaryBoxShadows.defaultShadow],
+              //   ),
+              // ),
             ],
           ),
         );

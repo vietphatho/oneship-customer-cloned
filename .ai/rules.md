@@ -178,6 +178,34 @@ path:
 
 ---
 
+# Widget Independence
+
+Widgets should be highly reusable and loosely coupled.
+
+### Rules
+
+* Do not pass Bloc, Cubit, State, ViewModel, Controller, or similar state-management objects through widget constructors unless there is a strong architectural reason, such as lifecycle ownership by a parent `State`.
+* Child widgets should retrieve required dependencies from `BuildContext`, Bloc/Repository providers, dependency injection, or context selectors.
+* Constructors should contain only UI configuration, display data, and callbacks when necessary.
+* Prefer `const MyWidget()` over `MyWidget(bloc: bloc, state: state)`.
+* Widgets should be portable and reusable across screens without requiring parent widgets to pass internal state-management objects.
+* Use `context.select()` or narrow `BlocBuilder.buildWhen` conditions where possible to reduce rebuild scope.
+* Keep widgets focused on a single responsibility.
+
+---
+
+# File Organization
+
+* Avoid large widget files containing many unrelated widgets.
+* Extract widgets into dedicated files when they represent a distinct UI component.
+* Prefer composition over massive widget trees.
+* Keep parent widgets focused on layout and orchestration.
+* Keep widget files small and maintainable.
+* Use one major widget per file whenever practical.
+* Refactor files that become difficult to navigate or exceed reasonable size.
+
+---
+
 # List Rules
 
 * Prefer ListView.separated() over ListView.builder().

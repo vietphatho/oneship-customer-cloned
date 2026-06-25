@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/vendor/master/data/vendor_navigation_i
 import 'package:oneship_customer/features/vendor/master/presentation/bloc/vendor_master_bloc.dart';
 import 'package:oneship_customer/features/vendor/master/presentation/bloc/vendor_master_state.dart';
 import 'package:oneship_customer/features/vendor/master/presentation/widgets/vendor_bottom_navigation_bar.dart';
+import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_bloc.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_bloc.dart';
 
 class VendorMasterPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _VendorMasterPageState extends State<VendorMasterPage> {
   final VendorMasterBloc _vendorMasterBloc = getIt.get();
   final AuthBloc _authBloc = getIt.get();
   final VendorProfileBloc _vendorProfileBloc = getIt.get();
+  final VendorStatsBloc _vendorStatsBloc = getIt.get();
 
   late final PageController _pageController;
 
@@ -92,6 +94,7 @@ class _VendorMasterPageState extends State<VendorMasterPage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          _vendorStatsBloc.clear();
           _vendorProfileBloc.clear();
           FunctionUtils.handleAfterLogout();
           context.pushReplacement(RouteName.loginPage);

@@ -9,6 +9,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/app_version.dart';
+import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_bloc.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_bloc.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/widgets/vendor_profile_header.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/widgets/vendor_profile_menu_section.dart';
@@ -23,6 +24,7 @@ class VendorProfilePage extends StatefulWidget {
 class _VendorProfilePageState extends State<VendorProfilePage> {
   final AuthBloc _authBloc = getIt.get();
   final VendorProfileBloc _vendorProfileBloc = getIt.get();
+  final VendorStatsBloc _vendorStatsBloc = getIt.get();
 
   @override
   void initState() {
@@ -58,7 +60,7 @@ class _VendorProfilePageState extends State<VendorProfilePage> {
                 AppDimensions.smallSpacing,
                 AppDimensions.smallSpacing,
                 AppDimensions.smallSpacing,
-                150,
+                AppDimensions.largeSpacing + AppDimensions.bottomNavBarHeight,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +76,7 @@ class _VendorProfilePageState extends State<VendorProfilePage> {
                   const VendorProfileLogoutButton(),
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   const Center(child: AppVersion()),
-                  AppSpacing.vertical(AppDimensions.largeSpacing),
+                  // AppSpacing.vertical(AppDimensions.largeSpacing),
                 ],
               ),
             ),
@@ -92,6 +94,7 @@ class _VendorProfilePageState extends State<VendorProfilePage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          _vendorStatsBloc.clear();
           _vendorProfileBloc.clear();
           FunctionUtils.handleAfterLogout();
           context.go(RouteName.homePage);
@@ -111,6 +114,7 @@ class _VendorProfilePageState extends State<VendorProfilePage> {
           break;
         case Result.success:
           PrimaryDialog.hideLoadingDialog(context);
+          _vendorStatsBloc.clear();
           _vendorProfileBloc.clear();
           PrimaryDialog.showSuccessDialog(
             context,

@@ -9,6 +9,7 @@ class RouteName {
   static const String verifyEmailPage = '/verify_email';
   static const String shopMasterPage = '/shop_master';
   static const String vendorMasterPage = '/vendor_master';
+  static const String vendorOrderDetailPage = '/vendor_master/orders/detail';
   static const String vendorProfileDetailPage = '/vendor_master/profile/detail';
   static const String customerHomePage = '/customer_home';
   static const String registerPage = '/register';

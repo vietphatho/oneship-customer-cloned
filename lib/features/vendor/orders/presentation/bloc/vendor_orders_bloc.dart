@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
 import 'package:oneship_customer/features/vendor/orders/data/constants/vendor_orders_request_defaults.dart';
 import 'package:oneship_customer/features/vendor/orders/domain/entities/vendor_order_entity.dart';
+import 'package:oneship_customer/features/vendor/orders/domain/use_cases/fetch_vendor_archived_order_detail_use_case.dart';
 import 'package:oneship_customer/features/vendor/orders/domain/use_cases/fetch_vendor_archived_orders_use_case.dart';
+import 'package:oneship_customer/features/vendor/orders/domain/use_cases/fetch_vendor_order_detail_use_case.dart';
 import 'package:oneship_customer/features/vendor/orders/domain/use_cases/fetch_vendor_processing_orders_use_case.dart';
 import 'package:oneship_customer/features/vendor/orders/presentation/bloc/vendor_orders_event.dart';
 import 'package:oneship_customer/features/vendor/orders/presentation/bloc/vendor_orders_tab.dart';
@@ -19,17 +22,24 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
   VendorOrdersBloc(
     this._fetchProcessingOrdersUseCase,
     this._fetchArchivedOrdersUseCase,
+    this._fetchOrderDetailUseCase,
+    this._fetchArchivedOrderDetailUseCase,
+    this._getShipperInfoUseCase,
     this._vendorProfileBloc,
   ) : super(VendorOrdersState.initial()) {
     on<VendorOrdersInitEvent>(_onInit);
     on<VendorOrdersFetchedEvent>(_onFetchOrders);
     on<VendorOrdersKeywordChangedEvent>(_onKeywordChanged);
+    on<VendorOrderDetailFetchedEvent>(_onFetchOrderDetail);
   }
 
   static const _searchDebounce = Duration(milliseconds: 500);
 
   final FetchVendorProcessingOrdersUseCase _fetchProcessingOrdersUseCase;
   final FetchVendorArchivedOrdersUseCase _fetchArchivedOrdersUseCase;
+  final FetchVendorOrderDetailUseCase _fetchOrderDetailUseCase;
+  final FetchVendorArchivedOrderDetailUseCase _fetchArchivedOrderDetailUseCase;
+  final GetShipperInfoUseCase _getShipperInfoUseCase;
   final VendorProfileBloc _vendorProfileBloc;
   final Map<VendorOrdersTab, Timer?> _searchDebounceTimers = {};
 
@@ -37,17 +47,6 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
     VendorOrdersInitEvent event,
     Emitter<VendorOrdersState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        processingOrdersResource: Resource.loading(
-          data: state.processingOrdersResource.data,
-        ),
-        archivedOrdersResource: Resource.loading(
-          data: state.archivedOrdersResource.data,
-        ),
-      ),
-    );
-
     final owner = await _ownerOrNull();
     if (owner == null) {
       emit(
@@ -64,6 +63,17 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
       );
       return;
     }
+
+    emit(
+      state.copyWith(
+        processingPage: VendorOrdersRequestDefaults.page,
+        archivedPage: VendorOrdersRequestDefaults.page,
+        processingOrders: [],
+        archivedOrders: [],
+        processingOrdersResource: Resource.loading(),
+        archivedOrdersResource: Resource.loading(),
+      ),
+    );
 
     final responses = await Future.wait([
       _fetchProcessingOrdersUseCase(
@@ -91,14 +101,8 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
         archivedPage: VendorOrdersRequestDefaults.page,
         processingOrdersResource: processingResponse,
         archivedOrdersResource: archivedResponse,
-        processingOrders: _ordersOrCurrent(
-          processingResponse,
-          state.processingOrders,
-        ),
-        archivedOrders: _ordersOrCurrent(
-          archivedResponse,
-          state.archivedOrders,
-        ),
+        processingOrders: _ordersOrEmpty(processingResponse),
+        archivedOrders: _ordersOrEmpty(archivedResponse),
       ),
     );
   }
@@ -109,10 +113,18 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
   ) async {
     switch (event.tab) {
       case VendorOrdersTab.processing:
-        await _fetchProcessingOrders(emit);
+        await _fetchProcessingOrders(
+          emit,
+          reset: event.reset,
+          loadMore: event.loadMore,
+        );
         break;
       case VendorOrdersTab.archived:
-        await _fetchArchivedOrders(emit);
+        await _fetchArchivedOrders(
+          emit,
+          reset: event.reset,
+          loadMore: event.loadMore,
+        );
         break;
     }
   }
@@ -134,15 +146,90 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
 
     _searchDebounceTimers[event.tab]?.cancel();
     _searchDebounceTimers[event.tab] = Timer(_searchDebounce, () {
-      add(VendorOrdersFetchedEvent(event.tab));
+      add(VendorOrdersFetchedEvent(event.tab, reset: true));
     });
   }
 
-  Future<void> _fetchProcessingOrders(Emitter<VendorOrdersState> emit) async {
+  FutureOr<void> _onFetchOrderDetail(
+    VendorOrderDetailFetchedEvent event,
+    Emitter<VendorOrdersState> emit,
+  ) async {
+    final orderId = event.orderId.trim();
+    if (orderId.isEmpty) return;
+    if (state.isOrderDetailLoading && state.selectedOrderId == orderId) return;
+
     emit(
       state.copyWith(
+        selectedOrderId: orderId,
+        selectedOrderTab: event.tab,
+        orderDetailResource: Resource.loading(
+          data: state.orderDetailResource.data,
+        ),
+      ),
+    );
+
+    final owner = await _ownerOrNull();
+    if (owner == null) {
+      emit(
+        state.copyWith(
+          orderDetailResource: Resource.error('vendor_profile_not_loaded', 0),
+        ),
+      );
+      return;
+    }
+
+    final response = switch (event.tab) {
+      VendorOrdersTab.processing => await _fetchOrderDetailUseCase(
+        shopId: owner.shopId,
+        vendorId: owner.vendorId,
+        orderId: orderId,
+      ),
+      VendorOrdersTab.archived => await _fetchArchivedOrderDetailUseCase(
+        shopId: owner.shopId,
+        vendorId: owner.vendorId,
+        orderId: orderId,
+      ),
+    };
+
+    final orderDetail = response.data;
+    if (response.state == Result.success &&
+        orderDetail != null &&
+        orderDetail.shipperCodes.isNotEmpty) {
+      final shipperResponse = await _getShipperInfoUseCase(
+        orderDetail.shipperCodes.first,
+      );
+      emit(
+        state.copyWith(
+          orderDetailResource: response.copyWith(
+            data: orderDetail.copyWith(shipper: shipperResponse.data),
+          ),
+        ),
+      );
+      return;
+    }
+
+    emit(state.copyWith(orderDetailResource: response));
+  }
+
+  Future<void> _fetchProcessingOrders(
+    Emitter<VendorOrdersState> emit, {
+    bool reset = false,
+    bool loadMore = false,
+  }) async {
+    if (state.processingOrdersResource.state == Result.loading) return;
+    if (loadMore && !state.hasMoreProcessingOrders) return;
+
+    final previousPage = state.processingPage;
+    final page = loadMore
+        ? state.processingPage + 1
+        : VendorOrdersRequestDefaults.page;
+
+    emit(
+      state.copyWith(
+        processingPage: page,
+        processingOrders: reset ? [] : state.processingOrders,
         processingOrdersResource: Resource.loading(
-          data: state.processingOrdersResource.data,
+          data: reset ? null : state.processingOrdersResource.data,
         ),
       ),
     );
@@ -163,24 +250,48 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
     final response = await _fetchProcessingOrdersUseCase(
       shopId: owner.shopId,
       vendorId: owner.vendorId,
-      page: state.processingPage,
+      page: page,
       limit: VendorOrdersRequestDefaults.limit,
       trackingCode: _trackingCodeOrNull(state.processingKeyword),
     );
 
+    final nextOrders = _resolveOrders(
+      response: response,
+      current: reset ? [] : state.processingOrders,
+      append: loadMore,
+    );
+
     emit(
       state.copyWith(
+        processingPage: _pageOrCurrent(
+          response,
+          loadMore ? previousPage : page,
+        ),
         processingOrdersResource: response,
-        processingOrders: _ordersOrCurrent(response, state.processingOrders),
+        processingOrders: nextOrders,
       ),
     );
   }
 
-  Future<void> _fetchArchivedOrders(Emitter<VendorOrdersState> emit) async {
+  Future<void> _fetchArchivedOrders(
+    Emitter<VendorOrdersState> emit, {
+    bool reset = false,
+    bool loadMore = false,
+  }) async {
+    if (state.archivedOrdersResource.state == Result.loading) return;
+    if (loadMore && !state.hasMoreArchivedOrders) return;
+
+    final previousPage = state.archivedPage;
+    final page = loadMore
+        ? state.archivedPage + 1
+        : VendorOrdersRequestDefaults.page;
+
     emit(
       state.copyWith(
+        archivedPage: page,
+        archivedOrders: reset ? [] : state.archivedOrders,
         archivedOrdersResource: Resource.loading(
-          data: state.archivedOrdersResource.data,
+          data: reset ? null : state.archivedOrdersResource.data,
         ),
       ),
     );
@@ -201,25 +312,48 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
     final response = await _fetchArchivedOrdersUseCase(
       shopId: owner.shopId,
       vendorId: owner.vendorId,
-      page: state.archivedPage,
+      page: page,
       limit: VendorOrdersRequestDefaults.limit,
       trackingCode: _trackingCodeOrNull(state.archivedKeyword),
     );
 
+    final nextOrders = _resolveOrders(
+      response: response,
+      current: reset ? [] : state.archivedOrders,
+      append: loadMore,
+    );
+
     emit(
       state.copyWith(
+        archivedPage: _pageOrCurrent(response, loadMore ? previousPage : page),
         archivedOrdersResource: response,
-        archivedOrders: _ordersOrCurrent(response, state.archivedOrders),
+        archivedOrders: nextOrders,
       ),
     );
   }
 
-  List<VendorOrderEntity> _ordersOrCurrent(
+  List<VendorOrderEntity> _ordersOrEmpty(
     Resource<VendorOrdersEntity> response,
-    List<VendorOrderEntity> current,
   ) {
-    if (response.state != Result.success) return current;
+    if (response.state != Result.success) return [];
     return response.data?.items ?? [];
+  }
+
+  List<VendorOrderEntity> _resolveOrders({
+    required Resource<VendorOrdersEntity> response,
+    required List<VendorOrderEntity> current,
+    required bool append,
+  }) {
+    if (response.state != Result.success) return current;
+
+    final items = response.data?.items ?? [];
+    if (!append) return items;
+    return [...current, ...items];
+  }
+
+  int _pageOrCurrent(Resource<VendorOrdersEntity> response, int current) {
+    if (response.state != Result.success) return current;
+    return response.data?.meta?.page ?? current;
   }
 
   String? _trackingCodeOrNull(String keyword) {
@@ -270,11 +404,35 @@ class VendorOrdersBloc extends Bloc<VendorOrdersEvent, VendorOrdersState> {
   }
 
   void retryProcessingOrders() {
-    add(const VendorOrdersFetchedEvent(VendorOrdersTab.processing));
+    add(
+      const VendorOrdersFetchedEvent(VendorOrdersTab.processing, reset: true),
+    );
   }
 
   void retryArchivedOrders() {
-    add(const VendorOrdersFetchedEvent(VendorOrdersTab.archived));
+    add(const VendorOrdersFetchedEvent(VendorOrdersTab.archived, reset: true));
+  }
+
+  void openOrderDetail(VendorOrderEntity order, VendorOrdersTab tab) {
+    final orderId = order.id?.trim();
+    if (orderId == null || orderId.isEmpty) return;
+    add(VendorOrderDetailFetchedEvent(orderId: orderId, tab: tab));
+  }
+
+  void refreshOrders(VendorOrdersTab tab) {
+    add(VendorOrdersFetchedEvent(tab, reset: true));
+  }
+
+  void loadMoreOrders(VendorOrdersTab tab) {
+    add(VendorOrdersFetchedEvent(tab, loadMore: true));
+  }
+
+  void retryOrderDetail() {
+    final orderId = state.selectedOrderId?.trim();
+    if (orderId == null || orderId.isEmpty) return;
+    final tab = state.selectedOrderTab;
+    if (tab == null) return;
+    add(VendorOrderDetailFetchedEvent(orderId: orderId, tab: tab));
   }
 
   @override

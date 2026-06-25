@@ -1,13 +1,10 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/wallet/presentation/widgets/withdraw_bottom_sheet.dart';
+import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_event.dart';
-import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/wallet/presentation/widgets/withdraw_bottom_sheet.dart';
 
 class WalletBalanceCard extends StatelessWidget {
   final double balance;
@@ -38,14 +35,14 @@ class WalletBalanceCard extends StatelessWidget {
                   color: Colors.white,
                   size: 14,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppDimensions.xSmallSpacing),
                 PrimaryText(
                   Utils.formatCurrencyWithUnit(balance),
                   color: Colors.white,
                   size: 32,
                   fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppDimensions.xSmallSpacing),
                 ElevatedButton.icon(
                   onPressed: () {
                     getIt<WalletBloc>().add(WithdrawReset());
@@ -63,8 +60,8 @@ class WalletBalanceCard extends StatelessWidget {
                   },
                   icon: SvgPicture.asset(
                     ImagePath.walletWithdrawIcon,
-                    width: 20,
-                    height: 20,
+                    width: AppDimensions.xSmallIconSize,
+                    height: AppDimensions.xSmallIconSize,
                   ),
                   label: const PrimaryText(
                     'Rút tiền',
@@ -76,7 +73,7 @@ class WalletBalanceCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                   ),
                 ),
               ],
@@ -84,8 +81,8 @@ class WalletBalanceCard extends StatelessWidget {
           ),
           SvgPicture.asset(
             ImagePath.walletBalanceIcon,
-            width: 170,
-            height: 170,
+            width: MediaQuery.of(context).size.width * 0.35,
+            height: MediaQuery.of(context).size.width * 0.35,
             fit: BoxFit.contain,
           ),
         ],

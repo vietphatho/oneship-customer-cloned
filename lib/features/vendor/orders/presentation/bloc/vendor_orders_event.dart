@@ -9,9 +9,15 @@ class VendorOrdersInitEvent extends VendorOrdersEvent {
 }
 
 class VendorOrdersFetchedEvent extends VendorOrdersEvent {
-  const VendorOrdersFetchedEvent(this.tab);
+  const VendorOrdersFetchedEvent(
+    this.tab, {
+    this.reset = false,
+    this.loadMore = false,
+  });
 
   final VendorOrdersTab tab;
+  final bool reset;
+  final bool loadMore;
 }
 
 class VendorOrdersKeywordChangedEvent extends VendorOrdersEvent {
@@ -22,4 +28,14 @@ class VendorOrdersKeywordChangedEvent extends VendorOrdersEvent {
 
   final VendorOrdersTab tab;
   final String keyword;
+}
+
+class VendorOrderDetailFetchedEvent extends VendorOrdersEvent {
+  const VendorOrderDetailFetchedEvent({
+    required this.orderId,
+    required this.tab,
+  });
+
+  final String orderId;
+  final VendorOrdersTab tab;
 }

@@ -1,4 +1,4 @@
-﻿part of '../views/vendor_home_page.dart';
+part of '../views/vendor_home_page.dart';
 
 class _PromoBanner extends StatelessWidget {
   const _PromoBanner();
@@ -66,41 +66,137 @@ class _StatsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = getIt.get<VendorStatsBloc>();
+
+    return BlocBuilder<VendorStatsBloc, VendorStatsState>(
+      bloc: bloc,
+      buildWhen: (previous, current) =>
+          previous.statsResource != current.statsResource,
+      builder: (context, state) {
+        final stats = state.stats;
+
+        if (state.isLoading && stats == null) {
+          return const _StatsPanelFrame(
+            child: SizedBox(
+              height: 92,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+
+        if (state.isError && stats == null) {
+          return _StatsPanelFrame(
+            child: SizedBox(
+              height: 92,
+              child: Center(
+                child: PrimaryButton.outlined(
+                  label: 'retry'.tr(),
+                  onPressed: () => bloc.init(forceRefresh: true),
+                ),
+              ),
+            ),
+          );
+        }
+
+        if (stats == null || state.isEmpty) {
+          return _StatsPanelFrame(
+            child: SizedBox(
+              height: 92,
+              child: Center(child: PrimaryText('vendor_stats.empty'.tr())),
+            ),
+          );
+        }
+
+        return _StatsPanelFrame(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  _StatItem(
+                    icon: Icons.inventory_2_rounded,
+                    color: AppColors.primary,
+                    value: stats.orderCount.toString(),
+                    label: 'vendor_stats.total_orders'.tr(),
+                  ),
+                  _StatItem(
+                    icon: Icons.check_circle_rounded,
+                    color: AppColors.successForeground,
+                    value: stats.deliveredCount.toString(),
+                    label: 'vendor_stats.delivered_orders'.tr(),
+                  ),
+                  _StatItem(
+                    icon: Icons.assignment_return_rounded,
+                    color: AppColors.error,
+                    value: stats.returnedCount.toString(),
+                    label: 'vendor_stats.returned_orders'.tr(),
+                  ),
+                ],
+              ),
+              AppSpacing.vertical(AppDimensions.smallSpacing),
+              Row(
+                children: [
+                  _StatItem(
+                    icon: Icons.trending_up_rounded,
+                    color: AppColors.shopHomeV2StatsPurple,
+                    value: _formatPercent(stats.successRate),
+                    label: 'vendor_stats.success_rate'.tr(),
+                  ),
+                  _StatItem(
+                    icon: Icons.local_shipping_rounded,
+                    color: AppColors.shopHomeV2StatsGold,
+                    value: _formatCompactCurrency(stats.totalDeliveryFeeAmount),
+                    label: 'vendor_stats.delivery_fee'.tr(),
+                  ),
+                  _StatItem(
+                    icon: Icons.monetization_on_rounded,
+                    color: AppColors.green,
+                    value: _formatCompactCurrency(stats.totalCodAmount),
+                    label: 'vendor_stats.cod_amount'.tr(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _formatPercent(double value) {
+    return '${value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1)}%';
+  }
+
+  String _formatCompactCurrency(double value) {
+    if (value >= 1000000) {
+      final formatted = (value / 1000000).toStringAsFixed(1);
+      return '${formatted.endsWith('.0') ? formatted.substring(0, formatted.length - 2) : formatted}Mđ';
+    }
+    if (value >= 1000) {
+      final formatted = (value / 1000).toStringAsFixed(1);
+      return '${formatted.endsWith('.0') ? formatted.substring(0, formatted.length - 2) : formatted}Kđ';
+    }
+    return '${value.toStringAsFixed(0)}đ';
+  }
+}
+
+class _StatsPanelFrame extends StatelessWidget {
+  const _StatsPanelFrame({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.smallSpacing,
+        horizontal: AppDimensions.xxSmallSpacing,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppDimensions.largeBorderRadius,
         boxShadow: [PrimaryBoxShadows.defaultShadow],
       ),
-      child: Row(
-        children: const [
-          _StatItem(
-            icon: Icons.inventory_2_rounded,
-            color: AppColors.primary,
-            value: '128',
-            label: 'Tổng đơn hàng',
-          ),
-          _StatItem(
-            icon: Icons.check_circle_rounded,
-            color: AppColors.successForeground,
-            value: '102',
-            label: 'Đơn hoàn thành',
-          ),
-          _StatItem(
-            icon: Icons.trending_up_rounded,
-            color: AppColors.shopHomeV2StatsPurple,
-            value: '79%',
-            label: 'Tỷ lệ hoàn thành',
-          ),
-          _StatItem(
-            icon: Icons.monetization_on_rounded,
-            color: AppColors.shopHomeV2StatsGold,
-            value: '12.5Mđ',
-            label: 'Tổng đã giao',
-          ),
-        ],
-      ),
+      child: child,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 
@@ -29,17 +28,17 @@ class PrimaryAvatar extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: avatarRadius,
-          foregroundImage:
-              avatarUrl?.isNotEmpty == true
-                  ? CachedNetworkImageProvider(avatarUrl!)
-                  : null,
+          foregroundImage: avatarUrl?.isNotEmpty == true
+              ? CachedNetworkImageProvider(avatarUrl!)
+              : null,
           backgroundColor: AppColors.neutral8,
-          child: SvgPicture.asset(
-            ImagePath.iconUser,
-            width: avatarRadius,
-            height: avatarRadius,
-            colorFilter: ColorFilter.mode(AppColors.neutral5, BlendMode.srcIn),
-          ),
+          // child: SvgPicture.asset(
+          //   ImagePath.iconUser,
+          //   width: avatarRadius,
+          //   height: avatarRadius,
+          //   colorFilter: ColorFilter.mode(AppColors.neutral5, BlendMode.srcIn),
+          // ),
+          child: Image.asset(ImagePath.shopHomeAvatarOzoShipGenerated),
         ),
         // Status indicator
         if (showStatusIndicator)

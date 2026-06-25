@@ -54,6 +54,8 @@ class _OrderDetailTransportationHistoryTabViewState
     return BlocBuilder<OrderTrackingBloc, OrderTrackingState>(
       bloc: _orderTrackingBloc,
       builder: (context, state) {
+        var shopCoor = state.trackingResult.data?.shopInfo?.coordinate?.latLong;
+
         return SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
             horizontal: AppDimensions.mediumSpacing,
@@ -63,8 +65,9 @@ class _OrderDetailTransportationHistoryTabViewState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               OrderMapPreview(
-                shopLocation: _shopBloc.state.currentShop?.shopCoordinates
-                    ?.latLong,
+                shopLocation:
+                    shopCoor ??
+                    _shopBloc.state.currentShop?.shopCoordinates?.latLong,
                 deliveryLocation: widget.deliveryLocation,
               ),
               AppSpacing.vertical(AppDimensions.smallSpacing),
