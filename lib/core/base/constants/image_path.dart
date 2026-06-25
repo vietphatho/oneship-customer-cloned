@@ -19,6 +19,8 @@ class ImagePath {
   static const String shopHomeStore = 'assets/images/shop_home_store.png';
   static const String shopHomeV2Market =
       'assets/images/shop_home_v2_market.png';
+  static const String shopHomeV2MarketCutout =
+      'assets/images/shop_home_v2_market_cutout.png';
   static const String shopHomeV2Medal = 'assets/images/shop_home_v2_medal.png';
   static const String shopHomeV2Wallet =
       'assets/images/shop_home_v2_wallet.png';

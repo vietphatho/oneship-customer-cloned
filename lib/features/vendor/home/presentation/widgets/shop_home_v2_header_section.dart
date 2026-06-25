@@ -25,29 +25,27 @@ class _HomeHeader extends StatelessWidget {
                 left: -16,
                 right: -16,
                 top: -14,
-                bottom: 0,
+                bottom: -6,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       colors: [
-                        AppColors.shopHomeV2HeaderBackground,
+                        AppColors.shopHomeV2HeaderBackground.withAlpha(175),
                         AppColors.shopHomeV2Background,
-                        AppColors.shopHomeV2HeaderBackground,
                       ],
-                      stops: [0, 0.58, 1],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                   ),
                 ),
               ),
               Positioned(
-                right: -28,
-                top: 14,
+                right: -18,
+                top: 48,
                 child: Image.asset(
-                  ImagePath.shopHomeV2Market,
-                  width: 276,
-                  height: 108,
+                  ImagePath.shopHomeV2MarketCutout,
+                  width: 210,
+                  height: 82,
                   fit: BoxFit.cover,
                   alignment: Alignment.centerRight,
                 ),
@@ -55,21 +53,24 @@ class _HomeHeader extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 72,
-                    height: 72,
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [PrimaryBoxShadows.defaultShadow],
+                  GestureDetector(
+                    onTap: () => context.push(RouteName.vendorProfileDetailPage),
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [PrimaryBoxShadows.defaultShadow],
+                      ),
+                      child: const _HeaderAvatarImage(),
                     ),
-                    child: const _HeaderAvatarImage(),
                   ),
                   AppSpacing.horizontal(12),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 12, right: 128),
+                      padding: const EdgeInsets.only(top: 8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -77,7 +78,7 @@ class _HomeHeader extends StatelessWidget {
                             'vendor_home.greeting'.tr(
                               namedArgs: {'name': _textOr(profile?.vendorName)},
                             ),
-                            maxLine: 1,
+                            maxLine: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.titleMedium,
                           ),
@@ -99,32 +100,35 @@ class _HomeHeader extends StatelessWidget {
                             ),
                           ),
                           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on_rounded,
-                                color: AppColors.primary,
-                                size: AppDimensions.smallIconSize,
-                              ),
-                              AppSpacing.horizontal(
-                                AppDimensions.xxxSmallSpacing,
-                              ),
-                              Expanded(
-                                child: PrimaryText(
-                                  _textOr(profile?.fullAddress),
-                                  maxLine: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.bodyXSmall.copyWith(
-                                    color: AppColors.neutral4,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 126),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on_rounded,
+                                  color: AppColors.primary,
+                                  size: AppDimensions.smallIconSize,
+                                ),
+                                AppSpacing.horizontal(
+                                  AppDimensions.xxxSmallSpacing,
+                                ),
+                                Expanded(
+                                  child: PrimaryText(
+                                    _textOr(profile?.fullAddress),
+                                    maxLine: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyles.bodyXSmall.copyWith(
+                                      color: AppColors.neutral4,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const Icon(
-                                Icons.chevron_right_rounded,
-                                color: AppColors.neutral4,
-                                size: AppDimensions.smallIconSize,
-                              ),
-                            ],
+                                const Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: AppColors.neutral4,
+                                  size: AppDimensions.smallIconSize,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -165,9 +169,13 @@ class _HeaderAvatarImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      ImagePath.shopHomeAvatarOzoShipGenerated,
-      fit: BoxFit.cover,
+    return ClipOval(
+      child: Image.asset(
+        ImagePath.shopHomeAvatarOzoShipGenerated,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
