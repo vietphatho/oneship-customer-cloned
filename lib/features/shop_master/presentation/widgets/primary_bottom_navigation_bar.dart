@@ -62,8 +62,10 @@ class _PrimaryBottomNavigationBarState
                     clipper: _BottomNavigationBarClipper(),
                     child: Container(
                       height: AppDimensions.bottomNavBarHeight + bottomInset,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.smallSpacing,
+                      padding: EdgeInsets.only(
+                        left: AppDimensions.mediumSpacing,
+                        right: AppDimensions.mediumSpacing,
+                        bottom: bottomInset,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.background,

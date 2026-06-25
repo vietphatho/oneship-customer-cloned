@@ -34,6 +34,14 @@
     "policy_news_description": "Hiệu lực từ 01/06/2025",
     "scan_patient_code": "Quét mã bệnh nhân"
   },
+  "vendor_home": {
+    "orders": {
+      "title": "Đơn hàng của tôi",
+      "processing_tab": "Đơn đang xử lý",
+      "archived_tab": "Đơn đã xử lý",
+      "search_hint": "Tìm kiếm đơn hàng..."
+    }
+  },
   "package_number": "Mã kiện hàng",
   "filter_results": "Lọc kết quả",
   "assigned": "Đã phân công",

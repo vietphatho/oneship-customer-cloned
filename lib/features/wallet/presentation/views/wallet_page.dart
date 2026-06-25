@@ -1,19 +1,13 @@
-import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_event.dart';
 import 'package:oneship_customer/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:oneship_customer/features/wallet/presentation/widgets/wallet_balance_card.dart';
+import 'package:oneship_customer/features/wallet/presentation/widgets/wallet_bank_account.dart';
 import 'package:oneship_customer/features/wallet/presentation/widgets/wallet_line_chart.dart';
 import 'package:oneship_customer/features/wallet/presentation/widgets/wallet_summary_stats.dart';
-import 'package:oneship_customer/features/wallet/presentation/widgets/wallet_bank_account.dart';
-import 'package:oneship_customer/features/shop_master/data/enum.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_event.dart';
-
-import 'package:oneship_customer/di/injection_container.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
@@ -37,19 +31,22 @@ class _WalletPageState extends State<WalletPage> {
       backgroundColor: AppColors.neutral9,
       appBar: PrimaryAppBar(
         title: 'Ví của tôi',
-        leading: BackButton(
-          onPressed: () {
-            getIt<ShopMasterBloc>().add(ShopMasterChangeMenuTabEvent(BottomNavigationItem.home));
-            context.go(RouteName.shopMasterPage);
-          },
-        ),
+        // leading: BackButton(
+        //   onPressed: () {
+        //     getIt<ShopMasterBloc>().add(ShopMasterChangeMenuTabEvent(BottomNavigationItem.home));
+        //     context.go(RouteName.shopMasterPage);
+        //   },
+        // ),
         actions: [
           IconButton(
             icon: SvgPicture.asset(
               'assets/icons/transaction_history.svg',
               width: 24,
               height: 24,
-              colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                AppColors.primary,
+                BlendMode.srcIn,
+              ),
             ),
             onPressed: () {
               // TODO: Navigate to transaction history
@@ -67,7 +64,7 @@ class _WalletPageState extends State<WalletPage> {
           if (state.error != null) {
             return Center(child: PrimaryText(state.error!, color: Colors.red));
           }
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(
               16.0,
@@ -97,5 +94,3 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 }
-
-

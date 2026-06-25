@@ -149,27 +149,37 @@ class _OrdersPageState extends State<OrdersPage>
             listener: _handleFindingShipperStatusListener,
           ),
         ],
-        child: SafeArea(
-          top: false,
-          child: DefaultTabController(
-            length: _tabList.length,
-            child: Column(
-              children: [
-                OrderStatusTabBar(controller: _tabCtrl, items: _tabList),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: AppDimensions.xSmallSpacing,
+        child: Column(
+          children: [
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Padding(
+            //     padding: EdgeInsets.fromLTRB(
+            //       AppDimensions.mediumSpacing,
+            //       0,
+            //       0,
+            //       AppDimensions.xSmallSpacing,
+            //     ),
+            //     child: const ShopSelectionButton(),
+            //   ),
+            // ),
+            Expanded(
+              child: DefaultTabController(
+                length: _tabList.length,
+                child: Column(
+                  children: [
+                    OrderStatusTabBar(controller: _tabCtrl, items: _tabList),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabCtrl,
+                        children: _tabList.map((e) => e.view).toList(),
+                      ),
                     ),
-                    child: TabBarView(
-                      controller: _tabCtrl,
-                      children: _tabList.map((e) => e.view).toList(),
-                    ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
