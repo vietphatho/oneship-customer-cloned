@@ -1,3 +1,9 @@
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 ﻿import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
@@ -26,6 +32,26 @@ class VendorHomePage extends StatefulWidget {
 
 class _VendorHomePageState extends State<VendorHomePage> {
   static const _backgroundColor = AppColors.shopHomeV2Background;
+  static const _shopId = '019eed2d-431c-7f5c-8a69-3d6bc9746dab';
+  static const _vendorId = '019eed48-76e7-7584-9f0b-49d30f727403';
+
+  ShopVendorEntity? _vendor;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchVendor();
+  }
+
+  Future<void> _fetchVendor() async {
+    final response = await getIt.get<ShopBloc>().fetchShopVendor(
+      shopId: _shopId,
+      vendorId: _vendorId,
+    );
+    if (!mounted || response.data == null) return;
+
+    setState(() => _vendor = response.data);
+  }
 
   final VendorHomeBloc _vendorHomeBloc = getIt.get();
 
@@ -61,7 +87,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
   Widget _buildHeaderSection() {
     return Column(
       children: [
-        const _HomeHeader(),
+        _HomeHeader(vendor: _vendor),
         AppSpacing.vertical(4),
         const _TopCards(),
         AppSpacing.vertical(8),

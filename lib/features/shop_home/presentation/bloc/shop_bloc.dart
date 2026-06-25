@@ -12,6 +12,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_visible_surcharges_use_case.dart';
@@ -299,6 +300,16 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
 
   void searchShops(String query) {
     add(ShopSearchEvent(query));
+  }
+
+  Future<Resource<ShopVendorEntity>> fetchShopVendor({
+    required String shopId,
+    required String vendorId,
+  }) {
+    return _fetchShopsUseCase.fetchShopVendor(
+      shopId: shopId,
+      vendorId: vendorId,
+    );
   }
 
   FutureOr<void> _onSearch(ShopSearchEvent event, Emitter<ShopState> emit) {

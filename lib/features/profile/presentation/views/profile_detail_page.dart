@@ -9,6 +9,8 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class ProfileDetailPage extends StatefulWidget {
   const ProfileDetailPage({super.key});
@@ -18,7 +20,11 @@ class ProfileDetailPage extends StatefulWidget {
 }
 
 class _ProfileDetailPageState extends State<ProfileDetailPage> {
+  static const _shopId = '019eed2d-431c-7f5c-8a69-3d6bc9746dab';
+  static const _vendorId = '019eed48-76e7-7584-9f0b-49d30f727403';
+  static const _emptyText = '--';
   final AuthBloc _authBloc = getIt.get();
+  final ShopBloc _shopBloc = getIt.get();
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameCtrl = TextEditingController();
@@ -29,10 +35,9 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
 
   @override
   void initState() {
-    _nameCtrl.text = _authBloc.userProfile.displayName.toString();
-    _emailCtrl.text = _authBloc.userProfile.userEmail.toString();
-    _phoneCtrl.text = _authBloc.userProfile.userPhone.toString();
     super.initState();
+    _setProfileFields();
+    _fetchVendorProfile();
   }
 
   @override
@@ -112,6 +117,41 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
     }
   }
 
+  Future<void> _fetchVendorProfile() async {
+    final response = await _shopBloc.fetchShopVendor(
+      shopId: _shopId,
+      vendorId: _vendorId,
+    );
+    if (!mounted) return;
+
+    final vendor = response.data;
+    if (vendor == null) return;
+
+    setState(() => _setProfileFields(vendor: vendor));
+  }
+
+  void _setProfileFields({ShopVendorEntity? vendor}) {
+    final userProfile = _authBloc.userProfile;
+
+    _nameCtrl.text = _textOr(vendor?.vendorName, userProfile.displayName);
+    _emailCtrl.text = _emailText(vendor?.email, userProfile.userEmail);
+    _phoneCtrl.text = _textOr(vendor?.phone, userProfile.userPhone);
+  }
+
+  String _textOr(String? value, String? fallback) {
+    final text = value?.trim();
+    if (text != null && text.isNotEmpty) return text;
+
+    final fallbackText = fallback?.trim();
+    if (fallbackText != null && fallbackText.isNotEmpty) return fallbackText;
+
+    return _emptyText;
+  }
+
+  String _emailText(String? value, String? fallback) {
+    return _textOr(value, fallback);
+  }
+
   Widget _handleChangedUpdateProfileButton() {
     if (isEdit == false) {
       return SafeArea(
@@ -132,10 +172,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
               child: SecondaryButton.outlined(
                 label: 'cancel'.tr(),
                 onPressed: () {
-                  final userProfile = _authBloc.userProfile;
-
-                  _nameCtrl.text = userProfile.displayName.toString();
-                  _phoneCtrl.text = userProfile.userPhone.toString();
+                  _fetchVendorProfile();
 
                   setState(() {
                     isEdit = !isEdit;

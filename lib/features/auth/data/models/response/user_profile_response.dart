@@ -27,7 +27,11 @@ abstract class UserProfileResponse with _$UserProfileResponse {
 
 @freezed
 abstract class Profile with _$Profile {
-  const factory Profile() = _Profile;
+  const factory Profile({
+    @JsonKey(name: "fullAddress") String? fullAddress,
+    @JsonKey(name: "provinceName") String? provinceName,
+    @JsonKey(name: "wardName") String? wardName,
+  }) = _Profile;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);

@@ -1,37 +1,19 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 
 class GeneralProfileShopInfoCard extends StatelessWidget {
-  const GeneralProfileShopInfoCard({super.key});
+  const GeneralProfileShopInfoCard({super.key, this.vendor, this.userProfile});
 
-  static const List<PrimaryInfoItemData> _items = [
-    PrimaryInfoItemData(
-      icon: Icons.storefront_outlined,
-      iconColor: AppColors.primary,
-      label: 'Tên cửa hàng',
-      value: 'OneShip Store',
-    ),
-    PrimaryInfoItemData(
-      icon: Icons.verified_user_outlined,
-      iconColor: AppColors.green,
-      label: 'Mã cửa hàng',
-      value: 'OS123456',
-    ),
-    PrimaryInfoItemData(
-      icon: Icons.calendar_month_outlined,
-      iconColor: AppColors.info,
-      label: 'Ngày tham gia',
-      value: '12/05/2025',
-    ),
-    PrimaryInfoItemData(
-      icon: Icons.workspace_premium_outlined,
-      iconColor: AppColors.investmentPurple,
-      label: 'Gói dịch vụ',
-      value: 'Business',
-    ),
-  ];
+  static const _emptyText = '--';
+
+  final ShopVendorEntity? vendor;
+  final UserProfileResponse? userProfile;
 
   @override
   Widget build(BuildContext context) {
+    final items = _items;
+
     return PrimaryPanel(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(
@@ -64,15 +46,81 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
           AppSpacing.vertical(AppDimensions.largeSpacing),
           Row(
             children: [
-              for (var i = 0; i < _items.length; i++) ...[
-                Expanded(child: PrimaryInfoItem(data: _items[i])),
-                if (i != _items.length - 1) const _InfoDivider(),
+              for (var i = 0; i < items.length; i++) ...[
+                Expanded(child: PrimaryInfoItem(data: items[i])),
+                if (i != items.length - 1) const _InfoDivider(),
               ],
             ],
           ),
         ],
       ),
     );
+  }
+
+  List<PrimaryInfoItemData> get _items {
+    return [
+      PrimaryInfoItemData(
+        icon: Icons.storefront_outlined,
+        iconColor: AppColors.primary,
+        label: 'Tên cửa hàng',
+        value: _textOr(vendor?.vendorName, userProfile?.displayName),
+      ),
+      PrimaryInfoItemData(
+        icon: Icons.verified_user_outlined,
+        iconColor: AppColors.green,
+        label: 'Mã cửa hàng',
+        value: _textOr(vendor?.vendorCode, userProfile?.userCode),
+      ),
+      PrimaryInfoItemData(
+        icon: Icons.calendar_month_outlined,
+        iconColor: AppColors.info,
+        label: 'Ngày tham gia',
+        value: _formatDate(vendor?.createdAt) ??
+            _formatDynamicDate(userProfile?.userRegistered),
+      ),
+      const PrimaryInfoItemData(
+        icon: Icons.workspace_premium_outlined,
+        iconColor: AppColors.investmentPurple,
+        label: 'Gói dịch vụ',
+        value: 'Business',
+      ),
+    ];
+  }
+
+  String _textOr(String? value, String? fallback) {
+    final text = value?.trim();
+    if (text != null && text.isNotEmpty) return text;
+
+    final fallbackText = fallback?.trim();
+    if (fallbackText != null && fallbackText.isNotEmpty) return fallbackText;
+
+    return _emptyText;
+  }
+
+  String? _formatDate(DateTime? date) {
+    if (date == null) return null;
+
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    return '$day/$month/${date.year}';
+  }
+
+  String _formatDynamicDate(dynamic value) {
+    if (value is DateTime) return _formatDate(value) ?? '';
+    if (value is int) return _formatTimestamp(value);
+    if (value is String) {
+      final date = DateTime.tryParse(value);
+      if (date != null) return _formatDate(date) ?? '';
+
+      final timestamp = int.tryParse(value);
+      if (timestamp != null) return _formatTimestamp(timestamp);
+    }
+    return _emptyText;
+  }
+
+  String _formatTimestamp(int value) {
+    final milliseconds = value > 1000000000000 ? value : value * 1000;
+    return _formatDate(DateTime.fromMillisecondsSinceEpoch(milliseconds)) ?? '';
   }
 }
 
