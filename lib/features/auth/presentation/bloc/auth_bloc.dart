@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/auth/data/enum.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
@@ -63,21 +62,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserProfileResponse get userProfile => _userProfile;
 
   List<BottomNavigationItem> getBottomNavBarList() {
-    if (_userProfile.userRole == UserRole.vendor.value) {
-      return [
-        BottomNavigationItem.vendorHome,
-        BottomNavigationItem.orderList,
-        BottomNavigationItem.wallet,
-        BottomNavigationItem.menu,
-      ];
-    } else {
-      return [
-        BottomNavigationItem.home,
-        BottomNavigationItem.orderList,
-        BottomNavigationItem.finance,
-        BottomNavigationItem.menu,
-      ];
-    }
+    return [
+      BottomNavigationItem.home,
+      BottomNavigationItem.orderList,
+      BottomNavigationItem.finance,
+      BottomNavigationItem.menu,
+    ];
   }
 
   Future<void> _onLoginEvent(AuthLoginEvent event, Emitter emit) async {

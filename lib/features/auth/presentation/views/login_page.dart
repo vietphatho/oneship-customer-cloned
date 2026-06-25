@@ -28,6 +28,7 @@ import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.d
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
+import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   final ShopBloc _shopBloc = getIt.get();
   final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
+  final VendorProfileBloc _vendorProfileBloc = getIt.get();
   final FinanceOverviewBloc financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
 
@@ -302,7 +304,8 @@ class _LoginPageState extends State<LoginPage> {
           if (userRole == UserRole.shop.value) {
             _shopBloc.init(state.resource.data?.id ?? "");
           } else if (userRole == UserRole.vendor.value) {
-            context.go(RouteName.shopMasterPage);
+            _vendorProfileBloc.init(forceRefresh: true);
+            context.go(RouteName.vendorMasterPage);
           } else {
             _authBloc.logOut();
             context.go(RouteName.splashPage);

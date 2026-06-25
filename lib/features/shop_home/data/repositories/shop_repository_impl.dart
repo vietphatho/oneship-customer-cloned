@@ -83,6 +83,9 @@ class ShopRepositoryImpl extends ShopRepository {
       () => _api.fetchShopVendor(shopId: shopId, vendorId: vendorId),
     );
     return response.parse((dto) => ShopVendorEntity.from(dto));
+  }
+
+  @override
   Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
     required String shopId,
   }) async {

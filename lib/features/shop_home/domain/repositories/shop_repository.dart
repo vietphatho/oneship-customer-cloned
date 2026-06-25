@@ -5,8 +5,8 @@ import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 
 abstract class ShopRepository extends BaseRepository {
@@ -28,6 +28,8 @@ abstract class ShopRepository extends BaseRepository {
   Future<Resource<ShopVendorEntity>> fetchShopVendor({
     required String shopId,
     required String vendorId,
+  });
+
   Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
     required String shopId,
   });

@@ -5,12 +5,10 @@ import 'package:oneship_customer/features/orders/presentation/views/create_order
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
 import 'package:oneship_customer/features/profile/presentation/views/general_profile_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_home.dart';
-import 'package:oneship_customer/features/vendor_home/presentation/views/vendor_home_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
 
 enum BottomNavigationItem {
   home,
-  vendorHome,
   orderList,
   createOrder,
   finance,
@@ -21,7 +19,6 @@ enum BottomNavigationItem {
 extension BottomNavigationItemExt on BottomNavigationItem {
   static const _mapTitle = {
     BottomNavigationItem.home: 'Trang chủ',
-    BottomNavigationItem.vendorHome: 'Trang chủ',
     BottomNavigationItem.orderList: 'Đơn hàng',
     BottomNavigationItem.createOrder: '',
     BottomNavigationItem.finance: 'Thống kê',
@@ -31,7 +28,6 @@ extension BottomNavigationItemExt on BottomNavigationItem {
 
   static const _mapIcon = {
     BottomNavigationItem.home: SvgPath.iconHome,
-    BottomNavigationItem.vendorHome: SvgPath.iconHome,
     BottomNavigationItem.orderList: SvgPath.iconOrderList,
     BottomNavigationItem.createOrder: SvgPath.iconAdd,
     BottomNavigationItem.finance: SvgPath.iconFinance,
@@ -42,7 +38,6 @@ extension BottomNavigationItemExt on BottomNavigationItem {
 
   static const _mapPage = {
     BottomNavigationItem.home: ShopHome(),
-    BottomNavigationItem.vendorHome: VendorHomePage(),
     BottomNavigationItem.orderList: OrdersPage(),
     BottomNavigationItem.createOrder: CreateOrderPage(),
     BottomNavigationItem.finance: FinancePage(),

@@ -87,5 +87,48 @@
         "update_success": "Updated successfully.",
         "camera_permission_error": "Unable to open the camera. Please check camera permission.",
         "no_shop_selected": "Please select a shop before scanning a patient code"
+    },
+    "vendor_home": {
+        "greeting": "Hello, {name}!",
+        "orders": {
+            "title": "My orders",
+            "processing_tab": "Processing",
+            "archived_tab": "Processed",
+            "search_hint": "Search orders..."
+        }
+    },
+    "vendor_master": {
+        "home": "Home",
+        "orders": "Orders",
+        "wallet": "Wallet",
+        "profile": "Profile"
+    },
+    "vendor_profile": {
+        "title": "Profile",
+        "detail_title": "Vendor information",
+        "vendor_info": "Vendor information",
+        "view_detail": "View detail",
+        "merchant": "Vendor",
+        "vendor_name": "Vendor name",
+        "vendor_code": "Vendor code",
+        "description": "Description",
+        "phone": "Phone",
+        "email": "Email",
+        "address": "Address",
+        "status": "Status",
+        "created_date": "Created date",
+        "updated_date": "Updated date",
+        "logout": "Log out",
+        "menu": {
+            "profile_info": "Personal information",
+            "change_password": "Change password",
+            "pickup_address": "Pickup address",
+            "payment_method": "Payment method",
+            "notification": "Notification",
+            "language": "Language",
+            "language_value": "English",
+            "support_center": "Support center",
+            "about": "About OneShip"
+        }
     }
 }

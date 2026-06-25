@@ -1,11 +1,13 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/features/auth/data/enum.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_event.dart';
+import 'package:oneship_customer/features/vendor/master/data/vendor_navigation_item.dart';
+import 'package:oneship_customer/features/vendor/master/presentation/bloc/vendor_master_bloc.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
 
 class WithdrawSuccessPage extends StatelessWidget {
   const WithdrawSuccessPage({super.key});
@@ -19,8 +21,7 @@ class WithdrawSuccessPage extends StatelessWidget {
         titleColor: AppColors.secondary,
         leading: BackButton(
           onPressed: () {
-            getIt<ShopMasterBloc>().add(ShopMasterChangeMenuTabEvent(BottomNavigationItem.home));
-            context.go(RouteName.shopMasterPage);
+            _goToMaster(context, shopTab: BottomNavigationItem.home);
           },
         ),
       ),
@@ -40,7 +41,7 @@ class WithdrawSuccessPage extends StatelessWidget {
               child: const Icon(Icons.check, color: Colors.white, size: 48),
             ),
             const SizedBox(height: 24),
-            
+
             const PrimaryText(
               'Rút tiền thành công!',
               color: Colors.green,
@@ -60,7 +61,7 @@ class WithdrawSuccessPage extends StatelessWidget {
               color: AppColors.secondary,
             ),
             const SizedBox(height: 32),
-            
+
             // Details Card
             Container(
               padding: const EdgeInsets.all(16),
@@ -78,11 +79,19 @@ class WithdrawSuccessPage extends StatelessWidget {
                   const SizedBox(height: 12),
                   const Divider(height: 1, color: AppColors.neutral7),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Số tiền nhận', '1.000.000đ', valueColor: AppColors.primary, valueFontWeight: FontWeight.bold),
+                  _buildDetailRow(
+                    'Số tiền nhận',
+                    '1.000.000đ',
+                    valueColor: AppColors.primary,
+                    valueFontWeight: FontWeight.bold,
+                  ),
                   const SizedBox(height: 24),
-                  
+
                   // Bank Account
-                  const PrimaryText('Tài khoản nhận tiền', fontWeight: FontWeight.bold),
+                  const PrimaryText(
+                    'Tài khoản nhận tiền',
+                    fontWeight: FontWeight.bold,
+                  ),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -100,16 +109,32 @@ class WithdrawSuccessPage extends StatelessWidget {
                             color: const Color(0xFFE0E7FF),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(Icons.account_balance, color: AppColors.info, size: 24),
+                          child: const Icon(
+                            Icons.account_balance,
+                            color: AppColors.info,
+                            size: 24,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         const Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              PrimaryText('Vietcombank', fontWeight: FontWeight.bold, size: 14),
-                              PrimaryText('1234 5678 9012 3456', size: 12, color: AppColors.neutral3),
-                              PrimaryText('NGUYỄN VĂN AN', size: 12, color: AppColors.neutral3),
+                              PrimaryText(
+                                'Vietcombank',
+                                fontWeight: FontWeight.bold,
+                                size: 14,
+                              ),
+                              PrimaryText(
+                                '1234 5678 9012 3456',
+                                size: 12,
+                                color: AppColors.neutral3,
+                              ),
+                              PrimaryText(
+                                'NGUYỄN VĂN AN',
+                                size: 12,
+                                color: AppColors.neutral3,
+                              ),
                             ],
                           ),
                         ),
@@ -117,25 +142,28 @@ class WithdrawSuccessPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   _buildDetailRow('Thời gian', '11/05/2024 - 10:15:30'),
                 ],
               ),
             ),
             const SizedBox(height: 32),
-            
+
             // Action Buttons
             PrimaryButton.filled(
               label: 'Đóng',
               onPressed: () {
-                getIt<ShopMasterBloc>().add(ShopMasterChangeMenuTabEvent(BottomNavigationItem.wallet));
-                context.go(RouteName.shopMasterPage);
+                _goToMaster(context, shopTab: BottomNavigationItem.wallet);
               },
             ),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () {},
-              child: const PrimaryText('Xem lịch sử giao dịch', color: AppColors.primary, fontWeight: FontWeight.bold),
+              child: const PrimaryText(
+                'Xem lịch sử giao dịch',
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
           ],
@@ -144,12 +172,41 @@ class WithdrawSuccessPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value, {Color valueColor = AppColors.secondary, FontWeight valueFontWeight = FontWeight.normal}) {
+  void _goToMaster(
+    BuildContext context, {
+    required BottomNavigationItem shopTab,
+  }) {
+    final userRole = getIt<AuthBloc>().userProfile.userRole;
+
+    if (userRole == UserRole.vendor.value) {
+      final vendorTab = shopTab == BottomNavigationItem.home
+          ? VendorNavigationItem.home
+          : VendorNavigationItem.wallet;
+      getIt<VendorMasterBloc>().changeTab(vendorTab);
+      context.go(RouteName.vendorMasterPage);
+      return;
+    }
+
+    getIt<ShopMasterBloc>().changeTab(shopTab);
+    context.go(RouteName.shopMasterPage);
+  }
+
+  Widget _buildDetailRow(
+    String label,
+    String value, {
+    Color valueColor = AppColors.secondary,
+    FontWeight valueFontWeight = FontWeight.normal,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         PrimaryText(label, color: AppColors.neutral3, size: 14),
-        PrimaryText(value, color: valueColor, fontWeight: valueFontWeight, size: 14),
+        PrimaryText(
+          value,
+          color: valueColor,
+          fontWeight: valueFontWeight,
+          size: 14,
+        ),
       ],
     );
   }

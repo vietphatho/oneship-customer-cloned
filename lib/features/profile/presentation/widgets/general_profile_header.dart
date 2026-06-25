@@ -6,7 +6,6 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 
 class GeneralProfileTopBar extends StatelessWidget {
   const GeneralProfileTopBar({super.key});
@@ -32,11 +31,9 @@ class GeneralProfileTopBar extends StatelessWidget {
 }
 
 class GeneralProfileSummaryCard extends StatelessWidget {
-  const GeneralProfileSummaryCard({super.key, this.vendor});
+  const GeneralProfileSummaryCard({super.key});
 
   static const _emptyText = '--';
-
-  final ShopVendorEntity? vendor;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +57,7 @@ class GeneralProfileSummaryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PrimaryText(
-                      _textOr(vendor?.vendorName, userProfile.displayName),
+                      _textOr(userProfile.displayName),
                       style: AppTextStyles.titleLarge.copyWith(fontSize: 19),
                       maxLine: 1,
                       overflow: TextOverflow.ellipsis,
@@ -68,18 +65,17 @@ class GeneralProfileSummaryCard extends StatelessWidget {
                     AppSpacing.vertical(AppDimensions.xSmallSpacing),
                     _SmallInfoLine(
                       icon: Icons.phone_outlined,
-                      text: _textOr(vendor?.phone, userProfile.userPhone),
+                      text: _textOr(userProfile.userPhone),
                     ),
                     AppSpacing.vertical(AppDimensions.xxSmallSpacing),
                     _SmallInfoLine(
                       icon: Icons.mail_outline_rounded,
-                      text: _emailText(vendor?.email, userProfile.userEmail),
+                      text: _emailText(userProfile.userEmail),
                     ),
                     AppSpacing.vertical(AppDimensions.xxSmallSpacing),
                     _SmallInfoLine(
                       icon: Icons.location_on_outlined,
                       text: _addressText(
-                        vendorAddress: vendor?.fullAddress,
                         authAddress: userProfile.profile?.fullAddress,
                         authWard: userProfile.profile?.wardName,
                         authProvince: userProfile.profile?.provinceName,
@@ -100,31 +96,22 @@ class GeneralProfileSummaryCard extends StatelessWidget {
     );
   }
 
-  String _textOr(String? value, String? fallback) {
+  String _textOr(String? value) {
     final text = value?.trim();
     if (text != null && text.isNotEmpty) return text;
-
-    final fallbackText = fallback?.trim();
-    if (fallbackText != null && fallbackText.isNotEmpty) return fallbackText;
 
     return _emptyText;
   }
 
-  String _emailText(String? value, String? fallback) {
-    return _textOr(value, fallback);
+  String _emailText(String? value) {
+    return _textOr(value);
   }
 
   String _addressText({
-    String? vendorAddress,
     String? authAddress,
     String? authWard,
     String? authProvince,
   }) {
-    final vendorFullAddress = vendorAddress?.trim();
-    if (vendorFullAddress != null && vendorFullAddress.isNotEmpty) {
-      return vendorFullAddress;
-    }
-
     final authFullAddress = authAddress?.trim();
     if (authFullAddress != null && authFullAddress.isNotEmpty) {
       return authFullAddress;

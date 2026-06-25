@@ -19,6 +19,7 @@ import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:oneship_customer/features/splash/presentation/bloc/splash_state.dart';
+import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_bloc.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -33,6 +34,7 @@ class _SplashPageState extends State<SplashPage> {
   final AuthBloc _authBloc = getIt.get();
   final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
+  final VendorProfileBloc _vendorProfileBloc = getIt.get();
   final FinanceOverviewBloc financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
 
@@ -103,7 +105,8 @@ class _SplashPageState extends State<SplashPage> {
             _shopBloc.init(state.resource.data?.id ?? "");
             break;
           } else if (userRole == UserRole.vendor.value) {
-            context.go(RouteName.shopMasterPage);
+            _vendorProfileBloc.init(forceRefresh: true);
+            context.go(RouteName.vendorMasterPage);
           } else {
             _authBloc.logOut();
             context.go(RouteName.homePage);

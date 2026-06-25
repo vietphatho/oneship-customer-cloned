@@ -35,11 +35,46 @@
     "scan_patient_code": "Quét mã bệnh nhân"
   },
   "vendor_home": {
+    "greeting": "Xin chào, {name}!",
     "orders": {
       "title": "Đơn hàng của tôi",
-      "processing_tab": "Đơn đang xử lý",
-      "archived_tab": "Đơn đã xử lý",
+      "processing_tab": "Đang xử lý",
+      "archived_tab": "Đã xử lý",
       "search_hint": "Tìm kiếm đơn hàng..."
+    }
+  },
+  "vendor_master": {
+    "home": "Trang chủ",
+    "orders": "Đơn hàng",
+    "wallet": "Ví",
+    "profile": "Hồ sơ"
+  },
+  "vendor_profile": {
+    "title": "Hồ sơ",
+    "detail_title": "Thông tin tiểu thương",
+    "vendor_info": "Thông tin tiểu thương",
+    "view_detail": "Xem chi tiết",
+    "merchant": "Tiểu thương",
+    "vendor_name": "Tên tiểu thương",
+    "vendor_code": "Mã tiểu thương",
+    "description": "Mô tả",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "status": "Trạng thái",
+    "created_date": "Ngày tạo",
+    "updated_date": "Ngày cập nhật",
+    "logout": "Đăng xuất",
+    "menu": {
+      "profile_info": "Thông tin cá nhân",
+      "change_password": "Đổi mật khẩu",
+      "pickup_address": "Địa chỉ lấy hàng",
+      "payment_method": "Phương thức thanh toán",
+      "notification": "Thông báo",
+      "language": "Ngôn ngữ",
+      "language_value": "Tiếng Việt",
+      "support_center": "Trung tâm hỗ trợ",
+      "about": "Giới thiệu về OneShip"
     }
   },
   "package_number": "Mã kiện hàng",

@@ -1,13 +1,11 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
-import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 
 class GeneralProfileShopInfoCard extends StatelessWidget {
-  const GeneralProfileShopInfoCard({super.key, this.vendor, this.userProfile});
+  const GeneralProfileShopInfoCard({super.key, this.userProfile});
 
   static const _emptyText = '--';
 
-  final ShopVendorEntity? vendor;
   final UserProfileResponse? userProfile;
 
   @override
@@ -63,20 +61,19 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
         icon: Icons.storefront_outlined,
         iconColor: AppColors.primary,
         label: 'Tên cửa hàng',
-        value: _textOr(vendor?.vendorName, userProfile?.displayName),
+        value: _textOr(userProfile?.displayName),
       ),
       PrimaryInfoItemData(
         icon: Icons.verified_user_outlined,
         iconColor: AppColors.green,
         label: 'Mã cửa hàng',
-        value: _textOr(vendor?.vendorCode, userProfile?.userCode),
+        value: _textOr(userProfile?.userCode),
       ),
       PrimaryInfoItemData(
         icon: Icons.calendar_month_outlined,
         iconColor: AppColors.info,
         label: 'Ngày tham gia',
-        value: _formatDate(vendor?.createdAt) ??
-            _formatDynamicDate(userProfile?.userRegistered),
+        value: _formatDynamicDate(userProfile?.userRegistered),
       ),
       const PrimaryInfoItemData(
         icon: Icons.workspace_premium_outlined,
@@ -87,12 +84,9 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
     ];
   }
 
-  String _textOr(String? value, String? fallback) {
+  String _textOr(String? value) {
     final text = value?.trim();
     if (text != null && text.isNotEmpty) return text;
-
-    final fallbackText = fallback?.trim();
-    if (fallbackText != null && fallbackText.isNotEmpty) return fallbackText;
 
     return _emptyText;
   }

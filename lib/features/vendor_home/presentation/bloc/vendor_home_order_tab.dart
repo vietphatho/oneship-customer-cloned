@@ -1,1 +1,0 @@
-enum VendorHomeOrderTab { processing, archived }

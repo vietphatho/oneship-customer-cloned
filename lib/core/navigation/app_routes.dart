@@ -43,6 +43,8 @@ import 'package:oneship_customer/features/splash/presentation/views/splash_page.
 import 'package:oneship_customer/features/support/presentation/models/support_category_data.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_category_page.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_page.dart';
+import 'package:oneship_customer/features/vendor/master/presentation/views/vendor_master_page.dart';
+import 'package:oneship_customer/features/vendor/profile/presentation/views/vendor_profile_detail_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/withdraw_success_page.dart';
 
@@ -74,6 +76,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopMasterPage,
       builder: (context, state) => const ShopMasterPage(),
+    ),
+    GoRoute(
+      path: RouteName.vendorMasterPage,
+      builder: (context, state) => const VendorMasterPage(),
+    ),
+    GoRoute(
+      path: RouteName.vendorProfileDetailPage,
+      builder: (context, state) => const VendorProfileDetailPage(),
     ),
     GoRoute(
       path: RouteName.shopEmptyPage,
