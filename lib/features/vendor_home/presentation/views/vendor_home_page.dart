@@ -4,6 +4,20 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_empty_data.dart';
+import 'package:oneship_customer/core/base/components/primary_frame.dart';
+import 'package:oneship_customer/core/base/components/primary_tab_bar.dart';
+import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
+import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/vendor_home/domain/entities/vendor_order_entity.dart';
+import 'package:oneship_customer/features/vendor_home/presentation/bloc/vendor_home_bloc.dart';
+import 'package:oneship_customer/features/vendor_home/presentation/bloc/vendor_home_order_tab.dart';
+import 'package:oneship_customer/features/vendor_home/presentation/bloc/vendor_home_state.dart';
 part '../widgets/shop_home_v2_header_section.dart';
 part '../widgets/shop_home_v2_overview_section.dart';
 part '../widgets/shop_home_v2_orders_section.dart';
@@ -37,6 +51,14 @@ class _VendorHomePageState extends State<VendorHomePage> {
     if (!mounted || response.data == null) return;
 
     setState(() => _vendor = response.data);
+  }
+
+  final VendorHomeBloc _vendorHomeBloc = getIt.get();
+
+  @override
+  void initState() {
+    super.initState();
+    _vendorHomeBloc.init();
   }
 
   @override
@@ -75,18 +97,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
   }
 
   Widget _buildOrdersSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _SectionTitle('Đơn hàng của tôi'),
-        AppSpacing.vertical(AppDimensions.smallSpacing),
-        const _SearchBox(),
-        AppSpacing.vertical(AppDimensions.smallSpacing),
-        const _StatusTabs(),
-        AppSpacing.vertical(AppDimensions.smallSpacing),
-        const _OrderList(),
-      ],
-    );
+    return const _OrdersSection();
   }
 
   Widget _buildPromoStatsSection() {

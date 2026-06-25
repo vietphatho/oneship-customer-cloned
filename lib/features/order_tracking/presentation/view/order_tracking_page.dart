@@ -91,11 +91,11 @@ class _OrderTrackingSession extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OrderTrackingShipperInfoSession(),
-              AppSpacing.vertical(AppDimensions.xLargeSpacing),
-              MapView(),
-              AppSpacing.vertical(AppDimensions.xLargeSpacing),
-              OrderTrackingDetailSession(),
+              const MapView(),
+              AppSpacing.vertical(AppDimensions.largeSpacing),
+              const OrderTrackingShipperInfoSession(),
+              AppSpacing.vertical(AppDimensions.largeSpacing),
+              const OrderTrackingDetailSession(),
             ],
           ),
         );

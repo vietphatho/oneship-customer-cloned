@@ -69,9 +69,7 @@ class _ShopHomePromotionBannerState extends State<ShopHomePromotionBanner> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   _bannerCount,
-                  (index) => _BannerIndicator(
-                    isActive: index == _currentPage,
-                  ),
+                  (index) => _BannerIndicator(isActive: index == _currentPage),
                 ),
               ),
             ),
@@ -364,10 +362,7 @@ class _NewsCard extends StatelessWidget {
             child: SizedBox(
               height: 108,
               width: double.infinity,
-              child: Image.asset(
-                image,
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset(image, fit: BoxFit.cover),
             ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -385,19 +380,13 @@ class _NewsCard extends StatelessWidget {
             description,
             maxLine: 2,
             overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontSize: 12,
-              height: 1.1,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(fontSize: 12, height: 1.1),
             color: AppColors.neutral5,
           ),
           const Spacer(),
           PrimaryText(
             date,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontSize: 10,
-              height: 1,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(fontSize: 10, height: 1),
             color: AppColors.primary,
           ),
         ],

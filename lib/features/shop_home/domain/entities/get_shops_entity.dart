@@ -53,8 +53,9 @@ abstract class ShopEntity with _$ShopEntity {
       status: _getStatus(dto.status),
       createdAt: dto.createdAt,
       updatedAt: dto.updatedAt,
-      profile:
-          dto.profile != null ? ShopProfileEntity.from(dto.profile!) : null,
+      profile: dto.profile != null
+          ? ShopProfileEntity.from(dto.profile!)
+          : null,
     );
   }
 

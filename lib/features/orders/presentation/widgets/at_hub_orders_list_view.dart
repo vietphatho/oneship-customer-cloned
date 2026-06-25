@@ -9,9 +9,9 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class AtHubOrdersListView extends StatefulWidget {
@@ -50,17 +50,15 @@ class _AtHubOrdersListViewState extends State<AtHubOrdersListView> {
       listeners: [
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.atHubOrdersList != current.atHubOrdersList,
+          listenWhen: (previous, current) =>
+              previous.atHubOrdersList != current.atHubOrdersList,
           listener: _listenOrdsListChanged,
         ),
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
-          listenWhen:
-              (previous, current) =>
-                  previous.validateOrdAtHubResource !=
-                  current.validateOrdAtHubResource,
+          listenWhen: (previous, current) =>
+              previous.validateOrdAtHubResource !=
+              current.validateOrdAtHubResource,
           listener: _listenValidateOrdAtHubChanged,
         ),
       ],
@@ -69,64 +67,73 @@ class _AtHubOrdersListViewState extends State<AtHubOrdersListView> {
           Expanded(
             child: BlocBuilder<OrdersBloc, OrdersState>(
               bloc: _ordersBloc,
-              buildWhen:
-                  (pre, cur) => pre.atHubOrdersList != cur.atHubOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+              buildWhen: (pre, cur) =>
+                  pre.atHubOrdersList != cur.atHubOrdersList ||
+                  pre.processingOrdersFilters != cur.processingOrdersFilters,
               builder: (context, state) {
-                List<OrderInfo> _orders = sortOrders(state.filteredAtHubOrdersList, _sortOption);
+                List<OrderInfo> orders = sortOrders(
+                  state.filteredAtHubOrdersList,
+                  _sortOption,
+                );
 
-                if (_orders.isEmpty) {
+                if (orders.isEmpty) {
                   return SafeArea(top: false, child: const PrimaryEmptyData());
                 }
 
                 return Column(
-            children: [
-              ProcessingOrdersSortSelectBar(
-                totalCount: _orders.length,
-                selectedCount: _selectedOrderKeys.length,
-                isAllSelected: _selectedOrderKeys.length == _orders.length && _orders.isNotEmpty,
-                sortOption: _sortOption,
-                onSelectAll: (val) {
-                  setState(() {
-                    if (val == true) {
-                      _selectedOrderKeys.addAll(_orders.map(_orderKey).whereType<String>());
-                    } else {
-                      _selectedOrderKeys.clear();
-                    }
-                  });
-                },
-                onSortChanged: (val) {
-                  if (val != null) {
-                    setState(() => _sortOption = val);
-                  }
-                },
-              ),
-              Expanded(
-                child: PrimaryRefreshabelListView(
-                  controller: _refreshController,
-                  onRefresh: _onRefresh,
-                  onLoading: _onLoading,
-                  enablePullUp: true,
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppDimensions.smallSpacing,
-                    horizontal: AppDimensions.smallSpacing,
-                  ),
-                  itemCount: _orders.length,
-                  itemBuilder: (context, index) => SelectableOrderInfoItem(
-                    index: index + 1,
-                    order: _orders[index],
-                    isSelected: _isSelected(_orders[index]),
-                    showSelectionControl: true,
-                    onTap: _onOrderTap,
-                    onLongPress: _toggleOrderSelection,
-                    onConfirmOrdAtHub: _onConfirmOrdAtHub,
-                  ),
-                  separatorBuilder:
-                      (context, index) =>
-                          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-                )
-              ),
-            ],
-          );
+                  children: [
+                    ProcessingOrdersSortSelectBar(
+                      totalCount: orders.length,
+                      selectedCount: _selectedOrderKeys.length,
+                      isAllSelected:
+                          _selectedOrderKeys.length == orders.length &&
+                          orders.isNotEmpty,
+                      sortOption: _sortOption,
+                      isSelectionMode: _selectedOrderKeys.isNotEmpty,
+                      onSelectAll: (val) {
+                        setState(() {
+                          if (val == true) {
+                            _selectedOrderKeys.addAll(
+                              orders.map(_orderKey).whereType<String>(),
+                            );
+                          } else {
+                            _selectedOrderKeys.clear();
+                          }
+                        });
+                      },
+                      onSortChanged: (val) {
+                        if (val != null) {
+                          setState(() => _sortOption = val);
+                        }
+                      },
+                    ),
+                    Expanded(
+                      child: PrimaryRefreshabelListView(
+                        controller: _refreshController,
+                        onRefresh: _onRefresh,
+                        onLoading: _onLoading,
+                        enablePullUp: true,
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppDimensions.smallSpacing,
+                          horizontal: AppDimensions.smallSpacing,
+                        ),
+                        itemCount: orders.length,
+                        itemBuilder: (context, index) => OrderInfoItem(
+                          index: index + 1,
+                          order: orders[index],
+                          isSelected: _isSelected(orders[index]),
+                          isSelectionMode: _selectedOrderKeys.isNotEmpty,
+                          onTap: _onOrderTap,
+                          onLongPress: _enterSelectionMode,
+                          onSelectionToggle: _toggleOrderSelection,
+                          onConfirmOrdAtHub: _onConfirmOrdAtHub,
+                        ),
+                        separatorBuilder: (context, index) =>
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
           ),
@@ -153,7 +160,6 @@ class _AtHubOrdersListViewState extends State<AtHubOrdersListView> {
     _ordersBloc.loadMoreOrders();
   }
 
-  
   String? _orderKey(OrderInfo order) => order.id;
 
   bool _isSelected(OrderInfo order) {
@@ -173,12 +179,21 @@ class _AtHubOrdersListViewState extends State<AtHubOrdersListView> {
     });
   }
 
+  void _enterSelectionMode(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+    setState(() => _selectedOrderKeys.add(key));
+  }
+
   void _onOrderTap(OrderInfo order) {
     _ordersBloc.openOrderDetail(order);
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
-    final visibleOrderKeys = state.filteredAtHubOrdersList.map(_orderKey).whereType<String>().toSet();
+    final visibleOrderKeys = state.filteredAtHubOrdersList
+        .map(_orderKey)
+        .whereType<String>()
+        .toSet();
     _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
 
     switch (state.orderListByStatusResource.state) {

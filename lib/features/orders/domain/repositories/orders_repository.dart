@@ -14,7 +14,6 @@ import 'package:oneship_customer/features/orders/domain/entities/order_detail_en
 import 'package:oneship_customer/features/orders/domain/entities/orders_history_response_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/product_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/products_list_entity.dart';
-import 'package:oneship_customer/features/orders/domain/entities/surcharge_entity.dart';
 
 abstract class OrdersRepository extends BaseRepository {
   Future<Resource<OrdersListResponse>> fetchOrdersByStatus({
@@ -37,10 +36,6 @@ abstract class OrdersRepository extends BaseRepository {
   Future<Resource<CalculatedDeliveryFeeEntity>> calculateDeliveryFee(
     CalculateDeliveryFeeRequest requestBody,
   );
-
-  Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
-    required String shopId,
-  });
 
   Future<Resource> createOrder(CreateOrderRequest requestBody);
 

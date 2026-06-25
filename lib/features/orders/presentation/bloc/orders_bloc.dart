@@ -15,7 +15,6 @@ import 'package:oneship_customer/features/orders/domain/use_cases/delete_order_u
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_detail_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/fetch_visible_surcharges_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_ord_at_hub_use_case.dart';
@@ -35,7 +34,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     this._resolveOrdersByStatusUseCase,
     this._getShipperInfoUseCase,
     this._validateOrdAtHubUseCase,
-    this._fetchVisibleSurchargesUseCase,
   ) : super(
         OrdersState(
           orderListByStatusResource: Resource.loading(),
@@ -53,7 +51,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrdersHistoryFetchingByStatusEvent>(_onFetchOrderHistoryEvent);
     on<OrdersHistoryLoadMoreEvent>(_onLoadMoreOrderHistoryEvent);
     on<ValidateOrdAtHubEvent>(_onValidateOrdAtHubEvent);
-    on<OrdersFetchVisibleSurchargesEvent>(_onFetchVisibleSurchargesEvent);
     // on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterAppliedEvent>(_onApplyOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterClearedEvent>(_onClearOrdersHistoryFilterEvent);
@@ -69,7 +66,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final ResolveOrdersByStatusUseCase _resolveOrdersByStatusUseCase;
   final GetShipperInfoUseCase _getShipperInfoUseCase;
   final ValidateOrdAtHubUseCase _validateOrdAtHubUseCase;
-  final FetchVisibleSurchargesUseCase _fetchVisibleSurchargesUseCase;
 
   late String _shopId;
   set shopId(String id) {
@@ -365,41 +361,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(state.copyWith(validateOrdAtHubResource: response));
   }
 
-  FutureOr<void> _onFetchVisibleSurchargesEvent(
-    OrdersFetchVisibleSurchargesEvent event,
-    Emitter<OrdersState> emit,
-  ) async {
-    if (event.shopId.isEmpty) return;
-
-    final current = state.visibleSurchargeGroupsByShopId[event.shopId];
-    if (!event.forceRefresh &&
-        (current?.state == Result.loading ||
-            current?.state == Result.success)) {
-      return;
-    }
-
-    emit(
-      state.copyWith(
-        visibleSurchargeGroupsByShopId: {
-          ...state.visibleSurchargeGroupsByShopId,
-          event.shopId: Resource.loading(data: current?.data ?? const []),
-        },
-      ),
-    );
-
-    final response = await _fetchVisibleSurchargesUseCase.call(
-      shopId: event.shopId,
-    );
-    emit(
-      state.copyWith(
-        visibleSurchargeGroupsByShopId: {
-          ...state.visibleSurchargeGroupsByShopId,
-          event.shopId: response,
-        },
-      ),
-    );
-  }
-
   BaseMetaResponse? _getOrdersHistoryMeta(OrderStatus status) {
     if (status == OrderStatus.delivered) return _deliveredOrdersHistoryMeta;
     if (status == OrderStatus.returned) return _returnedOrdersHistoryMeta;
@@ -505,18 +466,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     add(ProcessingOrdersFilterAppliedEvent(filters));
   }
 
-  void fetchVisibleSurcharges({
-    required String shopId,
-    bool forceRefresh = false,
-  }) {
-    add(
-      OrdersFetchVisibleSurchargesEvent(
-        shopId: shopId,
-        forceRefresh: forceRefresh,
-      ),
-    );
-  }
-
   FutureOr<void> _onApplyProcessingOrdersFilterEvent(
     ProcessingOrdersFilterAppliedEvent event,
     Emitter<OrdersState> emit,
@@ -526,7 +475,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   void init(String shopId) {
     _shopId = shopId;
-    fetchVisibleSurcharges(shopId: shopId);
     // add(OrdersFetchingByStatusEvent(_currentOrderStatus));
   }
 }

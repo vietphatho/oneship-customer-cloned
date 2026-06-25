@@ -31,6 +31,22 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
   final MapLibreBloc _mapLibreBloc = MapLibreBloc();
 
   @override
+  void initState() {
+    super.initState();
+    _syncMapLocations();
+  }
+
+  @override
+  void didUpdateWidget(covariant PrimaryMapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentLocation != widget.currentLocation ||
+        oldWidget.shopLocation != widget.shopLocation ||
+        oldWidget.showCurrentLocation != widget.showCurrentLocation) {
+      _syncMapLocations();
+    }
+  }
+
+  @override
   void dispose() {
     _mapLibreBloc.close();
     super.dispose();
@@ -38,14 +54,10 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
 
   @override
   Widget build(BuildContext context) {
-    final Geographic currentLocation = Geographic(
-      lon: widget.currentLocation.longitude,
-      lat: widget.currentLocation.latitude,
-    );
-    final Geographic shopLocation = Geographic(
-      lon: widget.shopLocation.longitude,
-      lat: widget.shopLocation.latitude,
-    );
+    final currentLocation = _toGeographic(widget.currentLocation);
+    final shopLocation = _toGeographic(widget.shopLocation);
+    final initialCenter =
+        currentLocation ?? shopLocation ?? const Geographic(lon: 0, lat: 0);
 
     return BlocBuilder<MapLibreBloc, MapLibreState>(
       bloc: _mapLibreBloc,
@@ -53,7 +65,7 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
         return MapLibreMap(
           options: MapOptions(
             initStyle: jsonEncode(Constants.googleMapsStyleJson),
-            initCenter: currentLocation,
+            initCenter: initialCenter,
             initZoom: Constants.defaultZoom,
           ),
           gestureRecognizers: {
@@ -66,7 +78,6 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
               case MapEventMapCreated():
                 _mapLibreBloc.setMapController(event.mapController);
               case MapEventStyleLoaded():
-                // add marker image to map
                 await event.style.addImageFromAssets(
                   id: MarkerType.customer.value,
                   asset: ImagePath.iconCusLocation,
@@ -75,24 +86,6 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
                 await event.style.addImageFromAssets(
                   id: MarkerType.shop.value,
                   asset: ImagePath.iconShopLocation,
-                );
-
-                if (widget.showCurrentLocation) {
-                  _mapLibreBloc.addMarker(
-                    marker: Feature(geometry: Point(currentLocation)),
-                    type: MarkerType.customer,
-                  );
-                }
-
-                _mapLibreBloc.addMarker(
-                  marker: Feature(geometry: Point(shopLocation)),
-                  type: MarkerType.shop,
-                );
-
-                _mapLibreBloc.fitCamera(
-                  widget.showCurrentLocation
-                      ? [currentLocation, shopLocation]
-                      : [shopLocation],
                 );
 
               case MapEventClick():
@@ -137,5 +130,19 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
         );
       },
     );
+  }
+
+  void _syncMapLocations() {
+    _mapLibreBloc.syncLocations(
+      currentLocation: _toGeographic(widget.currentLocation),
+      shopLocation: _toGeographic(widget.shopLocation),
+      showCurrentLocation: widget.showCurrentLocation,
+    );
+  }
+
+  Geographic? _toGeographic(LatLng coordinate) {
+    if (coordinate.latitude == 0 && coordinate.longitude == 0) return null;
+
+    return Geographic(lon: coordinate.longitude, lat: coordinate.latitude);
   }
 }

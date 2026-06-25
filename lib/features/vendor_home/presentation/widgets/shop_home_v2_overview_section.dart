@@ -250,13 +250,11 @@ class _QuickAction extends StatelessWidget {
     required this.label,
     required this.color,
     required this.assetPath,
-    this.badge,
   });
 
   final String label;
   final Color color;
   final String assetPath;
-  final String? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -276,28 +274,6 @@ class _QuickAction extends StatelessWidget {
                   ),
                 ),
               ),
-              if (badge != null)
-                Positioned(
-                  right: -2,
-                  top: -7,
-                  child: Container(
-                    width: 23,
-                    height: 23,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: PrimaryText(
-                      badge!,
-                      style: AppTextStyles.labelXSmall.copyWith(
-                        color: Colors.white,
-                        fontSize: 12,
-                        height: 1,
-                      ),
-                    ),
-                  ),
-                ),
             ],
           ),
           const Spacer(),

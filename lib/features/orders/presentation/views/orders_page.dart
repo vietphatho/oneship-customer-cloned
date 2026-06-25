@@ -10,12 +10,10 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tab_bar.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
-import 'package:oneship_customer/features/shop_master/data/enum.dart';
-import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -29,7 +27,6 @@ class _OrdersPageState extends State<OrdersPage>
   final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
-  final ShopMasterBloc _shopMasterBloc = getIt.get();
 
   late List<OrderStatus> _tabList;
   late TabController _tabCtrl;
@@ -67,19 +64,17 @@ class _OrdersPageState extends State<OrdersPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: AppColors.neutral9,
       appBar: PrimaryAppBar(
         title: 'processing_orders_title'.tr(),
-        leading: BackButton(
-          onPressed: () {
-            _shopMasterBloc.changeTab(BottomNavigationItem.home);
-          },
-        ),
+        // leading: BackButton(
+        //   onPressed: () {
+        //     _shopMasterBloc.changeTab(BottomNavigationItem.home);
+        //   },
+        // ),
         actions: [
           IconButton(
-            icon: const Icon(
-              CupertinoIcons.search,
-              color: AppColors.neutral2,
-            ),
+            icon: const Icon(CupertinoIcons.search, color: AppColors.neutral2),
             tooltip: 'search'.tr(),
             onPressed: () {
               // TODO: implement order search
@@ -97,12 +92,16 @@ class _OrdersPageState extends State<OrdersPage>
                 isScrollControlled: true,
                 backgroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(AppDimensions.largeRadius),
+                  ),
                 ),
                 builder: (context) => Padding(
                   padding: EdgeInsets.only(
-                    top: 16,
-                    bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                    top: AppDimensions.mediumSpacing,
+                    bottom:
+                        AppDimensions.xLargeSpacing +
+                        MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: ProcessingOrdersFilterPanel(
                     initialFilters: _ordersBloc.state.processingOrdersFilters,
@@ -111,7 +110,9 @@ class _OrdersPageState extends State<OrdersPage>
                       Navigator.pop(context);
                     },
                     onReset: () {
-                      _ordersBloc.applyProcessingOrdersFilters(ProcessingOrdersFilters.empty());
+                      _ordersBloc.applyProcessingOrdersFilters(
+                        ProcessingOrdersFilters.empty(),
+                      );
                     },
                   ),
                 ),
@@ -167,10 +168,7 @@ class _OrdersPageState extends State<OrdersPage>
                 length: _tabList.length,
                 child: Column(
                   children: [
-                    OrderStatusTabBar(
-                      controller: _tabCtrl,
-                      items: _tabList,
-                    ),
+                    OrderStatusTabBar(controller: _tabCtrl, items: _tabList),
                     Expanded(
                       child: TabBarView(
                         controller: _tabCtrl,

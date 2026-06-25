@@ -158,7 +158,12 @@ class _Header extends StatelessWidget {
             children: [
               OrderStatusTag(status: ordDtl.status ?? "--"),
               const Spacer(),
-              _EditButton(onPressed: () => _editOrder(context)),
+              if (![
+                OrderStatus.delivered.value,
+                OrderStatus.returned.value,
+                OrderStatus.cancelled.value,
+              ].contains(ordDtl.status))
+                _EditButton(onPressed: () => _editOrder(context)),
             ],
           ),
         ],
@@ -236,11 +241,7 @@ class _EditButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.edit_outlined,
-              size: 14,
-              color: AppColors.primary,
-            ),
+            Icon(Icons.edit_outlined, size: 14, color: AppColors.primary),
             AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
             PrimaryText(
               "edit".tr(),

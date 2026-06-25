@@ -8,7 +8,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/selectable_order_info_item.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_info_item.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_sort_select_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -20,7 +20,8 @@ class AllProcessingOrdersListView extends StatefulWidget {
       _AllProcessingOrdersListViewState();
 }
 
-class _AllProcessingOrdersListViewState extends State<AllProcessingOrdersListView> {
+class _AllProcessingOrdersListViewState
+    extends State<AllProcessingOrdersListView> {
   final OrdersBloc _ordersBloc = getIt.get();
   final RefreshController _refreshController = RefreshController();
 
@@ -48,22 +49,28 @@ class _AllProcessingOrdersListViewState extends State<AllProcessingOrdersListVie
         BlocListener<OrdersBloc, OrdersState>(
           bloc: _ordersBloc,
           listenWhen: (previous, current) =>
-              previous.allProcessingOrdersList != current.allProcessingOrdersList,
+              previous.allProcessingOrdersList !=
+              current.allProcessingOrdersList,
           listener: _listenOrdsListChanged,
         ),
       ],
       child: BlocBuilder<OrdersBloc, OrdersState>(
         bloc: _ordersBloc,
-        buildWhen:
-            (pre, cur) => pre.allProcessingOrdersList != cur.allProcessingOrdersList || pre.processingOrdersFilters != cur.processingOrdersFilters,
+        buildWhen: (pre, cur) =>
+            pre.allProcessingOrdersList != cur.allProcessingOrdersList ||
+            pre.processingOrdersFilters != cur.processingOrdersFilters,
         builder: (context, state) {
-          List<OrderInfo> orders = sortOrders(state.filteredAllProcessingOrdersList, _sortOption);
+          List<OrderInfo> orders = sortOrders(
+            state.filteredAllProcessingOrdersList,
+            _sortOption,
+          );
 
           if (orders.isEmpty) {
             return const PrimaryEmptyData();
           }
 
-          final allSelected = _selectedOrderKeys.length == orders.length && orders.isNotEmpty;
+          final allSelected =
+              _selectedOrderKeys.length == orders.length && orders.isNotEmpty;
 
           return Column(
             children: [
@@ -72,10 +79,13 @@ class _AllProcessingOrdersListViewState extends State<AllProcessingOrdersListVie
                 selectedCount: _selectedOrderKeys.length,
                 isAllSelected: allSelected,
                 sortOption: _sortOption,
+                isSelectionMode: _selectedOrderKeys.isNotEmpty,
                 onSelectAll: (val) {
                   setState(() {
                     if (val == true) {
-                      _selectedOrderKeys.addAll(orders.map(_orderKey).whereType<String>());
+                      _selectedOrderKeys.addAll(
+                        orders.map(_orderKey).whereType<String>(),
+                      );
                     } else {
                       _selectedOrderKeys.clear();
                     }
@@ -98,13 +108,14 @@ class _AllProcessingOrdersListViewState extends State<AllProcessingOrdersListVie
                     horizontal: AppDimensions.smallSpacing,
                   ),
                   itemCount: orders.length,
-                  itemBuilder: (context, index) => SelectableOrderInfoItem(
+                  itemBuilder: (context, index) => OrderInfoItem(
                     index: index + 1,
                     order: orders[index],
                     isSelected: _isSelected(orders[index]),
-                    showSelectionControl: true, // Show unconditionally as per user screenshot
+                    isSelectionMode: _selectedOrderKeys.isNotEmpty,
                     onTap: _onOrderTap,
-                    onLongPress: _toggleOrderSelection,
+                    onLongPress: _enterSelectionMode,
+                    onSelectionToggle: _toggleOrderSelection,
                   ),
                   separatorBuilder: (context, index) =>
                       AppSpacing.vertical(AppDimensions.xSmallSpacing),
@@ -149,12 +160,21 @@ class _AllProcessingOrdersListViewState extends State<AllProcessingOrdersListVie
     });
   }
 
+  void _enterSelectionMode(OrderInfo order) {
+    final key = _orderKey(order);
+    if (key == null) return;
+    setState(() => _selectedOrderKeys.add(key));
+  }
+
   void _onOrderTap(OrderInfo order) {
     _ordersBloc.openOrderDetail(order);
   }
 
   void _listenOrdsListChanged(BuildContext context, OrdersState state) {
-    final visibleOrderKeys = state.filteredAllProcessingOrdersList.map(_orderKey).whereType<String>().toSet();
+    final visibleOrderKeys = state.filteredAllProcessingOrdersList
+        .map(_orderKey)
+        .whereType<String>()
+        .toSet();
     _selectedOrderKeys.removeWhere((key) => !visibleOrderKeys.contains(key));
 
     switch (state.orderListByStatusResource.state) {

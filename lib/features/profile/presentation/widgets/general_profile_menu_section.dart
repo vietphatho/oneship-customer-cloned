@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GeneralProfileMenuPanel extends StatelessWidget {
   const GeneralProfileMenuPanel({super.key});
@@ -19,7 +20,7 @@ class GeneralProfileMenuPanel extends StatelessWidget {
       PrimaryMenuItemData(
         icon: Icons.lock_outline_rounded,
         iconColor: AppColors.info,
-        label: 'Cài đặt tài khoản',
+        label: 'Đổi mật khẩu',
         onTap: () => context.push(RouteName.changePasswordPage),
       ),
       const PrimaryMenuItemData(
@@ -43,15 +44,26 @@ class GeneralProfileMenuPanel extends StatelessWidget {
         label: 'Ngôn ngữ',
         trailingText: 'Tiếng Việt',
       ),
-      const PrimaryMenuItemData(
+      PrimaryMenuItemData(
         icon: Icons.support_agent_rounded,
         iconColor: AppColors.info,
         label: 'Trung tâm hỗ trợ',
+        onTap: () async {
+          final uri = Uri(scheme: 'mailto', path: Constants.oneshipGmail);
+
+          if (!await launchUrl(uri)) {
+            throw Exception('Could not launch email app');
+          }
+        },
       ),
-      const PrimaryMenuItemData(
+      PrimaryMenuItemData(
         icon: Icons.info_outline_rounded,
         iconColor: AppColors.primary,
         label: 'Giới thiệu về OneShip',
+        onTap: () async {
+          final uri = Uri.parse(Constants.oneshipWebsite);
+          await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+        },
       ),
       PrimaryMenuItemData(
         icon: Icons.account_circle_rounded,

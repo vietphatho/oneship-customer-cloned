@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/base/constants/svg_path.dart';
 
 class PrimaryEmptyData extends StatelessWidget {
   const PrimaryEmptyData({super.key, this.onRetry});
@@ -14,10 +14,14 @@ class PrimaryEmptyData extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            CupertinoIcons.folder,
-            size: AppDimensions.displayIconSize,
-            color: AppColors.neutral6,
+          // Icon(
+          //   CupertinoIcons.folder,
+          //   size: AppDimensions.displayIconSize,
+          //   color: AppColors.neutral6,
+          // ),
+          SvgPicture.asset(
+            SvgPath.icOrderProcessed,
+            width: AppDimensions.displayIconSize,
           ),
           AppSpacing.vertical(AppDimensions.smallSpacing),
           PrimaryText(

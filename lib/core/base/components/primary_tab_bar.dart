@@ -23,36 +23,37 @@ class PrimaryTabBar extends StatelessWidget {
     return Container(
       height: height,
       padding: EdgeInsets.symmetric(
-        horizontal: AppDimensions.mediumSpacing,
+        horizontal: AppDimensions.xxSmallSpacing,
         vertical: AppDimensions.xxSmallSpacing,
       ),
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        color: AppColors.primary,
+        color: AppColors.background,
+        border: Border.all(color: AppColors.neutral7),
       ),
       child: TabBar(
         controller: controller,
         padding: EdgeInsets.zero,
         labelColor: AppColors.primary,
-        labelStyle: AppTextStyles.labelMedium,
-        unselectedLabelColor: AppColors.primaryLight,
-        unselectedLabelStyle: AppTextStyles.labelMedium,
+        labelStyle: AppTextStyles.labelSmall,
+        unselectedLabelColor: AppColors.neutral6,
+        unselectedLabelStyle: AppTextStyles.bodySmall,
         labelPadding: EdgeInsets.zero,
         indicator: BoxDecoration(
           color: AppColors.primaryLight,
-          borderRadius: AppDimensions.smallBorderRadius,
+          borderRadius: AppDimensions.mediumBorderRadius,
         ),
         indicatorPadding: EdgeInsets.zero,
         isScrollable: isScrollable ?? false,
-        tabAlignment:
-            isScrollable == true ? TabAlignment.start : TabAlignment.fill,
-        tabs:
-            items
-                .map(
-                  ((item) =>
-                      Tab(text: item, height: AppDimensions.xxxLargeSpacing)),
-                )
-                .toList(),
+        tabAlignment: isScrollable == true
+            ? TabAlignment.start
+            : TabAlignment.fill,
+        tabs: items
+            .map(
+              ((item) =>
+                  Tab(text: item, height: AppDimensions.xxxLargeSpacing)),
+            )
+            .toList(),
         onTap: onTap,
       ),
     );

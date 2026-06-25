@@ -9,6 +9,7 @@ import 'package:oneship_customer/features/shop_home/data/models/response/get_sho
 import 'package:oneship_customer/features/shop_home/data/models/response/shipping_service_config_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shop_vendor_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/visible_surcharges_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'shop_api.g.dart';
@@ -50,4 +51,7 @@ abstract class ShopApi {
     @Path("shopId") required String shopId,
     @Path("vendorId") required String vendorId,
   });
+  @GET("/api/v1/delivery/shops/{shopId}/surcharges/visible")
+  Future<BaseResponse<VisibleSurchargesResponse, BaseError>>
+  fetchVisibleSurcharges({@Path("shopId") required String shopId});
 }

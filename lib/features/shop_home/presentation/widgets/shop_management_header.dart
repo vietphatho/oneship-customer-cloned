@@ -28,24 +28,22 @@ class ShopManagementHeader extends StatelessWidget {
           Text(
             'shop_management.page_title'.tr(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
           ),
           Text(
             'shop_management.title'.tr(),
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           AppSpacing.vertical(4),
           Text(
-            'shop_management.subtitle'
-                .tr(namedArgs: {'count': '$totalCount'}),
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: AppColors.neutral5),
+            'shop_management.subtitle'.tr(namedArgs: {'count': '$totalCount'}),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.neutral5),
             textAlign: TextAlign.center,
           ),
           AppSpacing.vertical(AppDimensions.mediumSpacing),
@@ -75,10 +73,11 @@ class ShopManagementHeader extends StatelessWidget {
             onChanged: onSearchChanged,
             decoration: InputDecoration(
               hintText: 'shop_management.search_hint'.tr(),
-              hintStyle:
-                  TextStyle(color: AppColors.neutral5, fontSize: 14),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              hintStyle: TextStyle(color: AppColors.neutral5, fontSize: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: AppColors.neutral6),
@@ -89,8 +88,7 @@ class ShopManagementHeader extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: AppColors.primary, width: 1.5),
               ),
             ),
           ),

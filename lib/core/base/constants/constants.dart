@@ -109,7 +109,7 @@ class Constants {
   static const String defaultSortByCreatedAt = "createdAt";
   static const String defaultSortOrderDesc = "desc";
 
-  static const tpSwitchBoard = "0981191608";
+  static const hotline = "0981191608";
 
   static const ValueKey profileAvatarHeroKey = ValueKey(
     "profile_avatar_hero_key",
@@ -124,4 +124,11 @@ class Constants {
   static const Duration animationUpdateCameraDur = Duration(milliseconds: 1500);
 
   static const Duration timeoutFCMToken = Duration(seconds: 5);
+
+  static const String oneshipWebsite = "https://oneship.app/";
+  static const String oneshipFaceBook =
+      "https://www.facebook.com/people/OneShip-H%E1%BB%93-Ch%C3%AD-Minh/61590686005646/?ref=1";
+  static const String oneshipLinkedin =
+      "https://www.linkedin.com/company/onexway/?viewAsMember=true";
+  static const String oneshipGmail = "support@onexway.io";
 }

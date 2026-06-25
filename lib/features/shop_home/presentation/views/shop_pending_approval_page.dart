@@ -20,7 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ShopPendingApprovalPage extends StatelessWidget {
   const ShopPendingApprovalPage({super.key});
 
-  static const String _hotline = Constants.tpSwitchBoard;
+  static const String _hotline = Constants.hotline;
 
   @override
   Widget build(BuildContext context) {

@@ -39,6 +39,7 @@ class CreateOrderReceiverSection extends StatelessWidget {
           isRequired: true,
           controller: nameController,
           textCapitalization: TextCapitalization.words,
+          textInputAction: TextInputAction.next,
           prefixIcon: const Icon(
             Icons.person_outline,
             size: AppDimensions.xSmallIconSize,

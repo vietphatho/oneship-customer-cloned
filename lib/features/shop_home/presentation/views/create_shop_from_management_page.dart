@@ -24,10 +24,12 @@ class CreateShopFromManagementPage extends StatefulWidget {
   const CreateShopFromManagementPage({super.key});
 
   @override
-  State<CreateShopFromManagementPage> createState() => _CreateShopFromManagementPageState();
+  State<CreateShopFromManagementPage> createState() =>
+      _CreateShopFromManagementPageState();
 }
 
-class _CreateShopFromManagementPageState extends State<CreateShopFromManagementPage> {
+class _CreateShopFromManagementPageState
+    extends State<CreateShopFromManagementPage> {
   final _formKey = GlobalKey<FormState>();
   final ShopBloc _shopBloc = getIt.get();
 
@@ -53,9 +55,8 @@ class _CreateShopFromManagementPageState extends State<CreateShopFromManagementP
   Widget build(BuildContext context) {
     return BlocListener<ShopBloc, ShopState>(
       bloc: _shopBloc,
-      listenWhen:
-          (previous, current) =>
-              previous.createShopResource != current.createShopResource,
+      listenWhen: (previous, current) =>
+          previous.createShopResource != current.createShopResource,
       listener: _handleCreateShopChanged,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -157,18 +158,16 @@ class _CreateShopFromManagementPageState extends State<CreateShopFromManagementP
                               _selectedWard != null,
                           textCapitalization: TextCapitalization.sentences,
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator:
-                              (value) => Validators.validateAddress(
-                                value,
-                                selectedAddress: _selectedAddress,
-                              ),
+                          validator: (value) => Validators.validateAddress(
+                            value,
+                            selectedAddress: _selectedAddress,
+                          ),
                           displayStringForOption: (item) => item.display ?? '',
-                          onSearch:
-                              (keyword) => _shopBloc.searchAddress(
-                                province: _selectedProvince!,
-                                ward: _selectedWard!,
-                                keyword: keyword,
-                              ),
+                          onSearch: (keyword) => _shopBloc.searchAddress(
+                            province: _selectedProvince!,
+                            ward: _selectedWard!,
+                            keyword: keyword,
+                          ),
                           onSelected: (value) {
                             setState(() {
                               _selectedAddress = value;
@@ -201,7 +200,8 @@ class _CreateShopFromManagementPageState extends State<CreateShopFromManagementP
           context.pop();
           PrimaryDialog.showSuccessDialog(
             context,
-            message: "create_shop_success".tr(), // Fallback if key doesn't exist, though usually we can just show generic success or rely on the toast. But let's just pop first.
+            message: "create_shop_success"
+                .tr(), // Fallback if key doesn't exist, though usually we can just show generic success or rely on the toast. But let's just pop first.
           );
         }
         break;
@@ -256,9 +256,8 @@ class _Footer extends StatelessWidget {
         ),
         child: BlocBuilder<ShopBloc, ShopState>(
           bloc: shopBloc,
-          buildWhen:
-              (previous, current) =>
-                  previous.createShopResource != current.createShopResource,
+          buildWhen: (previous, current) =>
+              previous.createShopResource != current.createShopResource,
           builder: (context, shopState) {
             return Row(
               children: [

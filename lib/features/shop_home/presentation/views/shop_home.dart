@@ -7,6 +7,7 @@ import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
+import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
@@ -38,6 +39,8 @@ class _ShopHomeState extends State<ShopHome> {
   final OrdersBloc _ordersBloc = getIt.get();
   final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
+  final LocationServiceBloc _locationServiceBloc = getIt.get();
+
   final TextEditingController _trackingNumberCtrl = TextEditingController();
 
   @override
@@ -247,6 +250,8 @@ class _ShopHomeState extends State<ShopHome> {
     }
 
     _orderTrackingBloc.search(trackingNumber);
+    _locationServiceBloc.getCurrentLocation();
+
     context.push(RouteName.orderTrackingPage);
   }
 }

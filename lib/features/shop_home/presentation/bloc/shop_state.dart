@@ -5,6 +5,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_sh
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 
 part 'shop_state.freezed.dart';
 
@@ -20,6 +21,8 @@ abstract class ShopState with _$ShopState {
     required Resource<GetShopsEntity> shopsResource,
     required Resource<List<ShippingServiceConfigEntity>>
     shippingServiceTypesResource,
+    required Resource<List<SurchargeGroupEntity>>
+    visibleSurchargeGroupsResource,
     BriefShopEntity? currentShop,
     BriefShopEntity? draftSelectedShop,
     @Default([]) List<BriefShopEntity> listBriefShops,
@@ -35,6 +38,12 @@ extension ShopStateX on ShopState {
 
   List<ShippingServiceConfigEntity> get shippingServices =>
       shippingServiceTypesResource.data ?? [];
+
+  List<SurchargeGroupEntity> get visibleSurchargeGroups =>
+      visibleSurchargeGroupsResource.data ?? const [];
+
+  List<SurchargeEntity> get visibleSurcharges =>
+      visibleSurchargeGroups.visibleSurcharges;
 
   bool get hasApprovedShop {
     return approvedBriefShops.isNotEmpty;

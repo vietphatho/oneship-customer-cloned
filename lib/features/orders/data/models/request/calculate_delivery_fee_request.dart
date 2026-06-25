@@ -10,6 +10,8 @@ abstract class CalculateDeliveryFeeRequest with _$CalculateDeliveryFeeRequest {
     @JsonKey(name: "distance") double? distance,
     @JsonKey(name: "serviceCode") String? serviceCode,
     @JsonKey(name: "weight") int? weight,
+    @JsonKey(name: "provinceCode") int? provinceCode,
+    @JsonKey(name: "wardCode") int? wardCode,
     @JsonKey(name: "surchargeCodes") @Default([]) List<String> surcharges,
     @JsonKey(name: "surchargeValues") Map<String, dynamic>? surchargesValues,
   }) = _CalculateDeliveryFeeRequest;

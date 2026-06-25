@@ -53,9 +53,8 @@ class _CreateShopPageState extends State<CreateShopPage> {
   Widget build(BuildContext context) {
     return BlocListener<ShopBloc, ShopState>(
       bloc: _shopBloc,
-      listenWhen:
-          (previous, current) =>
-              previous.createShopResource != current.createShopResource,
+      listenWhen: (previous, current) =>
+          previous.createShopResource != current.createShopResource,
       listener: _handleCreateShopChanged,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -157,18 +156,16 @@ class _CreateShopPageState extends State<CreateShopPage> {
                               _selectedWard != null,
                           textCapitalization: TextCapitalization.sentences,
                           validateMode: AutovalidateMode.onUserInteraction,
-                          validator:
-                              (value) => Validators.validateAddress(
-                                value,
-                                selectedAddress: _selectedAddress,
-                              ),
+                          validator: (value) => Validators.validateAddress(
+                            value,
+                            selectedAddress: _selectedAddress,
+                          ),
                           displayStringForOption: (item) => item.display ?? '',
-                          onSearch:
-                              (keyword) => _shopBloc.searchAddress(
-                                province: _selectedProvince!,
-                                ward: _selectedWard!,
-                                keyword: keyword,
-                              ),
+                          onSearch: (keyword) => _shopBloc.searchAddress(
+                            province: _selectedProvince!,
+                            ward: _selectedWard!,
+                            keyword: keyword,
+                          ),
                           onSelected: (value) {
                             setState(() {
                               _selectedAddress = value;
@@ -252,9 +249,8 @@ class _Footer extends StatelessWidget {
         ),
         child: BlocBuilder<ShopBloc, ShopState>(
           bloc: shopBloc,
-          buildWhen:
-              (previous, current) =>
-                  previous.createShopResource != current.createShopResource,
+          buildWhen: (previous, current) =>
+              previous.createShopResource != current.createShopResource,
           builder: (context, shopState) {
             return Row(
               children: [

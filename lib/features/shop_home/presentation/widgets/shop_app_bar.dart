@@ -109,9 +109,7 @@ class _ShopHomeAvatar extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        getIt
-            .get<ShopMasterBloc>()
-            .changeTab(BottomNavigationItem.menu);
+        getIt.get<ShopMasterBloc>().changeTab(BottomNavigationItem.menu);
       },
       child: ClipOval(
         child: Image.asset(

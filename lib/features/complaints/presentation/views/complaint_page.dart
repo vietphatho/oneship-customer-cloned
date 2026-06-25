@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/base/components/primary_app_bar.dart';
 import 'package:oneship_customer/core/base/components/primary_chip_tab_bar.dart';
 import 'package:oneship_customer/core/base/components/primary_summary_card.dart';
@@ -12,7 +14,9 @@ import 'package:oneship_customer/core/themes/app_dimensions.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_bloc.dart';
 import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_state.dart';
+import 'package:oneship_customer/features/complaints/presentation/bloc/complaint_event.dart';
 import 'package:oneship_customer/features/complaints/presentation/widgets/complaint_list_view.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_master/presentation/widgets/primary_bottom_navigation_bar.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -92,13 +96,26 @@ class _ComplaintPageState extends State<ComplaintPage> {
     return PrimaryAppBar(
       title: 'Khiếu nại - Sự cố',
       actions: [
+        // IconButton(
+        //   icon: const Icon(Icons.search, color: AppColors.grey500),
+        //   onPressed: () {},
+        // ),
+        // IconButton(
+        //   icon: const Icon(Icons.filter_alt_outlined, color: AppColors.grey500),
+        //   onPressed: () {},
+        // ),
         IconButton(
-          icon: const Icon(Icons.search, color: AppColors.grey500),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.filter_alt_outlined, color: AppColors.grey500),
-          onPressed: () {},
+          icon: const Icon(Icons.add, color: AppColors.orange),
+          onPressed: () async {
+            final result = await context.push(RouteName.createComplaintPage);
+            if (result == true) {
+              _complaintBloc.add(ComplaintStarted(
+                category: 'order_issue',
+                shopId: getIt<ShopBloc>().state.currentShop?.shopId,
+                status: _getStatusFromTabIndex(_selectedTabIndex),
+              ));
+            }
+          },
         ),
       ],
     );

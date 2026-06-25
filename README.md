@@ -22,6 +22,37 @@ gcloud auth application-default print-access-token
 flutter pub run build_runner build --delete-conflicting-outputs
 dart run build_runner build --delete-conflicting-outputs
 
+# Build apk release
+
+1. dev enviroment
+
+flutter build apk \
+  --release \
+  --dart-define=FLAVOR=dev \
+  --split-per-abi \
+  --obfuscate \
+  --split-debug-info=build/debug-info \
+  --tree-shake-icons \
+  -PFLAVOR=dev
+
+2. production enviroment
+
+flutter build apk \
+  --release \
+  --dart-define=FLAVOR=prod \
+  --split-per-abi \
+  --obfuscate \
+  --split-debug-info=build/debug-info \
+  --tree-shake-icons \
+  -PFLAVOR=prod
+
 # build aab
 
 flutter build appbundle --release
+
+flutter build apk \
+  --release \
+  --split-per-abi \
+  --obfuscate \
+  --split-debug-info=build/debug-info \
+  --tree-shake-icons

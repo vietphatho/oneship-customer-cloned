@@ -17,3 +17,15 @@ class MapAddMarker extends MapLibreEvent {
 
   MapAddMarker({required this.marker, required this.type});
 }
+
+class MapSyncLocations extends MapLibreEvent {
+  final Geographic? currentLocation;
+  final Geographic? shopLocation;
+  final bool showCurrentLocation;
+
+  MapSyncLocations({
+    required this.currentLocation,
+    required this.shopLocation,
+    required this.showCurrentLocation,
+  });
+}

@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:oneship_customer/core/base/components/primary_text.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/themes/app_box_shadows.dart';
-import 'package:oneship_customer/core/themes/app_colors.dart';
-import 'package:oneship_customer/core/themes/app_dimensions.dart';
-import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/features/support/presentation/widgets/support_section_title.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupportContactPanel extends StatelessWidget {
   const SupportContactPanel({super.key, this.compact = false});
@@ -14,7 +10,7 @@ class SupportContactPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const rows = Column(
+    final rows = Column(
       children: [
         _ContactRow(
           icon: Icons.chat_bubble_outline,
@@ -26,6 +22,10 @@ class SupportContactPanel extends StatelessWidget {
           icon: Icons.phone_outlined,
           title: 'support_help.call_title',
           subtitle: 'support_help.call_subtitle',
+          onTap: () {
+            final Uri launchUri = Uri(scheme: 'tel', path: Constants.hotline);
+            launchUrl(launchUri);
+          },
         ),
       ],
     );
@@ -66,15 +66,11 @@ class SupportContactPanel extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Positioned(
-                  top: -4,
-                  right: 2,
-                  child: _ContactBannerArt(),
-                ),
+                const Positioned(top: -4, right: 2, child: _ContactBannerArt()),
               ],
             ),
           ),
-          const _ContactRowsCard(child: rows),
+          _ContactRowsCard(child: rows),
         ],
       ),
     );
@@ -109,9 +105,7 @@ class _ContactBannerArt extends StatelessWidget {
       child: SizedBox(
         width: 100,
         height: 62,
-        child: CustomPaint(
-          painter: _EnvelopePainter(),
-        ),
+        child: CustomPaint(painter: _EnvelopePainter()),
       ),
     );
   }
@@ -185,53 +179,58 @@ class _ContactRow extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: AppColors.secondary.withValues(alpha: 0.08),
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: AppColors.secondary, size: 24),
             ),
-            child: Icon(icon, color: AppColors.secondary, size: 24),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PrimaryText(
-                  title.tr(),
-                  style: AppTextStyles.labelXSmall.copyWith(
-                    color: AppColors.blue950,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PrimaryText(
+                    title.tr(),
+                    style: AppTextStyles.labelXSmall.copyWith(
+                      color: AppColors.blue950,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                PrimaryText(
-                  subtitle.tr(),
-                  style: AppTextStyles.bodyXXSmall.copyWith(
-                    color: AppColors.grey500,
-                    fontSize: 16,
+                  const SizedBox(height: 2),
+                  PrimaryText(
+                    subtitle.tr(),
+                    style: AppTextStyles.bodyXXSmall.copyWith(
+                      color: AppColors.grey500,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const Icon(Icons.chevron_right, color: AppColors.grey500, size: 22),
-        ],
+            const Icon(Icons.chevron_right, color: AppColors.grey500, size: 22),
+          ],
+        ),
       ),
     );
   }
