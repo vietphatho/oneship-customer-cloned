@@ -79,6 +79,12 @@ class AuthDeleteAccountState extends AuthState {
   AuthDeleteAccountState(this.resource);
 }
 
+class AuthUpdatedUserAvatarState extends AuthState {
+  final Resource<UserProfileResponse> resource;
+
+  AuthUpdatedUserAvatarState(this.resource);
+}
+
 // class AuthUpdatedFcmTokenState extends AuthState {
 //   final Resource resource;
 

@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_selection_button.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
 import 'package:oneship_customer/features/shop_master/presentation/bloc/shop_master_bloc.dart';
-import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_selection_button.dart';
 
 class ShopAppBar extends StatelessWidget {
   const ShopAppBar({super.key, this.useDarkContent = false});
@@ -106,19 +107,15 @@ class _ShopHomeAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthBloc _authBloc = getIt.get();
+    String? userAvatar = _authBloc.userProfile.fullAvatarUrl;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         getIt.get<ShopMasterBloc>().changeTab(BottomNavigationItem.menu);
       },
-      child: ClipOval(
-        child: Image.asset(
-          ImagePath.shopHomeAvatarOzoShipGenerated,
-          width: AppDimensions.homeAvatarRadius * 2,
-          height: AppDimensions.homeAvatarRadius * 2,
-          fit: BoxFit.cover,
-        ),
-      ),
+      child: PrimaryAvatar(showStatusIndicator: false, url: userAvatar),
     );
   }
 }

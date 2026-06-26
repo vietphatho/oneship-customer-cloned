@@ -31,6 +31,11 @@ abstract class AuthRepository extends BaseRepository {
     required UpdateUserProfileRequest body,
   });
 
+  Future<Resource> updateUserAvatar({
+    required String id,
+    required String avatarPath,
+  });
+
   Future<Resource> updatePassword(UpdatePasswordRequest body);
   Future<Resource> createSecondPassword(CreateSecondPasswordRequest body);
   Future<Resource> updateSecondPassword(UpdateSecondPasswordRequest body);

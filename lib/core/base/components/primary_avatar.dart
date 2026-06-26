@@ -26,19 +26,21 @@ class PrimaryAvatar extends StatelessWidget {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        CircleAvatar(
-          radius: avatarRadius,
-          foregroundImage: avatarUrl?.isNotEmpty == true
-              ? CachedNetworkImageProvider(avatarUrl!)
-              : null,
-          backgroundColor: AppColors.neutral8,
-          // child: SvgPicture.asset(
-          //   ImagePath.iconUser,
-          //   width: avatarRadius,
-          //   height: avatarRadius,
-          //   colorFilter: ColorFilter.mode(AppColors.neutral5, BlendMode.srcIn),
-          // ),
-          child: Image.asset(ImagePath.shopHomeAvatarOzoShipGenerated),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.neutral8),
+            shape: BoxShape.circle,
+          ),
+          child: CircleAvatar(
+            radius: avatarRadius,
+            foregroundImage: avatarUrl?.isNotEmpty == true
+                ? CachedNetworkImageProvider(avatarUrl!)
+                : null,
+            backgroundColor: AppColors.neutral8,
+            child: ClipOval(
+              child: Image.asset(ImagePath.shopHomeAvatarOzoShipGenerated),
+            ),
+          ),
         ),
         // Status indicator
         if (showStatusIndicator)

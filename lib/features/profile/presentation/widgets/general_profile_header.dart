@@ -1,11 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/image_path.dart';
+import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_avatar_action_sheet.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_avatar_preview.dart';
 
 class GeneralProfileTopBar extends StatelessWidget {
   const GeneralProfileTopBar({super.key});
@@ -50,7 +54,7 @@ class GeneralProfileSummaryCard extends StatelessWidget {
           onTap: () => context.push(RouteName.profileDetailPage),
           child: Row(
             children: [
-              const _ProfileAvatar(),
+              _ProfileAvatar(avatarUrl: userProfile.fullAvatarUrl),
               AppSpacing.horizontal(AppDimensions.mediumSpacing),
               Expanded(
                 child: Column(
@@ -83,11 +87,6 @@ class GeneralProfileSummaryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.neutral5,
-                size: AppDimensions.largeIconSize,
               ),
             ],
           ),
@@ -126,16 +125,34 @@ class GeneralProfileSummaryCard extends StatelessWidget {
 }
 
 class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar();
+  const _ProfileAvatar({required this.avatarUrl});
+
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
-    return const PrimaryAssetAvatar(
-      image: ImagePath.shopHomeAvatarOzoShipGenerated,
-      backgroundImage: ImagePath.shopHomeAvatarBackground,
-      imageSize: 68,
-      overlayImage: ImagePath.profileEditBadge,
-      radius: 46,
+    return PrimaryAnimatedPressableWidget(
+      onTap: () async {
+        final action = await showProfileAvatarActionSheet(context);
+        if (!context.mounted || action == null) return;
+
+        switch (action) {
+          case ProfileAvatarAction.view:
+            showProfileAvatarPreview(context, avatarUrl: avatarUrl);
+            break;
+          case ProfileAvatarAction.change:
+            getIt.get<AuthBloc>().updateUserAvatar();
+            break;
+        }
+      },
+      child: Hero(
+        tag: Constants.profileAvatarHeroKey,
+        child: PrimaryAvatar(
+          url: avatarUrl,
+          radius: AppDimensions.defaultAvatarRadius,
+          showStatusIndicator: false,
+        ),
+      ),
     );
   }
 }

@@ -61,6 +61,10 @@ class AuthDeleteAccountEvent extends AuthEvent {
   const AuthDeleteAccountEvent();
 }
 
+class AuthUpdateUserAvatarEvent extends AuthEvent {
+  const AuthUpdateUserAvatarEvent();
+}
+
 // class GenOtpCodeEvent extends AuthEvent {
 //   final String phoneNumber;
 

@@ -91,7 +91,10 @@ class _OrderTrackingInputContainerState
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
-          PrimaryDialog.showErrorDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.trackingResult.message,
+          );
           break;
       }
     }

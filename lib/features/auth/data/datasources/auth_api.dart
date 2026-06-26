@@ -54,6 +54,13 @@ abstract class AuthApi {
     @Body() required UpdateUserProfileRequest body,
   });
 
+  @MultiPart()
+  @PATCH("/api/v1/users/{id}/avatar")
+  Future<BaseResponse<dynamic, BaseError>> updateUserAvatar({
+    @Path("id") required String id,
+    @Part(name: "avatar") required MultipartFile avatar,
+  });
+
   @PATCH("/api/v1/users/password")
   Future<BaseResponse> updatePassword(@Body() UpdatePasswordRequest body);
 

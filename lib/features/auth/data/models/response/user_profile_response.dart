@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 
 part 'user_profile_response.freezed.dart';
 part 'user_profile_response.g.dart';
@@ -16,7 +17,7 @@ abstract class UserProfileResponse with _$UserProfileResponse {
     @JsonKey(name: "avatarUrl") String? avatarUrl,
     @JsonKey(name: "coordinates") dynamic coordinates,
     @JsonKey(name: "userRegistered") dynamic userRegistered,
-        @JsonKey(name: "userRole") String? userRole,
+    @JsonKey(name: "userRole") String? userRole,
     @JsonKey(name: "hasSecondPassword") bool? hasSecondPassword,
     @JsonKey(name: "profile") Profile? profile,
   }) = _UserProfileResponse;
@@ -35,4 +36,11 @@ abstract class Profile with _$Profile {
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);
+}
+
+extension UserProfileResponseX on UserProfileResponse {
+  String? get fullAvatarUrl {
+    if (avatarUrl == null) return null;
+    return "${Constants.imgEndpoint}/$avatarUrl";
+  }
 }

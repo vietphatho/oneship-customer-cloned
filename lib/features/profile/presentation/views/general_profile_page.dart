@@ -122,6 +122,23 @@ class _GeneralProfilePageState extends State<GeneralProfilePage> {
           );
           break;
       }
+    } else if (state is AuthUpdatedUserAvatarState) {
+      switch (state.resource.state) {
+        case Result.loading:
+          PrimaryDialog.showLoadingDialog(context);
+          break;
+        case Result.success:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showSuccessDialog(context);
+          break;
+        case Result.error:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
+          break;
+      }
     }
   }
 }

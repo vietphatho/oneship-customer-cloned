@@ -22,30 +22,39 @@ class CustomerDrawer extends StatelessWidget {
           padding: AppDimensions.mediumPaddingHorizontal,
           child: Column(
             children: [
-              // HEADER
-              Row(
-                children: [
-                  PrimaryAvatar(
-                    url: authBloc.userProfile.avatarUrl,
-                    radius: AppDimensions.customerAvatarRadius,
-                    showStatusIndicator: false,
-                  ),
-                  AppSpacing.horizontal(AppDimensions.smallSpacing),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              BlocBuilder<AuthBloc, AuthState>(
+                bloc: authBloc,
+                builder: (context, state) {
+                  final userProfile = authBloc.userProfile;
+
+                  return Row(
                     children: [
-                      PrimaryText("hi".tr(), style: AppTextStyles.bodyMedium),
-                      PrimaryText(
-                        authBloc.userProfile.displayName,
-                        style: AppTextStyles.titleLarge,
+                      PrimaryAvatar(
+                        url: userProfile.avatarUrl,
+                        radius: AppDimensions.customerAvatarRadius,
+                        showStatusIndicator: false,
                       ),
-                      PrimaryText(
-                        authBloc.userProfile.userPhone,
-                        style: AppTextStyles.bodyMedium,
+                      AppSpacing.horizontal(AppDimensions.smallSpacing),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PrimaryText(
+                            "hi".tr(),
+                            style: AppTextStyles.bodyMedium,
+                          ),
+                          PrimaryText(
+                            userProfile.displayName,
+                            style: AppTextStyles.titleLarge,
+                          ),
+                          PrimaryText(
+                            userProfile.userPhone,
+                            style: AppTextStyles.bodyMedium,
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                ],
+                  );
+                },
               ),
               AppSpacing.vertical(AppDimensions.mediumSpacing),
 

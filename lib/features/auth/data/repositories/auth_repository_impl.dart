@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
@@ -57,6 +58,15 @@ class AuthRepositoryImpl extends AuthRepository {
     required UpdateUserProfileRequest body,
   }) {
     return request(() => _authApi.updateUserProfile(id: id, body: body));
+  }
+
+  @override
+  Future<Resource> updateUserAvatar({
+    required String id,
+    required String avatarPath,
+  }) async {
+    final avatar = await MultipartFile.fromFile(avatarPath);
+    return request(() => _authApi.updateUserAvatar(id: id, avatar: avatar));
   }
 
   @override

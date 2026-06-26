@@ -18,11 +18,13 @@ import 'package:oneship_customer/features/auth/domain/use_cases/log_in_use_case.
 import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_second_password_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/update_user_avatar_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_user_profile_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/verify_secondary_password_use_case.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
+import 'package:image_picker/image_picker.dart';
 
 @lazySingleton
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -36,6 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._updateSecondPasswordUseCase,
     this._verifySecondaryPasswordUseCase,
     this._deleteAccountUseCase,
+    this._updateUserAvatarUseCase,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
     on<AuthFetchingUserProfileEvent>(_onProfileFetchedEvent);
@@ -46,6 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthUpdateSecondPasswordEvent>(_onSecondPasswordUpdatedEvent);
     on<AuthVerifySecondaryPasswordEvent>(_onVerifySecondaryPassword);
     on<AuthDeleteAccountEvent>(_onDeleteAccountEvent);
+    on<AuthUpdateUserAvatarEvent>(_onUserAvatarUpdatedEvent);
   }
 
   final LogInUseCase _logInUseCase;
@@ -57,6 +61,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UpdateSecondPasswordUseCase _updateSecondPasswordUseCase;
   final VerifySecondaryPasswordUseCase _verifySecondaryPasswordUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
+  final UpdateUserAvatarUseCase _updateUserAvatarUseCase;
+  final ImagePicker _imagePicker = ImagePicker();
 
   late UserProfileResponse _userProfile;
   UserProfileResponse get userProfile => _userProfile;
@@ -158,6 +164,44 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthDeleteAccountState(response));
   }
 
+  FutureOr<void> _onUserAvatarUpdatedEvent(
+    AuthUpdateUserAvatarEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final selectedImage = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (selectedImage == null) return;
+
+    emit(AuthUpdatedUserAvatarState(Resource.loading(data: _userProfile)));
+
+    final uploadResponse = await _updateUserAvatarUseCase.call(
+      id: userProfile.id.toString(),
+      avatarPath: selectedImage.path,
+    );
+
+    if (uploadResponse.state != Result.success) {
+      emit(
+        AuthUpdatedUserAvatarState(
+          Resource.error(
+            uploadResponse.message,
+            uploadResponse.statusCode,
+            errorCode: uploadResponse.errorCode,
+            err: uploadResponse.err,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final profileResponse = await _fetchUserProfileUseCase.call();
+    if (profileResponse.state == Result.success &&
+        profileResponse.data != null) {
+      _userProfile = profileResponse.data!;
+    }
+    emit(AuthUpdatedUserAvatarState(profileResponse));
+  }
+
   void updatePassword(UpdatePasswordRequest body) {
     add(AuthUpdatePasswordEvent(body));
   }
@@ -214,5 +258,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void deleteAccount() {
     add(const AuthDeleteAccountEvent());
+  }
+
+  void updateUserAvatar() {
+    add(const AuthUpdateUserAvatarEvent());
   }
 }
