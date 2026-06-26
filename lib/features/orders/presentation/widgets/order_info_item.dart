@@ -2,9 +2,8 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/base/components/primary_dismissible.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
-import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tab_bar.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_list_item_parts.dart';
 
 class OrderInfoItem extends StatelessWidget {
   const OrderInfoItem({
@@ -32,9 +31,9 @@ class OrderInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OrderStatus statusEnum = _parseStatus(order.status);
-    final Color bgColor = _getBgColor(statusEnum);
-    final Color textColor = _getTextColor(statusEnum);
+    final statusEnum = parseOrderStatus(order.status);
+    final bgColor = orderStatusBackgroundColor(statusEnum);
+    final textColor = orderStatusForegroundColor(statusEnum);
     final String address =
         order.fullAddress ?? order.address ?? "no_address".tr();
     final String customerName = order.customerName?.trim().isNotEmpty == true
@@ -66,22 +65,8 @@ class OrderInfoItem extends StatelessWidget {
             }
             onTap?.call(order);
           },
-          child: AnimatedContainer(
-            duration: Durations.short2,
-            padding: const EdgeInsets.all(AppDimensions.smallSpacing),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.primaryLight.withValues(alpha: 0.38)
-                  : Colors.white,
-              borderRadius: AppDimensions.smallBorderRadius,
-              border: Border.all(
-                color: isSelected ? AppColors.primary : AppColors.neutral8,
-                width: isSelected
-                    ? AppDimensions.mediumBorderStroke
-                    : AppDimensions.smallBorderStroke,
-              ),
-              boxShadow: [PrimaryBoxShadows.defaultShadow],
-            ),
+          child: OrderListItemSurface(
+            isSelected: isSelected,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -110,17 +95,9 @@ class OrderInfoItem extends StatelessWidget {
                         )
                       : const SizedBox.shrink(),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(AppDimensions.xSmallSpacing),
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: statusEnum.buildIcon(
-                    width: AppDimensions.smallIconSize,
-                    height: AppDimensions.smallIconSize,
-                  ),
+                OrderListStatusIcon(
+                  status: statusEnum,
+                  backgroundColor: bgColor,
                 ),
                 AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
@@ -141,7 +118,7 @@ class OrderInfoItem extends StatelessWidget {
                             ),
                           ),
                           AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-                          _StatusPill(
+                          OrderListStatusPill(
                             status: statusEnum,
                             backgroundColor: bgColor,
                             foregroundColor: textColor,
@@ -152,7 +129,7 @@ class OrderInfoItem extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: _InlineInfo(
+                            child: OrderListInlineInfo(
                               icon: Icons.person_outline,
                               value:
                                   "$customerName • ${Utils.formatPhoneNumber(order.phone)}",
@@ -170,7 +147,7 @@ class OrderInfoItem extends StatelessWidget {
                         ],
                       ),
                       AppSpacing.vertical(AppDimensions.xxSmallSpacing),
-                      _InlineInfo(
+                      OrderListInlineInfo(
                         icon: Icons.location_on_outlined,
                         value: address,
                         maxLines: 2,
@@ -179,9 +156,9 @@ class OrderInfoItem extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: _InlineInfo(
+                            child: OrderListInlineInfo(
                               icon: Icons.schedule_outlined,
-                              value: _formatDateAndTime(order.createdAt),
+                              value: formatOrderListDateTime(order.createdAt),
                             ),
                           ),
                           if (order.trackingCode?.trim().isNotEmpty == true &&
@@ -208,162 +185,6 @@ class OrderInfoItem extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  String _formatDateAndTime(DateTime? date) {
-    if (date == null) return "--";
-    final localDate = date.toLocal();
-    final dateStr =
-        "${localDate.day.toString().padLeft(2, '0')}/${localDate.month.toString().padLeft(2, '0')}/${localDate.year}";
-    final timeStr =
-        "${localDate.hour.toString().padLeft(2, '0')}:${localDate.minute.toString().padLeft(2, '0')}";
-    return "$dateStr • $timeStr";
-  }
-
-  OrderStatus _parseStatus(String? statusStr) {
-    if (statusStr == null) return OrderStatus.pending;
-    switch (statusStr.toLowerCase()) {
-      case 'at_hub':
-        return OrderStatus.atHub;
-      case 'pending':
-        return OrderStatus.pending;
-      case 'processing':
-        return OrderStatus.processing;
-      case 'batched':
-        return OrderStatus.batched;
-      case 'shipping':
-        return OrderStatus.shipping;
-      case 'delayed':
-        return OrderStatus.delayed;
-      case 'delivered':
-        return OrderStatus.delivered;
-      case 'cancelled':
-        return OrderStatus.cancelled;
-      case 'returned':
-        return OrderStatus.returned;
-      case 'return_in_progress':
-        return OrderStatus.returnInProgress;
-      default:
-        return OrderStatus.pending;
-    }
-  }
-
-  Color _getBgColor(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.pending:
-      case OrderStatus.shipping:
-        return AppColors.orange.withValues(alpha: 0.1);
-      case OrderStatus.cancelled:
-        return AppColors.error.withValues(alpha: 0.1);
-      case OrderStatus.batched:
-        return AppColors.green.withValues(alpha: 0.1);
-      case OrderStatus.returned:
-      case OrderStatus.returnInProgress:
-        return AppColors.investmentPurple.withValues(alpha: 0.1);
-      default:
-        return AppColors.secondary.withValues(alpha: 0.1);
-    }
-  }
-
-  Color _getTextColor(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.pending:
-      case OrderStatus.shipping:
-        return AppColors.orange;
-      case OrderStatus.cancelled:
-        return AppColors.error;
-      case OrderStatus.batched:
-        return AppColors.green;
-      case OrderStatus.returned:
-      case OrderStatus.returnInProgress:
-        return AppColors.investmentPurple;
-      default:
-        return AppColors.secondary;
-    }
-  }
-}
-
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({
-    required this.status,
-    required this.backgroundColor,
-    required this.foregroundColor,
-  });
-
-  final OrderStatus status;
-  final Color backgroundColor;
-  final Color foregroundColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.xSmallSpacing,
-        vertical: AppDimensions.xxSmallSpacing,
-      ),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: AppDimensions.xSmallBorderRadius,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // status.buildIcon(
-          //   width: AppDimensions.xxSmallIconSize,
-          //   height: AppDimensions.xxSmallIconSize,
-          // ),
-          // AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-          PrimaryText(
-            status.value.tr(),
-            style: AppTextStyles.bodyXXSmall.copyWith(
-              color: foregroundColor,
-              fontWeight: FontWeight.w600,
-            ),
-            maxLine: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InlineInfo extends StatelessWidget {
-  const _InlineInfo({
-    required this.icon,
-    required this.value,
-    this.maxLines = 1,
-  });
-
-  final IconData icon;
-  final String value;
-  final int maxLines;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: maxLines > 1
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          size: AppDimensions.xSmallIconSize,
-          color: AppColors.neutral5,
-        ),
-        AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
-        Expanded(
-          child: PrimaryText(
-            value,
-            style: AppTextStyles.bodyXXSmall.copyWith(
-              color: AppColors.neutral4,
-            ),
-            maxLine: maxLines,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
     );
   }
 }

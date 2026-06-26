@@ -46,36 +46,32 @@ class _OrdersHistoryListCardState extends State<OrdersHistoryListCard> {
   Widget build(BuildContext context) {
     return BlocListener<OrdersBloc, OrdersState>(
       bloc: _ordersBloc,
-      listenWhen:
-          (previous, current) =>
-              previous.ordersHistoryResource != current.ordersHistoryResource,
+      listenWhen: (previous, current) =>
+          previous.ordersHistoryResource != current.ordersHistoryResource,
       listener: _listenOrdersHistoryChanged,
-      child:
-          widget.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : PrimaryRefreshabelListView(
-                controller: _refreshController,
-                itemCount: widget.orders.length,
-                enablePullUp: true,
-                padding: const EdgeInsets.all(AppDimensions.smallSpacing),
-                footerBottomSpacing: AppDimensions.safeBottomSpacing,
-                noMoreText: "Không còn đơn hàng",
-                onRefresh: widget.onRefresh,
-                onLoading: _onLoading,
-                itemBuilder: (context, index) {
-                  final order = widget.orders[index];
-                  return ProcessedOrderListItem(
-                    order: order,
-                    onTap:
-                        widget.onOrderTap != null
-                            ? () => widget.onOrderTap!(order)
-                            : null,
-                  );
-                },
-                separatorBuilder:
-                    (_, __) =>
-                        AppSpacing.vertical(AppDimensions.smallSpacing),
-              ),
+      child: widget.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : PrimaryRefreshabelListView(
+              controller: _refreshController,
+              itemCount: widget.orders.length,
+              enablePullUp: true,
+              padding: const EdgeInsets.all(AppDimensions.smallSpacing),
+              footerBottomSpacing: AppDimensions.safeBottomSpacing,
+              noMoreText: "no_more_data".tr(),
+              onRefresh: widget.onRefresh,
+              onLoading: _onLoading,
+              itemBuilder: (context, index) {
+                final order = widget.orders[index];
+                return ProcessedOrderListItem(
+                  order: order,
+                  onTap: widget.onOrderTap != null
+                      ? () => widget.onOrderTap!(order)
+                      : null,
+                );
+              },
+              separatorBuilder: (context, index) =>
+                  AppSpacing.vertical(AppDimensions.smallSpacing),
+            ),
     );
   }
 
