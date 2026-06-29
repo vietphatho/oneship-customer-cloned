@@ -59,7 +59,7 @@ class GeneralProfileMenuPanel extends StatelessWidget {
       PrimaryMenuItemData(
         icon: Icons.info_outline_rounded,
         iconColor: AppColors.primary,
-        label: 'Giới thiệu về OneShip',
+        label: 'Giới thiệu về OzoShip',
         onTap: () async {
           final uri = Uri.parse(Constants.oneshipWebsite);
           await launchUrl(uri, mode: LaunchMode.inAppBrowserView);

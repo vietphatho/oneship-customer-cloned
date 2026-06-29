@@ -1,4 +1,4 @@
-# OneShip Customer
+# OzoShip Seller
 
 Flutter: 3.38.2
 
