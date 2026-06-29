@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/forgot_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
@@ -14,6 +16,7 @@ import 'package:oneship_customer/features/auth/data/models/response/user_profile
 import 'package:oneship_customer/features/auth/domain/use_cases/create_second_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/delete_account_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/forgot_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_in_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_password_use_case.dart';
@@ -39,8 +42,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._verifySecondaryPasswordUseCase,
     this._deleteAccountUseCase,
     this._updateUserAvatarUseCase,
+    this._forgotPasswordUseCase,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
+    on<AuthForgotPasswordEvent>(_onForgotPasswordEvent);
     on<AuthFetchingUserProfileEvent>(_onProfileFetchedEvent);
     on<AuthUpdateUserProfileEvent>(_onProfileUpdatedEvent);
     on<AuthLogOutEvent>(_onLogOutEvent);
@@ -62,6 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final VerifySecondaryPasswordUseCase _verifySecondaryPasswordUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
   final UpdateUserAvatarUseCase _updateUserAvatarUseCase;
+  final ForgotPasswordUseCase _forgotPasswordUseCase;
   final ImagePicker _imagePicker = ImagePicker();
 
   late UserProfileResponse _userProfile;
@@ -86,6 +92,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final response = await _logInUseCase.call(request);
 
     emit(AuthLoggedInState(response));
+  }
+
+  FutureOr<void> _onForgotPasswordEvent(
+    AuthForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final email = event.email.trim();
+    final validationMessage = validateForgotPasswordEmail(email);
+    if (validationMessage != null) {
+      emit(AuthForgotPasswordState(Resource.error(validationMessage, 0)));
+      return;
+    }
+
+    emit(AuthForgotPasswordState(Resource.loading()));
+
+    final response = await _forgotPasswordUseCase.call(
+      ForgotPasswordRequest(email: email),
+    );
+
+    emit(AuthForgotPasswordState(response));
   }
 
   FutureOr<void> _onProfileFetchedEvent(
@@ -204,6 +230,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void updatePassword(UpdatePasswordRequest body) {
     add(AuthUpdatePasswordEvent(body));
+  }
+
+  void forgotPassword({required String email}) {
+    add(AuthForgotPasswordEvent(email: email));
+  }
+
+  String? validateForgotPasswordEmail(String email) {
+    return Validators.validateEmail(email.trim());
   }
 
   void createSecondPassword(CreateSecondPasswordRequest body) {

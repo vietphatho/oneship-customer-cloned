@@ -53,22 +53,12 @@ class _HomeHeader extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () =>
-                        context.push(RouteName.vendorProfileDetailPage),
-                    // child: Container(
-                    //   width: 72,
-                    //   height: 72,
-                    //   padding: const EdgeInsets.all(3),
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.white,
-                    //     shape: BoxShape.circle,
-                    //     boxShadow: [PrimaryBoxShadows.defaultShadow],
-                    //   ),
-                    //   child: const _HeaderAvatarImage(),
-                    // ),
-                    child: const PrimaryAvatar(showStatusIndicator: false),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () =>
+                  //       context.push(RouteName.vendorProfileDetailPage),
+                  //   child: const PrimaryAvatar(showStatusIndicator: false),
+                  // ),
+                  const _VendorAvatar(),
                   AppSpacing.horizontal(12),
                   Expanded(
                     child: Column(
@@ -169,6 +159,24 @@ class _HeaderAvatarImage extends StatelessWidget {
         height: double.infinity,
         fit: BoxFit.cover,
       ),
+    );
+  }
+}
+
+class _VendorAvatar extends StatelessWidget {
+  const _VendorAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    final AuthBloc _authBloc = getIt.get();
+    String? userAvatar = _authBloc.userProfile.fullAvatarUrl;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        getIt.get<ShopMasterBloc>().changeTab(BottomNavigationItem.menu);
+      },
+      child: PrimaryAvatar(showStatusIndicator: false, url: userAvatar),
     );
   }
 }

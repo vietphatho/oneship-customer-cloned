@@ -106,12 +106,6 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             value: request.phone,
                           ),
                           _InfoField(
-                            label: "address_type".tr(),
-                            value: request.isNewAddress
-                                ? "new_address".tr()
-                                : "old_address".tr(),
-                          ),
-                          _InfoField(
                             label: "province".tr(),
                             value: request.province?.name,
                           ),
@@ -123,9 +117,6 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                             label: "address".tr(),
                             value: request.fullAddress,
                           ),
-
-                          // _InfoField(label: "shop_name".tr(), value: ""),
-                          // _InfoField(label: "shop_name".tr(), value: ""),
                         ],
                       ),
                     ),

@@ -101,12 +101,13 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: AppDimensions.mediumPaddingAll,
                     child: SafeArea(
+                      top: false,
                       child: Column(
                         children: [
                           AppSpacing.vertical(AppDimensions.smallSpacing),
                           Image.asset(
                             ImagePath.oneshipLogo,
-                            height: AppDimensions.smallHeightButton,
+                            width: AppDimensions.defaultLogoSize,
                           ),
                           AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                           const OrderTrackingInputContainer(),

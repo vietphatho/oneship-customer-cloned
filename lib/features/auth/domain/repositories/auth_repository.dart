@@ -1,6 +1,7 @@
 import 'package:oneship_customer/core/base/base_repository.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/forgot_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
@@ -25,6 +26,8 @@ abstract class AuthRepository extends BaseRepository {
   Future<Resource> verifyEmail(VerifyEmailRequest body);
 
   Future<Resource> resendVerificationEmail(ResendVerificationEmailRequest body);
+
+  Future<Resource> forgotPassword(ForgotPasswordRequest body);
 
   Future<Resource<UserProfileResponse>> updateUserProfile({
     required String id,

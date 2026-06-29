@@ -23,10 +23,12 @@
     "received_goods_description": "The bag has been received successfully, please continue to deliver the orders.",
     "start_delivery": "Start delivery",
     "order_list": "Order list",
-    "welcome_to_oneship": "Welcome to OneShip",
+    "welcome_to_oneship": "Welcome to OzoShip",
     "order_connection_optimal_input_for_senders": "Order connection - optimal input for senders",
     "enter_phone_number": "Enter phone number",
     "forgot_password": "Forgot password?",
+    "forgot_password_confirm_message": "You forgot your password. Confirm sending an email to reset your password?",
+    "forgot_password_email_sent": "A password reset email has been sent.",
     "enter_password": "Enter password",
     "login": "Log in",
     "dont_have_an_account": "Don't have an account? ",
@@ -87,6 +89,11 @@
         "update_success": "Updated successfully.",
         "camera_permission_error": "Unable to open the camera. Please check camera permission.",
         "no_shop_selected": "Please select a shop before scanning a patient code"
+    },
+    "scan_tracking_code": {
+        "title": "Scan tracking code",
+        "instruction": "Place the QR code or barcode inside the scanner frame",
+        "camera_permission_error": "Unable to open the camera. Please check camera permission."
     },
     "vendor_home": {
         "greeting": "Hello, {name}!",
@@ -150,7 +157,7 @@
             "language": "Language",
             "language_value": "English",
             "support_center": "Support center",
-            "about": "About OneShip"
+            "about": "About OzoShip"
         }
     }
 }

@@ -125,7 +125,7 @@ class Constants {
 
   static const Duration timeoutFCMToken = Duration(seconds: 5);
 
-  static const String oneshipWebsite = "https://oneship.app/";
+  static const String oneshipWebsite = "https://ozoship.vn/";
   static const String oneshipFaceBook =
       "https://www.facebook.com/people/OneShip-H%E1%BB%93-Ch%C3%AD-Minh/61590686005646/?ref=1";
   static const String oneshipLinkedin =

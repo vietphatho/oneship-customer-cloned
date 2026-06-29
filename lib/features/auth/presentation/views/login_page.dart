@@ -15,6 +15,7 @@ import 'package:oneship_customer/core/network/token_manager.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_dimensions.dart';
 import 'package:oneship_customer/core/themes/app_spacing.dart';
+import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/data/enum.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
@@ -24,7 +25,6 @@ import 'package:oneship_customer/features/auth/presentation/widgets/back_to_home
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
-import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
@@ -40,13 +40,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthBloc _authBloc = getIt<AuthBloc>();
   final ShopBloc _shopBloc = getIt.get();
-  final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
   final VendorProfileBloc _vendorProfileBloc = getIt.get();
   final FinanceOverviewBloc financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc financeReconciliationBloc = getIt.get();
 
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
   TextEditingController pwdController = TextEditingController();
 
   final FocusNode _phoneNumNode = FocusNode();
@@ -60,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    phoneController.addListener(_validateForm);
+    emailCtrl.addListener(_validateForm);
     pwdController.addListener(_validateForm);
     _loadLoginInfo();
   }
@@ -70,19 +69,19 @@ class _LoginPageState extends State<LoginPage> {
     final info = await tokenManager.getLoginInfo();
     if (info['isRememberMe'] == 'true') {
       isRememberMe.value = true;
-      phoneController.text = info['username'] ?? '';
+      emailCtrl.text = info['username'] ?? '';
       pwdController.text = info['password'] ?? '';
     }
   }
 
   void _validateForm() {
     isFormValid.value =
-        phoneController.text.isNotEmpty && pwdController.text.isNotEmpty;
+        emailCtrl.text.isNotEmpty && pwdController.text.isNotEmpty;
   }
 
   @override
   void dispose() {
-    phoneController.dispose();
+    emailCtrl.dispose();
     pwdController.dispose();
     super.dispose();
   }
@@ -125,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        const Color.fromARGB(255, 111, 164, 221),
+                        AppColors.primary,
                         Theme.of(context).scaffoldBackgroundColor,
                       ],
                     ),
@@ -136,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const Positioned(top: -30, left: -20, child: _FloatingSphere()),
                 Positioned(
-                  top: AppDimensions.getSize(context).height / 5,
+                  top: AppDimensions.getSize(context).height / 6,
                   bottom: 0,
                   left: 0,
                   right: 0,
@@ -160,9 +159,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           AppSpacing.vertical(56),
                           PrimaryTextField(
-                            controller: phoneController,
-                            label: "user_name".tr(),
-                            hintText: "enter_user_name".tr(),
+                            controller: emailCtrl,
+                            label: "email".tr(),
+                            hintText: "enter_email".tr(),
                             // maxLength: 10,
                             isRequired: true,
                             // validator: Validators.validateRequiredPhoneNum,
@@ -171,23 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                             node: _phoneNumNode,
                             nextNode: _pwNode,
                           ),
-                          AppSpacing.vertical(AppDimensions.mediumSpacing),
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     Navigator.pushNamed(
-                          //       context,
-                          //       PathRoutes.forgotPasswordPage,
-                          //     );
-                          //   },
-                          //   child: Align(
-                          //     alignment: Alignment.centerRight,
-                          //     child: CustomText(
-                          //       text: "forgot_password".tr(),
-                          //       color: AppColors.appColor,
-                          //       bold: true,
-                          //     ),
-                          //   ),
-                          // ),
+                          AppSpacing.vertical(AppDimensions.smallSpacing),
                           PrimaryTextField(
                             controller: pwdController,
                             label: "password".tr(),
@@ -224,7 +207,19 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                           ),
-                          const SizedBox(height: 10),
+                          AppSpacing.vertical(AppDimensions.mediumSpacing),
+                          GestureDetector(
+                            onTap: _onForgotPasswordPressed,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: PrimaryText(
+                                "forgot_password".tr(),
+                                color: AppColors.primary,
+                                style: AppTextStyles.labelMedium,
+                                bold: true,
+                              ),
+                            ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -270,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
           PrimaryDialog.hideLoadingDialog(context);
 
           TokenManager().saveLoginInfo(
-            username: phoneController.text.trim(),
+            username: emailCtrl.text.trim(),
             password: pwdController.text.trim(),
             isRememberMe: isRememberMe.value,
           );
@@ -284,6 +279,26 @@ class _LoginPageState extends State<LoginPage> {
             );
             context.pushReplacement(RouteName.verifyEmailPage);
           }
+          break;
+        case Result.error:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showErrorDialog(
+            context,
+            message: state.resource.message,
+          );
+          break;
+      }
+    } else if (state is AuthForgotPasswordState) {
+      switch (state.resource.state) {
+        case Result.loading:
+          PrimaryDialog.showLoadingDialog(context);
+          break;
+        case Result.success:
+          PrimaryDialog.hideLoadingDialog(context);
+          PrimaryDialog.showSuccessDialog(
+            context,
+            message: 'forgot_password_email_sent',
+          );
           break;
         case Result.error:
           PrimaryDialog.hideLoadingDialog(context);
@@ -322,9 +337,28 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _onForgotPasswordPressed() {
+    final email = emailCtrl.text.trim();
+    final validationMessage = _authBloc.validateForgotPasswordEmail(email);
+    if (validationMessage != null) {
+      PrimaryDialog.showErrorDialog(context, message: validationMessage);
+      return;
+    }
+
+    PrimaryDialog.showQuestionDialog(
+      context,
+      message: 'forgot_password_confirm_message'.tr(),
+      positiveButtonText: 'confirm',
+      negativeButtonText: 'cancel',
+      onPositiveTapped: () {
+        _authBloc.forgotPassword(email: email);
+      },
+    );
+  }
+
   void _onLoginPressed() {
     _authBloc.login(
-      userName: phoneController.text.trim(),
+      userName: emailCtrl.text.trim(),
       password: pwdController.text.trim(),
     );
   }
@@ -382,14 +416,10 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class _FloatingLogo extends StatefulWidget {
-  final double amplitude;
-  final Duration duration;
+  static const double _amplitude = 8;
+  static const Duration _duration = Duration(milliseconds: 2800);
 
-  const _FloatingLogo({
-    super.key,
-    this.amplitude = 8,
-    this.duration = const Duration(milliseconds: 2800),
-  });
+  const _FloatingLogo();
 
   @override
   State<_FloatingLogo> createState() => _FloatingLogoState();
@@ -404,12 +434,14 @@ class _FloatingLogoState extends State<_FloatingLogo>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: widget.duration)
-      ..repeat(reverse: true);
+    _controller = AnimationController(
+      vsync: this,
+      duration: _FloatingLogo._duration,
+    )..repeat(reverse: true);
 
     _animation = Tween<double>(
-      begin: -widget.amplitude,
-      end: widget.amplitude,
+      begin: -_FloatingLogo._amplitude,
+      end: _FloatingLogo._amplitude,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
@@ -441,14 +473,10 @@ class _FloatingLogoState extends State<_FloatingLogo>
 }
 
 class _FloatingSphere extends StatefulWidget {
-  final double amplitude;
-  final Duration duration;
+  static const double _amplitude = 6;
+  static const Duration _duration = Duration(milliseconds: 3200);
 
-  const _FloatingSphere({
-    super.key,
-    this.amplitude = 6,
-    this.duration = const Duration(milliseconds: 3200),
-  });
+  const _FloatingSphere();
 
   @override
   State<_FloatingSphere> createState() => _FloatingSphereState();
@@ -463,12 +491,14 @@ class _FloatingSphereState extends State<_FloatingSphere>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: widget.duration)
-      ..repeat(reverse: true);
+    _controller = AnimationController(
+      vsync: this,
+      duration: _FloatingSphere._duration,
+    )..repeat(reverse: true);
 
     _animation = Tween<double>(
-      begin: -widget.amplitude,
-      end: widget.amplitude,
+      begin: -_FloatingSphere._amplitude,
+      end: _FloatingSphere._amplitude,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 

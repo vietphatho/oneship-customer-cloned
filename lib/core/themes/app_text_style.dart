@@ -118,6 +118,13 @@ class AppTextStyles {
     color: AppColors.onBackground,
   );
 
+  static const TextStyle bodyCompact = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    color: AppColors.onBackground,
+  );
+
   static const TextStyle bodyXXSmall = TextStyle(
     fontFamily: fontFamily,
     fontSize: 12,

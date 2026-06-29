@@ -7,8 +7,8 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 class ShopSelectionButton extends StatelessWidget {
   const ShopSelectionButton({super.key});
 
-  static const double _buttonSize = AppDimensions.homeAvatarRadius * 2;
-  static const double _iconSize = AppDimensions.mediumIconSize;
+  static const double _buttonSize = AppDimensions.homeAvatarRadius * 1.8;
+  static const double _iconSize = AppDimensions.smallIconSize;
 
   @override
   Widget build(BuildContext context) {

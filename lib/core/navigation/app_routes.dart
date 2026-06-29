@@ -230,5 +230,9 @@ final GoRouter appRouter = GoRouter(
       path: RouteName.scanPatientCodePage,
       builder: (context, state) => const ScanPatientCodePage(),
     ),
+    GoRoute(
+      path: RouteName.scanTrackingCodePage,
+      builder: (context, state) => const ScanTrackingCodePage(),
+    ),
   ],
 );

@@ -95,11 +95,6 @@ class OrderInfoItem extends StatelessWidget {
                         )
                       : const SizedBox.shrink(),
                 ),
-                OrderListStatusIcon(
-                  status: statusEnum,
-                  backgroundColor: bgColor,
-                ),
-                AppSpacing.horizontal(AppDimensions.smallSpacing),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +105,7 @@ class OrderInfoItem extends StatelessWidget {
                           Expanded(
                             child: PrimaryText(
                               orderCode,
-                              style: AppTextStyles.labelXSmall.copyWith(
+                              style: AppTextStyles.labelSmall.copyWith(
                                 color: AppColors.neutral1,
                               ),
                               maxLine: 1,
@@ -138,7 +133,7 @@ class OrderInfoItem extends StatelessWidget {
                           AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                           PrimaryText(
                             Utils.formatCurrencyWithUnit(order.codAmount),
-                            style: AppTextStyles.labelXSmall.copyWith(
+                            style: AppTextStyles.labelSmall.copyWith(
                               color: textColor,
                             ),
                             maxLine: 1,

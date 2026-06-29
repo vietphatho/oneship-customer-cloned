@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/forgot_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
@@ -47,6 +48,9 @@ abstract class AuthApi {
   Future<BaseResponse> resendVerificationEmail(
     @Body() ResendVerificationEmailRequest body,
   );
+
+  @POST("/api/v1/auth/forgot-password")
+  Future<BaseResponse> forgotPassword(@Body() ForgotPasswordRequest body);
 
   @PATCH("/api/v1/users/{id}")
   Future<BaseResponse<UserProfileResponse, BaseError>> updateUserProfile({

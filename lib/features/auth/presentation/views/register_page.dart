@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController passwordController;
   late final TextEditingController confirmPasswordController;
 
-  UserRole _userRole = UserRole.shop;
+  final UserRole _userRole = UserRole.shop;
 
   @override
   void initState() {
@@ -90,13 +90,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         //   ),
                         // ),
                         // AppSpacing.vertical(AppDimensions.smallSpacing),
-                        PrimaryTextField(
-                          controller: usernameController,
-                          label: "user_name".tr(),
-                          isRequired: true,
-                          validator: Validators.validateUsername,
-                        ),
-                        AppSpacing.vertical(AppDimensions.smallSpacing),
+                        // PrimaryTextField(
+                        //   controller: usernameController,
+                        //   label: "user_name".tr(),
+                        //   isRequired: true,
+                        //   validator: Validators.validateUsername,
+                        // ),
+                        // AppSpacing.vertical(AppDimensions.smallSpacing),
                         PrimaryTextField(
                           controller: fullNameController,
                           label: "full_name".tr(),

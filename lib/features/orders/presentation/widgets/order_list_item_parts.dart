@@ -124,9 +124,7 @@ class OrderListInlineInfo extends StatelessWidget {
         Expanded(
           child: PrimaryText(
             value,
-            style: AppTextStyles.bodyXXSmall.copyWith(
-              color: AppColors.neutral4,
-            ),
+            style: AppTextStyles.bodyXSmall.copyWith(color: AppColors.neutral4),
             maxLine: maxLines,
             overflow: TextOverflow.ellipsis,
           ),

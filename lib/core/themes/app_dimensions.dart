@@ -129,6 +129,8 @@ class AppDimensions {
   static const double largeIconSize = 28;
   static const double xLargeIconSize = 48;
   static const double displayIconSize = 56;
+  static const double defaultLogoSize = 72;
+
   static const double shopHomeButtonSize = 78;
 
   static const double myLocationIconSize = 36;

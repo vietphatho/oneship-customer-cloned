@@ -1,14 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/image_path.dart';
-import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/finance/presentation/bloc/finance_reconciliation_bloc.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
-import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -17,6 +13,7 @@ import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_ap
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_brief_info.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_content_sections.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_panel.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/tracking_search_input.dart';
 
 class ShopHome extends StatefulWidget {
   const ShopHome({super.key});
@@ -31,17 +28,12 @@ class _ShopHomeState extends State<ShopHome> {
   static const double _headerContentSpacing = 8;
   static const double _headerContentHeight =
       _heroHeight + _headerContentSpacing + _briefInfoHeight;
-  static const double _trackingInputHeight = 42;
 
   final ShopBloc _shopBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
-  final OrderTrackingBloc _orderTrackingBloc = getIt.get();
   final OrdersBloc _ordersBloc = getIt.get();
   final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
-  final LocationServiceBloc _locationServiceBloc = getIt.get();
-
-  final TextEditingController _trackingNumberCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -51,12 +43,6 @@ class _ShopHomeState extends State<ShopHome> {
     //   if (!mounted) return;
     //   CustomerCreditLimitDialog.show(context);
     // });
-  }
-
-  @override
-  void dispose() {
-    _trackingNumberCtrl.dispose();
-    super.dispose();
   }
 
   @override
@@ -114,64 +100,6 @@ class _ShopHomeState extends State<ShopHome> {
     }
   }
 
-  Widget _buildTrackingInput(BuildContext context) {
-    return Padding(
-      padding: AppDimensions.smallPaddingHorizontal,
-      child: Container(
-        height: _trackingInputHeight,
-        padding: const EdgeInsets.fromLTRB(12, 0, 4, 0),
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: AppDimensions.largeBorderRadius,
-          border: Border.all(color: AppColors.neutral8),
-          boxShadow: [PrimaryBoxShadows.defaultShadow],
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.search_rounded,
-              color: AppColors.primary,
-              size: AppDimensions.xSmallIconSize,
-            ),
-            AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-            Expanded(
-              child: TextField(
-                controller: _trackingNumberCtrl,
-                textInputAction: TextInputAction.search,
-                textCapitalization: TextCapitalization.characters,
-                style: AppTextStyles.bodySmall.copyWith(fontSize: 13),
-                decoration: InputDecoration(
-                  isDense: true,
-                  border: InputBorder.none,
-                  hintText: "input_tracking_number".tr(),
-                  hintStyle: AppTextStyles.bodySmall.copyWith(
-                    fontSize: 12,
-                    color: AppColors.neutral5,
-                  ),
-                  contentPadding: EdgeInsets.zero,
-                ),
-                onSubmitted: (_) => _onSearch(context),
-              ),
-            ),
-            Container(
-              width: 34,
-              height: 34,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: AppDimensions.smallBorderRadius,
-              ),
-              child: const Icon(
-                Icons.qr_code_scanner_rounded,
-                color: AppColors.onPrimary,
-                size: AppDimensions.smallIconSize,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildHeroHeader(BuildContext context) {
     return SizedBox(
       height: _heroHeight,
@@ -217,7 +145,7 @@ class _ShopHomeState extends State<ShopHome> {
             left: 0,
             right: 0,
             bottom: AppDimensions.xSmallSpacing,
-            child: _buildTrackingInput(context),
+            child: const TrackingSearchInput(),
           ),
         ],
       ),
@@ -240,18 +168,5 @@ class _ShopHomeState extends State<ShopHome> {
         ],
       ),
     );
-  }
-
-  void _onSearch(BuildContext context) {
-    final trackingNumber = _trackingNumberCtrl.text.trim();
-
-    if (trackingNumber.isEmpty) {
-      return;
-    }
-
-    _orderTrackingBloc.search(trackingNumber);
-    _locationServiceBloc.getCurrentLocation();
-
-    context.push(RouteName.orderTrackingPage);
   }
 }

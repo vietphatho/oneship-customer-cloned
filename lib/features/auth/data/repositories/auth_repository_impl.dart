@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/models/base_error.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/auth/data/datasources/auth_api.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
+import 'package:oneship_customer/features/auth/data/models/request/forgot_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/login_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/register_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/resend_verification_email_request.dart';
@@ -50,6 +51,11 @@ class AuthRepositoryImpl extends AuthRepository {
     ResendVerificationEmailRequest body,
   ) {
     return request(() => _authApi.resendVerificationEmail(body));
+  }
+
+  @override
+  Future<Resource> forgotPassword(ForgotPasswordRequest body) {
+    return request(() => _authApi.forgotPassword(body));
   }
 
   @override

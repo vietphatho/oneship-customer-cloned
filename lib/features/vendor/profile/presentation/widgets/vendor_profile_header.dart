@@ -1,10 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_animated_pressable_widget.dart';
 import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/models/response/user_profile_response.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_avatar_action_sheet.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_avatar_preview.dart';
 import 'package:oneship_customer/features/vendor/profile/domain/entities/vendor_profile_entity.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_bloc.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendor_profile_state.dart';
@@ -56,7 +60,7 @@ class VendorProfileSummaryCard extends StatelessWidget {
           onTap: () => context.push(RouteName.vendorProfileDetailPage),
           child: Row(
             children: [
-              const _VendorProfileAvatar(),
+              _VendorProfileAvatar(avatarUrl: userProfile.fullAvatarUrl),
               AppSpacing.horizontal(AppDimensions.smallSpacing),
               Expanded(
                 child: Column(
@@ -219,13 +223,34 @@ class VendorProfileInfoCard extends StatelessWidget {
 }
 
 class _VendorProfileAvatar extends StatelessWidget {
-  const _VendorProfileAvatar();
+  const _VendorProfileAvatar({required this.avatarUrl});
+
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryAvatar(
-      radius: AppDimensions.defaultAvatarRadius,
-      showStatusIndicator: false,
+    return PrimaryAnimatedPressableWidget(
+      onTap: () async {
+        final action = await showProfileAvatarActionSheet(context);
+        if (!context.mounted || action == null) return;
+
+        switch (action) {
+          case ProfileAvatarAction.view:
+            showProfileAvatarPreview(context, avatarUrl: avatarUrl);
+            break;
+          case ProfileAvatarAction.change:
+            getIt.get<AuthBloc>().updateUserAvatar();
+            break;
+        }
+      },
+      child: Hero(
+        tag: Constants.profileAvatarHeroKey,
+        child: PrimaryAvatar(
+          url: avatarUrl,
+          radius: AppDimensions.defaultAvatarRadius,
+          showStatusIndicator: false,
+        ),
+      ),
     );
   }
 }
