@@ -71,7 +71,7 @@ class _OrderDetailPageState extends State<OrderDetailPage>
                   ),
                   child: _Header(ordDtl: ordDtl),
                 ),
-                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                AppSpacing.vertical(AppDimensions.smallSpacing),
                 OrderDetailTabBar(
                   controller: _tabCtrl,
                   items: _tabList,
@@ -119,7 +119,10 @@ class _Header extends StatelessWidget {
         boxShadow: AppBoxShadows.card,
         borderRadius: AppDimensions.largeBorderRadius,
       ),
-      padding: AppDimensions.smallPaddingAll,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppDimensions.smallSpacing,
+        vertical: AppDimensions.xSmallSpacing,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -132,7 +135,7 @@ class _Header extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: PrimaryText(
                     orderNumber,
-                    style: AppTextStyles.labelLarge,
+                    style: AppTextStyles.labelMedium,
                   ),
                 ),
               ),
@@ -144,14 +147,14 @@ class _Header extends StatelessWidget {
                 icon: Icon(
                   Icons.content_copy,
                   color: AppColors.secondary,
-                  size: 22,
+                  size: AppDimensions.xSmallIconSize,
                 ),
               ),
             ],
           ),
           PrimaryText(
             DateTimeUtils.formatDateTime(ordDtl.createdAt?.toLocal()),
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodyXSmall,
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           Row(

@@ -109,12 +109,11 @@ class _HomePageState extends State<HomePage> {
                             ImagePath.oneshipLogo,
                             width: AppDimensions.defaultLogoSize,
                           ),
-                          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                          AppSpacing.vertical(AppDimensions.xLargeSpacing),
                           const OrderTrackingInputContainer(),
-                          AppSpacing.vertical(AppDimensions.xxLargeSpacing),
+                          AppSpacing.vertical(AppDimensions.mediumSpacing),
                           _AuthActionButtons(),
-                          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
-                          AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
+                          AppSpacing.vertical(AppDimensions.mediumSpacing),
                           PrimaryText(
                             'company_name'.tr(),
                             style: AppTextStyles.titleMedium.copyWith(

@@ -13,10 +13,15 @@ class OrdersHistoryTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryTabBar(
-      controller: controller,
-      onTap: onTap,
-      items: ["all".tr(), "delivered".tr(), "returned".tr()],
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.smallSpacing,
+      ),
+      child: PrimaryTabBar(
+        controller: controller,
+        onTap: onTap,
+        items: ["all".tr(), "delivered".tr(), "returned".tr()],
+      ),
     );
   }
 }

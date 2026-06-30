@@ -58,8 +58,8 @@ class _OrderDetailTransportationHistoryTabViewState
 
         return SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.mediumSpacing,
-            vertical: AppDimensions.mediumSpacing,
+            horizontal: AppDimensions.smallSpacing,
+            vertical: AppDimensions.smallSpacing,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

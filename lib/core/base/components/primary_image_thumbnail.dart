@@ -16,8 +16,10 @@ class PrimaryImageThumbnail extends StatelessWidget {
   final String? filePath;
   final bool canPreview;
 
-  factory PrimaryImageThumbnail.network(String url, {bool canPreview = false}) =>
-      PrimaryImageThumbnail._internal(url: url, canPreview: canPreview);
+  factory PrimaryImageThumbnail.network(
+    String url, {
+    bool canPreview = false,
+  }) => PrimaryImageThumbnail._internal(url: url, canPreview: canPreview);
 
   factory PrimaryImageThumbnail.file(String filePath) =>
       PrimaryImageThumbnail._internal(filePath: filePath);
@@ -32,6 +34,7 @@ class PrimaryImageThumbnail extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           borderRadius: AppDimensions.mediumBorderRadius,
+          border: Border.all(color: AppColors.neutral8),
         ),
       );
 
@@ -48,6 +51,7 @@ class PrimaryImageThumbnail extends StatelessWidget {
             image: FileImage(File(filePath!)),
             fit: BoxFit.cover,
           ),
+          border: Border.all(color: AppColors.neutral8),
         ),
       );
     }
@@ -76,8 +80,8 @@ class PrimaryImageThumbnail extends StatelessWidget {
                   top: AppDimensions.mediumSpacing,
                   right: AppDimensions.mediumSpacing,
                   child: IconButton(
-                    onPressed:
-                        () => Navigator.of(context, rootNavigator: true).pop(),
+                    onPressed: () =>
+                        Navigator.of(context, rootNavigator: true).pop(),
                     icon: const Icon(Icons.close, color: Colors.white),
                   ),
                 ),

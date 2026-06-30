@@ -28,17 +28,17 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
                 'Thông tin cửa hàng',
                 style: AppTextStyles.labelMedium.copyWith(fontSize: 17),
               ),
-              const Spacer(),
-              PrimaryText(
-                'Xem chi tiết',
-                style: AppTextStyles.labelXSmall.copyWith(fontSize: 13),
-                color: AppColors.primary,
-              ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.primary,
-                size: AppDimensions.smallIconSize,
-              ),
+              // const Spacer(),
+              // PrimaryText(
+              //   'Xem chi tiết',
+              //   style: AppTextStyles.labelXSmall.copyWith(fontSize: 13),
+              //   color: AppColors.primary,
+              // ),
+              // const Icon(
+              //   Icons.chevron_right_rounded,
+              //   color: AppColors.primary,
+              //   size: AppDimensions.smallIconSize,
+              // ),
             ],
           ),
           AppSpacing.vertical(AppDimensions.largeSpacing),

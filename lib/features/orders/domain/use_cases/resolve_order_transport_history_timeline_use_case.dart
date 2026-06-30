@@ -13,7 +13,7 @@ class ResolveOrderTransportHistoryTimelineUseCase {
     final items = <OrderTransportHistoryTimelineEntity?>[
       _buildItem(
         title: 'delivery_successfully',
-        description: 'recipient_address',
+        description: 'delivered_desc',
         time: history.deliveredAt,
         images: history.confirmationImages ?? [],
         showCompletedTag: true,
@@ -32,12 +32,14 @@ class ResolveOrderTransportHistoryTimelineUseCase {
       _buildItem(
         title: 'start_processing',
         description: 'at_shop',
-        time: history.scannedAt ?? history.addedToPackageAt ?? fallbackStartedAt,
+        time:
+            history.scannedAt ?? history.addedToPackageAt ?? fallbackStartedAt,
       ),
     ];
 
-    final resolvedItems =
-        items.whereType<OrderTransportHistoryTimelineEntity>().toList();
+    final resolvedItems = items
+        .whereType<OrderTransportHistoryTimelineEntity>()
+        .toList();
     if (resolvedItems.isNotEmpty) return resolvedItems;
 
     return _buildFallbackStartedItem(fallbackStartedAt);

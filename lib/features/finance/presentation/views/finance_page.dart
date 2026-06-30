@@ -48,25 +48,25 @@ class _FinancePageState extends State<FinancePage>
     return Scaffold(
       appBar: PrimaryAppBar(
         title: 'statistics_title'.tr(),
-        actions: [
-          BlocBuilder<FinanceOverviewBloc, FinanceOverviewState>(
-            bloc: _financeOverviewBloc,
-            builder: (context, state) {
-              if (state.isSecondPasswordRequired &&
-                  state.shopFinancialData.state == Result.error) {
-                return const SizedBox.shrink();
-              }
-              return const PrimaryIconButton(
-                icon: Icon(Icons.notifications_none_rounded),
-                badgeText: '3',
-                size: 40,
-                iconSize: 20,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              );
-            },
-          ),
-          const SizedBox(width: 16),
-        ],
+        // actions: [
+        //   BlocBuilder<FinanceOverviewBloc, FinanceOverviewState>(
+        //     bloc: _financeOverviewBloc,
+        //     builder: (context, state) {
+        //       if (state.isSecondPasswordRequired &&
+        //           state.shopFinancialData.state == Result.error) {
+        //         return const SizedBox.shrink();
+        //       }
+        //       return const PrimaryIconButton(
+        //         icon: Icon(Icons.notifications_none_rounded),
+        //         badgeText: '3',
+        //         size: 40,
+        //         iconSize: 20,
+        //         borderRadius: BorderRadius.all(Radius.circular(10)),
+        //       );
+        //     },
+        //   ),
+        //   const SizedBox(width: 16),
+        // ],
       ),
       body: BlocConsumer<FinanceOverviewBloc, FinanceOverviewState>(
         bloc: _financeOverviewBloc,

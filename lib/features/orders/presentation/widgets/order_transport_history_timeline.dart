@@ -12,10 +12,7 @@ class OrderTransportHistoryTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.xxLargeSpacing,
-        vertical: AppDimensions.largeSpacing,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.smallSpacing),
       child: Column(
         children: List.generate(
           items.length,
@@ -49,30 +46,27 @@ class _TimelineItemView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: AppDimensions.largeSpacing,
-            child: Column(
-              children: [
-                Container(
-                  width: AppDimensions.smallSpacing,
-                  height: AppDimensions.smallSpacing,
-                  decoration: BoxDecoration(
-                    color: isFirst ? AppColors.primary : AppColors.secondary,
-                    shape: BoxShape.circle,
+          Column(
+            children: [
+              Container(
+                width: AppDimensions.smallSpacing,
+                height: AppDimensions.smallSpacing,
+                decoration: BoxDecoration(
+                  color: isFirst ? AppColors.primary : AppColors.secondary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              if (!isLast)
+                Expanded(
+                  child: Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: AppDimensions.xxSmallSpacing,
+                    ),
+                    color: AppColors.neutral5,
                   ),
                 ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: 1,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: AppDimensions.xxSmallSpacing,
-                      ),
-                      color: AppColors.neutral5,
-                    ),
-                  ),
-              ],
-            ),
+            ],
           ),
           AppSpacing.horizontal(AppDimensions.smallSpacing),
           Expanded(
@@ -92,16 +86,14 @@ class _TimelineItemView extends StatelessWidget {
                           children: [
                             PrimaryText(
                               item.title.tr(),
-                              style: AppTextStyles.labelLarge,
+                              style: AppTextStyles.labelMedium,
                             ),
                             PrimaryText(
                               item.description.tr(),
-                              style: AppTextStyles.bodyMedium,
+                              style: AppTextStyles.bodySmall,
                             ),
                             if (item.showCompletedTag) ...[
-                              AppSpacing.vertical(
-                                AppDimensions.xxSmallSpacing,
-                              ),
+                              AppSpacing.vertical(AppDimensions.xxSmallSpacing),
                               const _CompletedTag(),
                             ],
                           ],
@@ -112,11 +104,12 @@ class _TimelineItemView extends StatelessWidget {
                         children: [
                           PrimaryText(
                             DateTimeUtils.formatTimeFromDT(time) ?? '',
-                            style: AppTextStyles.bodyMedium,
+                            style: AppTextStyles.bodyXSmall,
+                            color: AppColors.neutral6,
                           ),
                           PrimaryText(
                             DateTimeUtils.formatDateFromDT(time) ?? '',
-                            style: AppTextStyles.bodyMedium,
+                            style: AppTextStyles.bodyXSmall,
                             color: AppColors.neutral6,
                           ),
                         ],
@@ -130,9 +123,8 @@ class _TimelineItemView extends StatelessWidget {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: item.images.length,
-                        separatorBuilder:
-                            (_, __) =>
-                                AppSpacing.horizontal(AppDimensions.smallSpacing),
+                        separatorBuilder: (_, __) =>
+                            AppSpacing.horizontal(AppDimensions.smallSpacing),
                         itemBuilder: (context, index) {
                           final imageUrl =
                               StringUtils.getImgUrl(item.images[index]) ?? '';

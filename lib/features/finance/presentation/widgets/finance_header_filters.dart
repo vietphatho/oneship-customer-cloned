@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_avatar.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
+import 'package:oneship_customer/core/utils/string_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/finance/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
@@ -40,7 +42,7 @@ class FinanceHeaderFilters extends StatelessWidget {
                   child: const _ShopFilterContent(),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppDimensions.xSmallSpacing),
               Expanded(
                 child: Column(
                   children: [
@@ -52,16 +54,13 @@ class FinanceHeaderFilters extends StatelessWidget {
                           const _HeaderSvgIcon(
                             asset: 'assets/icons/finance_calendar.svg',
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppDimensions.xSmallSpacing),
                           Expanded(
                             child: Text(
                               '${DateTimeUtils.formatDateFromDT(startDate)} - ${DateTimeUtils.formatDateFromDT(endDate)}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: AppColors.grey600,
-                              ),
+                              style: AppTextStyles.bodyXXSmall,
                             ),
                           ),
                           const _HeaderSvgIcon(
@@ -104,18 +103,11 @@ class _ShopFilterContent extends StatelessWidget {
 
         return Row(
           children: [
-            CircleAvatar(
-              radius: 22,
-              backgroundColor: AppColors.primary,
-              backgroundImage: hasShopLogo ? NetworkImage(shopLogo!) : null,
-              child: hasShopLogo
-                  ? null
-                  : const Text(
-                      'OzoShip',
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
+            PrimaryAvatar(
+              url: hasShopLogo ? StringUtils.getImgUrl(shopLogo) : null,
+              showStatusIndicator: false,
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppDimensions.xSmallSpacing),
             Expanded(
               child: Text(
                 shopName,
@@ -123,9 +115,6 @@ class _ShopFilterContent extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
-            ),
-            const _HeaderSvgIcon(
-              asset: 'assets/icons/finance_chevron_down.svg',
             ),
           ],
         );
@@ -226,7 +215,9 @@ class _HeaderFilterCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         height: height,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.xSmallSpacing,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),

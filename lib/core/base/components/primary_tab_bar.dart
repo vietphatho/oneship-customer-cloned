@@ -27,7 +27,8 @@ class PrimaryTabBar extends StatelessWidget {
         vertical: AppDimensions.xxSmallSpacing,
       ),
       decoration: BoxDecoration(
-        borderRadius: borderRadius,
+        borderRadius:
+            borderRadius ?? BorderRadius.circular(AppDimensions.largeRadius),
         color: AppColors.background,
         border: Border.all(color: AppColors.neutral7),
       ),

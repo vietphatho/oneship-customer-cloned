@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
@@ -590,32 +591,33 @@ class _ChartCard extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.grey200),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      'by_day'.tr(),
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: AppColors.grey600,
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    _FinanceAssetIcon(
-                      asset: 'assets/icons/finance_chevron_down.svg',
-                      color: AppColors.grey500,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+              //   decoration: BoxDecoration(
+              //     border: Border.all(color: AppColors.grey200),
+              //     borderRadius: BorderRadius.circular(8),
+              //   ),
+              //   child: Row(
+              //     children: [
+              //       Text(
+              //         'by_day'.tr(),
+              //         style: const TextStyle(
+              //           fontSize: 10,
+              //           color: AppColors.grey600,
+              //         ),
+              //       ),
+              //       SizedBox(width: 4),
+              //       _FinanceAssetIcon(
+              //         asset: 'assets/icons/finance_chevron_down.svg',
+              //         color: AppColors.grey500,
+              //         size: 12,
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
           Row(
             children: [
               _Legend(
@@ -715,12 +717,18 @@ class _DetailsGrid extends StatelessWidget {
             foregroundColor: AppColors.primary,
           ),
           rows: [
-            _FeeBreakdownRow(label: 'shipping_fee'.tr(), amount: finance.deliveryFee),
+            _FeeBreakdownRow(
+              label: 'shipping_fee'.tr(),
+              amount: finance.deliveryFee,
+            ),
             _FeeBreakdownRow(
               label: 'shipping_fee_VAT'.tr(),
               amount: finance.deliveryFeeVat,
             ),
-            _FeeBreakdownRow(label: 'surcharge'.tr(), amount: finance.surchargeFee),
+            _FeeBreakdownRow(
+              label: 'surcharge'.tr(),
+              amount: finance.surchargeFee,
+            ),
             _FeeBreakdownRow(
               label: 'surcharge_vat'.tr(),
               amount: finance.surchargeVat,
@@ -759,7 +767,10 @@ class _DetailsGrid extends StatelessWidget {
               label: 'return_shipping_vat'.tr(),
               amount: finance.returnDeliveryFeeVat,
             ),
-            _FeeBreakdownRow(label: 'surcharge'.tr(), amount: finance.returnSurchargeFee),
+            _FeeBreakdownRow(
+              label: 'surcharge'.tr(),
+              amount: finance.returnSurchargeFee,
+            ),
             _FeeBreakdownRow(
               label: 'surcharge_vat'.tr(),
               amount: finance.returnSurchargeVat,
@@ -912,7 +923,10 @@ class _FeeBreakdownCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _formatAmount(totalAmount, showPositiveSign: showPositiveSign),
+                  _formatAmount(
+                    totalAmount,
+                    showPositiveSign: showPositiveSign,
+                  ),
                   style: TextStyle(
                     fontSize: 26,
                     height: 1,
@@ -1253,7 +1267,9 @@ class _DailySummaryItem extends StatelessWidget {
                     ),
                     _DailySummaryRow(
                       label: 'return_order_fee'.tr(),
-                      value: Utils.formatCurrencyWithUnit(item.totalReturnedFee),
+                      value: Utils.formatCurrencyWithUnit(
+                        item.totalReturnedFee,
+                      ),
                     ),
                     _DailySummaryRow(
                       label: 'remain_balance'.tr(),

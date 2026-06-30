@@ -32,8 +32,8 @@ class ProcessedOrderListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            OrderListStatusIcon(status: statusEnum, backgroundColor: bgColor),
-            AppSpacing.horizontal(AppDimensions.smallSpacing),
+            // OrderListStatusIcon(status: statusEnum, backgroundColor: bgColor),
+            // AppSpacing.horizontal(AppDimensions.smallSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
