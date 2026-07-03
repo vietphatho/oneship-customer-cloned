@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:oneship_customer/core/base/components/primary_app_bar.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
+import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_text.dart';
 import 'package:oneship_customer/core/themes/app_colors.dart';
 import 'package:oneship_customer/core/themes/app_dimensions.dart';
 import 'package:oneship_customer/core/themes/app_text_style.dart';
 import 'package:oneship_customer/features/shop_master/presentation/widgets/primary_bottom_navigation_bar.dart';
+import 'package:oneship_customer/features/support/presentation/models/support_article_data.dart';
 import 'package:oneship_customer/features/support/presentation/models/support_category_data.dart';
+import 'package:oneship_customer/features/support/presentation/models/support_question_action_data.dart';
+import 'package:oneship_customer/features/support/presentation/models/support_web_view_data.dart';
 import 'package:oneship_customer/features/support/presentation/widgets/support_contact_panel.dart';
 import 'package:oneship_customer/features/support/presentation/widgets/support_question_row.dart';
 import 'package:oneship_customer/features/support/presentation/widgets/support_section_title.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupportCategoryPage extends StatefulWidget {
   const SupportCategoryPage({super.key, required this.category});
@@ -47,14 +52,39 @@ class _SupportCategoryPageState extends State<SupportCategoryPage> {
             PrimaryCard(
               child: Column(
                 children: [
-                  for (int index = 0; index < category.questionKeys.length; index++) ...[
-                    SupportExpandableQuestionRow(
-                      question: category.questionKeys[index].tr(),
-                      isExpanded: _expandedQuestionIndex == index,
-                      onTap: () {
-                        setState(() {
-                          _expandedQuestionIndex = _expandedQuestionIndex == index ? null : index;
-                        });
+                  for (
+                    int index = 0;
+                    index < category.questionKeys.length;
+                    index++
+                  ) ...[
+                    Builder(
+                      builder: (context) {
+                        final questionKey = category.questionKeys[index];
+                        final action = supportQuestionActionByKey[questionKey];
+                        final answer =
+                            supportArticleDataByQuestionKey[questionKey]
+                                ?.content
+                                .tr();
+
+                        return SupportExpandableQuestionRow(
+                          question: questionKey.tr(),
+                          answer: answer,
+                          isExpanded:
+                              action == null && _expandedQuestionIndex == index,
+                          onTap: () {
+                            if (action != null) {
+                              _openSupportQuestionAction(context, action);
+                              return;
+                            }
+
+                            setState(() {
+                              _expandedQuestionIndex =
+                                  _expandedQuestionIndex == index
+                                  ? null
+                                  : index;
+                            });
+                          },
+                        );
                       },
                     ),
                     if (index != category.questionKeys.length - 1)
@@ -71,6 +101,27 @@ class _SupportCategoryPageState extends State<SupportCategoryPage> {
         ),
       ),
     );
+  }
+
+  void _openSupportQuestionAction(
+    BuildContext context,
+    SupportQuestionActionData action,
+  ) {
+    switch (action.type) {
+      case SupportQuestionActionType.webView:
+        _openSupportWebView(action.webView!);
+    }
+  }
+
+  Future<void> _openSupportWebView(SupportWebViewData data) async {
+    final isOpened = await launchUrl(
+      Uri.parse(data.url),
+      mode: LaunchMode.inAppBrowserView,
+    );
+
+    if (!isOpened && mounted) {
+      PrimaryDialog.showErrorDialog(context, message: 'fetch_error');
+    }
   }
 }
 

@@ -15,7 +15,7 @@ const supportCategories = [
       'support_help.categories.account.questions.login_failed',
       'support_help.categories.account.questions.forgot_password',
       'support_help.categories.account.questions.change_phone',
-      'support_help.categories.account.questions.kyc',
+      // 'support_help.categories.account.questions.kyc',
       'support_help.categories.account.questions.locked',
     ],
   ),
@@ -43,7 +43,7 @@ const supportCategories = [
     iconBackgroundColor: AppColors.supportPackageBackground,
     questionKeys: [
       'support_help.categories.package.questions.missing_or_error',
-      'support_help.categories.package.questions.how_to_use',
+      // 'support_help.categories.package.questions.how_to_use',
       'support_help.categories.package.questions.delivery_failed',
       'support_help.categories.package.questions.change_address',
       'support_help.categories.package.questions.delivery_time',

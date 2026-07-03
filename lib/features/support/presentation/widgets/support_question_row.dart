@@ -10,11 +10,13 @@ class SupportExpandableQuestionRow extends StatelessWidget {
     required this.question,
     required this.isExpanded,
     required this.onTap,
+    this.answer,
   });
 
   final String question;
   final bool isExpanded;
   final VoidCallback onTap;
+  final String? answer;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class SupportExpandableQuestionRow extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 8),
                 child: PrimaryText(
-                  'support_help.answer_placeholder'.tr(),
+                  answer ?? 'support_help.answer_placeholder'.tr(),
                   style: AppTextStyles.bodyXXSmall.copyWith(
                     color: AppColors.grey600,
                     fontSize: 14,
@@ -112,7 +114,11 @@ class _QuestionIcon extends StatelessWidget {
         color: AppColors.secondary.withValues(alpha: 0.08),
         shape: BoxShape.circle,
       ),
-      child: const Icon(Icons.question_mark, color: AppColors.secondary, size: 18),
+      child: const Icon(
+        Icons.question_mark,
+        color: AppColors.secondary,
+        size: 18,
+      ),
     );
   }
 }
