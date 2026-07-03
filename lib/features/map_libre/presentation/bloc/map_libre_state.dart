@@ -10,5 +10,6 @@ abstract class MapLibreState with _$MapLibreState {
     MapController? mapCtrl,
     @Default([]) List<Feature<Point>> customerMarker,
     @Default([]) List<Feature<Point>> shopMarker,
+    @Default([]) List<Feature<LineString>> routePolylines,
   }) = _MapLibreState;
 }

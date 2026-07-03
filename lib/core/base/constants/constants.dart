@@ -93,7 +93,7 @@ class Constants {
   );
 
   /// Default zoom level
-  static const double defaultZoom = 14.0;
+  static const double defaultZoom = 15.0;
 
   /// Limitation
   static const int maxPickUpImgs = 3;

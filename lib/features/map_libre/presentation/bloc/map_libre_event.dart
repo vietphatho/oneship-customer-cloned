@@ -11,6 +11,8 @@ class MapSetController extends MapLibreEvent {
   MapSetController(this.mapController);
 }
 
+class MapStyleReady extends MapLibreEvent {}
+
 class MapAddMarker extends MapLibreEvent {
   final Feature<Point> marker;
   final MarkerType type;
@@ -22,10 +24,12 @@ class MapSyncLocations extends MapLibreEvent {
   final Geographic? currentLocation;
   final Geographic? shopLocation;
   final bool showCurrentLocation;
+  final List<Geographic> routeCoordinates;
 
   MapSyncLocations({
     required this.currentLocation,
     required this.shopLocation,
     required this.showCurrentLocation,
+    this.routeCoordinates = const [],
   });
 }

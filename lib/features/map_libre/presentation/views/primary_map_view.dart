@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -17,11 +18,13 @@ class PrimaryMapView extends StatefulWidget {
     required this.currentLocation,
     required this.shopLocation,
     this.showCurrentLocation = true,
+    this.routeCoordinates = const [],
   });
 
   final LatLng currentLocation;
   final LatLng shopLocation;
   final bool showCurrentLocation;
+  final List<LatLng> routeCoordinates;
 
   @override
   State<PrimaryMapView> createState() => _PrimaryMapViewState();
@@ -41,7 +44,11 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.currentLocation != widget.currentLocation ||
         oldWidget.shopLocation != widget.shopLocation ||
-        oldWidget.showCurrentLocation != widget.showCurrentLocation) {
+        oldWidget.showCurrentLocation != widget.showCurrentLocation ||
+        !const ListEquality<LatLng>().equals(
+          oldWidget.routeCoordinates,
+          widget.routeCoordinates,
+        )) {
       _syncMapLocations();
     }
   }
@@ -77,6 +84,12 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
             switch (event) {
               case MapEventMapCreated():
                 _mapLibreBloc.setMapController(event.mapController);
+
+                if (Platform.isIOS) {
+                  event.mapController.setStyle(
+                    jsonEncode(Constants.googleMapsStyleJson),
+                  );
+                }
               case MapEventStyleLoaded():
                 await event.style.addImageFromAssets(
                   id: MarkerType.customer.value,
@@ -88,6 +101,8 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
                   asset: ImagePath.iconShopLocation,
                 );
 
+                _mapLibreBloc.setStyleReady();
+
               case MapEventClick():
                 // add a new marker on click
                 break;
@@ -97,25 +112,34 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
             }
           },
           layers: [
-            MarkerLayer(
-              points: state.customerMarker,
-              textField: '{name}',
-              textAllowOverlap: true,
-              iconImage: MarkerType.customer.value,
-              iconSize: 0.075,
-              iconAnchor: IconAnchor.bottom,
-              textOffset: const [0, 1],
-            ),
+            if (state.routePolylines.isNotEmpty)
+              PolylineLayer(
+                polylines: state.routePolylines,
+                color: AppColors.blue600,
+                width: 5,
+              ),
 
-            MarkerLayer(
-              points: state.shopMarker,
-              textField: '{name}',
-              textAllowOverlap: true,
-              iconImage: MarkerType.shop.value,
-              iconSize: 0.075,
-              iconAnchor: IconAnchor.bottom,
-              textOffset: const [0, 1],
-            ),
+            if (state.customerMarker.isNotEmpty)
+              MarkerLayer(
+                points: state.customerMarker,
+                textField: '{name}',
+                textAllowOverlap: true,
+                iconImage: MarkerType.customer.value,
+                iconSize: 0.9,
+                iconAnchor: IconAnchor.bottom,
+                textOffset: const [0, 1],
+              ),
+
+            if (state.shopMarker.isNotEmpty)
+              MarkerLayer(
+                points: state.shopMarker,
+                textField: '{name}',
+                textAllowOverlap: true,
+                iconImage: MarkerType.shop.value,
+                iconSize: 0.9,
+                iconAnchor: IconAnchor.bottom,
+                textOffset: const [0, 1],
+              ),
           ],
           children: [
             Transform.scale(
@@ -137,6 +161,10 @@ class _PrimaryMapViewState extends State<PrimaryMapView> {
       currentLocation: _toGeographic(widget.currentLocation),
       shopLocation: _toGeographic(widget.shopLocation),
       showCurrentLocation: widget.showCurrentLocation,
+      routeCoordinates: widget.routeCoordinates
+          .map(_toGeographic)
+          .whereType<Geographic>()
+          .toList(),
     );
   }
 
