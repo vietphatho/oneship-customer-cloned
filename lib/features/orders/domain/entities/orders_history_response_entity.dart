@@ -58,7 +58,8 @@ abstract class OrdersHistoryEntity with _$OrdersHistoryEntity {
 
     String? shopId,
     String? serviceCode,
-    String? externalOrderId,
+    String? externalId,
+    ExternalType? externalType,
 
     DateTime? sequenceDate,
 
@@ -111,7 +112,8 @@ abstract class OrdersHistoryEntity with _$OrdersHistoryEntity {
       createdAt: dto.createdAt,
       shopId: dto.shopId,
       serviceCode: dto.serviceCode,
-      externalOrderId: dto.externalOrderId,
+      externalId: dto.externalId,
+      externalType: ExternalTypeX.fromValue(dto.externalType),
       // sequenceDate: dto.sequenceDate,
       dailySequence: dto.dailySequence ?? 0,
       totalProductAmount: dto.totalProductAmount ?? 0,

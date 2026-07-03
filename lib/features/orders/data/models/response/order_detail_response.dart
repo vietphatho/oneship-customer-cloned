@@ -9,7 +9,8 @@ abstract class OrderDetailResponse with _$OrderDetailResponse {
   const factory OrderDetailResponse({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "orderNumber") String? orderNumber,
-    @JsonKey(name: "externalOrderId") String? externalOrderId,
+    @JsonKey(name: "externalId") String? externalId,
+    @JsonKey(name: "externalType") String? externalType,
     @JsonKey(name: "serviceCode") String? serviceCode,
     @JsonKey(name: "trackingCode") String? trackingCode,
     @JsonKey(name: "sequenceDate") DateTime? sequenceDate,
@@ -47,10 +48,26 @@ abstract class OrderDetailResponse with _$OrderDetailResponse {
     @JsonKey(name: "orderFees") List<OrderFee>? orderFees,
     @JsonKey(name: "totalProductAmount") int? totalProductAmount,
     @JsonKey(name: "totalDeliveryFee") int? totalDeliveryFee,
+    @JsonKey(name: "hospitalMetadata")
+    HospitalMetadataResponse? hospitalMetadata,
   }) = _OrderDetailResponse;
 
   factory OrderDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$OrderDetailResponseFromJson(json);
+}
+
+@freezed
+abstract class HospitalMetadataResponse with _$HospitalMetadataResponse {
+  const factory HospitalMetadataResponse({
+    @JsonKey(name: "medicalRecordCode") String? medicalRecordCode,
+    @JsonKey(name: "prescriptionDate") String? prescriptionDate,
+    @JsonKey(name: "prescriptionNumber") String? prescriptionNumber,
+    @JsonKey(name: "delegateName") String? delegateName,
+    @JsonKey(name: "delegatePhone") String? delegatePhone,
+  }) = _HospitalMetadataResponse;
+
+  factory HospitalMetadataResponse.fromJson(Map<String, dynamic> json) =>
+      _$HospitalMetadataResponseFromJson(json);
 }
 
 @freezed
@@ -68,6 +85,8 @@ abstract class Detail with _$Detail {
     @JsonKey(name: "isFragile") bool? isFragile,
     @JsonKey(name: "isLiquid") bool? isLiquid,
     @JsonKey(name: "hasBattery") bool? hasBattery,
+    @JsonKey(name: "commodityType") @Default([]) List<String> commodityType,
+    @JsonKey(name: "handlingType") @Default([]) List<String> handlingType,
     @JsonKey(name: "note") String? note,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,

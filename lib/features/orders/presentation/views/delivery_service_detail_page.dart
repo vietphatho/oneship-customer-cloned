@@ -155,7 +155,7 @@ class _CoverageRuleCard extends StatelessWidget {
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
           OrderDetailInfoField(
-            label: "Trọng lượng tối đa",
+            label: "Khối lượng tối đa",
             value: rule.maxWeightLabel,
           ),
           if (rule.fees.isEmpty)

@@ -21,7 +21,8 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
   );
 
   const factory CreateOrderRequestEntity({
-    String? externalOrderId,
+    String? externalId,
+    ExternalType? externalType,
     ShippingServiceConfigEntity? serviceConfig,
     @Default([]) List<String> surchargeCodes,
     @Default({}) Map<String, int> surchargeValues,
@@ -46,11 +47,16 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
     DetailEntity? detail,
     @Default([]) List<SelectedProductEntity> selectedProducts,
     RoutingEntity? router,
+    HospitalMetadataEntity? hospitalMetadata,
   }) = _CreateOrderRequestEntity;
 
   CreateOrderRequest toDto() {
+    final normalizedExternalId = externalId?.trim();
     return CreateOrderRequest(
-      externalOrderId: externalOrderId,
+      externalId: normalizedExternalId?.isNotEmpty == true
+          ? normalizedExternalId
+          : null,
+      externalType: externalType,
       serviceCode: serviceConfig?.serviceCode,
       surchargeCodes: surchargeCodes,
       surchargeValues: surchargeValues.isEmpty ? null : surchargeValues,
@@ -83,6 +89,7 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
         bbox: router?.fullRouteData?.bbox,
         orderCoordinates: router?.orderCoordinates,
       ),
+      hospitalMetadata: hospitalMetadata?.toDto(),
     );
   }
 
@@ -97,7 +104,8 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
             : null);
 
     return CreateOrderRequestEntity(
-      externalOrderId: model.externalOrderId,
+      externalId: model.externalId,
+      externalType: null,
 
       serviceConfig: serviceConfig,
 
@@ -161,6 +169,8 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
         isFragile: model.isFragile,
         isLiquid: model.isLiquid,
         hasBattery: model.hasBattery,
+        commodityType: model.commodityType,
+        handlingType: model.handlingType,
         note: model.note,
       ),
 
@@ -184,6 +194,74 @@ abstract class CreateOrderRequestEntity with _$CreateOrderRequestEntity {
             ? model.coordinates!.coordinates!
             : [],
       ),
+
+      hospitalMetadata: model.hospitalMetadata?.toCreateOrderMetadata(),
+    );
+  }
+}
+
+@freezed
+abstract class HospitalMetadataEntity with _$HospitalMetadataEntity {
+  const HospitalMetadataEntity._();
+
+  const factory HospitalMetadataEntity({
+    String? medicalRecordCode,
+    String? prescriptionDate,
+    String? prescriptionNumber,
+    String? delegateName,
+    String? delegatePhone,
+  }) = _HospitalMetadataEntity;
+
+  factory HospitalMetadataEntity.forToday({
+    required String medicalRecordCode,
+    required String prescriptionNumber,
+    String? delegateName,
+    String? delegatePhone,
+    DateTime? now,
+  }) {
+    return HospitalMetadataEntity(
+      medicalRecordCode: medicalRecordCode.trim(),
+      prescriptionDate: _formatRequestDate(now ?? DateTime.now()),
+      prescriptionNumber: prescriptionNumber.trim(),
+      delegateName: delegateName?.trim(),
+      delegatePhone: delegatePhone?.trim(),
+    );
+  }
+
+  bool get hasRequiredInfo {
+    return medicalRecordCode?.trim().isNotEmpty == true &&
+        prescriptionDate?.trim().isNotEmpty == true &&
+        prescriptionNumber?.trim().isNotEmpty == true;
+  }
+
+  HospitalMetadata toDto() {
+    return HospitalMetadata(
+      medicalRecordCode: medicalRecordCode,
+      prescriptionDate: prescriptionDate,
+      prescriptionNumber: prescriptionNumber,
+      delegateName: delegateName?.trim().isEmpty == true ? null : delegateName,
+      delegatePhone: delegatePhone?.trim().isEmpty == true
+          ? null
+          : delegatePhone,
+    );
+  }
+
+  static String _formatRequestDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+}
+
+extension OrderDetailHospitalMetadataMapper
+    on OrderDetailHospitalMetadataEntity {
+  HospitalMetadataEntity toCreateOrderMetadata() {
+    return HospitalMetadataEntity(
+      medicalRecordCode: medicalRecordCode,
+      prescriptionDate: prescriptionDate,
+      prescriptionNumber: prescriptionNumber,
+      delegateName: delegateName,
+      delegatePhone: delegatePhone,
     );
   }
 }
@@ -202,6 +280,8 @@ abstract class DetailEntity with _$DetailEntity {
     @Default(false) bool isOnePiece,
     @Default(false) bool isLiquid,
     @Default(false) bool hasBattery,
+    @Default([]) List<String> commodityType,
+    @Default([]) List<String> handlingType,
     int? length,
     int? width,
     int? height,
@@ -211,8 +291,8 @@ abstract class DetailEntity with _$DetailEntity {
 
   Detail toDto() {
     return Detail(
-      pickupDate: pickupDate,
-      pickupTimeSlot: pickupSession?.requestValue,
+      // pickupDate: pickupDate,
+      // pickupTimeSlot: pickupSession?.requestValue,
       // deliveryTimeSlot: deliveryTimeSlot,
       weight: weight,
       // isHighValueGoods: isHighValueGoods,
@@ -220,9 +300,11 @@ abstract class DetailEntity with _$DetailEntity {
       // isOnePiece: isOnePiece,
       // isLiquid: isLiquid,
       // hasBattery: hasBattery,
-      length: length ?? 0,
-      width: width ?? 0,
-      height: height ?? 0,
+      commodityType: commodityType,
+      handlingType: handlingType,
+      // length: length ?? 0,
+      // width: width ?? 0,
+      // height: height ?? 0,
       // orderSource: orderSource,
       note: note,
     );

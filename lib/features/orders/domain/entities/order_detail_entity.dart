@@ -15,7 +15,8 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
   const factory OrderDetailEntity({
     String? id,
     String? orderNumber,
-    String? externalOrderId,
+    String? externalId,
+    ExternalType? externalType,
     String? serviceCode,
     String? trackingCode,
     DateTime? sequenceDate,
@@ -58,19 +59,23 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
     @Default(false) bool isFragile,
     @Default(false) bool isLiquid,
     @Default(false) bool hasBattery,
+    @Default([]) List<String> commodityType,
+    @Default([]) List<String> handlingType,
     String? note,
     @Default([]) List<OrderDetailProductEntity> items,
     OrderDetailShopEntity? shop,
     @Default([]) List<OrderFeeEntity> orderFees,
     @Default(0) int totalProductAmount,
     @Default(0) int totalDeliveryFee,
+    OrderDetailHospitalMetadataEntity? hospitalMetadata,
   }) = _OrderDetailEntity;
 
   factory OrderDetailEntity.from(OrderDetailResponse dto) {
     return OrderDetailEntity(
       id: dto.id,
       orderNumber: dto.orderNumber,
-      externalOrderId: dto.externalOrderId,
+      externalId: dto.externalId,
+      externalType: ExternalTypeX.fromValue(dto.externalType),
       serviceCode: dto.serviceCode,
       trackingCode: dto.trackingCode,
       sequenceDate: dto.sequenceDate,
@@ -118,6 +123,8 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
       isFragile: dto.detail?.isFragile ?? false,
       isLiquid: dto.detail?.isLiquid ?? false,
       hasBattery: dto.detail?.hasBattery ?? false,
+      commodityType: dto.detail?.commodityType ?? [],
+      handlingType: dto.detail?.handlingType ?? [],
       note: dto.detail?.note?.toString(),
       items:
           dto.items
@@ -129,6 +136,9 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
           dto.orderFees?.map((e) => OrderFeeEntity.from(e)).toList() ?? [],
       totalProductAmount: dto.totalProductAmount ?? 0,
       totalDeliveryFee: dto.totalDeliveryFee ?? 0,
+      hospitalMetadata: dto.hospitalMetadata != null
+          ? OrderDetailHospitalMetadataEntity.from(dto.hospitalMetadata!)
+          : null,
     );
   }
 
@@ -136,7 +146,8 @@ abstract class OrderDetailEntity with _$OrderDetailEntity {
     return OrderDetailEntity(
       id: model.id,
       orderNumber: model.orderNumber,
-      externalOrderId: model.externalOrderId,
+      externalId: model.externalId,
+      externalType: model.externalType,
       serviceCode: model.serviceCode,
       trackingCode: model.trackingCode,
       sequenceDate: model.sequenceDate,
@@ -246,6 +257,36 @@ abstract class OrderDetailShopEntity with _$OrderDetailShopEntity {
     fullAddress: dto.fullAddress ?? "",
     shopType: dto.shopType,
   );
+}
+
+@freezed
+abstract class OrderDetailHospitalMetadataEntity
+    with _$OrderDetailHospitalMetadataEntity {
+  const OrderDetailHospitalMetadataEntity._();
+
+  const factory OrderDetailHospitalMetadataEntity({
+    String? medicalRecordCode,
+    String? prescriptionDate,
+    String? prescriptionNumber,
+    String? delegateName,
+    String? delegatePhone,
+  }) = _OrderDetailHospitalMetadataEntity;
+
+  factory OrderDetailHospitalMetadataEntity.from(HospitalMetadataResponse dto) {
+    return OrderDetailHospitalMetadataEntity(
+      medicalRecordCode: dto.medicalRecordCode,
+      prescriptionDate: dto.prescriptionDate,
+      prescriptionNumber: dto.prescriptionNumber,
+      delegateName: dto.delegateName,
+      delegatePhone: dto.delegatePhone,
+    );
+  }
+
+  bool get hasDelegateName => delegateName?.trim().isNotEmpty == true;
+
+  bool get hasDelegatePhone => delegatePhone?.trim().isNotEmpty == true;
+
+  bool get hasDelegateInfo => hasDelegateName || hasDelegatePhone;
 }
 
 @freezed

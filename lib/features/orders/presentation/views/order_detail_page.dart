@@ -14,11 +14,14 @@ import 'package:oneship_customer/features/orders/presentation/bloc/create_order_
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
+import 'package:oneship_customer/features/orders/presentation/views/hospital_order_detail_info_tab_view.dart';
+import 'package:oneship_customer/features/orders/presentation/views/market_order_detail_info_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_info_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_products_list_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_transportation_history_tab_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_tab_bar.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_status_tag.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -81,7 +84,25 @@ class _OrderDetailPageState extends State<OrderDetailPage>
                   child: TabBarView(
                     controller: _tabCtrl,
                     children: [
-                      const OrderDetailInfoTabView(),
+                      BlocBuilder<ShopBloc, ShopState>(
+                        bloc: getIt.get<ShopBloc>(),
+                        buildWhen: (previous, current) =>
+                            previous.currentShop?.shopType !=
+                            current.currentShop?.shopType,
+                        builder: (context, shopState) {
+                          if (shopState.currentShop?.shopType ==
+                              ShopType.hospital) {
+                            return const HospitalOrderDetailInfoTabView();
+                          }
+
+                          if (shopState.currentShop?.shopType ==
+                              ShopType.market) {
+                            return const MarketOrderDetailInfoTabView();
+                          }
+
+                          return const OrderDetailInfoTabView();
+                        },
+                      ),
                       const OrderDetailProductsListTabView(),
                       OrderDetailTransportationHistoryTabView(
                         trackingCode: ordDtl.trackingCode ?? ordDtl.orderNumber,

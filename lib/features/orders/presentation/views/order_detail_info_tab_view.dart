@@ -8,14 +8,19 @@ import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_detail_vendor_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_state.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_detail_info_components.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailInfoTabView extends StatelessWidget {
   const OrderDetailInfoTabView({super.key});
+
+  static const _resolveVendor = ResolveOrderDetailVendorUseCase();
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +71,34 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       _buildInfoField(
                         label: "phone_number".tr(),
                         value: ordDtl?.shop?.phone ?? currentShop?.phone,
+                      ),
+                      BlocBuilder<ShopBloc, ShopState>(
+                        bloc: shopBloc,
+                        buildWhen: (previous, current) =>
+                            previous.shopVendorsResource !=
+                            current.shopVendorsResource,
+                        builder: (context, shopState) {
+                          final vendor = _resolveVendor(
+                            order: ordDtl,
+                            vendors: shopState.shopVendors,
+                          );
+                          if (vendor == null) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Column(
+                            children: [
+                              _buildInfoField(
+                                label: "Tiểu thương",
+                                value: vendor.vendorName,
+                              ),
+                              _buildInfoField(
+                                label: "Địa chỉ",
+                                value: vendor.fullAddress,
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       // _buildInfoField(
                       //   label: "pick_up_date".tr(),
@@ -139,11 +172,37 @@ class OrderDetailInfoTabView extends StatelessWidget {
                       ),
                       _buildInfoField(
                         label: "dimensions".tr(),
-                        value: Utils.formatDimensionWithUnit(
-                          length: ordDtl?.length,
-                          width: ordDtl?.width,
-                          height: ordDtl?.height,
-                        ),
+                        value:
+                            "${ordDtl?.packageSize?.displayName}"
+                            " (${ordDtl?.packageSize?.dimensions})",
+                      ),
+                      BlocBuilder<ShopBloc, ShopState>(
+                        bloc: shopBloc,
+                        buildWhen: (previous, current) =>
+                            previous.commodityTypesResource !=
+                                current.commodityTypesResource ||
+                            previous.handlingTypesResource !=
+                                current.handlingTypesResource,
+                        builder: (context, shopState) {
+                          return Column(
+                            children: [
+                              _buildInfoField(
+                                label: "commodity_type".tr(),
+                                value: _displayOrderOptionNames(
+                                  codes: ordDtl?.commodityType ?? const [],
+                                  options: shopState.commodityTypes,
+                                ),
+                              ),
+                              _buildInfoField(
+                                label: "handling_type".tr(),
+                                value: _displayOrderOptionNames(
+                                  codes: ordDtl?.handlingType ?? const [],
+                                  options: shopState.handlingTypes,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       _buildInfoField(
                         label: "service".tr(),
@@ -156,7 +215,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (ordDtl?.note?.isEmpty == true) ...[
+                if (ordDtl?.note?.isNotEmpty == true) ...[
                   AppSpacing.vertical(AppDimensions.smallSpacing),
                   PrimaryFrame(
                     child: Column(
@@ -218,7 +277,7 @@ class OrderDetailInfoTabView extends StatelessWidget {
                             previous.visibleSurchargeGroupsResource !=
                             current.visibleSurchargeGroupsResource,
                         builder: (context, shopState) {
-                          return _OrdersFeeListView(
+                          return OrderDetailFeeListView(
                             fees: (ordDtl?.orderFees ?? [])
                                 .map(
                                   (fee) => fee.toDisplayEntity(
@@ -359,69 +418,12 @@ class OrderDetailInfoTabView extends StatelessWidget {
       ),
     );
   }
-}
 
-class _OrdersFeeListView extends StatelessWidget {
-  const _OrdersFeeListView({required this.fees});
-
-  final List<OrderFeeDisplayEntity> fees;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      itemBuilder: (context, index) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PrimaryText(
-            fees[index].label,
-            style: AppTextStyles.bodyMedium,
-            fontWeight: FontWeight.w600,
-            color: AppColors.neutral1,
-          ),
-          AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
-          _buildInfoField(
-            label: "exclude_vat".tr(),
-            value: Utils.formatCurrencyWithUnit(fees[index].baseAmount),
-          ),
-          _buildInfoField(
-            label: "VAT (${fees[index].vatRate}%)".tr(),
-            value: Utils.formatCurrencyWithUnit(fees[index].vatAmount),
-          ),
-          _buildInfoField(
-            label: "include_vat".tr(),
-            value: Utils.formatCurrencyWithUnit(fees[index].totalAmount),
-          ),
-        ],
-      ),
-      separatorBuilder: (context, index) =>
-          AppSpacing.vertical(AppDimensions.xSmallSpacing),
-      itemCount: fees.length,
-    );
-  }
-
-  Row _buildInfoField({required String label, required String? value}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PrimaryText(
-          label,
-          style: AppTextStyles.bodyMedium,
-          fontWeight: FontWeight.w300,
-          color: AppColors.neutral5,
-        ),
-        Expanded(
-          child: PrimaryText(
-            value ?? "--",
-            style: AppTextStyles.bodyMedium,
-            color: AppColors.neutral1,
-            textAlign: TextAlign.end,
-          ),
-        ),
-      ],
-    );
+  String? _displayOrderOptionNames({
+    required List<String> codes,
+    required List<OrderOptionEntity> options,
+  }) {
+    final displayNames = options.displayNamesForCodes(codes);
+    return displayNames.isNotEmpty ? displayNames : null;
   }
 }

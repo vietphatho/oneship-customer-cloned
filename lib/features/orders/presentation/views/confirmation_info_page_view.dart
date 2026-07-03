@@ -11,9 +11,11 @@ import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/domain/entities/calculated_delivery_fee_entity.dart';
+import 'package:oneship_customer/features/orders/domain/entities/create_order_request_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 
 class ConfirmationInfoPageView extends StatefulWidget {
   const ConfirmationInfoPageView({super.key});
@@ -36,6 +38,7 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
       listener: _handleListener,
       builder: (context, state) {
         final request = state.request;
+        final isHospitalOrder = state.shopInfo.shopType == ShopType.hospital;
 
         return Column(
           children: [
@@ -73,85 +76,109 @@ class _ConfirmationInfoPageViewState extends State<ConfirmationInfoPageView> {
                       ),
                     ),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
-                    PrimaryCard(
-                      child: Column(
-                        children: [
-                          _InfoField(
-                            label: "shop_name".tr(),
-                            value: state.shopInfo.shopName,
-                          ),
-                          // _InfoField(
-                          //   label: "pick_up_time".tr(),
-                          //   value: DateTimeUtils.formatDateFromDT(
-                          //     request.detail?.pickupDate,
-                          //   ),
-                          // ),
-                          // _InfoField(
-                          //   label: "service_type".tr(),
-                          //   value: request.serviceCode?.name,
-                          // ),
-                        ],
-                      ),
-                    ),
-                    AppSpacing.vertical(AppDimensions.mediumSpacing),
-                    PrimaryCard(
-                      child: Column(
-                        children: [
-                          _InfoField(
-                            label: "customer_name".tr(),
-                            value: request.customerName,
-                          ),
-                          _InfoField(
-                            label: "phone_number".tr(),
-                            value: request.phone,
-                          ),
-                          _InfoField(
-                            label: "province".tr(),
-                            value: request.province?.name,
-                          ),
-                          _InfoField(
-                            label: "ward".tr(),
-                            value: request.ward?.name,
-                          ),
-                          _InfoField(
-                            label: "address".tr(),
-                            value: request.fullAddress,
-                          ),
-                        ],
-                      ),
-                    ),
-                    AppSpacing.vertical(AppDimensions.mediumSpacing),
-                    PrimaryCard(
-                      child: Column(
-                        children: [
-                          _InfoField(
-                            label: "weight".tr(),
-                            value: Utils.formatWeightWithUnit(
-                              request.detail?.weight,
+                    if (!isHospitalOrder) ...[
+                      PrimaryCard(
+                        child: Column(
+                          children: [
+                            _InfoField(
+                              label: "shop_name".tr(),
+                              value: state.shopInfo.shopName,
                             ),
-                          ),
-                          _InfoField(
-                            label: "dimensions".tr(),
-                            value: Utils.formatDimensionWithUnit(
-                              length: request.detail?.length,
-                              width: request.detail?.width,
-                              height: request.detail?.height,
+                            // _InfoField(
+                            //   label: "pick_up_time".tr(),
+                            //   value: DateTimeUtils.formatDateFromDT(
+                            //     request.detail?.pickupDate,
+                            //   ),
+                            // ),
+                            // _InfoField(
+                            //   label: "service_type".tr(),
+                            //   value: request.serviceCode?.name,
+                            // ),
+                          ],
+                        ),
+                      ),
+                      AppSpacing.vertical(AppDimensions.mediumSpacing),
+                    ],
+                    _RecipientConfirmationCard(
+                      isHospitalOrder: isHospitalOrder,
+                      request: request,
+                    ),
+                    if (isHospitalOrder &&
+                        request.hospitalMetadata.hasDelegateInfo) ...[
+                      AppSpacing.vertical(AppDimensions.mediumSpacing),
+                      PrimaryCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PrimaryText(
+                              "hospital_delegate_info".tr(),
+                              style: AppTextStyles.labelMedium,
+                              color: AppColors.neutral2,
+                              fontWeight: FontWeight.w700,
                             ),
-                          ),
+                            AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+                            if (request.hospitalMetadata.hasDelegateName)
+                              _InfoField(
+                                label: "delegate_name".tr(),
+                                value: request
+                                    .hospitalMetadata
+                                    .displayDelegateName,
+                              ),
+                            if (request.hospitalMetadata.hasDelegatePhone)
+                              _InfoField(
+                                label: "delegate_phone".tr(),
+                                value: request
+                                    .hospitalMetadata
+                                    .displayDelegatePhone,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    if (state.shopInfo.shopType != ShopType.hospital) ...[
+                      AppSpacing.vertical(AppDimensions.mediumSpacing),
+                      PrimaryCard(
+                        child: Column(
+                          children: [
+                            _InfoField(
+                              label: "weight".tr(),
+                              value: Utils.formatWeightWithUnit(
+                                request.detail?.weight,
+                              ),
+                            ),
+                            _InfoField(
+                              label: "dimensions".tr(),
+                              value: Utils.formatDimensionWithUnit(
+                                length: request.detail?.length,
+                                width: request.detail?.width,
+                                height: request.detail?.height,
+                              ),
+                            ),
+                            _InfoField(
+                              label: "commodity_type".tr(),
+                              value: _createOrderBloc
+                                  .selectedCommodityTypeNames(),
+                            ),
+                            _InfoField(
+                              label: "handling_type".tr(),
+                              value: _createOrderBloc
+                                  .selectedHandlingTypeNames(),
+                            ),
 
-                          // _InfoField(
-                          //   label: "cod".tr(),
-                          //   value: Utils.formatCurrencyWithUnit(
-                          //     request.codAmount,
-                          //   ),
-                          // ),
-                          _InfoField(
-                            label: "note".tr(),
-                            value: request.detail?.note,
-                          ),
-                        ],
+                            // _InfoField(
+                            //   label: "cod".tr(),
+                            //   value: Utils.formatCurrencyWithUnit(
+                            //     request.codAmount,
+                            //   ),
+                            // ),
+                            _InfoField(
+                              label: "note".tr(),
+                              value: request.detail?.note,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     const _FeeSession(),
                     AppSpacing.vertical(AppDimensions.largeSpacing),
@@ -254,6 +281,51 @@ class _BottomActionButtons extends StatelessWidget {
               },
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecipientConfirmationCard extends StatelessWidget {
+  const _RecipientConfirmationCard({
+    required this.request,
+    required this.isHospitalOrder,
+  });
+
+  final CreateOrderRequestEntity request;
+  final bool isHospitalOrder;
+
+  @override
+  Widget build(BuildContext context) {
+    return PrimaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isHospitalOrder) ...[
+            PrimaryText(
+              "hospital_patient_info".tr(),
+              style: AppTextStyles.labelMedium,
+              color: AppColors.neutral2,
+              fontWeight: FontWeight.w700,
+            ),
+            AppSpacing.vertical(AppDimensions.xxSmallSpacing),
+          ],
+          _InfoField(label: "customer_name".tr(), value: request.customerName),
+          _InfoField(label: "phone_number".tr(), value: request.phone),
+          _InfoField(label: "province".tr(), value: request.province?.name),
+          _InfoField(label: "ward".tr(), value: request.ward?.name),
+          _InfoField(label: "address".tr(), value: request.fullAddress),
+          if (isHospitalOrder) ...[
+            _InfoField(
+              label: "medical_record_code".tr(),
+              value: request.hospitalMetadata?.medicalRecordCode,
+            ),
+            _InfoField(
+              label: "prescription_number".tr(),
+              value: request.hospitalMetadata?.prescriptionNumber,
+            ),
+          ],
         ],
       ),
     );
@@ -466,4 +538,16 @@ class _CalculatedSurchargeFeeRow extends StatelessWidget {
       value: Utils.formatCurrencyWithUnit(surcharge.totalAmount),
     );
   }
+}
+
+extension _HospitalMetadataConfirmationX on HospitalMetadataEntity? {
+  bool get hasDelegateName => displayDelegateName?.isNotEmpty == true;
+
+  bool get hasDelegatePhone => displayDelegatePhone?.isNotEmpty == true;
+
+  bool get hasDelegateInfo => hasDelegateName || hasDelegatePhone;
+
+  String? get displayDelegateName => this?.delegateName?.trim();
+
+  String? get displayDelegatePhone => this?.delegatePhone?.trim();
 }

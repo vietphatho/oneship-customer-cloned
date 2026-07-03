@@ -8,13 +8,17 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/core/base/models/ward.dart';
 import 'package:oneship_customer/features/location_service/data/models/response/suggested_address_response.dart';
 import 'package:oneship_customer/features/location_service/domain/use_cases/search_address_use_case.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_form_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/create_shop_use_case.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_commodity_types_use_case.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_handling_types_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_vendors_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_visible_surcharges_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/get_shipping_service_configs_use_case.dart';
@@ -30,6 +34,9 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     this._searchAddressUseCase,
     this._getShippingServiceConfigsUseCase,
     this._fetchVisibleSurchargesUseCase,
+    this._fetchCommodityTypesUseCase,
+    this._fetchHandlingTypesUseCase,
+    this._fetchShopVendorsUseCase,
   ) : super(
         ShopState(
           dailySummaryResource: Resource.loading(),
@@ -38,6 +45,9 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           shopsResource: Resource.loading(),
           shippingServiceTypesResource: Resource.loading(),
           visibleSurchargeGroupsResource: Resource.loading(data: const []),
+          commodityTypesResource: Resource.loading(data: const []),
+          handlingTypesResource: Resource.loading(data: const []),
+          shopVendorsResource: Resource.loading(data: const []),
         ),
       ) {
     on<ShopFetchBriefListEvent>(_onFetchBriefShops);
@@ -58,6 +68,9 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final SearchAddressUseCase _searchAddressUseCase;
   final GetShippingServiceConfigsUseCase _getShippingServiceConfigsUseCase;
   final FetchVisibleSurchargesUseCase _fetchVisibleSurchargesUseCase;
+  final FetchCommodityTypesUseCase _fetchCommodityTypesUseCase;
+  final FetchHandlingTypesUseCase _fetchHandlingTypesUseCase;
+  final FetchShopVendorsUseCase _fetchShopVendorsUseCase;
 
   FutureOr<void> _onFetchDailySummary(
     ShopFetchDailySummaryEvent event,
@@ -179,6 +192,11 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         visibleSurchargeGroupsResource: Resource.loading(
           data: state.visibleSurchargeGroups,
         ),
+        commodityTypesResource: Resource.loading(data: state.commodityTypes),
+        handlingTypesResource: Resource.loading(data: state.handlingTypes),
+        shopVendorsResource: _isMarketShop(state.currentShop)
+            ? Resource.loading(data: state.shopVendors)
+            : Resource.success(const []),
       ),
     );
 
@@ -188,12 +206,23 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     final visibleSurchargesFuture = _fetchVisibleSurchargesUseCase.call(
       shopId: shopId,
     );
+    final commodityTypesFuture = _fetchCommodityTypesUseCase.call(
+      shopId: shopId,
+    );
+    final handlingTypesFuture = _fetchHandlingTypesUseCase.call(shopId: shopId);
+    final shopVendorsFuture = _fetchShopVendorsIfMarket(state.currentShop);
     final getShippingServices = await shippingServicesFuture;
     final visibleSurcharges = await visibleSurchargesFuture;
+    final commodityTypes = await commodityTypesFuture;
+    final handlingTypes = await handlingTypesFuture;
+    final shopVendors = await shopVendorsFuture;
     emit(
       state.copyWith(
         shippingServiceTypesResource: getShippingServices,
         visibleSurchargeGroupsResource: visibleSurcharges,
+        commodityTypesResource: commodityTypes,
+        handlingTypesResource: handlingTypes,
+        shopVendorsResource: shopVendors,
       ),
     );
   }
@@ -221,6 +250,11 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         visibleSurchargeGroupsResource: Resource.loading(
           data: state.visibleSurchargeGroups,
         ),
+        commodityTypesResource: Resource.loading(data: state.commodityTypes),
+        handlingTypesResource: Resource.loading(data: state.handlingTypes),
+        shopVendorsResource: _isMarketShop(event.shop)
+            ? Resource.loading(data: state.shopVendors)
+            : Resource.success(const []),
       ),
     );
 
@@ -231,13 +265,24 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
     final visibleSurchargesFuture = _fetchVisibleSurchargesUseCase.call(
       shopId: shopId,
     );
+    final commodityTypesFuture = _fetchCommodityTypesUseCase.call(
+      shopId: shopId,
+    );
+    final handlingTypesFuture = _fetchHandlingTypesUseCase.call(shopId: shopId);
+    final shopVendorsFuture = _fetchShopVendorsIfMarket(event.shop);
     final getShippingServices = await shippingServicesFuture;
     final visibleSurcharges = await visibleSurchargesFuture;
+    final commodityTypes = await commodityTypesFuture;
+    final handlingTypes = await handlingTypesFuture;
+    final shopVendors = await shopVendorsFuture;
 
     emit(
       state.copyWith(
         shippingServiceTypesResource: getShippingServices,
         visibleSurchargeGroupsResource: visibleSurcharges,
+        commodityTypesResource: commodityTypes,
+        handlingTypesResource: handlingTypes,
+        shopVendorsResource: shopVendors,
       ),
     );
   }
@@ -310,6 +355,21 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
       shopId: shopId,
       vendorId: vendorId,
     );
+  }
+
+  Future<Resource<List<ShopVendorEntity>>> _fetchShopVendorsIfMarket(
+    BriefShopEntity? shop,
+  ) {
+    final shopId = shop?.shopId;
+    if (!_isMarketShop(shop) || shopId == null || shopId.isEmpty) {
+      return Future.value(Resource.success(const []));
+    }
+
+    return _fetchShopVendorsUseCase.call(shopId: shopId, limit: 100);
+  }
+
+  bool _isMarketShop(BriefShopEntity? shop) {
+    return shop?.shopType == ShopType.market;
   }
 
   FutureOr<void> _onSearch(ShopSearchEvent event, Emitter<ShopState> emit) {

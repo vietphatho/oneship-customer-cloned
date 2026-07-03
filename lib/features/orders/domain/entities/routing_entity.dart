@@ -19,10 +19,9 @@ abstract class RoutingEntity with _$RoutingEntity {
       id: dto.id,
       distance: dto.distance,
       orderCoordinates: dto.orderCoordinates ?? [],
-      fullRouteData:
-          dto.fullRouteData != null
-              ? FullRouteDataEntity.from(dto.fullRouteData!)
-              : null,
+      fullRouteData: dto.fullRouteData != null
+          ? FullRouteDataEntity.from(dto.fullRouteData!)
+          : null,
     );
   }
 
@@ -33,6 +32,13 @@ abstract class RoutingEntity with _$RoutingEntity {
       orderCoordinates: orderCoordinates,
       fullRouteData: fullRouteData?.toDto(),
     );
+  }
+
+  List<List<double>> get routeCoordinates {
+    return fullRouteData?.points?.coordinates
+            .where((coordinate) => coordinate.length >= 2)
+            .toList() ??
+        [];
   }
 }
 
@@ -64,10 +70,9 @@ abstract class FullRouteDataEntity with _$FullRouteDataEntity {
       transfers: dto.transfers,
       pointsEncoded: dto.pointsEncoded,
       bbox: dto.bbox ?? [],
-      snappedWaypoints:
-          dto.snappedWaypoints != null
-              ? PointsEntity.from(dto.snappedWaypoints!)
-              : null,
+      snappedWaypoints: dto.snappedWaypoints != null
+          ? PointsEntity.from(dto.snappedWaypoints!)
+          : null,
       points: dto.points != null ? PointsEntity.from(dto.points!) : null,
       instructions:
           dto.instructions?.map((e) => InstructionEntity.from(e)).toList() ??

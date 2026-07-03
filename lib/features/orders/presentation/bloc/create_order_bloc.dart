@@ -18,8 +18,11 @@ import 'package:oneship_customer/features/orders/domain/use_cases/update_ord_use
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
@@ -28,6 +31,9 @@ import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state
 class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   // final AddProductToOrderUseCase _addProductToOrderUseCase;
   // final UpdateProductQuantityUseCase _updateProductQuantityUseCase;
+  static const int hospitalDefaultWeight = 100;
+  static const PackageSize hospitalDefaultPackageSize = PackageSize.small;
+
   final ValidateCreateOrderInfoUseCase _validateCreateOrderInfoUseCase;
   final UpdateOrdUseCase _updateOrdUseCase;
   final ShopBloc _shopBloc;
@@ -43,7 +49,11 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   ) : super(CreateOrderState.initial()) {
     on<CreateOrderInitShopEvent>(_onInitEvent);
     on<CreateOrderSyncVisibleSurchargesEvent>(_onSyncVisibleSurchargesEvent);
+    on<CreateOrderToggleCommodityTypeEvent>(_onToggleCommodityTypeEvent);
+    on<CreateOrderToggleHandlingTypeEvent>(_onToggleHandlingTypeEvent);
     on<CreateOrderChangeRequestEvent>(_onRequestChangedEvent);
+    on<CreateOrderCompleteHospitalFormEvent>(_onCompleteHospitalFormEvent);
+    on<CreateOrderExternalInfoChangedEvent>(_onExternalInfoChangedEvent);
     on<CreateOrderChangePickUpTimeEvent>(_onPickUpDateChangedEvent);
     on<CreateOrderChangeCustomerInfoEvent>(_onCustomerInfoChangedEvent);
     on<CreateOrderChangeOrderInfoEvent>(_onOrderInfoChangedEvent);
@@ -69,11 +79,31 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   ) async {
     // Preserve existing request data, only inject shopId if not already set
     final shopId = state.request.shopId ?? event.shop.shopId;
+    final externalType = _externalTypeForShop(event.shop.shopType);
+    var request = state.request.copyWith(
+      shopId: shopId,
+      externalId: event.shop.shopType == ShopType.market
+          ? state.request.externalId
+          : null,
+      externalType: externalType,
+    );
+    var draftRequest = state.draftRequest.copyWith(
+      shopId: shopId,
+      externalId: event.shop.shopType == ShopType.market
+          ? state.draftRequest.externalId
+          : null,
+      externalType: externalType,
+    );
+    if (event.shop.shopType == ShopType.hospital) {
+      request = _applyHospitalDefaults(request);
+      draftRequest = _applyHospitalDefaults(draftRequest);
+    }
+
     emit(
       state.copyWith(
         shopInfo: event.shop,
-        request: state.request.copyWith(shopId: shopId),
-        draftRequest: state.draftRequest.copyWith(shopId: shopId),
+        request: request,
+        draftRequest: draftRequest,
         errorMessage: null,
       ),
     );
@@ -102,6 +132,66 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     _syncDeliveryFeeCalculation(emit);
   }
 
+  FutureOr<void> _onToggleCommodityTypeEvent(
+    CreateOrderToggleCommodityTypeEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    final detail = state.draftRequest.detail ?? const DetailEntity();
+    final commodityType = _toggleCode(
+      codes: detail.commodityType,
+      code: event.code,
+      isSelected: event.isSelected,
+    );
+
+    final nextDetail = detail.copyWith(commodityType: commodityType);
+
+    emit(
+      state.copyWith(
+        request: state.request.copyWith(detail: nextDetail),
+        draftRequest: state.draftRequest.copyWith(detail: nextDetail),
+        errorMessage: null,
+      ),
+    );
+  }
+
+  FutureOr<void> _onToggleHandlingTypeEvent(
+    CreateOrderToggleHandlingTypeEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    final detail = state.draftRequest.detail ?? const DetailEntity();
+    final handlingType = _toggleCode(
+      codes: detail.handlingType,
+      code: event.code,
+      isSelected: event.isSelected,
+    );
+
+    final nextDetail = detail.copyWith(handlingType: handlingType);
+
+    emit(
+      state.copyWith(
+        request: state.request.copyWith(detail: nextDetail),
+        draftRequest: state.draftRequest.copyWith(detail: nextDetail),
+        errorMessage: null,
+      ),
+    );
+  }
+
+  List<String> _toggleCode({
+    required List<String> codes,
+    required String code,
+    required bool isSelected,
+  }) {
+    final nextCodes = [...codes];
+    if (isSelected) {
+      if (!nextCodes.contains(code)) {
+        nextCodes.add(code);
+      }
+    } else {
+      nextCodes.remove(code);
+    }
+    return nextCodes;
+  }
+
   FutureOr<void> _onRequestChangedEvent(
     CreateOrderChangeRequestEvent event,
     Emitter<CreateOrderState> emit,
@@ -115,6 +205,42 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       ),
     );
     _syncDeliveryFeeCalculation(emit);
+  }
+
+  FutureOr<void> _onCompleteHospitalFormEvent(
+    CreateOrderCompleteHospitalFormEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        request: event.request,
+        draftRequest: event.request,
+        surchargeValidationErrors: const {},
+        step: CreateOrderStep.confirmation,
+        errorMessage: null,
+      ),
+    );
+    _lastFeeCalculationRequest = null;
+    _syncDeliveryFeeCalculation(emit);
+  }
+
+  FutureOr<void> _onExternalInfoChangedEvent(
+    CreateOrderExternalInfoChangedEvent event,
+    Emitter<CreateOrderState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        request: state.request.copyWith(
+          externalId: event.externalId,
+          externalType: event.externalType,
+        ),
+        draftRequest: state.draftRequest.copyWith(
+          externalId: event.externalId,
+          externalType: event.externalType,
+        ),
+        errorMessage: null,
+      ),
+    );
   }
 
   FutureOr<void> _onPickUpDateChangedEvent(
@@ -273,7 +399,6 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         paymentStatus: null,
         paymentMethod: null,
         status: null,
-        externalOrderId: null,
         orderNumber: null,
         selectedProducts: currentRequest.selectedProducts
             .where((p) => p.id.isNotEmpty)
@@ -287,6 +412,21 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
     emit(
       state.copyWith(createOrderResource: response, updateOrdId: updateOrdId),
+    );
+  }
+
+  void changeMarketVendor(ShopVendorEntity? vendor) {
+    if (!_isMarketOrder) return;
+
+    final externalId = vendor?.userId.trim();
+    final normalizedExternalId = externalId?.isNotEmpty == true
+        ? externalId
+        : null;
+    add(
+      CreateOrderExternalInfoChangedEvent(
+        externalId: normalizedExternalId,
+        externalType: ExternalType.vendor,
+      ),
     );
   }
 
@@ -498,14 +638,15 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   }
 
   CalculateDeliveryFeeRequest? _feeCalculationRequest() {
-    final shopId = state.shopInfo.shopId ?? state.draftRequest.shopId;
+    final draftRequest = _applyHospitalDefaultsIfNeeded(state.draftRequest);
+    final shopId = state.shopInfo.shopId ?? draftRequest.shopId;
     final distance =
         state.routingToShopResource.data?.distance ??
-        state.draftRequest.router?.distance;
-    final serviceCode = state.draftRequest.serviceConfig?.serviceCode;
-    final weight = state.draftRequest.detail?.weight?.toInt();
-    final provinceCode = state.draftRequest.province?.code;
-    final wardCode = state.draftRequest.ward?.code;
+        draftRequest.router?.distance;
+    final serviceCode = draftRequest.serviceConfig?.serviceCode;
+    final weight = draftRequest.detail?.weight?.toInt();
+    final provinceCode = draftRequest.province?.code;
+    final wardCode = draftRequest.ward?.code;
 
     if (shopId == null || shopId.isEmpty) return null;
     if (distance == null || distance <= 0) return null;
@@ -566,6 +707,30 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(CreateOrderUpdateSurchargeValueEvent(code: code, value: value));
   }
 
+  void toggleCommodityType(String code, bool isSelected) {
+    add(
+      CreateOrderToggleCommodityTypeEvent(code: code, isSelected: isSelected),
+    );
+  }
+
+  void toggleHandlingType(String code, bool isSelected) {
+    add(CreateOrderToggleHandlingTypeEvent(code: code, isSelected: isSelected));
+  }
+
+  String selectedCommodityTypeNames() {
+    final detail = state.draftRequest.detail;
+    return _shopBloc.state.commodityTypes.displayNamesForCodes(
+      detail?.commodityType ?? const [],
+    );
+  }
+
+  String selectedHandlingTypeNames() {
+    final detail = state.draftRequest.detail;
+    return _shopBloc.state.handlingTypes.displayNamesForCodes(
+      detail?.handlingType ?? const [],
+    );
+  }
+
   void backToStep(CreateOrderStep step) {
     add(CreateOrderChangeRequestEvent(state.request, step: step));
   }
@@ -613,7 +778,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     int? length = 0,
     PackageSize? packageSize,
     String? note,
-    String? externalOrderId,
+    String? externalId,
     String? orderSource,
     required List<SelectedProductEntity> selectedProducts,
   }) {
@@ -621,7 +786,8 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     var draftReq = state.draftRequest;
 
     final newReq = currentReq.copyWith(
-      externalOrderId: externalOrderId,
+      externalId: _isMarketOrder ? externalId : null,
+      externalType: _externalTypeForCurrentShop(),
       codAmount: codAmount,
       serviceConfig: draftReq.serviceConfig,
       packageSize: packageSize ?? draftReq.packageSize,
@@ -682,6 +848,53 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     add(
       CreateOrderChangeRequestEvent(newReq, step: CreateOrderStep.confirmation),
     );
+  }
+
+  void completeHospitalCreateOrderForm({
+    required String customerName,
+    required String phoneNumber,
+    required String address,
+    required String medicalRecordCode,
+    required String prescriptionNumber,
+    String? delegateName,
+    String? delegatePhone,
+    String? note,
+  }) {
+    final currentReq = state.request;
+    final draftReq = state.draftRequest;
+    final hospitalMetadata = HospitalMetadataEntity.forToday(
+      medicalRecordCode: medicalRecordCode,
+      prescriptionNumber: prescriptionNumber,
+      delegateName: delegateName,
+      delegatePhone: delegatePhone,
+    );
+    final newReq = currentReq.copyWith(
+      customerName: customerName,
+      phone: phoneNumber,
+      province: draftReq.province,
+      ward: draftReq.ward,
+      fullAddress: address,
+      isNewAddress: draftReq.isNewAddress,
+      codAmount: 0,
+      serviceConfig: draftReq.serviceConfig,
+      packageSize: hospitalDefaultPackageSize,
+      surchargeCodes: state.selectedSurchargeCodes,
+      surchargeValues: _selectedSurchargeValues(),
+      detail: (currentReq.detail ?? const DetailEntity()).copyWith(
+        weight: hospitalDefaultWeight.toDouble(),
+        commodityType: const [],
+        handlingType: const [],
+        note: note,
+      ),
+      selectedProducts: const [],
+      hospitalMetadata: hospitalMetadata.copyWith(
+        prescriptionDate:
+            currentReq.hospitalMetadata?.prescriptionDate ??
+            hospitalMetadata.prescriptionDate,
+      ),
+    );
+
+    add(CreateOrderCompleteHospitalFormEvent(newReq));
   }
 
   void changePickUpDate({DateTime? date, OrderPickUpSession? session}) {
@@ -751,6 +964,79 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     );
   }
 
+  void selectDefaultShippingServiceIfNeeded(
+    List<ShippingServiceConfigEntity> services, {
+    bool force = false,
+  }) {
+    if (services.isEmpty) return;
+    if (!force && state.draftRequest.serviceConfig != null) return;
+    if (force &&
+        state.draftRequest.serviceConfig?.serviceCode ==
+            services.first.serviceCode) {
+      return;
+    }
+
+    changeOrderInfo(serviceConfig: services.first);
+  }
+
+  void applyHospitalCreateOrderDefaults() {
+    if (!_isHospitalOrder) return;
+    final hasDefaults =
+        state.draftRequest.detail?.weight?.toInt() == hospitalDefaultWeight &&
+        state.draftRequest.packageSize == hospitalDefaultPackageSize;
+    if (hasDefaults) return;
+
+    changeOrderInfo(
+      weight: hospitalDefaultWeight,
+      packageSize: hospitalDefaultPackageSize,
+    );
+  }
+
+  bool get _isHospitalOrder {
+    return state.shopInfo.shopType == ShopType.hospital ||
+        _shopBloc.state.currentShop?.shopType == ShopType.hospital;
+  }
+
+  bool get _isMarketOrder {
+    return state.shopInfo.shopType == ShopType.market ||
+        _shopBloc.state.currentShop?.shopType == ShopType.market;
+  }
+
+  ExternalType? _externalTypeForShop(ShopType shopType) {
+    switch (shopType) {
+      case ShopType.market:
+        return ExternalType.vendor;
+      case ShopType.hospital:
+        return ExternalType.hospital;
+      case ShopType.df:
+        return null;
+    }
+  }
+
+  ExternalType? _externalTypeForCurrentShop() {
+    return _externalTypeForShop(
+      _shopBloc.state.currentShop?.shopType ?? state.shopInfo.shopType,
+    );
+  }
+
+  CreateOrderRequestEntity _applyHospitalDefaultsIfNeeded(
+    CreateOrderRequestEntity request,
+  ) {
+    if (!_isHospitalOrder) return request;
+    return _applyHospitalDefaults(request);
+  }
+
+  CreateOrderRequestEntity _applyHospitalDefaults(
+    CreateOrderRequestEntity request,
+  ) {
+    return request.copyWith(
+      packageSize: hospitalDefaultPackageSize,
+      detail: (request.detail ?? const DetailEntity()).copyWith(
+        weight: hospitalDefaultWeight.toDouble(),
+      ),
+    );
+  }
+
   void changePayer(Payer payer) {
     final changed = state.request.copyWith(payer: payer);
     add(
@@ -777,7 +1063,11 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     }
 
     final validatedResult = _validateCreateOrderInfoUseCase
-        .validateConfirmInfoStep(state.acceptTerms);
+        .validateConfirmInfoStep(
+          request: state.request,
+          acceptTerms: state.acceptTerms,
+          isHospitalOrder: state.shopInfo.shopType == ShopType.hospital,
+        );
 
     if (validatedResult != null) {
       _error(validatedResult);

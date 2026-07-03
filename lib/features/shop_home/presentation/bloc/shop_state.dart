@@ -3,8 +3,10 @@ import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_entity.dart';
 
 part 'shop_state.freezed.dart';
@@ -23,6 +25,9 @@ abstract class ShopState with _$ShopState {
     shippingServiceTypesResource,
     required Resource<List<SurchargeGroupEntity>>
     visibleSurchargeGroupsResource,
+    required Resource<List<OrderOptionEntity>> commodityTypesResource,
+    required Resource<List<OrderOptionEntity>> handlingTypesResource,
+    required Resource<List<ShopVendorEntity>> shopVendorsResource,
     BriefShopEntity? currentShop,
     BriefShopEntity? draftSelectedShop,
     @Default([]) List<BriefShopEntity> listBriefShops,
@@ -44,6 +49,15 @@ extension ShopStateX on ShopState {
 
   List<SurchargeEntity> get visibleSurcharges =>
       visibleSurchargeGroups.visibleSurcharges;
+
+  List<OrderOptionEntity> get commodityTypes =>
+      commodityTypesResource.data ?? const [];
+
+  List<OrderOptionEntity> get handlingTypes =>
+      handlingTypesResource.data ?? const [];
+
+  List<ShopVendorEntity> get shopVendors =>
+      shopVendorsResource.data ?? const [];
 
   bool get hasApprovedShop {
     return approvedBriefShops.isNotEmpty;

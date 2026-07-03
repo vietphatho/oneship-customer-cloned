@@ -8,6 +8,9 @@ import 'package:oneship_customer/features/orders/presentation/bloc/create_order_
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/product_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_order_form_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/hospital_create_order_form_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/market_create_order_form_page.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
@@ -63,9 +66,17 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
       ],
       child: BlocBuilder<CreateOrderBloc, CreateOrderState>(
         bloc: _createOrderBloc,
-        buildWhen: (pre, cur) => pre.updateOrdId != cur.updateOrdId,
+        buildWhen: (pre, cur) =>
+            pre.updateOrdId != cur.updateOrdId ||
+            pre.shopInfo.shopType != cur.shopInfo.shopType,
         builder: (context, state) {
           final isUpdate = state.updateOrdId != null;
+          final isHospitalOrder =
+              state.shopInfo.shopType == ShopType.hospital ||
+              _shopBloc.state.currentShop?.shopType == ShopType.hospital;
+          final isMarketOrder =
+              state.shopInfo.shopType == ShopType.market ||
+              _shopBloc.state.currentShop?.shopType == ShopType.market;
           return Scaffold(
             appBar: PrimaryAppBar(
               title: isUpdate
@@ -83,11 +94,29 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
             //     const ConfirmationInfoPageView(),
             //   ],
             // ),
-            body: CreateOrderFormPage(pageController: _pageController),
+            body: _buildFormPage(
+              isHospitalOrder: isHospitalOrder,
+              isMarketOrder: isMarketOrder,
+            ),
           );
         },
       ),
     );
+  }
+
+  Widget _buildFormPage({
+    required bool isHospitalOrder,
+    required bool isMarketOrder,
+  }) {
+    if (isHospitalOrder) {
+      return HospitalCreateOrderFormPage(pageController: _pageController);
+    }
+
+    if (isMarketOrder) {
+      return MarketCreateOrderFormPage(pageController: _pageController);
+    }
+
+    return CreateOrderFormPage(pageController: _pageController);
   }
 
   void _handleListener(BuildContext context, CreateOrderState state) {

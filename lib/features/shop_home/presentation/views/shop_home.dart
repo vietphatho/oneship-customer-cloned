@@ -76,6 +76,7 @@ class _ShopHomeState extends State<ShopHome> {
                     const ShopHomeOfferSection(),
                     AppSpacing.vertical(AppDimensions.smallSpacing),
                     const ShopHomeNewsSection(),
+                    AppSpacing.vertical(AppDimensions.xxLargeSpacing),
                   ],
                 ),
               ),

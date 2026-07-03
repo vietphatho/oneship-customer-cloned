@@ -13,9 +13,11 @@ import 'package:oneship_customer/features/finance/presentation/views/finance_det
 import 'package:oneship_customer/features/finance/presentation/views/finance_period_detail_page.dart';
 import 'package:oneship_customer/features/home/presentation/view/home_page.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/view/order_tracking_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/commodity_selection_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_multi_orders_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/create_order_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/delivery_service_detail_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/handling_selection_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_history_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
@@ -121,6 +123,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.createOrderPage,
       builder: (context, state) => const CreateOrderPage(),
+    ),
+    GoRoute(
+      path: RouteName.commoditySelectionPage,
+      builder: (context, state) => CommoditySelectionPage(),
+    ),
+    GoRoute(
+      path: RouteName.handlingSelectionPage,
+      builder: (context, state) => HandlingSelectionPage(),
     ),
     GoRoute(
       path: RouteName.deliveryServiceDetailPage,

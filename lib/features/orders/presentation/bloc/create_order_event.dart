@@ -27,6 +27,26 @@ class CreateOrderSyncVisibleSurchargesEvent extends CreateOrderEvent {
   const CreateOrderSyncVisibleSurchargesEvent();
 }
 
+class CreateOrderToggleCommodityTypeEvent extends CreateOrderEvent {
+  final String code;
+  final bool isSelected;
+
+  const CreateOrderToggleCommodityTypeEvent({
+    required this.code,
+    required this.isSelected,
+  });
+}
+
+class CreateOrderToggleHandlingTypeEvent extends CreateOrderEvent {
+  final String code;
+  final bool isSelected;
+
+  const CreateOrderToggleHandlingTypeEvent({
+    required this.code,
+    required this.isSelected,
+  });
+}
+
 class UpdateOrderInitEvent extends CreateOrderEvent {
   final String ordId;
   final CreateOrderRequestEntity request;
@@ -41,6 +61,22 @@ class CreateOrderChangeRequestEvent extends CreateOrderEvent {
   const CreateOrderChangeRequestEvent(
     this.request, {
     this.step = CreateOrderStep.receiverInfo,
+  });
+}
+
+class CreateOrderCompleteHospitalFormEvent extends CreateOrderEvent {
+  final CreateOrderRequestEntity request;
+
+  const CreateOrderCompleteHospitalFormEvent(this.request);
+}
+
+class CreateOrderExternalInfoChangedEvent extends CreateOrderEvent {
+  final String? externalId;
+  final ExternalType? externalType;
+
+  const CreateOrderExternalInfoChangedEvent({
+    this.externalId,
+    this.externalType,
   });
 }
 

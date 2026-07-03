@@ -21,7 +21,7 @@ class CreateOrderDeliveryServiceCard extends StatelessWidget {
       borderRadius: AppDimensions.largeBorderRadius,
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(AppDimensions.xSmallSpacing),
+        padding: const EdgeInsets.all(AppDimensions.xxSmallSpacing),
         decoration: BoxDecoration(
           color: selected ? AppColors.primaryLight : Colors.white,
           border: Border.all(
@@ -31,6 +31,27 @@ class CreateOrderDeliveryServiceCard extends StatelessWidget {
         ),
         child: Row(
           children: [
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: RadioGroup<bool>(
+                groupValue: selected,
+                onChanged: (_) => onTap(),
+                child: Radio<bool>(
+                  value: true,
+                  activeColor: AppColors.primary,
+                  fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return AppColors.primary;
+                    }
+                    return AppColors.neutral7;
+                  }),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
+            ),
+            AppSpacing.horizontal(AppDimensions.xxSmallSpacing),
             Expanded(
               child: PrimaryText(
                 service.serviceLabel,

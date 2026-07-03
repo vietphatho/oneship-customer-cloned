@@ -1,6 +1,8 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/create_order_commodity_selector.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_delivery_service_selector.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/create_order_handling_selector.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_surcharge_section.dart';
 
 class CreateOrderGoodsSection extends StatelessWidget {
@@ -44,6 +46,10 @@ class CreateOrderGoodsSection extends StatelessWidget {
         ),
         AppSpacing.vertical(AppDimensions.mediumSpacing),
         CreateOrderDeliveryServiceSelector(),
+        AppSpacing.vertical(AppDimensions.smallSpacing),
+        CreateOrderCommoditySelector(),
+        AppSpacing.vertical(AppDimensions.smallSpacing),
+        CreateOrderHandlingSelector(),
         AppSpacing.vertical(AppDimensions.smallSpacing),
         const CreateOrderSurchargeSection(),
         AppSpacing.vertical(AppDimensions.smallSpacing),
@@ -96,8 +102,8 @@ class _PackageSizeDropdown extends StatelessWidget {
             Expanded(
               child: PrimaryText(
                 dimensions == null
-                    ? "${"dimensions".tr()} (D x R x C)"
-                    : "$dimensions ${Constants.pkgDimensionsUnit} (D x R x C)",
+                    ? "dimensions".tr()
+                    : "$dimensions ${Constants.pkgDimensionsUnit}",
                 style: AppTextStyles.bodySmall,
                 color: AppColors.neutral5,
               ),

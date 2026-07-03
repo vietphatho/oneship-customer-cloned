@@ -4,6 +4,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
@@ -30,7 +31,20 @@ abstract class ShopRepository extends BaseRepository {
     required String vendorId,
   });
 
+  Future<Resource<List<ShopVendorEntity>>> fetchShopVendors({
+    required String shopId,
+    required int limit,
+  });
+
   Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
+    required String shopId,
+  });
+
+  Future<Resource<List<OrderOptionEntity>>> fetchCommodityTypes({
+    required String shopId,
+  });
+
+  Future<Resource<List<OrderOptionEntity>>> fetchHandlingTypes({
     required String shopId,
   });
 }

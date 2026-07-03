@@ -25,6 +25,10 @@ class RouteName {
   static const String shopSelectionPage = '/shop_selection_page';
 
   static const String createOrderPage = '/shop_master/create_order';
+  static const String commoditySelectionPage =
+      '/shop_master/create_order/commodity_selection';
+  static const String handlingSelectionPage =
+      '/shop_master/create_order/handling_selection';
   static const String deliveryServiceDetailPage =
       '/shop_master/create_order/delivery_service_detail';
   static const String surchargeDetailPage =

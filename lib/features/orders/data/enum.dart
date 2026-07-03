@@ -11,6 +11,25 @@ import 'package:oneship_customer/features/orders/presentation/widgets/all_proces
 
 enum CreateOrderProductAction { increment, decrement }
 
+enum ExternalType { vendor, hospital }
+
+extension ExternalTypeX on ExternalType {
+  static const _mapValue = {
+    ExternalType.vendor: "vendor",
+    ExternalType.hospital: "hospital",
+  };
+
+  String get value => _mapValue[this]!;
+
+  static ExternalType? fromValue(String? value) {
+    final normalizedValue = value?.trim();
+    if (normalizedValue == null || normalizedValue.isEmpty) return null;
+    return ExternalType.values.firstWhereOrNull(
+      (type) => type.value == normalizedValue,
+    );
+  }
+}
+
 enum OrderStatus {
   atHub,
   pending,

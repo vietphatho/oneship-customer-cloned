@@ -4,7 +4,6 @@ import 'package:oneship_customer/core/base/components/primary_frame.dart';
 import 'package:oneship_customer/core/utils/utils.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
-import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
@@ -26,7 +25,7 @@ class CreateOrderFormPage extends StatelessWidget {
       controller: pageController,
       physics: const NeverScrollableScrollPhysics(),
       children: const [
-        _CreateOrderForm(),
+        CreateOrderFormContent(),
         SizedBox.shrink(),
         ConfirmationInfoPageView(),
       ],
@@ -34,16 +33,17 @@ class CreateOrderFormPage extends StatelessWidget {
   }
 }
 
-class _CreateOrderForm extends StatefulWidget {
-  const _CreateOrderForm();
+class CreateOrderFormContent extends StatefulWidget {
+  const CreateOrderFormContent({super.key, this.leadingSections = const []});
 
   @override
-  State<_CreateOrderForm> createState() => _CreateOrderFormState();
+  State<CreateOrderFormContent> createState() => _CreateOrderFormContentState();
+
+  final List<Widget> leadingSections;
 }
 
-class _CreateOrderFormState extends State<_CreateOrderForm> {
+class _CreateOrderFormContentState extends State<CreateOrderFormContent> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
-  final LocationServiceBloc _locationServiceBloc = getIt.get();
   final ProductBloc _productBloc = getIt.get();
 
   final TextEditingController _nameCtrl = TextEditingController();
@@ -90,12 +90,10 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
                   padding: const EdgeInsets.all(AppDimensions.xSmallSpacing),
                   child: Column(
                     children: [
+                      ...widget.leadingSections,
                       _section(
                         title: "recipient".tr(),
                         child: CreateOrderReceiverSection(
-                          state: state,
-                          createOrderBloc: _createOrderBloc,
-                          locationServiceBloc: _locationServiceBloc,
                           nameController: _nameCtrl,
                           phoneController: _phoneCtrl,
                           addressController: _addressCtrl,
@@ -171,6 +169,8 @@ class _CreateOrderFormState extends State<_CreateOrderForm> {
         state.draftRequest.province != null &&
         state.draftRequest.ward != null &&
         state.draftRequest.serviceConfig != null &&
+        (state.draftRequest.detail?.commodityType.isNotEmpty ?? false) &&
+        (state.draftRequest.detail?.handlingType.isNotEmpty ?? false) &&
         Utils.parseCurrencyInput(_weightCtrl.text) > 0 &&
         !_createOrderBloc.hasInvalidSelectedSurcharges(state);
   }

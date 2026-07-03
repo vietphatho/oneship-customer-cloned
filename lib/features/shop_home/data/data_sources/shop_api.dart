@@ -6,8 +6,10 @@ import 'package:oneship_customer/features/shop_home/data/models/request/create_s
 import 'package:oneship_customer/features/shop_home/data/models/response/create_shop_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_brief_shops_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/get_shops_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/order_option_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shipping_service_config_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shop_daily_summary_response.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/shop_vendor_list_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/shop_vendor_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/visible_surcharges_response.dart';
 import 'package:retrofit/retrofit.dart';
@@ -51,7 +53,24 @@ abstract class ShopApi {
     @Path("shopId") required String shopId,
     @Path("vendorId") required String vendorId,
   });
+
+  @GET("/api/v1/shops/{shopId}/vendors")
+  Future<BaseResponse<ShopVendorListResponse, BaseError>> fetchShopVendors({
+    @Path("shopId") required String shopId,
+    @Query("limit") required int limit,
+  });
+
   @GET("/api/v1/delivery/shops/{shopId}/surcharges/visible")
   Future<BaseResponse<VisibleSurchargesResponse, BaseError>>
   fetchVisibleSurcharges({@Path("shopId") required String shopId});
+
+  @GET("/api/v1/orders/get-commodity")
+  Future<BaseResponse<List<CommodityResponse>, BaseError>> fetchCommodityTypes({
+    @Query("shopId") required String shopId,
+  });
+
+  @GET("/api/v1/orders/get-handling")
+  Future<BaseResponse<List<HandlingResponse>, BaseError>> fetchHandlingTypes({
+    @Query("shopId") required String shopId,
+  });
 }

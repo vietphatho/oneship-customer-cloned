@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/features/orders/data/enum.dart';
 
 part 'create_order_request.freezed.dart';
 part 'create_order_request.g.dart';
@@ -6,7 +7,14 @@ part 'create_order_request.g.dart';
 @freezed
 abstract class CreateOrderRequest with _$CreateOrderRequest {
   const factory CreateOrderRequest({
-    @JsonKey(name: "externalId", includeIfNull: false) String? externalOrderId,
+    @JsonKey(name: "externalId", includeIfNull: false) String? externalId,
+    @JsonKey(
+      name: "externalType",
+      includeIfNull: false,
+      fromJson: _externalTypeFromJson,
+      toJson: _externalTypeToJson,
+    )
+    ExternalType? externalType,
     @JsonKey(name: "serviceCode") String? serviceCode,
     @JsonKey(name: "surchargeCodes") List<String>? surchargeCodes,
     @JsonKey(name: "surchargeValues") Map<String, int>? surchargeValues,
@@ -33,17 +41,42 @@ abstract class CreateOrderRequest with _$CreateOrderRequest {
     @JsonKey(name: "detail") Detail? detail,
     @JsonKey(name: "selectedProducts") List<SelectedProduct>? selectedProducts,
     @JsonKey(name: "router") CreateOrderRouter? router,
+    @JsonKey(name: "hospitalMetadata", includeIfNull: false)
+    HospitalMetadata? hospitalMetadata,
   }) = _CreateOrderRequest;
 
   factory CreateOrderRequest.fromJson(Map<String, dynamic> json) =>
       _$CreateOrderRequestFromJson(json);
 }
 
+ExternalType? _externalTypeFromJson(String? value) {
+  for (final type in ExternalType.values) {
+    if (type.value == value) return type;
+  }
+  return null;
+}
+
+String? _externalTypeToJson(ExternalType? type) => type?.value;
+
+@freezed
+abstract class HospitalMetadata with _$HospitalMetadata {
+  const factory HospitalMetadata({
+    @JsonKey(name: "medicalRecordCode") String? medicalRecordCode,
+    @JsonKey(name: "prescriptionDate") String? prescriptionDate,
+    @JsonKey(name: "prescriptionNumber") String? prescriptionNumber,
+    @JsonKey(name: "delegateName") String? delegateName,
+    @JsonKey(name: "delegatePhone") String? delegatePhone,
+  }) = _HospitalMetadata;
+
+  factory HospitalMetadata.fromJson(Map<String, dynamic> json) =>
+      _$HospitalMetadataFromJson(json);
+}
+
 @freezed
 abstract class Detail with _$Detail {
   const factory Detail({
-    @JsonKey(name: "pickupDate") DateTime? pickupDate,
-    @JsonKey(name: "pickupTimeSlot") String? pickupTimeSlot,
+    // @JsonKey(name: "pickupDate") DateTime? pickupDate,
+    // @JsonKey(name: "pickupTimeSlot") String? pickupTimeSlot,
     // @JsonKey(name: "deliveryTimeSlot") String? deliveryTimeSlot,
     @JsonKey(name: "weight") double? weight,
     // @JsonKey(name: "isHighValueGoods") bool? isHighValueGoods,
@@ -51,9 +84,11 @@ abstract class Detail with _$Detail {
     // @JsonKey(name: "isOnePiece") bool? isOnePiece,
     // @JsonKey(name: "isLiquid") bool? isLiquid,
     // @JsonKey(name: "hasBattery") bool? hasBattery,
-    @JsonKey(name: "length") @Default(0) int length,
-    @JsonKey(name: "width") @Default(0) int width,
-    @JsonKey(name: "height") @Default(0) int height,
+    @JsonKey(name: "commodityType") @Default([]) List<String> commodityType,
+    @JsonKey(name: "handlingType") @Default([]) List<String> handlingType,
+    // @JsonKey(name: "length") @Default(0) int length,
+    // @JsonKey(name: "width") @Default(0) int width,
+    // @JsonKey(name: "height") @Default(0) int height,
     // @JsonKey(name: "orderSource") String? orderSource,
     @JsonKey(name: "note") String? note,
   }) = _Detail;

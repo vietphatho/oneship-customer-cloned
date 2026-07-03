@@ -1,5 +1,7 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_card.dart';
+import 'package:oneship_customer/core/utils/utils.dart';
+import 'package:oneship_customer/features/orders/domain/entities/order_fee_entity.dart';
 
 class OrderDetailInfoScaffold extends StatelessWidget {
   const OrderDetailInfoScaffold({
@@ -111,6 +113,79 @@ class OrderDetailInfoField extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class OrderDetailFeeListView extends StatelessWidget {
+  const OrderDetailFeeListView({super.key, required this.fees});
+
+  final List<OrderFeeDisplayEntity> fees;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemBuilder: (context, index) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PrimaryText(
+            fees[index].label,
+            style: AppTextStyles.bodyMedium,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral1,
+          ),
+          AppSpacing.vertical(AppDimensions.xxxSmallSpacing),
+          _OrderDetailFeeField(
+            label: "exclude_vat".tr(),
+            value: Utils.formatCurrencyWithUnit(fees[index].baseAmount),
+          ),
+          _OrderDetailFeeField(
+            label: "VAT (${fees[index].vatRate}%)".tr(),
+            value: Utils.formatCurrencyWithUnit(fees[index].vatAmount),
+          ),
+          _OrderDetailFeeField(
+            label: "include_vat".tr(),
+            value: Utils.formatCurrencyWithUnit(fees[index].totalAmount),
+          ),
+        ],
+      ),
+      separatorBuilder: (context, index) =>
+          AppSpacing.vertical(AppDimensions.xSmallSpacing),
+      itemCount: fees.length,
+    );
+  }
+}
+
+class _OrderDetailFeeField extends StatelessWidget {
+  const _OrderDetailFeeField({required this.label, required this.value});
+
+  final String label;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PrimaryText(
+          label,
+          style: AppTextStyles.bodyMedium,
+          fontWeight: FontWeight.w300,
+          color: AppColors.neutral5,
+        ),
+        Expanded(
+          child: PrimaryText(
+            value ?? "--",
+            style: AppTextStyles.bodyMedium,
+            color: AppColors.neutral1,
+            textAlign: TextAlign.end,
+          ),
+        ),
+      ],
     );
   }
 }

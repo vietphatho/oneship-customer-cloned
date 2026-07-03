@@ -3,11 +3,13 @@ import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/shop_home/data/data_sources/shop_api.dart';
 import 'package:oneship_customer/features/shop_home/data/models/request/create_shop_request.dart';
+import 'package:oneship_customer/features/shop_home/data/models/response/order_option_response.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/visible_surcharges_response.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
@@ -86,6 +88,19 @@ class ShopRepositoryImpl extends ShopRepository {
   }
 
   @override
+  Future<Resource<List<ShopVendorEntity>>> fetchShopVendors({
+    required String shopId,
+    required int limit,
+  }) async {
+    final response = await request(
+      () => _api.fetchShopVendors(shopId: shopId, limit: limit),
+    );
+    return response.parse(
+      (dto) => dto.items.map(ShopVendorEntity.from).toList(),
+    );
+  }
+
+  @override
   Future<Resource<List<SurchargeGroupEntity>>> fetchVisibleSurcharges({
     required String shopId,
   }) async {
@@ -96,5 +111,29 @@ class ShopRepositoryImpl extends ShopRepository {
     return response.parse<List<SurchargeGroupEntity>>((dto) {
       return dto.data.map(SurchargeGroupEntity.from).toList();
     });
+  }
+
+  @override
+  Future<Resource<List<OrderOptionEntity>>> fetchCommodityTypes({
+    required String shopId,
+  }) async {
+    final response = await request<List<CommodityResponse>, dynamic>(
+      () => _api.fetchCommodityTypes(shopId: shopId),
+    );
+    return response.parse<List<OrderOptionEntity>>(
+      (dto) => dto.map(OrderOptionEntity.fromCommodity).toList(),
+    );
+  }
+
+  @override
+  Future<Resource<List<OrderOptionEntity>>> fetchHandlingTypes({
+    required String shopId,
+  }) async {
+    final response = await request<List<HandlingResponse>, dynamic>(
+      () => _api.fetchHandlingTypes(shopId: shopId),
+    );
+    return response.parse<List<OrderOptionEntity>>(
+      (dto) => dto.map(OrderOptionEntity.fromHandling).toList(),
+    );
   }
 }

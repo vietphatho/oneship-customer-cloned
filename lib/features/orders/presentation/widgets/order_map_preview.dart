@@ -6,6 +6,7 @@ import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/lat_long.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/map_libre/presentation/views/primary_map_view.dart';
+import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 
@@ -23,10 +24,28 @@ class CreateOrderMapPreview extends StatelessWidget {
         return OrderMapPreview(
           shopLocation: state.shopInfo.shopCoordinates?.latLong,
           deliveryLocation: _toLatLong(_deliveryCoordinates(state)),
+          routeCoordinates: _routing(state)?.routeCoordinates ?? const [],
           height: height,
         );
       },
     );
+  }
+
+  RoutingEntity? _routing(CreateOrderState state) {
+    final requestRouter = state.request.router;
+    if (_hasRoutingData(requestRouter)) return requestRouter;
+
+    final draftRouter = state.draftRequest.router;
+    if (_hasRoutingData(draftRouter)) return draftRouter;
+
+    final response = state.routingToShopResource.data;
+    return response != null ? RoutingEntity.from(response) : null;
+  }
+
+  bool _hasRoutingData(RoutingEntity? routing) {
+    return routing != null &&
+        (routing.orderCoordinates.isNotEmpty ||
+            routing.routeCoordinates.isNotEmpty);
   }
 
   List<double>? _deliveryCoordinates(CreateOrderState state) {
@@ -50,11 +69,13 @@ class OrderMapPreview extends StatelessWidget {
     super.key,
     required this.shopLocation,
     required this.deliveryLocation,
+    this.routeCoordinates = const [],
     this.height = 220,
   });
 
   final LatLong? shopLocation;
   final LatLong? deliveryLocation;
+  final List<List<double>> routeCoordinates;
   final double height;
 
   @override
@@ -77,10 +98,18 @@ class OrderMapPreview extends StatelessWidget {
             currentLocation: initialLocation,
             shopLocation: shopLatLng,
             showCurrentLocation: deliveryLatLng != null,
+            routeCoordinates: _toRouteLatLng(routeCoordinates),
           ),
         ),
       ),
     );
+  }
+
+  List<map_latlong.LatLng> _toRouteLatLng(List<List<double>> coordinates) {
+    return coordinates
+        .where((coordinate) => coordinate.length >= 2)
+        .map((coordinate) => map_latlong.LatLng(coordinate[1], coordinate[0]))
+        .toList();
   }
 
   map_latlong.LatLng? _toMapLatLng(LatLong? coordinate) {

@@ -28,7 +28,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
   final TextEditingController _widthCtrl = TextEditingController();
   final TextEditingController _heightCtrl = TextEditingController();
   final TextEditingController _noteCtrl = TextEditingController();
-  final TextEditingController _externalOrderIdCtrl = TextEditingController();
+  final TextEditingController _externalIdCtrl = TextEditingController();
   final TextEditingController _orderSourceCtrl = TextEditingController();
 
   // DeliveryServiceType _deliveryServiceType = DeliveryServiceType.standard;
@@ -43,7 +43,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
     _widthCtrl.text = request.detail?.width?.toString() ?? "";
     _heightCtrl.text = request.detail?.height?.toString() ?? "";
     _noteCtrl.text = request.detail?.note ?? "";
-    _externalOrderIdCtrl.text = request.externalOrderId ?? "";
+    _externalIdCtrl.text = request.externalId ?? "";
     // _orderSourceCtrl.text = request.o
   }
 
@@ -145,8 +145,8 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
                     children: [
                       Expanded(
                         child: PrimaryTextField(
-                          label: "external_order_id".tr(),
-                          controller: _externalOrderIdCtrl,
+                          label: "external_id".tr(),
+                          controller: _externalIdCtrl,
                           // onChanged: (_) => setState(() {}),
                         ),
                       ),
@@ -214,7 +214,7 @@ class _OrderInfoPageViewState extends State<OrderInfoPageView>
       width: int.tryParse(_widthCtrl.text),
       height: int.tryParse(_heightCtrl.text),
       note: _noteCtrl.text,
-      externalOrderId: _externalOrderIdCtrl.text,
+      externalId: _externalIdCtrl.text,
       orderSource: _orderSourceCtrl.text,
       selectedProducts: productBloc.state.productsListSelected,
     );
