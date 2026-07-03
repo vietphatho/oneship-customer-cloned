@@ -130,5 +130,5 @@ class Constants {
       "https://www.facebook.com/people/OneShip-H%E1%BB%93-Ch%C3%AD-Minh/61590686005646/?ref=1";
   static const String oneshipLinkedin =
       "https://www.linkedin.com/company/onexway/?viewAsMember=true";
-  static const String oneshipGmail = "support@onexway.io";
+  static const String oneshipGmail = "support@ozoship.vn";
 }
