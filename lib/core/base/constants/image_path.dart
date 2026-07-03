@@ -11,8 +11,8 @@ class ImagePath {
   static String onboarding_1 = 'assets/images/onboarding_1.png';
   static String onboarding_2 = 'assets/images/onboarding_2.png';
   static String onboarding_3 = 'assets/images/onboarding_3.png';
-  static String homeBackground = 'assets/images/home_background.png';
-  static String shopHomeBackground = 'assets/images/shop_home_background.png';
+  static String homeBackground = 'assets/images/home_background.jpeg';
+  static String shopHomeBackground = 'assets/images/shop_home_background.jpeg';
   static const String shopHomeAvatar = 'assets/images/shop_home_avatar.png';
   static const String shopHomeAvatarBackground =
       'assets/images/shop_home_avatar_background.png';
