@@ -33,13 +33,16 @@ class _PrimaryBottomNavigationBarState
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.paddingOf(context).bottom;
+    final navigationGeometry = _BottomNavigationBarGeometry(
+      bottomInset: bottomInset,
+    );
 
     return BlocBuilder<ShopMasterBloc, ShopMasterState>(
       bloc: _shopMasterBloc,
       builder: (context, state) {
         return Container(
           color: Colors.transparent,
-          height: AppDimensions.safeBottomSpacing + bottomInset,
+          height: navigationGeometry.totalHeight,
           width: double.infinity,
           child: Stack(
             clipBehavior: Clip.none,
@@ -59,13 +62,15 @@ class _PrimaryBottomNavigationBarState
                     color: Colors.transparent,
                   ),
                   child: ClipPath(
-                    clipper: _BottomNavigationBarClipper(),
+                    clipper: _BottomNavigationBarClipper(
+                      geometry: navigationGeometry,
+                    ),
                     child: Container(
-                      height: AppDimensions.bottomNavBarHeight + bottomInset,
+                      height: navigationGeometry.barHeight,
                       padding: EdgeInsets.only(
                         left: AppDimensions.mediumSpacing,
                         right: AppDimensions.mediumSpacing,
-                        bottom: bottomInset,
+                        bottom: navigationGeometry.bottomInset,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.background,
@@ -96,9 +101,7 @@ class _PrimaryBottomNavigationBarState
                               onTap: _onItemTapped,
                             ),
                           ),
-                          const SizedBox(
-                            width: AppDimensions.centerButtonNavHeight,
-                          ),
+                          SizedBox(width: navigationGeometry.centerButtonSize),
                           Expanded(
                             child: _NavigationItem(
                               item: _bottomNavBarList[2],
@@ -123,10 +126,13 @@ class _PrimaryBottomNavigationBarState
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topCenter,
+              Positioned(
+                top: navigationGeometry.centerButtonTop,
+                left: 0,
+                right: 0,
                 child: _CenterNavigationItem(
                   item: BottomNavigationItem.createOrder,
+                  geometry: navigationGeometry,
                   // isSelected:
                   //     _shopMasterBloc.currentTab == BottomNavigationItem.home,
                   onTap: () {
@@ -152,31 +158,38 @@ class _PrimaryBottomNavigationBarState
 
 class _CenterNavigationItem extends StatelessWidget {
   final BottomNavigationItem item;
+  final _BottomNavigationBarGeometry geometry;
   final VoidCallback onTap;
 
-  const _CenterNavigationItem({required this.item, required this.onTap});
+  const _CenterNavigationItem({
+    required this.item,
+    required this.geometry,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryAnimatedPressableWidget(
-      onTap: onTap,
-      child: Container(
-        width: AppDimensions.centerButtonNavHeight,
-        height: AppDimensions.centerButtonNavHeight,
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          shape: BoxShape.circle,
-          boxShadow: PrimaryBoxShadows.bottomNavShadow,
-        ),
-        child: Center(
-          child: SizedBox(
-            width: AppDimensions.smallIconSize,
-            height: AppDimensions.smallIconSize,
-            child: SvgPicture.asset(
-              item.icon,
-              colorFilter: const ColorFilter.mode(
-                Colors.white,
-                BlendMode.srcIn,
+    return Center(
+      child: PrimaryAnimatedPressableWidget(
+        onTap: onTap,
+        child: Container(
+          width: geometry.centerButtonSize,
+          height: geometry.centerButtonSize,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
+            boxShadow: PrimaryBoxShadows.bottomNavShadow,
+          ),
+          child: Center(
+            child: SizedBox(
+              width: AppDimensions.smallIconSize,
+              height: AppDimensions.smallIconSize,
+              child: SvgPicture.asset(
+                item.icon,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),
@@ -230,29 +243,72 @@ class _NavigationItem extends StatelessWidget {
   }
 }
 
+class _BottomNavigationBarGeometry {
+  final double bottomInset;
+
+  const _BottomNavigationBarGeometry({required this.bottomInset});
+
+  double get barContentHeight => AppDimensions.bottomNavBarHeight;
+  double get centerButtonSize => AppDimensions.centerButtonNavHeight;
+  double get centerButtonRadius => centerButtonSize / 2;
+  double get notchClearance => AppDimensions.mediumSpacing;
+  double get notchShoulderPadding => AppDimensions.mediumSpacing;
+  double get notchEntryDepth => centerButtonRadius / 4;
+
+  double get totalHeight => AppDimensions.safeBottomSpacing + bottomInset;
+  double get barHeight => barContentHeight + bottomInset;
+  double get barTop => totalHeight - barHeight;
+
+  double get centerButtonCenterYInBar => centerButtonRadius - barTop;
+  double get centerButtonTop =>
+      barTop + centerButtonCenterYInBar - centerButtonRadius;
+
+  double get notchDepth =>
+      centerButtonCenterYInBar + centerButtonRadius + notchClearance;
+
+  double get notchRadius => centerButtonRadius + notchClearance;
+  double get notchShoulderRadius => notchRadius + notchShoulderPadding;
+}
+
 class _BottomNavigationBarClipper extends CustomClipper<Path> {
+  final _BottomNavigationBarGeometry geometry;
+
+  const _BottomNavigationBarClipper({required this.geometry});
+
   @override
   Path getClip(Size size) {
+    final centerX = size.width / 2;
+    final notchRadius = geometry.notchRadius;
+    final notchShoulderRadius = geometry.notchShoulderRadius;
+    final notchEntryDepth = geometry.notchEntryDepth;
+    final barContentHeight = size.height - geometry.bottomInset;
+    final notchDepth = geometry.notchDepth
+        .clamp(notchEntryDepth, barContentHeight)
+        .toDouble();
+
     return Path()
       ..moveTo(0, 0)
-      ..lineTo(size.width * 0.35, 0)
+      ..lineTo(centerX - notchShoulderRadius, 0)
       ..quadraticBezierTo(
-        size.width * 0.40,
+        centerX - notchRadius,
         0,
-        size.width * 0.40,
-        size.height * 0.10,
+        centerX - notchRadius,
+        notchEntryDepth,
       )
       ..cubicTo(
-        size.width * 0.43,
-        size.height * 0.57,
-
-        size.width * 0.57,
-        size.height * 0.57,
-
-        size.width * 0.60,
-        size.height * 0.10,
+        centerX - notchRadius / 2,
+        notchDepth,
+        centerX + notchRadius / 2,
+        notchDepth,
+        centerX + notchRadius,
+        notchEntryDepth,
       )
-      ..quadraticBezierTo(size.width * 0.60, 0, size.width * 0.65, 0)
+      ..quadraticBezierTo(
+        centerX + notchRadius,
+        0,
+        centerX + notchShoulderRadius,
+        0,
+      )
       ..lineTo(size.width, 0)
       ..lineTo(size.width, size.height)
       ..lineTo(0, size.height)
@@ -260,5 +316,7 @@ class _BottomNavigationBarClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldReclip(covariant _BottomNavigationBarClipper oldClipper) {
+    return oldClipper.geometry.bottomInset != geometry.bottomInset;
+  }
 }
