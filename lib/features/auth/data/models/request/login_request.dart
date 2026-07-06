@@ -8,6 +8,7 @@ abstract class LoginRequest with _$LoginRequest {
   const factory LoginRequest({
     @JsonKey(name: "login") String? login,
     @JsonKey(name: "password") String? password,
+    @JsonKey(name: "deviceId") String? deviceId,
   }) = _LoginRequest;
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>

@@ -5,8 +5,8 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
-import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/network/token_manager.dart';
+import 'package:oneship_customer/core/services/device_id_service.dart';
 import 'package:oneship_customer/core/utils/app_logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 
@@ -28,10 +28,14 @@ class SocketMessage {
 
 @lazySingleton
 class SocketService {
+  SocketService(this._deviceIdService);
+
   static socket_io.Socket? _socket;
   static final _controller = StreamController<SocketMessage>.broadcast();
   Stream<SocketMessage> get stream => _controller.stream;
   bool get isConnected => _socket?.connected ?? false;
+
+  final DeviceIdService _deviceIdService;
 
   Future<void> connect(String shopId) async {
     if (isConnected) return;
@@ -100,6 +104,7 @@ class SocketService {
     );
     final response = await refreshDio.post(
       '$endpoint${Constants.refreshTokenEndpoint}',
+      queryParameters: {'deviceId': await _deviceIdService.getDeviceId()},
     );
 
     AppLogger().log("socket refresh token result", detail: response.data);

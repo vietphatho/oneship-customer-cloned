@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/network/api_logger.dart';
+import 'package:oneship_customer/core/services/device_id_service.dart';
 
 import 'api_interceptor.dart';
 import 'token_manager.dart';
@@ -10,7 +11,7 @@ import 'token_manager.dart';
 @module
 abstract class DioModule {
   @lazySingleton
-  Dio dio(TokenManager tokenManager) {
+  Dio dio(TokenManager tokenManager, DeviceIdService deviceIdService) {
     String baseUrl = Constants.endpoint;
     // dotenv.env[Constant.endpointKey] ?? "";
 
@@ -24,7 +25,7 @@ abstract class DioModule {
       ),
     );
 
-    dio.interceptors.add(ApiInterceptor(tokenManager, dio));
+    dio.interceptors.add(ApiInterceptor(tokenManager, dio, deviceIdService));
     dio.interceptors.add(ApiLogger());
     return dio;
   }

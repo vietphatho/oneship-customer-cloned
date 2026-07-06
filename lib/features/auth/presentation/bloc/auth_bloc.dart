@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/core/services/device_id_service.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/forgot_password_request.dart';
@@ -27,7 +29,6 @@ import 'package:oneship_customer/features/auth/domain/use_cases/verify_secondary
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/shop_master/data/enum.dart';
-import 'package:image_picker/image_picker.dart';
 
 @lazySingleton
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -43,6 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._deleteAccountUseCase,
     this._updateUserAvatarUseCase,
     this._forgotPasswordUseCase,
+    this._deviceIdService,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
     on<AuthForgotPasswordEvent>(_onForgotPasswordEvent);
@@ -68,6 +70,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final DeleteAccountUseCase _deleteAccountUseCase;
   final UpdateUserAvatarUseCase _updateUserAvatarUseCase;
   final ForgotPasswordUseCase _forgotPasswordUseCase;
+  final DeviceIdService _deviceIdService;
+
   final ImagePicker _imagePicker = ImagePicker();
 
   late UserProfileResponse _userProfile;
@@ -88,6 +92,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginRequest request = LoginRequest(
       login: event.userName,
       password: event.password,
+      deviceId: await _deviceIdService.getDeviceId(),
     );
     final response = await _logInUseCase.call(request);
 

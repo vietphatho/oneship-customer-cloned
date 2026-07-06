@@ -4,6 +4,7 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/error_code.dart';
 import 'package:oneship_customer/core/navigation/app_navigator.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/services/device_id_service.dart';
 import 'package:oneship_customer/core/storage/secure_storage.dart';
 import 'package:oneship_customer/core/storage/secure_storage_key.dart';
 import 'package:oneship_customer/core/utils/app_logger.dart';
@@ -13,10 +14,11 @@ import 'token_manager.dart';
 class ApiInterceptor extends Interceptor {
   final TokenManager tokenManager;
   final Dio dio;
+  final DeviceIdService deviceIdService;
 
   Future<void>? _refreshFuture;
 
-  ApiInterceptor(this.tokenManager, this.dio);
+  ApiInterceptor(this.tokenManager, this.dio, this.deviceIdService);
 
   @override
   void onRequest(
@@ -103,6 +105,7 @@ class ApiInterceptor extends Interceptor {
     // dotenv.env[Constant.endpointKey] ?? "";
     final response = await refreshDio.post(
       '$endpoint${Constants.refreshTokenEndpoint}',
+      queryParameters: {'deviceId': await deviceIdService.getDeviceId()},
     );
 
     AppLogger().log("refresh token result", detail: response.data);
