@@ -48,14 +48,18 @@ class PrimaryDropdown<T> extends StatelessWidget {
                 children: [
                   PrimaryText(
                     label,
-                    style: AppTextStyles.labelMedium,
+                    style: AppTextStyles.labelSmall,
                     color: hasError ? AppColors.primary : colorScheme.onSurface,
                   ),
                   if (isRequired)
-                    const PrimaryText(" *", color: AppColors.primary),
+                    const PrimaryText(
+                      " *",
+                      style: AppTextStyles.labelMedium,
+                      color: AppColors.expenseRed,
+                    ),
                 ],
               ),
-            const SizedBox(height: AppDimensions.xxSmallSpacing),
+            const SizedBox(height: AppDimensions.xxxSmallSpacing),
             DropdownMenu<T>(
               enabled: enabled,
               requestFocusOnTap: requestFocusOnTap,

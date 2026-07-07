@@ -209,20 +209,20 @@ class _PrimaryAutoCompleteTextFieldState<T>
             if (widget.label != null)
               Padding(
                 padding: const EdgeInsets.only(
-                  bottom: AppDimensions.xSmallSpacing,
+                  bottom: AppDimensions.xxxSmallSpacing,
                 ),
                 child: Row(
                   children: [
                     PrimaryText(
                       widget.label,
-                      style: AppTextStyles.labelMedium,
+                      style: AppTextStyles.labelSmall,
                       color: colorScheme.onSurface,
                     ),
                     if (widget.isRequired)
                       PrimaryText(
                         " *",
                         style: AppTextStyles.labelMedium,
-                        color: AppColors.primary,
+                        color: AppColors.expenseRed,
                       ),
                   ],
                 ),

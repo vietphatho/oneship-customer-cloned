@@ -1341,6 +1341,12 @@
     "instruction": "Đưa mã QR hoặc barcode vào khung quét",
     "camera_permission_error": "Không thể mở camera. Vui lòng kiểm tra quyền truy cập camera."
   },
+  "primary_scannable_text_field": {
+    "title": "Quét mã",
+    "scan": "Quét mã",
+    "instruction": "Đưa mã QR hoặc barcode vào khung quét",
+    "camera_error": "Không thể mở camera. Vui lòng kiểm tra quyền truy cập camera."
+  },
   "fixed": "Phí cố định",
   "percent": "Phí theo phần trăm",
   "from": "từ",

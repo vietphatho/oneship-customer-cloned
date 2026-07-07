@@ -25,7 +25,11 @@ class CreateOrderOptionSelectorField extends StatelessWidget {
         Row(
           children: [
             PrimaryText(label, style: AppTextStyles.bodySmall, bold: true),
-            const PrimaryText(" *", color: AppColors.primary),
+            const PrimaryText(
+              " *",
+              style: AppTextStyles.labelMedium,
+              color: AppColors.expenseRed,
+            ),
           ],
         ),
         AppSpacing.vertical(AppDimensions.xSmallSpacing),

@@ -1,16 +1,21 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/core/base/components/primary_auto_complete_text_field.dart';
 import 'package:oneship_customer/core/base/components/primary_frame.dart';
+import 'package:oneship_customer/core/base/components/primary_scannable_text_field.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/location_service/bloc/location_service_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_bloc.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_state.dart';
 import 'package:oneship_customer/features/orders/presentation/views/confirmation_info_page_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_bottom_bar.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_delivery_service_selector.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/create_order_receiver_section.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/create_order_surcharge_section.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_province_selector.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/customer_info_ward_selector.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/order_map_preview.dart';
 
 class HospitalCreateOrderFormPage extends StatelessWidget {
   const HospitalCreateOrderFormPage({super.key, required this.pageController});
@@ -41,6 +46,7 @@ class _HospitalCreateOrderForm extends StatefulWidget {
 
 class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
   final CreateOrderBloc _createOrderBloc = getIt.get();
+  final locationServiceBloc = getIt.get<LocationServiceBloc>();
 
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _phoneCtrl = TextEditingController();
@@ -50,6 +56,9 @@ class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
   final TextEditingController _delegateNameCtrl = TextEditingController();
   final TextEditingController _delegatePhoneCtrl = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+
+  final FocusNode _medicalRecordCodeNode = FocusNode();
+  final FocusNode _prescriptionNumberNode = FocusNode();
 
   @override
   void initState() {
@@ -79,11 +88,15 @@ class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
     _delegateNameCtrl.dispose();
     _delegatePhoneCtrl.dispose();
     _noteController.dispose();
+    _medicalRecordCodeNode.dispose();
+    _prescriptionNumberNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    double mapViewHeight = MediaQuery.of(context).size.height * 0.28;
+
     return BlocBuilder<CreateOrderBloc, CreateOrderState>(
       bloc: _createOrderBloc,
       builder: (context, state) {
@@ -100,29 +113,103 @@ class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
                         title: "hospital_patient_info".tr(),
                         child: Column(
                           children: [
-                            CreateOrderReceiverSection(
-                              nameController: _nameCtrl,
-                              phoneController: _phoneCtrl,
-                              addressController: _addressCtrl,
-                              onChanged: _refresh,
-                            ),
-                            AppSpacing.vertical(AppDimensions.smallSpacing),
-                            PrimaryTextField(
+                            PrimaryScannableTextField(
                               label: "medical_record_code".tr(),
                               isRequired: true,
                               controller: _medicalRecordCodeCtrl,
+                              node: _medicalRecordCodeNode,
+                              nextNode: _prescriptionNumberNode,
                               textInputAction: TextInputAction.next,
                               onChanged: (_) => _refresh(),
                             ),
-                            AppSpacing.vertical(AppDimensions.smallSpacing),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
                             PrimaryTextField(
                               label: "prescription_number".tr(),
                               isRequired: true,
                               controller: _prescriptionNumberCtrl,
+                              node: _prescriptionNumberNode,
                               textInputAction: TextInputAction.next,
                               onChanged: (_) => _refresh(),
                             ),
-                            AppSpacing.vertical(AppDimensions.smallSpacing),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                            PrimaryTextField(
+                              label: "name".tr(),
+                              isRequired: true,
+                              controller: _nameCtrl,
+                              textCapitalization: TextCapitalization.words,
+                              textInputAction: TextInputAction.next,
+                              prefixIcon: const Icon(
+                                Icons.person_outline,
+                                size: AppDimensions.xSmallIconSize,
+                                color: AppColors.primary,
+                              ),
+                              onChanged: (value) {
+                                _createOrderBloc.changeCustomerInfo(
+                                  name: value,
+                                );
+                                _refresh();
+                              },
+                            ),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                            PrimaryTextField(
+                              label: "phone_number".tr(),
+                              isRequired: true,
+                              controller: _phoneCtrl,
+                              keyboardType: TextInputType.phone,
+                              prefixIcon: const Icon(
+                                Icons.phone_outlined,
+                                size: AppDimensions.xSmallIconSize,
+                                color: AppColors.primary,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(10),
+                              ],
+                              onChanged: (value) {
+                                _createOrderBloc.changeCustomerInfo(
+                                  phoneNumber: value,
+                                );
+                                _refresh();
+                              },
+                            ),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                          ],
+                        ),
+                      ),
+                      AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                      _section(
+                        title: "delivery_address".tr(),
+                        child: Column(
+                          children: [
+                            const CustomerInfoProvinceSelector(),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                            const CustomerInfoWardSelector(),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
+                            PrimaryAutoCompleteTextField(
+                              label: "address".tr(),
+                              isRequired: true,
+                              enabled: state.isEnableAddressField,
+                              controller: _addressCtrl,
+                              displayStringForOption: (item) =>
+                                  item.display ?? "--",
+                              onSearch: (value) {
+                                if (value.trim().length < 5)
+                                  return Future.value([]);
+                                return locationServiceBloc.searchAddress(
+                                  province: state.draftRequest.province!,
+                                  ward: state.draftRequest.ward!,
+                                  address: value,
+                                );
+                              },
+                              onSelected: (value) {
+                                _createOrderBloc.changeCustomerInfo(
+                                  address: value.display,
+                                  destinationRefId: value.refId,
+                                );
+                                _refresh();
+                              },
+                            ),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
                             PrimaryTextField(
                               label: "note".tr(),
                               hintText: "note_hint".tr(),
@@ -130,6 +217,8 @@ class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
                               maxLength: 200,
                               maxLine: 2,
                             ),
+                            AppSpacing.vertical(AppDimensions.mediumSpacing),
+                            CreateOrderMapPreview(height: mapViewHeight),
                           ],
                         ),
                       ),
@@ -145,7 +234,7 @@ class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
                               textInputAction: TextInputAction.next,
                               onChanged: (_) => _refresh(),
                             ),
-                            AppSpacing.vertical(AppDimensions.smallSpacing),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
                             PrimaryTextField(
                               label: "delegate_phone".tr(),
                               controller: _delegatePhoneCtrl,
@@ -169,7 +258,7 @@ class _HospitalCreateOrderFormState extends State<_HospitalCreateOrderForm> {
                               firstServiceOnly: true,
                               lockSelection: true,
                             ),
-                            AppSpacing.vertical(AppDimensions.smallSpacing),
+                            AppSpacing.vertical(AppDimensions.xSmallSpacing),
                             const CreateOrderSurchargeSection(),
                           ],
                         ),
