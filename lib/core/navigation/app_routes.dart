@@ -18,6 +18,7 @@ import 'package:oneship_customer/features/orders/presentation/views/create_multi
 import 'package:oneship_customer/features/orders/presentation/views/create_order_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/delivery_service_detail_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/handling_selection_page.dart';
+import 'package:oneship_customer/features/orders/presentation/views/hospital_medical_record_scanner_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/order_detail_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_history_page.dart';
 import 'package:oneship_customer/features/orders/presentation/views/orders_page.dart';
@@ -243,6 +244,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.scanTrackingCodePage,
       builder: (context, state) => const ScanTrackingCodePage(),
+    ),
+    GoRoute(
+      path: RouteName.hospitalMedicalRecordScannerPage,
+      builder: (context, state) => const HospitalMedicalRecordScannerPage(),
     ),
   ],
 );

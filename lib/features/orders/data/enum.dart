@@ -1,13 +1,14 @@
 import 'package:oneship_customer/core/base/base_import_components.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/all_processing_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/at_hub_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/batched_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/canceled_orders_list_view.dart';
+import 'package:oneship_customer/features/orders/presentation/widgets/created_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delayed_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/delivering_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/pending_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_list_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/returned_orders_list_view.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/all_processing_orders_list_view.dart';
 
 enum CreateOrderProductAction { increment, decrement }
 
@@ -32,6 +33,7 @@ extension ExternalTypeX on ExternalType {
 
 enum OrderStatus {
   atHub,
+  created,
   pending,
   processing,
   batched,
@@ -49,6 +51,7 @@ enum OrderStatus {
 extension OrderStatusExt on OrderStatus {
   static const _mapValue = {
     OrderStatus.atHub: "at_hub",
+    OrderStatus.created: "created",
     OrderStatus.pending: "pending",
     OrderStatus.processing: "processing",
     OrderStatus.batched: "batched",
@@ -65,6 +68,7 @@ extension OrderStatusExt on OrderStatus {
 
   static const _mapView = {
     OrderStatus.atHub: AtHubOrdersListView(),
+    OrderStatus.created: CreatedOrdersListView(),
     OrderStatus.pending: PendingOrdersListView(),
     OrderStatus.processing: ProcessingOrdersListView(),
     OrderStatus.batched: BatchedOrdersListView(),

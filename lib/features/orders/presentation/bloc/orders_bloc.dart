@@ -16,6 +16,7 @@ import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_de
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_order_history_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/fetch_orders_by_status_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/get_shipper_info_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/process_hospital_scanner_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/resolve_orders_by_status_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_ord_at_hub_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_event.dart';
@@ -34,6 +35,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     this._resolveOrdersByStatusUseCase,
     this._getShipperInfoUseCase,
     this._validateOrdAtHubUseCase,
+    this._processHospitalScannerUseCase,
   ) : super(
         OrdersState(
           orderListByStatusResource: Resource.loading(),
@@ -41,6 +43,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
           orderDetailResource: Resource.loading(),
           deleteOrderResource: Resource.loading(),
           validateOrdAtHubResource: Resource.loading(),
+          hospitalScannerResource: Resource.loading(),
         ),
       ) {
     on<OrdersFetchingByStatusEvent>(_onFetchDataEvent);
@@ -52,6 +55,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrdersHistoryFetchingByStatusEvent>(_onFetchOrderHistoryEvent);
     on<OrdersHistoryLoadMoreEvent>(_onLoadMoreOrderHistoryEvent);
     on<ValidateOrdAtHubEvent>(_onValidateOrdAtHubEvent);
+    on<HospitalMedicalRecordScannerStartedEvent>(
+      _onHospitalMedicalRecordScannerStartedEvent,
+    );
+    on<HospitalMedicalRecordDetectedEvent>(
+      _onHospitalMedicalRecordDetectedEvent,
+    );
     // on<OrdersHistoryFilterToggledEvent>(_onToggleOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterAppliedEvent>(_onApplyOrdersHistoryFilterEvent);
     // on<OrdersHistoryFilterClearedEvent>(_onClearOrdersHistoryFilterEvent);
@@ -67,6 +76,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final ResolveOrdersByStatusUseCase _resolveOrdersByStatusUseCase;
   final GetShipperInfoUseCase _getShipperInfoUseCase;
   final ValidateOrdAtHubUseCase _validateOrdAtHubUseCase;
+  final ProcessHospitalScannerUseCase _processHospitalScannerUseCase;
+
+  static const Duration _hospitalScanDuplicateCooldown = Duration(seconds: 2);
 
   late String _shopId;
   set shopId(String id) {
@@ -80,6 +92,11 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   OrderStatus _currentOrderStatus = OrderStatus.pending;
   set currentOrderStatus(OrderStatus status) => _currentOrderStatus = status;
+
+  String? _hospitalScannerShopId;
+  String? _lastHospitalScanCode;
+  DateTime? _lastHospitalScanAt;
+  bool _isHospitalScanInFlight = false;
 
   FutureOr<void> _onFetchDataEvent(
     OrdersFetchingByStatusEvent event,
@@ -105,6 +122,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         delayedOrdersList: state.delayedOrdersList,
         cancelledOrdersList: state.cancelledOrdersList,
         returnedOrdersList: state.returnedOrdersList,
+        createdOrdersList: state.createdOrdersList,
       ),
     );
 
@@ -120,6 +138,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         delayedOrdersList: ordersByStatus.delayedOrdersList,
         cancelledOrdersList: ordersByStatus.cancelledOrdersList,
         returnedOrdersList: ordersByStatus.returnedOrdersList,
+        createdOrdersList: ordersByStatus.createdOrdersList,
       ),
     );
   }
@@ -311,6 +330,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         delayedOrdersList: state.delayedOrdersList,
         cancelledOrdersList: state.cancelledOrdersList,
         returnedOrdersList: state.returnedOrdersList,
+        createdOrdersList: state.createdOrdersList,
       ),
     );
 
@@ -326,6 +346,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         delayedOrdersList: ordersByStatus.delayedOrdersList,
         cancelledOrdersList: ordersByStatus.cancelledOrdersList,
         returnedOrdersList: ordersByStatus.returnedOrdersList,
+        createdOrdersList: ordersByStatus.createdOrdersList,
       ),
     );
   }
@@ -367,6 +388,66 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
 
     emit(state.copyWith(validateOrdAtHubResource: response));
+  }
+
+  FutureOr<void> _onHospitalMedicalRecordScannerStartedEvent(
+    HospitalMedicalRecordScannerStartedEvent event,
+    Emitter<OrdersState> emit,
+  ) {
+    _hospitalScannerShopId = event.shopId;
+    _isHospitalScanInFlight = false;
+    _lastHospitalScanCode = null;
+    _lastHospitalScanAt = null;
+    emit(
+      state.copyWith(
+        isHospitalScanRunning: false,
+        hospitalScannerResource: Resource.loading(),
+      ),
+    );
+  }
+
+  FutureOr<void> _onHospitalMedicalRecordDetectedEvent(
+    HospitalMedicalRecordDetectedEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    final shopId = _hospitalScannerShopId;
+    if (shopId == null || shopId.isEmpty) {
+      _isHospitalScanInFlight = false;
+      emit(
+        state.copyWith(
+          isHospitalScanRunning: false,
+          hospitalScannerResource: Resource.error(
+            'hospital_medical_record_scanner.no_shop_selected',
+            0,
+          ),
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        isHospitalScanRunning: true,
+        hospitalScannerResource: Resource.loading(),
+      ),
+    );
+
+    final response = await _processHospitalScannerUseCase.call(
+      medicalRecordCode: event.medicalRecordCode,
+      shopId: shopId,
+    );
+
+    _isHospitalScanInFlight = false;
+    emit(
+      state.copyWith(
+        isHospitalScanRunning: false,
+        hospitalScannerResource: response,
+      ),
+    );
+
+    if (response.state == Result.success) {
+      add(OrdersFetchingByStatusEvent(_currentOrderStatus));
+    }
   }
 
   BaseMetaResponse? _getOrdersHistoryMeta(OrderStatus status) {
@@ -438,6 +519,27 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   void validateOrdAtHub({required String ordId, required String hubId}) {
     add(ValidateOrdAtHubEvent(hubId: hubId, ordId: ordId));
+  }
+
+  void startHospitalMedicalRecordScanning({required String? shopId}) {
+    add(HospitalMedicalRecordScannerStartedEvent(shopId: shopId));
+  }
+
+  void onHospitalMedicalRecordDetected(String medicalRecordCode) {
+    final trimmedCode = medicalRecordCode.trim();
+    if (trimmedCode.isEmpty || _isHospitalScanInFlight) return;
+
+    final now = DateTime.now();
+    final isDuplicateInCooldown =
+        _lastHospitalScanCode == trimmedCode &&
+        _lastHospitalScanAt != null &&
+        now.difference(_lastHospitalScanAt!) < _hospitalScanDuplicateCooldown;
+    if (isDuplicateInCooldown) return;
+
+    _isHospitalScanInFlight = true;
+    _lastHospitalScanCode = trimmedCode;
+    _lastHospitalScanAt = now;
+    add(HospitalMedicalRecordDetectedEvent(trimmedCode));
   }
 
   void deleteOrder(OrderInfo order) {

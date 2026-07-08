@@ -13,6 +13,18 @@ class UpdateOrdUseCase {
     required String ordId,
     required CreateOrderRequestEntity request,
   }) async {
-    return _repository.updateOrder(ordId: ordId, requestBody: request.toDto());
+    final cleanRequest = request.copyWith(
+      paymentStatus: null,
+      paymentMethod: null,
+      status: null,
+      orderNumber: null,
+      selectedProducts: request.selectedProducts
+          .where((product) => product.id.isNotEmpty)
+          .toList(),
+    );
+    return _repository.updateOrder(
+      ordId: ordId,
+      requestBody: cleanRequest.toDto(),
+    );
   }
 }

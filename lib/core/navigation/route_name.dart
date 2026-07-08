@@ -65,4 +65,6 @@ class RouteName {
   static const String withdrawSuccessPage = '/wallet/withdraw_success';
   static const String scanPatientCodePage = '/scan_patient_code_page';
   static const String scanTrackingCodePage = '/scan_tracking_code_page';
+  static const String hospitalMedicalRecordScannerPage =
+      '/hospital_medical_record_scanner_page';
 }

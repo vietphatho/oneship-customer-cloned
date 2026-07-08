@@ -715,6 +715,7 @@
   "delivery_completed_description": "Bạn đã giao hoàn tất túi hàng. Tích cực nhận đơn để tiếp tục công việc nhé",
   "version": "Phiên bản",
   "pending": "Chờ xử lý",
+  "created": "Đã tạo",
   "shipping": "Đang giao hàng",
   "delayed": "Tạm hoãn",
   "delivered": "Đã giao",
@@ -1346,6 +1347,15 @@
     "scan": "Quét mã",
     "instruction": "Đưa mã QR hoặc barcode vào khung quét",
     "camera_error": "Không thể mở camera. Vui lòng kiểm tra quyền truy cập camera."
+  },
+  "hospital_medical_record_scanner": {
+    "open_button": "Quét chuyển trạng thái",
+    "title": "Quét mã bệnh án",
+    "instruction": "Đưa mã QR hoặc barcode bệnh án vào khung quét",
+    "processing": "Đang xử lý mã bệnh án...",
+    "scan_success": "Cập nhật trạng thái thành công.",
+    "camera_permission_error": "Không thể mở camera. Vui lòng kiểm tra quyền truy cập camera.",
+    "no_shop_selected": "Vui lòng chọn cửa hàng trước khi quét mã bệnh án"
   },
   "fixed": "Phí cố định",
   "percent": "Phí theo phần trăm",
