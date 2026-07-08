@@ -6,6 +6,7 @@ import 'package:oneship_customer/core/base/models/base_response.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
+import 'package:oneship_customer/features/orders/data/models/request/process_hospital_scanner_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/validate_ord_at_hub_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/calculate_delivery_fee_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
@@ -89,4 +90,9 @@ abstract class OrdersApi {
     @Path("hubId") required String hubId,
     @Body() required ValidateOrdAtHubRequest body,
   });
+
+  @POST("/api/v1/delivery/hospital/scanner/process")
+  Future<BaseResponse> processHospitalScanner(
+    @Body() ProcessHospitalScannerRequest body,
+  );
 }

@@ -13,7 +13,9 @@ import 'package:oneship_customer/features/orders/presentation/widgets/order_stat
 import 'package:oneship_customer/features/orders/presentation/widgets/processing_orders_filter_panel.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_state.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -24,6 +26,17 @@ class OrdersPage extends StatefulWidget {
 
 class _OrdersPageState extends State<OrdersPage>
     with SingleTickerProviderStateMixin {
+  static const List<OrderStatus> _baseTabs = [
+    OrderStatus.pending,
+    OrderStatus.processing,
+    OrderStatus.batched,
+    OrderStatus.shipping,
+    OrderStatus.atHub,
+    OrderStatus.delayed,
+    OrderStatus.cancelled,
+    OrderStatus.returned,
+  ];
+
   final OrdersBloc _ordersBloc = getIt.get();
   final PackagesBloc _packagesBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
@@ -34,24 +47,16 @@ class _OrdersPageState extends State<OrdersPage>
   @override
   void initState() {
     super.initState();
-    _tabList = const [
-      OrderStatus.allProcessing,
-      OrderStatus.atHub,
-      OrderStatus.pending,
-      OrderStatus.processing,
-      OrderStatus.batched,
-      OrderStatus.shipping,
-      OrderStatus.delayed,
-      OrderStatus.cancelled,
-      OrderStatus.returned,
-    ];
-    _tabCtrl = TabController(length: _tabList.length, vsync: this);
+    _tabList = _visibleTabsForShopType(_shopBloc.state.currentShop?.shopType);
 
     var shopId = _shopBloc.state.currentShop?.shopId ?? "";
     _ordersBloc.init(shopId);
 
-    int destination = _tabList.indexOf(OrderStatus.pending);
-    _tabCtrl.animateTo(destination);
+    _tabCtrl = TabController(
+      length: _tabList.length,
+      vsync: this,
+      initialIndex: _tabIndexOf(OrderStatus.pending),
+    );
   }
 
   @override
@@ -148,6 +153,13 @@ class _OrdersPageState extends State<OrdersPage>
                 pre.findShipperStatus != cur.findShipperStatus,
             listener: _handleFindingShipperStatusListener,
           ),
+          BlocListener<ShopBloc, ShopState>(
+            bloc: _shopBloc,
+            listenWhen: (previous, current) =>
+                previous.currentShop?.shopId != current.currentShop?.shopId ||
+                previous.currentShop?.shopType != current.currentShop?.shopType,
+            listener: _handleCurrentShopChanged,
+          ),
         ],
         child: Column(
           children: [
@@ -175,6 +187,10 @@ class _OrdersPageState extends State<OrdersPage>
                         children: _tabList.map((e) => e.view).toList(),
                       ),
                     ),
+                    AppSpacing.vertical(
+                      MediaQuery.of(context).padding.bottom +
+                          AppDimensions.largeSpacing,
+                    ),
                   ],
                 ),
               ),
@@ -196,8 +212,7 @@ class _OrdersPageState extends State<OrdersPage>
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
         await Future.delayed(Durations.short2);
-        int destination = _tabList.indexOf(OrderStatus.processing);
-        _tabCtrl.animateTo(destination);
+        _animateToStatus(OrderStatus.processing);
         _packagesBloc.connectSocket();
         break;
       case Result.error:
@@ -221,8 +236,7 @@ class _OrdersPageState extends State<OrdersPage>
       case Result.success:
         PrimaryDialog.hideLoadingDialog(context);
         await Future.delayed(Durations.short2);
-        int destination = _tabList.indexOf(OrderStatus.pending);
-        _tabCtrl.animateTo(destination);
+        _animateToStatus(OrderStatus.pending);
         _packagesBloc.disconnectSocket();
         break;
       case Result.error:
@@ -263,8 +277,7 @@ class _OrdersPageState extends State<OrdersPage>
           context,
           message: "shipper_founded".tr(),
           onClosed: () {
-            int destination = _tabList.indexOf(OrderStatus.batched);
-            _tabCtrl.animateTo(destination);
+            _animateToStatus(OrderStatus.batched);
           },
         );
         break;
@@ -278,5 +291,55 @@ class _OrdersPageState extends State<OrdersPage>
       default:
         break;
     }
+  }
+
+  void _handleCurrentShopChanged(BuildContext context, ShopState state) {
+    _ordersBloc.init(state.currentShop?.shopId ?? "");
+    final selectedStatus = _updateVisibleTabs(state.currentShop?.shopType);
+    _ordersBloc.currentOrderStatus = selectedStatus;
+    _ordersBloc.fetchOrdersByStatus();
+  }
+
+  OrderStatus _updateVisibleTabs(ShopType? shopType) {
+    final nextTabs = _visibleTabsForShopType(shopType);
+    if (const ListEquality<OrderStatus>().equals(_tabList, nextTabs)) {
+      return _tabList[_tabCtrl.index];
+    }
+
+    final selectedStatus = _tabList[_tabCtrl.index];
+    final nextSelectedStatus = nextTabs.contains(selectedStatus)
+        ? selectedStatus
+        : OrderStatus.pending;
+    final nextIndex = nextTabs.indexOf(nextSelectedStatus);
+
+    final previousController = _tabCtrl;
+    setState(() {
+      _tabList = nextTabs;
+      _tabCtrl = TabController(
+        length: _tabList.length,
+        vsync: this,
+        initialIndex: nextIndex < 0 ? 0 : nextIndex,
+      );
+    });
+    previousController.dispose();
+    return nextSelectedStatus;
+  }
+
+  List<OrderStatus> _visibleTabsForShopType(ShopType? shopType) {
+    if (shopType == ShopType.hospital) {
+      return const [OrderStatus.created, ..._baseTabs];
+    }
+    return _baseTabs;
+  }
+
+  int _tabIndexOf(OrderStatus status) {
+    final index = _tabList.indexOf(status);
+    return index < 0 ? 0 : index;
+  }
+
+  void _animateToStatus(OrderStatus status) {
+    final index = _tabList.indexOf(status);
+    if (index < 0 || index >= _tabCtrl.length) return;
+    _tabCtrl.animateTo(index);
   }
 }

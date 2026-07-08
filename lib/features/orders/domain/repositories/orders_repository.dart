@@ -6,6 +6,7 @@ import 'package:oneship_customer/features/orders/data/enum.dart';
 import 'package:oneship_customer/features/orders/data/models/request/calculate_delivery_fee_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_order_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/create_product_request.dart';
+import 'package:oneship_customer/features/orders/data/models/request/process_hospital_scanner_request.dart';
 import 'package:oneship_customer/features/orders/data/models/request/validate_ord_at_hub_request.dart';
 import 'package:oneship_customer/features/orders/data/models/response/get_routing_to_shop_response.dart';
 import 'package:oneship_customer/features/orders/data/models/response/orders_list_response.dart';
@@ -72,4 +73,6 @@ abstract class OrdersRepository extends BaseRepository {
     required String hubId,
     required ValidateOrdAtHubRequest body,
   });
+
+  Future<Resource> processHospitalScanner(ProcessHospitalScannerRequest body);
 }

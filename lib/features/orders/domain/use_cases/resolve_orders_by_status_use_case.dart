@@ -29,6 +29,8 @@ class ResolveOrdersByStatusUseCase {
         return current.copyWith(cancelledOrdersList: orders);
       case OrderStatus.returned:
         return current.copyWith(returnedOrdersList: orders);
+      case OrderStatus.created:
+        return current.copyWith(createdOrdersList: orders);
       default:
         return current;
     }
@@ -42,7 +44,10 @@ class ResolveOrdersByStatusUseCase {
     switch (status) {
       case OrderStatus.allProcessing:
         return current.copyWith(
-          allProcessingOrdersList: [...current.allProcessingOrdersList, ...orders],
+          allProcessingOrdersList: [
+            ...current.allProcessingOrdersList,
+            ...orders,
+          ],
         );
       case OrderStatus.atHub:
         return current.copyWith(
@@ -75,6 +80,10 @@ class ResolveOrdersByStatusUseCase {
       case OrderStatus.returned:
         return current.copyWith(
           returnedOrdersList: [...current.returnedOrdersList, ...orders],
+        );
+      case OrderStatus.created:
+        return current.copyWith(
+          createdOrdersList: [...current.createdOrdersList, ...orders],
         );
       default:
         return current;

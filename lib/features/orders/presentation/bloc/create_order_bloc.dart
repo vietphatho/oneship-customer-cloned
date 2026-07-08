@@ -13,7 +13,10 @@ import 'package:oneship_customer/features/orders/domain/entities/create_order_re
 import 'package:oneship_customer/features/orders/domain/entities/order_detail_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/routing_entity.dart';
 import 'package:oneship_customer/features/orders/domain/entities/selected_product_entity.dart';
-import 'package:oneship_customer/features/orders/domain/repositories/orders_repository.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/calculate_delivery_fee_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/create_order_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/get_routing_to_shop_use_case.dart';
+import 'package:oneship_customer/features/orders/domain/use_cases/resolve_create_order_fee_request_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/update_ord_use_case.dart';
 import 'package:oneship_customer/features/orders/domain/use_cases/validate_create_order_info_use_case.dart';
 import 'package:oneship_customer/features/orders/presentation/bloc/create_order_event.dart';
@@ -34,13 +37,21 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   static const int hospitalDefaultWeight = 100;
   static const PackageSize hospitalDefaultPackageSize = PackageSize.small;
 
+  final CalculateDeliveryFeeUseCase _calculateDeliveryFeeUseCase;
+  final CreateOrderUseCase _createOrderUseCase;
+  final GetRoutingToShopUseCase _getRoutingToShopUseCase;
+  final ResolveCreateOrderFeeRequestUseCase
+  _resolveCreateOrderFeeRequestUseCase;
   final ValidateCreateOrderInfoUseCase _validateCreateOrderInfoUseCase;
   final UpdateOrdUseCase _updateOrdUseCase;
   final ShopBloc _shopBloc;
   CalculateDeliveryFeeRequest? _lastFeeCalculationRequest;
 
   CreateOrderBloc(
-    this._repository,
+    this._calculateDeliveryFeeUseCase,
+    this._createOrderUseCase,
+    this._getRoutingToShopUseCase,
+    this._resolveCreateOrderFeeRequestUseCase,
     // this._addProductToOrderUseCase,
     // this._updateProductQuantityUseCase,
     this._validateCreateOrderInfoUseCase,
@@ -70,8 +81,6 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
     on<CreateOrderErrorEvent>(_onErrorEvent);
     on<UpdateOrderInitEvent>(_onInitUpdateOrdEvent);
   }
-
-  final OrdersRepository _repository;
 
   FutureOr<void> _onInitEvent(
     CreateOrderInitShopEvent event,
@@ -335,7 +344,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
         errorMessage: null,
       ),
     );
-    final response = await _repository.calculateDeliveryFee(event.request);
+    final response = await _calculateDeliveryFeeUseCase.call(event.request);
 
     emit(state.copyWith(calculatedFeeResource: response));
   }
@@ -352,7 +361,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       ),
     );
     _syncDeliveryFeeCalculation(emit);
-    final response = await _repository.getRoutingToShop(
+    final response = await _getRoutingToShopUseCase.call(
       shopCoordinates: event.shopCoor,
       destinationRefId: event.destinationRefId,
     );
@@ -378,7 +387,7 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   ) async {
     // Capture before emit changes state
     final updateOrdId = state.updateOrdId;
-    final currentRequest = state.request;
+    final currentRequest = _requestForSubmit();
 
     emit(
       state.copyWith(
@@ -391,22 +400,11 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
 
     late final Resource response;
     if (updateOrdId == null) {
-      response = await _repository.createOrder(currentRequest.toDto());
+      response = await _createOrderUseCase.call(currentRequest);
     } else {
-      // Strip system-managed fields that server rejects on update
-      // and filter products with invalid productId (empty string)
-      final cleanRequest = currentRequest.copyWith(
-        paymentStatus: null,
-        paymentMethod: null,
-        status: null,
-        orderNumber: null,
-        selectedProducts: currentRequest.selectedProducts
-            .where((p) => p.id.isNotEmpty)
-            .toList(),
-      );
       response = await _updateOrdUseCase.call(
         ordId: updateOrdId,
-        request: cleanRequest,
+        request: currentRequest,
       );
     }
 
@@ -640,31 +638,13 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
   CalculateDeliveryFeeRequest? _feeCalculationRequest() {
     final draftRequest = _applyHospitalDefaultsIfNeeded(state.draftRequest);
     final shopId = state.shopInfo.shopId ?? draftRequest.shopId;
-    final distance =
-        state.routingToShopResource.data?.distance ??
-        draftRequest.router?.distance;
-    final serviceCode = draftRequest.serviceConfig?.serviceCode;
-    final weight = draftRequest.detail?.weight?.toInt();
-    final provinceCode = draftRequest.province?.code;
-    final wardCode = draftRequest.ward?.code;
-
-    if (shopId == null || shopId.isEmpty) return null;
-    if (distance == null || distance <= 0) return null;
-    if (serviceCode == null || serviceCode.isEmpty) return null;
-    if (weight == null || weight <= 0) return null;
-    if (hasInvalidSelectedSurcharges()) return null;
-    if (provinceCode == null) return null;
-    if (wardCode == null) return null;
-
-    return CalculateDeliveryFeeRequest(
+    return _resolveCreateOrderFeeRequestUseCase.call(
+      draftRequest: draftRequest,
       shopId: shopId,
-      distance: distance,
-      serviceCode: serviceCode,
-      weight: weight,
-      provinceCode: provinceCode,
-      wardCode: wardCode,
-      surcharges: state.selectedSurchargeCodes,
-      surchargesValues: _selectedSurchargeValues(),
+      routeDistance: state.routingToShopResource.data?.distance,
+      selectedSurchargeCodes: state.selectedSurchargeCodes,
+      selectedSurchargeValues: _selectedSurchargeValues(),
+      hasInvalidSelectedSurcharges: hasInvalidSelectedSurcharges(),
     );
   }
 
@@ -1034,6 +1014,14 @@ class CreateOrderBloc extends Bloc<CreateOrderEvent, CreateOrderState> {
       detail: (request.detail ?? const DetailEntity()).copyWith(
         weight: hospitalDefaultWeight.toDouble(),
       ),
+    );
+  }
+
+  CreateOrderRequestEntity _requestForSubmit() {
+    return state.request.copyWith(
+      status: state.shopInfo.shopType == ShopType.hospital
+          ? OrderStatus.created.value
+          : null,
     );
   }
 

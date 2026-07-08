@@ -16,6 +16,7 @@ class ReusableBarcodeScannerView extends StatefulWidget {
     required this.openSettingsText,
     required this.retryText,
     this.isProcessing = false,
+    this.formats,
     this.onScannerError,
   });
 
@@ -27,6 +28,7 @@ class ReusableBarcodeScannerView extends StatefulWidget {
   final String openSettingsText;
   final String retryText;
   final bool isProcessing;
+  final List<BarcodeFormat>? formats;
 
   @override
   State<ReusableBarcodeScannerView> createState() =>
@@ -48,7 +50,7 @@ class _ReusableBarcodeScannerViewState extends State<ReusableBarcodeScannerView>
   BarcodeCameraPermissionStatus? _permissionStatus;
   bool _isControllerStarted = false;
 
-  static const List<BarcodeFormat> _supportedFormats = [
+  static const List<BarcodeFormat> _defaultFormats = [
     BarcodeFormat.qrCode,
     BarcodeFormat.codabar,
     BarcodeFormat.code39,
@@ -67,7 +69,7 @@ class _ReusableBarcodeScannerViewState extends State<ReusableBarcodeScannerView>
     WidgetsBinding.instance.addObserver(this);
     _scannerController = MobileScannerController(
       autoStart: false,
-      formats: _supportedFormats,
+      formats: widget.formats ?? _defaultFormats,
     );
     _requestPermission();
   }

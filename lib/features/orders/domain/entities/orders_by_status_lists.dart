@@ -11,6 +11,7 @@ class OrdersByStatusLists {
     required this.delayedOrdersList,
     required this.cancelledOrdersList,
     required this.returnedOrdersList,
+    required this.createdOrdersList,
   });
 
   final List<OrderInfo> allProcessingOrdersList;
@@ -22,6 +23,7 @@ class OrdersByStatusLists {
   final List<OrderInfo> delayedOrdersList;
   final List<OrderInfo> cancelledOrdersList;
   final List<OrderInfo> returnedOrdersList;
+  final List<OrderInfo> createdOrdersList;
 
   OrdersByStatusLists copyWith({
     List<OrderInfo>? allProcessingOrdersList,
@@ -33,9 +35,11 @@ class OrdersByStatusLists {
     List<OrderInfo>? delayedOrdersList,
     List<OrderInfo>? cancelledOrdersList,
     List<OrderInfo>? returnedOrdersList,
+    List<OrderInfo>? createdOrdersList,
   }) {
     return OrdersByStatusLists(
-      allProcessingOrdersList: allProcessingOrdersList ?? this.allProcessingOrdersList,
+      allProcessingOrdersList:
+          allProcessingOrdersList ?? this.allProcessingOrdersList,
       atHubOrdersList: atHubOrdersList ?? this.atHubOrdersList,
       pendingOrdersList: pendingOrdersList ?? this.pendingOrdersList,
       processingOrdersList: processingOrdersList ?? this.processingOrdersList,
@@ -44,6 +48,7 @@ class OrdersByStatusLists {
       delayedOrdersList: delayedOrdersList ?? this.delayedOrdersList,
       cancelledOrdersList: cancelledOrdersList ?? this.cancelledOrdersList,
       returnedOrdersList: returnedOrdersList ?? this.returnedOrdersList,
+      createdOrdersList: createdOrdersList ?? this.createdOrdersList,
     );
   }
 }

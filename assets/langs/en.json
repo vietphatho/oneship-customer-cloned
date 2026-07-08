@@ -101,6 +101,15 @@
         "instruction": "Place the QR code or barcode inside the scanner frame",
         "camera_error": "Unable to open the camera. Please check camera permission."
     },
+    "hospital_medical_record_scanner": {
+        "open_button": "Scan status transition",
+        "title": "Scan medical record",
+        "instruction": "Place the medical record QR code or barcode inside the scanner frame",
+        "processing": "Processing medical record...",
+        "scan_success": "Status updated successfully.",
+        "camera_permission_error": "Unable to open the camera. Please check camera permission.",
+        "no_shop_selected": "Please select a shop before scanning medical records"
+    },
     "vendor_home": {
         "greeting": "Hello, {name}!",
         "orders": {

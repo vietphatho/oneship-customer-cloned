@@ -84,3 +84,15 @@ class ValidateOrdAtHubEvent extends OrdersEvent {
 
   ValidateOrdAtHubEvent({required this.hubId, required this.ordId});
 }
+
+class HospitalMedicalRecordScannerStartedEvent extends OrdersEvent {
+  const HospitalMedicalRecordScannerStartedEvent({required this.shopId});
+
+  final String? shopId;
+}
+
+class HospitalMedicalRecordDetectedEvent extends OrdersEvent {
+  const HospitalMedicalRecordDetectedEvent(this.medicalRecordCode);
+
+  final String medicalRecordCode;
+}
