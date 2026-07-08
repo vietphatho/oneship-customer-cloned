@@ -10,9 +10,8 @@ import 'package:oneship_customer/features/order_tracking/domain/entities/order_t
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_bloc.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_event.dart';
 import 'package:oneship_customer/features/order_tracking/presentation/bloc/order_tracking_state.dart';
-import 'package:oneship_customer/features/orders/domain/use_cases/resolve_order_transport_history_timeline_use_case.dart';
+import 'package:oneship_customer/features/orders/presentation/views/order_transportation_history_view.dart';
 import 'package:oneship_customer/features/orders/presentation/widgets/order_map_preview.dart';
-import 'package:oneship_customer/features/orders/presentation/widgets/order_transport_history_timeline.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
 
 class OrderDetailTransportationHistoryTabView extends StatefulWidget {
@@ -36,9 +35,6 @@ class _OrderDetailTransportationHistoryTabViewState
     extends State<OrderDetailTransportationHistoryTabView> {
   final OrderTrackingBloc _orderTrackingBloc = getIt.get();
   final ShopBloc _shopBloc = getIt.get();
-  final ResolveOrderTransportHistoryTimelineUseCase
-  _resolveTransportHistoryTimelineUseCase =
-      ResolveOrderTransportHistoryTimelineUseCase();
 
   @override
   void initState() {
@@ -88,20 +84,13 @@ class _OrderDetailTransportationHistoryTabViewState
       return const PrimaryEmptyData();
     }
 
-    return _buildTimeline(result.data);
+    return _buildTimeline(result.data!);
   }
 
-  Widget _buildTimeline(OrderTrackingEntity? data) {
-    final history = data?.deliveryHistory.firstOrNull;
-    final items = _resolveTransportHistoryTimelineUseCase.call(
-      history,
+  Widget _buildTimeline(OrderTrackingEntity data) {
+    return OrderTransportationHistoryView(
+      trackingResult: data,
       fallbackStartedAt: widget.fallbackStartedAt,
     );
-
-    if (items.isEmpty) {
-      return const PrimaryEmptyData();
-    }
-
-    return OrderTransportHistoryTimeline(items: items);
   }
 }

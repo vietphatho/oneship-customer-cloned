@@ -16,6 +16,7 @@ abstract class OrderTrackingResponse with _$OrderTrackingResponse {
     @JsonKey(name: "codAmount") double? codAmount,
     @JsonKey(name: "totalDeliveryFee") double? totalDeliveryFee,
     @JsonKey(name: "serviceCode") String? serviceCode,
+    @JsonKey(name: "isIntraCity") bool? isIntraCity,
     @JsonKey(name: "weight") int? weight,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "shipper") Shipper? shipper,
@@ -35,6 +36,7 @@ abstract class DeliveryHistory with _$DeliveryHistory {
   const factory DeliveryHistory({
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "confirmationImages") List<String>? confirmationImages,
+    @JsonKey(name: "shippingAt") DateTime? shippingAt,
     @JsonKey(name: "arrivedAtDelivery") DateTime? arrivedAtDelivery,
     @JsonKey(name: "deliveredAt") DateTime? deliveredAt,
     @JsonKey(name: "addedToPackageAt") DateTime? addedToPackageAt,

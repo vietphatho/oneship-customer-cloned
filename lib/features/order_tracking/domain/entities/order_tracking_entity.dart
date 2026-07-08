@@ -18,6 +18,7 @@ abstract class OrderTrackingEntity with _$OrderTrackingEntity {
     @Default(0.0) double codAmount,
     @Default(0.0) double totalDeliveryFee,
     String? serviceCode,
+    @Default(true) bool isIntraCity,
     @Default(0) int weight,
     DateTime? createdAt,
     ShipperEntity? shipper,
@@ -39,6 +40,7 @@ abstract class OrderTrackingEntity with _$OrderTrackingEntity {
       codAmount: (dto.codAmount ?? 0).toDouble(),
       totalDeliveryFee: (dto.totalDeliveryFee ?? 0).toDouble(),
       serviceCode: dto.serviceCode,
+      isIntraCity: dto.isIntraCity ?? true,
       weight: dto.weight ?? 0,
       createdAt: dto.createdAt,
       shipper: dto.shipper != null ? ShipperEntity.from(dto.shipper!) : null,
@@ -88,7 +90,9 @@ abstract class ShipperEntity with _$ShipperEntity {
 abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
   const factory DeliveryHistoryEntity({
     @Default(OrderStatus.allProcessing) OrderStatus status,
+    String? rawStatus,
     @Default([]) List<String> confirmationImages,
+    DateTime? shippingAt,
     DateTime? arrivedAtDelivery,
     DateTime? deliveredAt,
     DateTime? addedToPackageAt,
@@ -102,6 +106,7 @@ abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
   factory DeliveryHistoryEntity.from(DeliveryHistory dto) {
     return DeliveryHistoryEntity(
       status: _getStatus(dto.status),
+      rawStatus: dto.status,
       confirmationImages: dto.confirmationImages ?? [],
       arrivedAtDelivery: dto.arrivedAtDelivery,
       deliveredAt: dto.deliveredAt,
@@ -109,6 +114,7 @@ abstract class DeliveryHistoryEntity with _$DeliveryHistoryEntity {
       scannedAt: dto.scannedAt,
       pickupConfirmedAt: dto.pickupConfirmedAt,
       quantityConfirmedAt: dto.quantityConfirmedAt,
+      shippingAt: dto.shippingAt,
       pickupImages: dto.pickupImages ?? [],
       isVerified: dto.isVerified ?? false,
     );

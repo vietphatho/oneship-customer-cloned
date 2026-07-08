@@ -132,6 +132,18 @@
             "delivery_fee": "Delivery fee"
         }
     },
+    "at_shop": "At shop",
+    "start_processing": "Start processing",
+    "arrived_at_delivery": "Arrived at delivery",
+    "arrived_at_delivery_desc": "Driver is on the way to deliver",
+    "delivery_successfully": "Delivery successfully",
+    "delivered_desc": "Order has been delivered",
+    "scanned_ord": "Scanned orders",
+    "scanned_ord_desc": "Driver scanned the orders at the shop",
+    "shipping_desc": "Driver is delivering the order",
+    "qty_confirm_ord": "Quantity confirmed",
+    "qty_confirm_ord_desc": "Driver confirmed the order quantity",
+    "completed": "Completed",
     "vendor_profile": {
         "title": "Profile",
         "detail_title": "Vendor information",

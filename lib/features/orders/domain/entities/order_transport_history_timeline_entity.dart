@@ -9,7 +9,7 @@ class OrderTransportHistoryTimelineEntity {
 
   final String title;
   final String description;
-  final DateTime time;
+  final DateTime? time;
   final List<String> images;
   final bool showCompletedTag;
 }

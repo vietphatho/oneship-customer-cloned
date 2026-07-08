@@ -1345,5 +1345,10 @@
   "percent": "Phí theo phần trăm",
   "from": "từ",
   "view_avatar": "Xem ảnh đại diện",
-  "change_avatar": "Đổi ảnh đại diện"
+  "change_avatar": "Đổi ảnh đại diện",
+  "scanned_ord": "Quét các đơn hàng",
+  "scanned_ord_desc": "Tài xế đã kiểm quét các đơn hàng tại cửa hàng",
+  "shipping_desc": "Tài xế đang tiến hành giao hàng",
+  "qty_confirm_ord": "Đã xác nhận số lượng đơn hàng",
+  "qty_confirm_ord_desc": "Tài xế đã xác nhận số lượng đơn hàng"
 }

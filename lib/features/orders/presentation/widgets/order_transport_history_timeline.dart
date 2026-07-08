@@ -40,7 +40,7 @@ class _TimelineItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final time = item.time.toLocal();
+    final time = item.time;
 
     return IntrinsicHeight(
       child: Row(
@@ -88,10 +88,11 @@ class _TimelineItemView extends StatelessWidget {
                               item.title.tr(),
                               style: AppTextStyles.labelMedium,
                             ),
-                            PrimaryText(
-                              item.description.tr(),
-                              style: AppTextStyles.bodySmall,
-                            ),
+                            if (item.description.isNotEmpty)
+                              PrimaryText(
+                                item.description.tr(),
+                                style: AppTextStyles.bodySmall,
+                              ),
                             if (item.showCompletedTag) ...[
                               AppSpacing.vertical(AppDimensions.xxSmallSpacing),
                               const _CompletedTag(),
@@ -99,21 +100,7 @@ class _TimelineItemView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          PrimaryText(
-                            DateTimeUtils.formatTimeFromDT(time) ?? '',
-                            style: AppTextStyles.bodyXSmall,
-                            color: AppColors.neutral6,
-                          ),
-                          PrimaryText(
-                            DateTimeUtils.formatDateFromDT(time) ?? '',
-                            style: AppTextStyles.bodyXSmall,
-                            color: AppColors.neutral6,
-                          ),
-                        ],
-                      ),
+                      if (time != null) _TimelineTimeLabel(time: time),
                     ],
                   ),
                   if (item.images.isNotEmpty) ...[
@@ -123,7 +110,7 @@ class _TimelineItemView extends StatelessWidget {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: item.images.length,
-                        separatorBuilder: (_, __) =>
+                        separatorBuilder: (_, index) =>
                             AppSpacing.horizontal(AppDimensions.smallSpacing),
                         itemBuilder: (context, index) {
                           final imageUrl =
@@ -149,6 +136,33 @@ class _TimelineItemView extends StatelessWidget {
   }
 }
 
+class _TimelineTimeLabel extends StatelessWidget {
+  const _TimelineTimeLabel({required this.time});
+
+  final DateTime time;
+
+  @override
+  Widget build(BuildContext context) {
+    final localTime = time.toLocal();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        PrimaryText(
+          DateTimeUtils.formatTimeFromDT(localTime) ?? '',
+          style: AppTextStyles.bodyXSmall,
+          color: AppColors.neutral6,
+        ),
+        PrimaryText(
+          DateTimeUtils.formatDateFromDT(localTime) ?? '',
+          style: AppTextStyles.bodyXSmall,
+          color: AppColors.neutral6,
+        ),
+      ],
+    );
+  }
+}
+
 class _CompletedTag extends StatelessWidget {
   const _CompletedTag();
 
@@ -156,7 +170,7 @@ class _CompletedTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.green.withOpacity(0.12),
+        color: AppColors.green.withValues(alpha: 0.12),
         border: Border.all(color: AppColors.green),
         borderRadius: AppDimensions.smallBorderRadius,
       ),

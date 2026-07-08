@@ -15,25 +15,39 @@ class ResolveOrderTransportHistoryTimelineUseCase {
         title: 'delivery_successfully',
         description: 'delivered_desc',
         time: history.deliveredAt,
-        images: history.confirmationImages ?? [],
+        images: history.confirmationImages,
         showCompletedTag: true,
       ),
       _buildItem(
-        title: 'shipping',
+        title: 'arrived_at_delivery',
         description: 'arrived_at_delivery_desc',
         time: history.arrivedAtDelivery,
+      ),
+      _buildItem(
+        title: 'shipping',
+        description: 'shipping_desc',
+        time: history.shippingAt,
       ),
       _buildItem(
         title: 'picked_up',
         description: 'at_shop',
         time: history.pickupConfirmedAt,
-        images: history.pickupImages ?? [],
+        images: history.pickupImages,
+      ),
+      _buildItem(
+        title: 'qty_confirm_ord',
+        description: 'qty_confirm_ord_desc',
+        time: history.quantityConfirmedAt,
+      ),
+      _buildItem(
+        title: 'scanned_ord',
+        description: 'scanned_ord_desc',
+        time: history.scannedAt,
       ),
       _buildItem(
         title: 'start_processing',
         description: 'at_shop',
-        time:
-            history.scannedAt ?? history.addedToPackageAt ?? fallbackStartedAt,
+        time: history.addedToPackageAt ?? fallbackStartedAt,
       ),
     ];
 

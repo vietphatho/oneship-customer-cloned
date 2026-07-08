@@ -65,20 +65,20 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
 }
 
 class _OrderTrackingSession extends StatelessWidget {
-  const _OrderTrackingSession({super.key});
+  const _OrderTrackingSession();
 
   @override
   Widget build(BuildContext context) {
-    final OrderTrackingBloc _orderTrackingBloc = getIt.get();
+    final OrderTrackingBloc orderTrackingBloc = getIt.get();
 
     return BlocConsumer<OrderTrackingBloc, OrderTrackingState>(
-      bloc: _orderTrackingBloc,
+      bloc: orderTrackingBloc,
       listener: _handleOrderTrackingListener,
       builder: (context, state) {
-        var trackingResult = state.trackingResult;
-        var orderNumber = trackingResult?.data?.orderNumber;
+        final trackingResult = state.trackingResult;
+        final orderNumber = trackingResult.data?.orderNumber;
 
-        if (trackingResult?.state != Result.success &&
+        if (trackingResult.state != Result.success &&
             (orderNumber?.isEmpty ?? true)) {
           return const PrimaryEmptyData();
         }
@@ -107,7 +107,7 @@ class _OrderTrackingSession extends StatelessWidget {
     BuildContext context,
     OrderTrackingState state,
   ) {
-    switch (state.trackingResult!.state) {
+    switch (state.trackingResult.state) {
       case Result.loading:
         PrimaryDialog.showLoadingDialog(context);
         break;
