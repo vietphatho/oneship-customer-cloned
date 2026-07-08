@@ -95,6 +95,12 @@
         "instruction": "Place the QR code or barcode inside the scanner frame",
         "camera_permission_error": "Unable to open the camera. Please check camera permission."
     },
+    "primary_scannable_text_field": {
+        "title": "Scan code",
+        "scan": "Scan code",
+        "instruction": "Place the QR code or barcode inside the scanner frame",
+        "camera_error": "Unable to open the camera. Please check camera permission."
+    },
     "vendor_home": {
         "greeting": "Hello, {name}!",
         "orders": {

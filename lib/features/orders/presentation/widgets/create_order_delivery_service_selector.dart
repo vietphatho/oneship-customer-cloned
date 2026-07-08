@@ -1,5 +1,5 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
@@ -66,7 +66,11 @@ class _CreateOrderDeliveryServiceSelectorState
                     style: AppTextStyles.bodySmall,
                     bold: true,
                   ),
-                  const PrimaryText(" *", color: AppColors.primary),
+                  const PrimaryText(
+                    " *",
+                    style: AppTextStyles.labelMedium,
+                    color: AppColors.expenseRed,
+                  ),
                 ],
               ),
               AppSpacing.vertical(AppDimensions.xSmallSpacing),

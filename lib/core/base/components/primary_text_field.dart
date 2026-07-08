@@ -104,7 +104,6 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
 
   @override
   void dispose() {
-    widget.node?.dispose();
     // Không dispose focus node thuộc về parent.
     if (_controllerListener != null && widget.controller != null) {
       widget.controller!.removeListener(_controllerListener!);
@@ -125,20 +124,20 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
           if (widget.label != null)
             Padding(
               padding: const EdgeInsets.only(
-                bottom: AppDimensions.xxSmallSpacing,
+                bottom: AppDimensions.xxxSmallSpacing,
               ),
               child: Row(
                 children: [
                   PrimaryText(
                     widget.label,
-                    style: AppTextStyles.labelMedium,
+                    style: AppTextStyles.labelSmall,
                     color: colorScheme.onSurface,
                   ),
                   if (widget.isRequired)
                     PrimaryText(
                       " *",
                       style: AppTextStyles.labelMedium,
-                      color: AppColors.primary,
+                      color: AppColors.expenseRed,
                     ),
                 ],
               ),
