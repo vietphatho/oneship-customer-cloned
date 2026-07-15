@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
-import 'package:oneship_customer/features/vendor/home/data/models/request/vendor_stats_request.dart';
+import 'package:oneship_customer/features/vendor/finance/domain/use_cases/fetch_vendor_financial_summary_use_case.dart';
 import 'package:oneship_customer/features/vendor/home/domain/entities/vendor_stats_entity.dart';
-import 'package:oneship_customer/features/vendor/home/domain/use_cases/fetch_vendor_stats_use_case.dart';
 import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_event.dart';
 import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_filter.dart';
 import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_state.dart';
@@ -15,15 +14,17 @@ import 'package:oneship_customer/features/vendor/profile/presentation/bloc/vendo
 
 @lazySingleton
 class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
-  VendorStatsBloc(this._fetchVendorStatsUseCase, this._vendorProfileBloc)
-    : super(VendorStatsState.initial()) {
+  VendorStatsBloc(
+    this._fetchVendorFinancialSummaryUseCase,
+    this._vendorProfileBloc,
+  ) : super(VendorStatsState.initial()) {
     on<VendorStatsInitializedEvent>(_onInitialized);
     on<VendorStatsFilterChangedEvent>(_onFilterChanged);
     on<VendorStatsCustomRangeChangedEvent>(_onCustomRangeChanged);
     on<VendorStatsClearedEvent>(_onCleared);
   }
 
-  final FetchVendorStatsUseCase _fetchVendorStatsUseCase;
+  final FetchVendorFinancialSummaryUseCase _fetchVendorFinancialSummaryUseCase;
   final VendorProfileBloc _vendorProfileBloc;
   final Map<String, VendorStats> _statsCache = {};
 
@@ -32,7 +33,9 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
     Emitter<VendorStatsState> emit,
   ) async {
     try {
-      if (state.hasLoadedInitialRange && !event.forceRefresh) return;
+      if (state.hasLoadedInitialRange && _isTodayRange && !event.forceRefresh) {
+        return;
+      }
       await _fetchCurrentRange(emit, forceRefresh: event.forceRefresh);
     } finally {
       event.completer?.complete();
@@ -107,8 +110,20 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
     Emitter<VendorStatsState> emit, {
     bool forceRefresh = false,
   }) async {
-    final owner = await _ownerOrNull();
-    if (owner == null) {
+    final today = _today();
+    if (!_sameDate(state.startDate, today) ||
+        !_sameDate(state.endDate, today)) {
+      emit(
+        state.copyWith(
+          startDate: today,
+          endDate: today,
+          filter: VendorStatsFilter.custom,
+        ),
+      );
+    }
+
+    final userId = await _userIdOrNull();
+    if (userId == null) {
       emit(
         state.copyWith(
           statsResource: Resource.error('vendor_profile_not_loaded', 0),
@@ -118,14 +133,8 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
       return;
     }
 
-    final request = VendorStatsRequest(
-      shopId: owner.shopId,
-      vendorId: owner.vendorId,
-      startDate: state.startDate,
-      endDate: state.endDate,
-    );
-
-    final cachedStats = _statsCache[request.cacheKey];
+    final cacheKey = '$userId|${today.toIso8601String()}';
+    final cachedStats = _statsCache[cacheKey];
     if (cachedStats != null && !forceRefresh) {
       emit(
         state.copyWith(
@@ -142,15 +151,24 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
       ),
     );
 
-    final response = await _fetchVendorStatsUseCase(request);
-    if (response.state == Result.success && response.data != null) {
-      _statsCache[request.cacheKey] = response.data!;
+    final response = await _fetchVendorFinancialSummaryUseCase(
+      userId: userId,
+      startDate: today,
+      endDate: today,
+    );
+    final statsResponse = response.parse(
+      (entity) => VendorStats.fromFinanceSummary(entity, date: today),
+    );
+    if (statsResponse.state == Result.success && statsResponse.data != null) {
+      _statsCache[cacheKey] = statsResponse.data!;
     }
 
-    emit(state.copyWith(statsResource: response, hasLoadedInitialRange: true));
+    emit(
+      state.copyWith(statsResource: statsResponse, hasLoadedInitialRange: true),
+    );
   }
 
-  Future<_VendorStatsOwner?> _ownerOrNull() async {
+  Future<String?> _userIdOrNull() async {
     var profile = _vendorProfileBloc.profile;
     if (profile == null) {
       _vendorProfileBloc.init();
@@ -159,16 +177,12 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
           .then((state) => state.profile);
     }
 
-    final shopId = profile?.shopId?.trim();
-    final vendorId = profile?.id?.trim();
-    if (shopId == null ||
-        shopId.isEmpty ||
-        vendorId == null ||
-        vendorId.isEmpty) {
+    final userId = profile?.userId?.trim();
+    if (userId == null || userId.isEmpty) {
       return null;
     }
 
-    return _VendorStatsOwner(shopId: shopId, vendorId: vendorId);
+    return userId;
   }
 
   DateTime _today() {
@@ -184,6 +198,11 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
     return left.year == right.year &&
         left.month == right.month &&
         left.day == right.day;
+  }
+
+  bool get _isTodayRange {
+    final today = _today();
+    return _sameDate(state.startDate, today) && _sameDate(state.endDate, today);
   }
 
   void init({bool forceRefresh = false}) {
@@ -215,11 +234,4 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
   void clear() {
     add(const VendorStatsClearedEvent());
   }
-}
-
-class _VendorStatsOwner {
-  const _VendorStatsOwner({required this.shopId, required this.vendorId});
-
-  final String shopId;
-  final String vendorId;
 }

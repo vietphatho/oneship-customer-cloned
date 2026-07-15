@@ -103,8 +103,13 @@ class _VerifySecondaryPasswordPageState
                 AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                 PrimaryButton.filled(
                   label: 'create_second_password'.tr(),
-                  onPressed: () {
-                    context.push(RouteName.changeSecondaryPasswordPage);
+                  onPressed: () async {
+                    final isCreated = await context.push<bool>(
+                      RouteName.changeSecondaryPasswordPage,
+                    );
+                    if (isCreated == true) {
+                      widget.onCallback();
+                    }
                   },
                 ),
               ],

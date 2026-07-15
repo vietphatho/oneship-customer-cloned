@@ -172,6 +172,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthUpdatedPasswordState(Resource.loading()));
     final response = await _createSecondPasswordUseCase.call(event.body);
+    if (response.state == Result.success) {
+      _userProfile = _userProfile.copyWith(hasSecondPassword: true);
+    }
     emit(AuthUpdatedPasswordState(response));
   }
 

@@ -46,7 +46,7 @@
   "vendor_master": {
     "home": "Trang chủ",
     "orders": "Đơn hàng",
-    "wallet": "Ví",
+    "finance": "Tài chính",
     "profile": "Hồ sơ"
   },
   "vendor_stats": {
@@ -58,8 +58,13 @@
     "cod_amount": "Tiền COD",
     "empty": "Chưa có dữ liệu thống kê"
   },
-  "vendor_wallet": {
-    "title": "Ví tiểu thương",
+  "vendor_finance": {
+    "title": "Tài chính tiểu thương",
+    "second_password_required": {
+      "title": "Chưa tạo mật khẩu cấp 2",
+      "description": "Bạn cần tạo mật khẩu cấp 2 để xem thống kê. Mật khẩu này cũng sẽ được dùng cho các giao dịch tài chính và xác minh danh tính trong tương lai.",
+      "button": "Tạo mật khẩu cấp 2"
+    },
     "filters": {
       "title": "Khoảng thời gian",
       "this_week": "Tuần này",

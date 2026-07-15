@@ -47,6 +47,10 @@ import 'package:oneship_customer/features/support/presentation/models/support_ca
 import 'package:oneship_customer/features/support/presentation/views/support_category_page.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_page.dart';
 import 'package:oneship_customer/features/vendor/master/presentation/views/vendor_master_page.dart';
+import 'package:oneship_customer/features/vendor/finance/presentation/views/finance_detail_by_day.dart'
+    as vendor_finance;
+import 'package:oneship_customer/features/vendor/finance/presentation/views/finance_period_detail_page.dart'
+    as vendor_finance;
 import 'package:oneship_customer/features/vendor/orders/presentation/views/vendor_order_detail_page.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/views/vendor_profile_detail_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
@@ -212,6 +216,16 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.financePeriodDetailPage,
       builder: (context, state) => const FinancePeriodDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.vendorFinanceDetailByDayPage,
+      builder: (context, state) =>
+          const vendor_finance.VendorFinanceDetailByDay(),
+    ),
+    GoRoute(
+      path: RouteName.vendorFinancePeriodDetailPage,
+      builder: (context, state) =>
+          const vendor_finance.VendorFinancePeriodDetailPage(),
     ),
     GoRoute(
       path: RouteName.productPage,

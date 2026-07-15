@@ -181,7 +181,7 @@ class WithdrawSuccessPage extends StatelessWidget {
     if (userRole == UserRole.vendor.value) {
       final vendorTab = shopTab == BottomNavigationItem.home
           ? VendorNavigationItem.home
-          : VendorNavigationItem.wallet;
+          : VendorNavigationItem.finance;
       getIt<VendorMasterBloc>().changeTab(vendorTab);
       context.go(RouteName.vendorMasterPage);
       return;

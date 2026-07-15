@@ -24,7 +24,7 @@ class SecondaryTextButton extends StatelessWidget {
         padding: padding ?? EdgeInsets.zero,
         child: PrimaryText(
           label,
-          style: AppTextStyles.labelLarge,
+          style: AppTextStyles.labelMedium,
           color: AppColors.secondary,
         ),
       ),

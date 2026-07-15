@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/secondary_button.dart';
@@ -7,7 +7,6 @@ import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/bloc/auth_event.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/data/models/request/create_second_password_request.dart';
 import 'package:oneship_customer/features/auth/data/models/request/update_second_password_request.dart';
@@ -17,16 +16,20 @@ class ChangeSecondaryPasswordPage extends StatefulWidget {
   const ChangeSecondaryPasswordPage({super.key});
 
   @override
-  State<ChangeSecondaryPasswordPage> createState() => _ChangeSecondaryPasswordPageState();
+  State<ChangeSecondaryPasswordPage> createState() =>
+      _ChangeSecondaryPasswordPageState();
 }
 
-class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPage> {
+class _ChangeSecondaryPasswordPageState
+    extends State<ChangeSecondaryPasswordPage> {
   final AuthBloc _authBloc = getIt.get();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _currentPwdCtrl = TextEditingController();
-  final TextEditingController _currentSecondaryPwdCtrl = TextEditingController();
+  final TextEditingController _currentSecondaryPwdCtrl =
+      TextEditingController();
   final TextEditingController _newSecondaryPwdCtrl = TextEditingController();
-  final TextEditingController _confirmNewSecondaryPwdCtrl = TextEditingController();
+  final TextEditingController _confirmNewSecondaryPwdCtrl =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -95,7 +98,7 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
                   hintText: 'input'.tr(),
                   obscureText: true,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value.isEmpty) {
                       return "validate.text_required".tr();
                     }
                     if (value != _newSecondaryPwdCtrl.text) {
@@ -132,7 +135,8 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
 
   void _onUpdatePressed() {
     if (_formKey.currentState?.validate() ?? false) {
-      final hasSecondPassword = _authBloc.userProfile.hasSecondPassword ?? false;
+      final hasSecondPassword =
+          _authBloc.userProfile.hasSecondPassword ?? false;
 
       if (hasSecondPassword) {
         final request = UpdateSecondPasswordRequest(
@@ -164,7 +168,7 @@ class _ChangeSecondaryPasswordPageState extends State<ChangeSecondaryPasswordPag
             context,
             message: 'account_info.update_success'.tr(),
             onClosed: () {
-              if (mounted) Navigator.pop(context);
+              if (mounted) context.pop(true);
             },
           );
           break;

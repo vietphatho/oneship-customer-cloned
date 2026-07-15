@@ -1,4 +1,5 @@
 import 'package:oneship_customer/features/vendor/home/data/models/response/vendor_stats_response.dart';
+import 'package:oneship_customer/features/vendor/finance/domain/entities/finance_entity.dart';
 
 class VendorStats {
   const VendorStats({
@@ -28,6 +29,38 @@ class VendorStats {
       returnedCount: dto.returnedCount ?? 0,
       successRate: dto.successRate ?? 0,
       dailyStats: dto.dailyStats?.map(DailyVendorStat.fromDto).toList() ?? [],
+    );
+  }
+
+  factory VendorStats.fromFinanceSummary(
+    VendorFinanceEntity entity, {
+    required DateTime date,
+  }) {
+    final deliveredCount = entity.orderCount ?? 0;
+    final returnedCount = entity.returnedOrderCount ?? 0;
+    final orderCount = deliveredCount + returnedCount;
+    final successRate = orderCount == 0
+        ? 0.0
+        : (deliveredCount / orderCount) * 100;
+
+    return VendorStats(
+      orderCount: orderCount,
+      totalDeliveryFeeAmount: (entity.deliveryFee ?? 0).toDouble(),
+      totalCodAmount: (entity.codCollected ?? 0).toDouble(),
+      deliveredCount: deliveredCount,
+      returnedCount: returnedCount,
+      successRate: successRate,
+      dailyStats: [
+        DailyVendorStat(
+          statDate: date,
+          orderCount: orderCount,
+          totalDeliveryFeeAmount: (entity.deliveryFee ?? 0).toDouble(),
+          totalCodAmount: (entity.codCollected ?? 0).toDouble(),
+          deliveredCount: deliveredCount,
+          returnedCount: returnedCount,
+          successRate: successRate,
+        ),
+      ],
     );
   }
 

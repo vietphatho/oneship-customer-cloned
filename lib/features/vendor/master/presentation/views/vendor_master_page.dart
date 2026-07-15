@@ -33,7 +33,7 @@ class _VendorMasterPageState extends State<VendorMasterPage> {
   static const _tabs = [
     VendorNavigationItem.home,
     VendorNavigationItem.orders,
-    VendorNavigationItem.wallet,
+    VendorNavigationItem.finance,
     VendorNavigationItem.profile,
   ];
 

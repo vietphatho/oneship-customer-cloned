@@ -175,7 +175,7 @@ class _SupportCard extends StatelessWidget {
             style: AppTextStyles.labelLarge,
             color: AppColors.primary,
           ),
-          AppSpacing.vertical(AppDimensions.mediumSpacing),
+          AppSpacing.vertical(AppDimensions.smallSpacing),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -194,7 +194,7 @@ class _SupportCard extends StatelessWidget {
               AppSpacing.horizontal(AppDimensions.smallSpacing),
               PrimaryText(
                 hotline,
-                style: AppTextStyles.titleXXXLarge.copyWith(
+                style: AppTextStyles.titleXXLarge.copyWith(
                   color: AppColors.secondary,
                   fontWeight: FontWeight.w800,
                 ),
@@ -205,7 +205,7 @@ class _SupportCard extends StatelessWidget {
           PrimaryText(
             "support_working_hours".tr(),
             textAlign: TextAlign.center,
-            style: AppTextStyles.bodyMedium,
+            style: AppTextStyles.bodySmall,
             color: AppColors.neutral5,
           ),
         ],

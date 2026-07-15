@@ -224,7 +224,7 @@ class _QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final VendorMasterBloc _vendorMasterBloc = getIt.get();
+    final VendorMasterBloc vendorMasterBloc = getIt.get();
 
     return Container(
       height: 78,
@@ -242,7 +242,7 @@ class _QuickActions extends StatelessWidget {
             color: AppColors.primary,
             assetPath: ImagePath.shopHomeV2IconOrder,
             onTap: () {
-              _vendorMasterBloc.changeTab(VendorNavigationItem.orders);
+              vendorMasterBloc.changeTab(VendorNavigationItem.orders);
             },
           ),
           _QuickAction(
@@ -260,7 +260,7 @@ class _QuickActions extends StatelessWidget {
             color: AppColors.shopHomeV2QuickActionWallet,
             assetPath: ImagePath.shopHomeV2IconWallet,
             onTap: () {
-              _vendorMasterBloc.changeTab(VendorNavigationItem.wallet);
+              vendorMasterBloc.changeTab(VendorNavigationItem.finance);
             },
           ),
         ],
@@ -286,11 +286,11 @@ class _QuickAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: PrimaryAnimatedPressableWidget(
-        onTap: onTap != null
-            ? onTap
-            : () {
-                // context.push(RouteName.)
-              },
+        onTap:
+            onTap ??
+            () {
+              // context.push(RouteName.)
+            },
         child: Column(
           children: [
             Stack(

@@ -77,13 +77,13 @@ class _Body extends StatelessWidget {
               PrimaryText(
                 "no_shop_title".tr(),
                 textAlign: TextAlign.center,
-                style: AppTextStyles.titleXXXLarge,
+                style: AppTextStyles.titleXXLarge,
               ),
               AppSpacing.vertical(AppDimensions.xLargeSpacing),
               PrimaryText(
                 "no_shop_description".tr(),
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium,
+                style: AppTextStyles.bodySmall,
                 color: AppColors.neutral5,
               ),
               AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
@@ -118,6 +118,7 @@ class _Body extends StatelessWidget {
                 onPressed: _onBack,
               ),
               const DeleteAccountButton(),
+              AppSpacing.vertical(AppDimensions.largeSpacing),
             ],
           ),
         ),

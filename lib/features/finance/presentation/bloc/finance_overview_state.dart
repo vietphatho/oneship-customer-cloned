@@ -19,7 +19,7 @@ abstract class FinanceOverviewState with _$FinanceOverviewState {
 
 extension FinanceOverviewStateX on FinanceOverviewState {
   bool get isSecondPasswordRequired =>
-      (shopFinancialData.statusCode == 401 &&
-          (shopFinancialData.errorCode == ErrorCodeEnum.auth016.key ||
-              shopFinancialData.errorCode == ErrorCodeEnum.auth020.key));
+      shopFinancialData.statusCode == 401 &&
+      (shopFinancialData.errorCode == ErrorCodeEnum.auth016.key ||
+          shopFinancialData.errorCode == ErrorCodeEnum.auth020.key);
 }

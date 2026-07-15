@@ -34,12 +34,15 @@ class _VendorHomePageState extends State<VendorHomePage> {
 
   final VendorProfileBloc _vendorProfileBloc = getIt.get();
   final VendorStatsBloc _vendorStatsBloc = getIt.get();
+  final AuthBloc _authBloc = getIt.get();
 
   @override
   void initState() {
     super.initState();
     _vendorProfileBloc.init();
-    _vendorStatsBloc.init();
+    if (_hasSecondPassword) {
+      _vendorStatsBloc.init();
+    }
   }
 
   @override
@@ -49,7 +52,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
-          onRefresh: () async => _vendorStatsBloc.refresh(),
+          onRefresh: _refresh,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 150),
@@ -80,6 +83,10 @@ class _VendorHomePageState extends State<VendorHomePage> {
   }
 
   Widget _buildPromoStatsSection() {
+    if (!_hasSecondPassword) {
+      return const _PromoBanner();
+    }
+
     return Column(
       children: [
         const _PromoBanner(),
@@ -87,5 +94,14 @@ class _VendorHomePageState extends State<VendorHomePage> {
         const _StatsPanel(),
       ],
     );
+  }
+
+  bool get _hasSecondPassword =>
+      _authBloc.userProfile.hasSecondPassword == true;
+
+  Future<void> _refresh() async {
+    if (_hasSecondPassword) {
+      await _vendorStatsBloc.refresh();
+    }
   }
 }

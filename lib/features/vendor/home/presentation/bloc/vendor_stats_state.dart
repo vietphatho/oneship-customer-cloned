@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
+import 'package:oneship_customer/core/base/constants/error_code.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
 import 'package:oneship_customer/features/vendor/home/domain/entities/vendor_stats_entity.dart';
 import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_filter.dart';
@@ -22,7 +23,7 @@ abstract class VendorStatsState with _$VendorStatsState {
 
     return VendorStatsState(
       statsResource: Resource.loading(),
-      startDate: today.subtract(const Duration(days: 30)),
+      startDate: today,
       endDate: today,
     );
   }
@@ -34,6 +35,11 @@ extension VendorStatsStateX on VendorStatsState {
   bool get isLoading => statsResource.state == Result.loading;
 
   bool get isError => statsResource.state == Result.error;
+
+  bool get isSecondPasswordVerificationRequired =>
+      statsResource.statusCode == 401 &&
+      (statsResource.errorCode == ErrorCodeEnum.auth016.key ||
+          statsResource.errorCode == ErrorCodeEnum.auth020.key);
 
   bool get isEmpty =>
       statsResource.state == Result.success && stats?.isEmpty == true;

@@ -22,7 +22,7 @@ class _VendorBottomNavigationBarState extends State<VendorBottomNavigationBar> {
   static const _items = [
     VendorNavigationItem.home,
     VendorNavigationItem.orders,
-    VendorNavigationItem.wallet,
+    VendorNavigationItem.finance,
     VendorNavigationItem.profile,
   ];
 

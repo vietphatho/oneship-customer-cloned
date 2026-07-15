@@ -122,7 +122,7 @@
     "vendor_master": {
         "home": "Home",
         "orders": "Orders",
-        "wallet": "Wallet",
+        "finance": "Finance",
         "profile": "Profile"
     },
     "vendor_stats": {
@@ -134,8 +134,13 @@
         "cod_amount": "COD amount",
         "empty": "No statistics data yet"
     },
-    "vendor_wallet": {
-        "title": "Vendor wallet",
+    "vendor_finance": {
+        "title": "Vendor finance",
+        "second_password_required": {
+            "title": "Second Password not created",
+            "description": "Create a Second Password to access statistics. This password will also be used for future financial transactions and identity verification.",
+            "button": "Create Second Password"
+        },
         "filters": {
             "title": "Date range",
             "this_week": "This week",
