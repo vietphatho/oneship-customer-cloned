@@ -2,9 +2,69 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/vendor/finance/domain/entities/finance_entity.dart';
 import 'package:oneship_customer/features/vendor/finance/presentation/widgets/vendor_finance_chart_painter.dart';
 
-class VendorFinanceChartCard extends StatelessWidget {
-  const VendorFinanceChartCard({super.key, required this.items});
+class VendorFinanceChartsSection extends StatelessWidget {
+  const VendorFinanceChartsSection({super.key, required this.items});
 
+  final List<DailyBreakdownEntity> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final charts = [
+          VendorFinanceChartCard(
+            title: 'cod_trend'.tr(),
+            label: 'chart_money_label'.tr(
+              namedArgs: {'label': 'cod_collection'.tr()},
+            ),
+            metric: VendorFinanceChartMetric.cod,
+            items: items,
+          ),
+          VendorFinanceChartCard(
+            title: 'delivery_fee_trend'.tr(),
+            label: 'chart_money_label'.tr(
+              namedArgs: {'label': 'delivery_fee_title'.tr()},
+            ),
+            metric: VendorFinanceChartMetric.deliveryFee,
+            items: items,
+          ),
+        ];
+
+        if (constraints.maxWidth >= 640) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: charts.first),
+              AppSpacing.horizontal(AppDimensions.smallSpacing),
+              Expanded(child: charts.last),
+            ],
+          );
+        }
+
+        return Column(
+          children: [
+            charts.first,
+            AppSpacing.vertical(AppDimensions.smallSpacing),
+            charts.last,
+          ],
+        );
+      },
+    );
+  }
+}
+
+class VendorFinanceChartCard extends StatelessWidget {
+  const VendorFinanceChartCard({
+    super.key,
+    required this.title,
+    required this.label,
+    required this.metric,
+    required this.items,
+  });
+
+  final String title;
+  final String label;
+  final VendorFinanceChartMetric metric;
   final List<DailyBreakdownEntity> items;
 
   @override
@@ -13,29 +73,9 @@ class VendorFinanceChartCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PrimaryText(
-            'cod_and_delivery_fee'.tr(),
-            style: AppTextStyles.labelXSmall,
-          ),
+          PrimaryText(title, style: AppTextStyles.labelXSmall),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          Wrap(
-            spacing: AppDimensions.largeSpacing,
-            runSpacing: AppDimensions.xxSmallSpacing,
-            children: [
-              _ChartLegend(
-                color: AppColors.green600,
-                label: 'chart_money_label'.tr(
-                  namedArgs: {'label': 'cod_collection'.tr()},
-                ),
-              ),
-              _ChartLegend(
-                color: AppColors.primary,
-                label: 'chart_money_label'.tr(
-                  namedArgs: {'label': 'delivery_fee_title'.tr()},
-                ),
-              ),
-            ],
-          ),
+          _ChartLegend(color: metric.color, label: label),
           AppSpacing.vertical(AppDimensions.smallSpacing),
           SizedBox(
             height: VendorFinanceChartPainter.chartHeight,
@@ -49,7 +89,12 @@ class VendorFinanceChartCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   )
-                : CustomPaint(painter: VendorFinanceChartPainter(items)),
+                : CustomPaint(
+                    painter: VendorFinanceChartPainter(
+                      items: items,
+                      metric: metric,
+                    ),
+                  ),
           ),
         ],
       ),

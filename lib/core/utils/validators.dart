@@ -90,12 +90,35 @@ class Validators {
     return null;
   }
 
+  static String? validateSecondPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "validate.second_password_required".tr();
+    }
+    if (value.length < 8) {
+      return "validate.second_password_min_length".tr();
+    }
+    return null;
+  }
+
   static String? validateConfirmPassword(
     String? value,
     String originalPassword,
   ) {
     if (value == null || value.isEmpty) {
       return "validate.confirm_password_required".tr();
+    }
+    if (value != originalPassword) {
+      return "validate.confirm_password_mismatch".tr();
+    }
+    return null;
+  }
+
+  static String? validateConfirmSecondPassword(
+    String? value,
+    String originalPassword,
+  ) {
+    if (value == null || value.isEmpty) {
+      return "validate.confirm_second_password_required".tr();
     }
     if (value != originalPassword) {
       return "validate.confirm_password_mismatch".tr();

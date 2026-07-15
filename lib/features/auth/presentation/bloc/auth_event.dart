@@ -22,6 +22,12 @@ class AuthForgotPasswordEvent extends AuthEvent {
   AuthForgotPasswordEvent({required this.email});
 }
 
+class AuthForgotSecondaryPasswordEvent extends AuthEvent {
+  final String email;
+
+  AuthForgotSecondaryPasswordEvent({required this.email});
+}
+
 class AuthLogOutEvent extends AuthEvent {
   const AuthLogOutEvent();
 }

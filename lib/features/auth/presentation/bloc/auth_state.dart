@@ -49,6 +49,12 @@ class AuthForgotPasswordState extends AuthState {
   AuthForgotPasswordState(this.resource);
 }
 
+class AuthForgotSecondaryPasswordState extends AuthState {
+  final Resource resource;
+
+  AuthForgotSecondaryPasswordState(this.resource);
+}
+
 class AuthFetchedUserProfileState extends AuthState {
   final Resource<UserProfileResponse> resource;
 

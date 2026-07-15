@@ -59,11 +59,11 @@ class _VendorFinanceOverviewTabViewState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SummaryCards(finance: finance),
-                const SizedBox(height: 16),
-                VendorFinanceChartCard(
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                VendorFinanceChartsSection(
                   items: finance.dailyBreakdown ?? const [],
                 ),
-                const SizedBox(height: 16),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
                 _DetailsGrid(finance: finance),
                 const SizedBox(height: 16),
                 _DailySummaryCard(items: finance.dailyBreakdown ?? const []),

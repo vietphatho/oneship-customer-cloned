@@ -36,6 +36,7 @@ class ProfileBackgroundScaffold extends StatelessWidget {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: true,
           appBar: appBar,
           body: showBodyBackground
               ? Container(color: AppColors.background, child: body)

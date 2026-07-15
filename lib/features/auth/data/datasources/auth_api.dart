@@ -52,6 +52,11 @@ abstract class AuthApi {
   @POST("/api/v1/auth/forgot-password")
   Future<BaseResponse> forgotPassword(@Body() ForgotPasswordRequest body);
 
+  @POST("/api/v1/auth/forgot-secondary-password")
+  Future<BaseResponse> forgotSecondaryPassword(
+    @Body() ForgotPasswordRequest body,
+  );
+
   @PATCH("/api/v1/users/{id}")
   Future<BaseResponse<UserProfileResponse, BaseError>> updateUserProfile({
     @Path("id") required String id,

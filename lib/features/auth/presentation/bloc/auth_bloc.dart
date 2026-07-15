@@ -19,6 +19,7 @@ import 'package:oneship_customer/features/auth/domain/use_cases/create_second_pa
 import 'package:oneship_customer/features/auth/domain/use_cases/delete_account_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/fetch_user_profile_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/forgot_password_use_case.dart';
+import 'package:oneship_customer/features/auth/domain/use_cases/forgot_secondary_password_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_in_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/log_out_use_case.dart';
 import 'package:oneship_customer/features/auth/domain/use_cases/update_password_use_case.dart';
@@ -44,10 +45,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._deleteAccountUseCase,
     this._updateUserAvatarUseCase,
     this._forgotPasswordUseCase,
+    this._forgotSecondaryPasswordUseCase,
     this._deviceIdService,
   ) : super(const AuthInitialState()) {
     on<AuthLoginEvent>(_onLoginEvent);
     on<AuthForgotPasswordEvent>(_onForgotPasswordEvent);
+    on<AuthForgotSecondaryPasswordEvent>(_onForgotSecondaryPasswordEvent);
     on<AuthFetchingUserProfileEvent>(_onProfileFetchedEvent);
     on<AuthUpdateUserProfileEvent>(_onProfileUpdatedEvent);
     on<AuthLogOutEvent>(_onLogOutEvent);
@@ -70,12 +73,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final DeleteAccountUseCase _deleteAccountUseCase;
   final UpdateUserAvatarUseCase _updateUserAvatarUseCase;
   final ForgotPasswordUseCase _forgotPasswordUseCase;
+  final ForgotSecondaryPasswordUseCase _forgotSecondaryPasswordUseCase;
   final DeviceIdService _deviceIdService;
 
   final ImagePicker _imagePicker = ImagePicker();
 
   late UserProfileResponse _userProfile;
   UserProfileResponse get userProfile => _userProfile;
+  bool _hasDismissedSecondPasswordReminder = false;
 
   List<BottomNavigationItem> getBottomNavBarList() {
     return [
@@ -119,6 +124,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthForgotPasswordState(response));
   }
 
+  FutureOr<void> _onForgotSecondaryPasswordEvent(
+    AuthForgotSecondaryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final email = event.email.trim();
+    final validationMessage = validateForgotPasswordEmail(email);
+    if (validationMessage != null) {
+      emit(
+        AuthForgotSecondaryPasswordState(Resource.error(validationMessage, 0)),
+      );
+      return;
+    }
+
+    emit(AuthForgotSecondaryPasswordState(Resource.loading()));
+
+    final response = await _forgotSecondaryPasswordUseCase.call(
+      ForgotPasswordRequest(email: email),
+    );
+
+    emit(AuthForgotSecondaryPasswordState(response));
+  }
+
   FutureOr<void> _onProfileFetchedEvent(
     AuthFetchingUserProfileEvent event,
     Emitter<AuthState> emit,
@@ -137,6 +164,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLogOutState(Resource.loading()));
     final response = await _logOutUseCase.call();
+    if (response.state == Result.success) {
+      _hasDismissedSecondPasswordReminder = false;
+    }
     emit(AuthLogOutState(response));
   }
 
@@ -173,7 +203,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthUpdatedPasswordState(Resource.loading()));
     final response = await _createSecondPasswordUseCase.call(event.body);
     if (response.state == Result.success) {
-      _userProfile = _userProfile.copyWith(hasSecondPassword: true);
+      final profileResponse = await _fetchUserProfileUseCase.call();
+      if (profileResponse.state == Result.success &&
+          profileResponse.data != null) {
+        _userProfile = profileResponse.data!;
+      } else {
+        emit(AuthUpdatedPasswordState(profileResponse));
+        return;
+      }
     }
     emit(AuthUpdatedPasswordState(response));
   }
@@ -184,6 +221,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthUpdatedPasswordState(Resource.loading()));
     final response = await _updateSecondPasswordUseCase.call(event.body);
+    if (response.state == Result.success) {
+      final profileResponse = await _fetchUserProfileUseCase.call();
+      if (profileResponse.state == Result.success &&
+          profileResponse.data != null) {
+        _userProfile = profileResponse.data!;
+      } else {
+        emit(AuthUpdatedPasswordState(profileResponse));
+        return;
+      }
+    }
     emit(AuthUpdatedPasswordState(response));
   }
 
@@ -242,6 +289,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void forgotPassword({required String email}) {
     add(AuthForgotPasswordEvent(email: email));
+  }
+
+  void forgotSecondaryPassword({required String email}) {
+    add(AuthForgotSecondaryPasswordEvent(email: email));
   }
 
   String? validateForgotPasswordEmail(String email) {
@@ -304,5 +355,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void updateUserAvatar() {
     add(const AuthUpdateUserAvatarEvent());
+  }
+
+  bool get shouldShowSecondPasswordReminder =>
+      !_hasDismissedSecondPasswordReminder &&
+      (_userProfile.hasSecondPassword ?? false) == false;
+
+  void dismissSecondPasswordReminder() {
+    _hasDismissedSecondPasswordReminder = true;
   }
 }

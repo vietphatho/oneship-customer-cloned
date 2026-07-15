@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
@@ -6,10 +5,11 @@ import 'package:oneship_customer/core/base/components/secondary_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
+import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
-import 'package:oneship_customer/features/auth/data/models/request/update_password_request.dart';
 import 'package:oneship_customer/features/profile/presentation/widgets/profile_background_scaffold.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/profile_form_scroll_view.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -24,12 +24,18 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final TextEditingController _currentPwdCtrl = TextEditingController();
   final TextEditingController _secondaryPwdCtrl = TextEditingController();
   final TextEditingController _newPwdCtrl = TextEditingController();
+  final FocusNode _currentPwdNode = FocusNode();
+  final FocusNode _secondaryPwdNode = FocusNode();
+  final FocusNode _newPwdNode = FocusNode();
 
   @override
   void dispose() {
     _currentPwdCtrl.dispose();
     _secondaryPwdCtrl.dispose();
     _newPwdCtrl.dispose();
+    _currentPwdNode.dispose();
+    _secondaryPwdNode.dispose();
+    _newPwdNode.dispose();
     super.dispose();
   }
 
@@ -44,65 +50,77 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       body: BlocListener<AuthBloc, AuthState>(
         bloc: _authBloc,
         listener: _handleUpdatePasswordListener,
-        child: Padding(
-          padding: AppDimensions.mediumPaddingHorizontal,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                AppSpacing.vertical(AppDimensions.largeSpacing),
-                PrimaryTextField(
-                  label: 'change_password.current_password'.tr(),
-                  isRequired: true,
-                  controller: _currentPwdCtrl,
-                  hintText: 'input'.tr(),
-                  obscureText: true,
-                  validator: Validators.validateEmptyField,
-                ),
-                AppSpacing.vertical(AppDimensions.mediumSpacing),
-                PrimaryTextField(
-                  label: 'change_password.secondary_password'.tr(),
-                  isRequired: true,
-                  controller: _secondaryPwdCtrl,
-                  hintText: 'input'.tr(),
-                  obscureText: true,
-                  validator: Validators.validateEmptyField,
-                ),
-                AppSpacing.vertical(AppDimensions.mediumSpacing),
-                PrimaryTextField(
-                  label: 'change_password.new_password'.tr(),
-                  isRequired: true,
-                  controller: _newPwdCtrl,
-                  hintText: 'input'.tr(),
-                  obscureText: true,
-                  validator: Validators.validateEmptyField,
-                ),
-                const Spacer(),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: AppDimensions.mediumSpacing,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SecondaryButton.outlined(
-                            label: 'change_password.button_close'.tr(),
-                            onPressed: () => Navigator.pop(context),
+        child: ProfileFormScrollView(
+          child: Padding(
+            padding: AppDimensions.mediumPaddingHorizontal,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  AppSpacing.vertical(AppDimensions.largeSpacing),
+                  PrimaryTextField(
+                    label: 'change_password.current_password'.tr(),
+                    isRequired: true,
+                    controller: _currentPwdCtrl,
+                    node: _currentPwdNode,
+                    nextNode: _secondaryPwdNode,
+                    hintText: 'input'.tr(),
+                    obscureText: true,
+                    textInputAction: TextInputAction.next,
+                    validator: Validators.validateEmptyField,
+                  ),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  PrimaryTextField(
+                    label: 'change_password.secondary_password'.tr(),
+                    isRequired: true,
+                    controller: _secondaryPwdCtrl,
+                    node: _secondaryPwdNode,
+                    nextNode: _newPwdNode,
+                    hintText: 'input'.tr(),
+                    obscureText: true,
+                    textInputAction: TextInputAction.next,
+                    validator: Validators.validateEmptyField,
+                  ),
+                  AppSpacing.vertical(AppDimensions.mediumSpacing),
+                  PrimaryTextField(
+                    label: 'change_password.new_password'.tr(),
+                    isRequired: true,
+                    controller: _newPwdCtrl,
+                    node: _newPwdNode,
+                    hintText: 'input'.tr(),
+                    obscureText: true,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) => _onUpdatePressed(),
+                    validator: Validators.validateEmptyField,
+                  ),
+                  AppSpacing.vertical(AppDimensions.largeSpacing),
+                  const Spacer(),
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: AppDimensions.mediumSpacing,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SecondaryButton.outlined(
+                              label: 'change_password.button_close'.tr(),
+                              onPressed: () => Navigator.pop(context),
+                            ),
                           ),
-                        ),
-                        AppSpacing.horizontal(AppDimensions.mediumSpacing),
-                        Expanded(
-                          child: SecondaryButton.filled(
-                            label: 'change_password.button_update'.tr(),
-                            onPressed: _onUpdatePressed,
+                          AppSpacing.horizontal(AppDimensions.mediumSpacing),
+                          Expanded(
+                            child: SecondaryButton.filled(
+                              label: 'change_password.button_update'.tr(),
+                              onPressed: _onUpdatePressed,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

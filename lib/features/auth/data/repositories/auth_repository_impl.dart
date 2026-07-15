@@ -59,6 +59,11 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<Resource> forgotSecondaryPassword(ForgotPasswordRequest body) {
+    return request(() => _authApi.forgotSecondaryPassword(body));
+  }
+
+  @override
   Future<Resource<UserProfileResponse>> updateUserProfile({
     required String id,
     required UpdateUserProfileRequest body,

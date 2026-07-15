@@ -3,10 +3,29 @@ import 'dart:math' as math;
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/features/vendor/finance/domain/entities/finance_entity.dart';
 
-class VendorFinanceChartPainter extends CustomPainter {
-  VendorFinanceChartPainter(this.items);
+enum VendorFinanceChartMetric {
+  cod,
+  deliveryFee;
 
-  static const double chartHeight = 190;
+  Color get color {
+    return switch (this) {
+      VendorFinanceChartMetric.cod => AppColors.green600,
+      VendorFinanceChartMetric.deliveryFee => AppColors.primary,
+    };
+  }
+
+  int valueOf(DailyBreakdownEntity item) {
+    return switch (this) {
+      VendorFinanceChartMetric.cod => item.codCollected ?? 0,
+      VendorFinanceChartMetric.deliveryFee => item.deliveryFee ?? 0,
+    };
+  }
+}
+
+class VendorFinanceChartPainter extends CustomPainter {
+  VendorFinanceChartPainter({required this.items, required this.metric});
+
+  static const double chartHeight = 156;
   static const int _gridLineCount = 4;
   static const double _leftPadding = 46;
   static const double _rightPadding = 12;
@@ -15,6 +34,7 @@ class VendorFinanceChartPainter extends CustomPainter {
   static const double _labelMinSpacing = 48;
 
   final List<DailyBreakdownEntity> items;
+  final VendorFinanceChartMetric metric;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -24,16 +44,12 @@ class VendorFinanceChartPainter extends CustomPainter {
       ..color = AppColors.grey200
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
-    final codLinePaint = _linePaint(AppColors.green600);
-    final deliveryLinePaint = _linePaint(AppColors.primary);
+    final linePaint = _linePaint(metric.color);
     final dotBorderPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
-    final codDotPaint = Paint()
-      ..color = AppColors.green600
-      ..style = PaintingStyle.fill;
-    final deliveryDotPaint = Paint()
-      ..color = AppColors.primary
+    final dotPaint = Paint()
+      ..color = metric.color
       ..style = PaintingStyle.fill;
 
     final chartWidth = size.width - _leftPadding - _rightPadding;
@@ -44,44 +60,26 @@ class VendorFinanceChartPainter extends CustomPainter {
 
     _drawGridAndYAxis(canvas, size, chartHeight, maxAmount, gridPaint);
 
-    final codPath = Path();
-    final deliveryPath = Path();
-    final codPoints = <Offset>[];
-    final deliveryPoints = <Offset>[];
+    final path = Path();
+    final points = <Offset>[];
 
     for (var index = 0; index < items.length; index++) {
       final item = items[index];
       final x = _xPosition(index, chartWidth);
-      final codY = _yPosition(item.codCollected ?? 0, chartHeight, maxAmount);
-      final deliveryY = _yPosition(
-        item.deliveryFee ?? 0,
-        chartHeight,
-        maxAmount,
-      );
+      final y = _yPosition(metric.valueOf(item), chartHeight, maxAmount);
+      final point = Offset(x, y);
 
-      final codPoint = Offset(x, codY);
-      final deliveryPoint = Offset(x, deliveryY);
-      codPoints.add(codPoint);
-      deliveryPoints.add(deliveryPoint);
-
-      _extendPath(codPath, codPoint, index);
-      _extendPath(deliveryPath, deliveryPoint, index);
+      points.add(point);
+      _extendPath(path, point, index);
       _drawXAxisLabel(canvas, item.date, index, chartWidth, chartHeight);
     }
 
     if (items.length > 1) {
-      canvas.drawPath(codPath, codLinePaint);
-      canvas.drawPath(deliveryPath, deliveryLinePaint);
+      canvas.drawPath(path, linePaint);
     }
 
-    for (var index = 0; index < codPoints.length; index++) {
-      _drawCircleMarker(canvas, codPoints[index], dotBorderPaint, codDotPaint);
-      _drawSquareMarker(
-        canvas,
-        deliveryPoints[index],
-        dotBorderPaint,
-        deliveryDotPaint,
-      );
+    for (final point in points) {
+      _drawCircleMarker(canvas, point, dotBorderPaint, dotPaint);
     }
   }
 
@@ -97,8 +95,7 @@ class VendorFinanceChartPainter extends CustomPainter {
   int _maxAmount() {
     var maxAmount = 0;
     for (final item in items) {
-      maxAmount = math.max(maxAmount, item.codCollected ?? 0);
-      maxAmount = math.max(maxAmount, item.deliveryFee ?? 0);
+      maxAmount = math.max(maxAmount, metric.valueOf(item));
     }
     return maxAmount;
   }
@@ -244,32 +241,8 @@ class VendorFinanceChartPainter extends CustomPainter {
     canvas.drawCircle(point, 3, fillPaint);
   }
 
-  void _drawSquareMarker(
-    Canvas canvas,
-    Offset point,
-    Paint borderPaint,
-    Paint fillPaint,
-  ) {
-    const outerSize = 8.0;
-    const innerSize = 5.5;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromCenter(center: point, width: outerSize, height: outerSize),
-        const Radius.circular(2),
-      ),
-      borderPaint,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromCenter(center: point, width: innerSize, height: innerSize),
-        const Radius.circular(1.5),
-      ),
-      fillPaint,
-    );
-  }
-
   @override
   bool shouldRepaint(covariant VendorFinanceChartPainter oldDelegate) {
-    return oldDelegate.items != items;
+    return oldDelegate.items != items || oldDelegate.metric != metric;
   }
 }

@@ -29,6 +29,8 @@ abstract class AuthRepository extends BaseRepository {
 
   Future<Resource> forgotPassword(ForgotPasswordRequest body);
 
+  Future<Resource> forgotSecondaryPassword(ForgotPasswordRequest body);
+
   Future<Resource<UserProfileResponse>> updateUserProfile({
     required String id,
     required UpdateUserProfileRequest body,

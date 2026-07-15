@@ -1,15 +1,20 @@
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VendorProfileMenuPanel extends StatelessWidget {
   const VendorProfileMenuPanel({super.key});
 
-  List<PrimaryMenuItemData> _items(BuildContext context) {
+  List<PrimaryMenuItemData> _items(
+    BuildContext context, {
+    required bool hasSecondPassword,
+  }) {
     return [
       PrimaryMenuItemData(
         icon: Icons.person_outline_rounded,
@@ -22,6 +27,14 @@ class VendorProfileMenuPanel extends StatelessWidget {
         iconColor: AppColors.info,
         label: 'vendor_profile.menu.change_password'.tr(),
         onTap: () => context.push(RouteName.changePasswordPage),
+      ),
+      PrimaryMenuItemData(
+        icon: Icons.enhanced_encryption_outlined,
+        iconColor: AppColors.investmentPurple,
+        label: hasSecondPassword
+            ? 'profile_menu.change_second_password'.tr()
+            : 'profile_menu.create_second_password'.tr(),
+        onTap: () => context.push(RouteName.changeSecondaryPasswordPage),
       ),
       PrimaryMenuItemData(
         icon: Icons.location_on_outlined,
@@ -82,17 +95,33 @@ class VendorProfileMenuPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = _items(context);
+    final authBloc = getIt.get<AuthBloc>();
 
-    return PrimaryPanel(
-      width: double.infinity,
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          for (var i = 0; i < items.length; i++)
-            PrimaryMenuItem(data: items[i], showDivider: i != items.length - 1),
-        ],
-      ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      bloc: authBloc,
+      buildWhen: (previous, current) =>
+          current is AuthFetchedUserProfileState ||
+          current is AuthUpdatedPasswordState,
+      builder: (context, state) {
+        final items = _items(
+          context,
+          hasSecondPassword: authBloc.userProfile.hasSecondPassword ?? false,
+        );
+
+        return PrimaryPanel(
+          width: double.infinity,
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              for (var i = 0; i < items.length; i++)
+                PrimaryMenuItem(
+                  data: items[i],
+                  showDivider: i != items.length - 1,
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

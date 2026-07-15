@@ -61,9 +61,9 @@ class _FinanceOverviewTabViewState extends State<FinanceOverviewTabView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SummaryCards(finance: finance),
-                const SizedBox(height: 16),
-                _ChartCard(items: finance.dailyBreakdown ?? const []),
-                const SizedBox(height: 16),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
+                _ChartsSection(items: finance.dailyBreakdown ?? const []),
+                AppSpacing.vertical(AppDimensions.mediumSpacing),
                 _DetailsGrid(finance: finance),
                 const SizedBox(height: 16),
                 _DailySummaryCard(items: finance.dailyBreakdown ?? const []),
@@ -573,8 +573,68 @@ class _TagMetricPainter extends CustomPainter {
       oldDelegate.foregroundColor != foregroundColor;
 }
 
+class _ChartsSection extends StatelessWidget {
+  const _ChartsSection({required this.items});
+
+  final List<DailyBreakdownEntity> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final charts = [
+          _ChartCard(
+            title: 'cod_trend'.tr(),
+            label: 'chart_money_label'.tr(
+              namedArgs: {'label': 'cod_collection'.tr()},
+            ),
+            metric: _FinanceChartMetric.cod,
+            items: items,
+          ),
+          _ChartCard(
+            title: 'delivery_fee_trend'.tr(),
+            label: 'chart_money_label'.tr(
+              namedArgs: {'label': 'delivery_fee_title'.tr()},
+            ),
+            metric: _FinanceChartMetric.deliveryFee,
+            items: items,
+          ),
+        ];
+
+        if (constraints.maxWidth >= 640) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: charts.first),
+              AppSpacing.horizontal(AppDimensions.smallSpacing),
+              Expanded(child: charts.last),
+            ],
+          );
+        }
+
+        return Column(
+          children: [
+            charts.first,
+            AppSpacing.vertical(AppDimensions.smallSpacing),
+            charts.last,
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _ChartCard extends StatelessWidget {
-  const _ChartCard({required this.items});
+  const _ChartCard({
+    required this.title,
+    required this.label,
+    required this.metric,
+    required this.items,
+  });
+
+  final String title;
+  final String label;
+  final _FinanceChartMetric metric;
   final List<DailyBreakdownEntity> items;
 
   @override
@@ -586,10 +646,7 @@ class _ChartCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  'cod_and_delivery_fee'.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
+                child: PrimaryText(title, style: AppTextStyles.labelXSmall),
               ),
               // Container(
               //   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
@@ -618,35 +675,23 @@ class _ChartCard extends StatelessWidget {
             ],
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          Row(
-            children: [
-              _Legend(
-                color: AppColors.green600,
-                label: 'chart_money_label'.tr(
-                  namedArgs: {'label': 'cod_collection'.tr()},
-                ),
-              ),
-              const SizedBox(width: 20),
-              _Legend(
-                color: AppColors.primary,
-                label: 'chart_money_label'.tr(
-                  namedArgs: {'label': 'delivery_fee_title'.tr()},
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
+          _Legend(color: metric.color, label: label),
+          AppSpacing.vertical(AppDimensions.smallSpacing),
           SizedBox(
-            height: 190,
+            height: _FinanceChartPainter.chartHeight,
             width: double.infinity,
             child: items.isEmpty
                 ? Center(
-                    child: Text(
+                    child: PrimaryText(
                       'no_daily_data'.tr(),
-                      style: const TextStyle(color: AppColors.grey500),
+                      style: AppTextStyles.bodyXSmall,
+                      color: AppColors.grey500,
+                      textAlign: TextAlign.center,
                     ),
                   )
-                : CustomPaint(painter: _FinanceChartPainter(items)),
+                : CustomPaint(
+                    painter: _FinanceChartPainter(items: items, metric: metric),
+                  ),
           ),
         ],
       ),
@@ -1443,261 +1488,235 @@ class _FinanceAssetIcon extends StatelessWidget {
   }
 }
 
-class _StatusIcon extends StatelessWidget {
-  const _StatusIcon({required this.color});
+enum _FinanceChartMetric {
+  cod,
+  deliveryFee;
 
-  final Color color;
+  Color get color {
+    return switch (this) {
+      _FinanceChartMetric.cod => AppColors.green600,
+      _FinanceChartMetric.deliveryFee => AppColors.primary,
+    };
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 14,
-      height: 14,
-      decoration: BoxDecoration(
-        color: color.withAlpha(24),
-        shape: BoxShape.circle,
-        border: Border.all(color: color),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(1),
-        child: _FinanceAssetIcon(
-          asset: 'assets/icons/finance_status_check.svg',
-          color: color,
-          size: 10,
-        ),
-      ),
-    );
+  int valueOf(DailyBreakdownEntity item) {
+    return switch (this) {
+      _FinanceChartMetric.cod => item.codCollected ?? 0,
+      _FinanceChartMetric.deliveryFee => item.deliveryFee ?? 0,
+    };
   }
 }
 
 class _FinanceChartPainter extends CustomPainter {
-  final List<DailyBreakdownEntity> items;
+  _FinanceChartPainter({required this.items, required this.metric});
 
-  _FinanceChartPainter(this.items);
+  static const double chartHeight = 156;
+  static const int _gridLineCount = 4;
+  static const double _leftPadding = 46;
+  static const double _rightPadding = 12;
+  static const double _topPadding = 12;
+  static const double _bottomPadding = 34;
+  static const double _labelMinSpacing = 48;
+
+  final List<DailyBreakdownEntity> items;
+  final _FinanceChartMetric metric;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (items.isEmpty) return;
 
-    final paintCodLine = Paint()
-      ..color = AppColors.green600
+    final linePaint = Paint()
+      ..color = metric.color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
 
-    final paintFeeLine = Paint()
-      ..color = AppColors.primary
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round;
-
-    final paintCodDot = Paint()
-      ..color = AppColors.green600
-      ..style = PaintingStyle.fill;
-
-    final paintFeeDot = Paint()
-      ..color = AppColors.primary
-      ..style = PaintingStyle.fill;
-
-    final paintDotBorder = Paint()
+    final dotBorderPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
 
-    final paintGrid = Paint()
+    final dotPaint = Paint()
+      ..color = metric.color
+      ..style = PaintingStyle.fill;
+
+    final gridPaint = Paint()
       ..color = AppColors.grey200
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
-    final textStyle = TextStyle(
-      color: AppColors.grey500,
-      fontSize: 9,
-      fontWeight: FontWeight.w500,
-    );
+    final chartWidth = size.width - _leftPadding - _rightPadding;
+    final chartHeight = size.height - _topPadding - _bottomPadding;
+    if (chartWidth <= 0 || chartHeight <= 0) return;
 
-    // 1. Calculate nice max values for left (COD) and right (Fee) Y-axes
-    double maxCod = 0;
-    double maxFee = 0;
+    final maxAmount = _niceAxisMax(_maxAmount());
+    _drawGridAndYAxis(canvas, size, chartHeight, maxAmount, gridPaint);
+
+    final path = Path();
+    final points = <Offset>[];
+
+    for (var i = 0; i < items.length; i++) {
+      final item = items[i];
+      final x = _xPosition(i, chartWidth);
+      final y = _yPosition(metric.valueOf(item), chartHeight, maxAmount);
+      final point = Offset(x, y);
+
+      points.add(point);
+      _extendPath(path, point, i);
+      _drawXAxisLabel(canvas, item.date, i, chartWidth, chartHeight);
+    }
+
+    if (items.length > 1) {
+      canvas.drawPath(path, linePaint);
+    }
+
+    for (final point in points) {
+      canvas.drawCircle(point, 4.5, dotBorderPaint);
+      canvas.drawCircle(point, 3.0, dotPaint);
+    }
+  }
+
+  int _maxAmount() {
+    var maxAmount = 0;
     for (final item in items) {
-      maxCod = math.max(maxCod, (item.codCollected ?? 0).toDouble());
-      maxFee = math.max(maxFee, (item.totalOut ?? 0).toDouble());
+      maxAmount = math.max(maxAmount, metric.valueOf(item));
     }
+    return maxAmount;
+  }
 
-    // Process Left Axis (COD) max
-    if (maxCod <= 0) {
-      maxCod = 20000000; // 20M fallback
-    } else {
-      double division = maxCod / 4;
-      double step = 1000000; // 1M step
-      if (division > 10000000) {
-        step = 5000000;
-      } else if (division > 5000000) {
-        step = 2000000;
-      } else if (division > 2000000) {
-        step = 1000000;
-      } else if (division > 1000000) {
-        step = 500000;
-      } else if (division > 500000) {
-        step = 200000;
-      } else {
-        step = 100000;
-      }
-      double roundedDivision = (division / step).ceil() * step;
-      maxCod = roundedDivision * 4;
-    }
+  double _niceAxisMax(int amount) {
+    if (amount <= 0) return 1;
 
-    // Process Right Axis (Fee) max
-    if (maxFee <= 0) {
-      maxFee = 800000; // 800k fallback
-    } else {
-      double division = maxFee / 4;
-      double step = 10000; // 10k step
-      if (division > 100000) {
-        step = 50000;
-      } else if (division > 50000) {
-        step = 20000;
-      } else if (division > 20000) {
-        step = 10000;
-      } else if (division > 10000) {
-        step = 5000;
-      } else {
-        step = 2000;
-      }
-      double roundedDivision = (division / step).ceil() * step;
-      maxFee = roundedDivision * 4;
-    }
+    final rawStep = amount / _gridLineCount;
+    final magnitude = math.pow(10, rawStep.toStringAsFixed(0).length - 1);
+    final normalized = rawStep / magnitude;
+    final niceStep = switch (normalized) {
+      <= 1 => 1,
+      <= 2 => 2,
+      <= 5 => 5,
+      _ => 10,
+    };
 
-    const double leftPadding = 40;
-    const double rightPadding = 40;
-    const double topPadding = 15;
-    const double bottomPadding = 25;
+    return (niceStep * magnitude * _gridLineCount).toDouble();
+  }
 
-    final double chartWidth = size.width - leftPadding - rightPadding;
-    final double chartHeight = size.height - topPadding - bottomPadding;
-
-    // Helper to format Y labels
-    String formatYLabel(double val) {
-      if (val == 0) return '0';
-      if (val >= 1000000) {
-        double m = val / 1000000;
-        return '${m.toStringAsFixed(m % 1 == 0 ? 0 : 1)}M';
-      } else if (val >= 1000) {
-        double k = val / 1000;
-        return '${k.toStringAsFixed(k % 1 == 0 ? 0 : 1)}K';
-      }
-      return val.toStringAsFixed(0);
-    }
-
-    // 2. Draw Y axis grid lines and labels
-    const int gridLines = 4;
-    for (int i = 0; i <= gridLines; i++) {
-      final double y = topPadding + chartHeight * (1 - i / gridLines);
-
-      // Draw grid line
+  void _drawGridAndYAxis(
+    Canvas canvas,
+    Size size,
+    double chartHeight,
+    double maxAmount,
+    Paint gridPaint,
+  ) {
+    for (var i = 0; i <= _gridLineCount; i++) {
+      final y = _topPadding + chartHeight * (1 - i / _gridLineCount);
       canvas.drawLine(
-        Offset(leftPadding, y),
-        Offset(size.width - rightPadding, y),
-        paintGrid,
+        Offset(_leftPadding, y),
+        Offset(size.width - _rightPadding, y),
+        gridPaint,
       );
 
-      // Left Y label (COD)
-      final double codVal = maxCod * (i / gridLines);
-      final leftTextPainter = TextPainter(
-        text: TextSpan(text: formatYLabel(codVal), style: textStyle),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      leftTextPainter.paint(
+      final amount = maxAmount * (i / _gridLineCount);
+      final labelPainter = _textPainter(_formatAmountLabel(amount));
+      labelPainter.paint(
         canvas,
         Offset(
-          leftPadding - leftTextPainter.width - 6,
-          y - leftTextPainter.height / 2,
+          _leftPadding - labelPainter.width - AppDimensions.xxSmallSpacing,
+          y - labelPainter.height / 2,
         ),
       );
-
-      // Right Y label (Fee)
-      final double feeVal = maxFee * (i / gridLines);
-      final rightTextPainter = TextPainter(
-        text: TextSpan(text: formatYLabel(feeVal), style: textStyle),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      rightTextPainter.paint(
-        canvas,
-        Offset(size.width - rightPadding + 6, y - rightTextPainter.height / 2),
-      );
     }
+  }
 
-    // 3. Draw lines and points
-    final Path pathCod = Path();
-    final Path pathFee = Path();
-    final List<Offset> pointsCod = [];
-    final List<Offset> pointsFee = [];
+  double _xPosition(int index, double chartWidth) {
+    if (items.length == 1) return _leftPadding + chartWidth / 2;
+    return _leftPadding + index * (chartWidth / (items.length - 1));
+  }
 
-    for (int i = 0; i < items.length; i++) {
-      final item = items[i];
-      final double codVal = (item.codCollected ?? 0).toDouble();
-      final double feeVal = (item.totalOut ?? 0).toDouble();
+  double _yPosition(int amount, double chartHeight, double maxAmount) {
+    final ratio = (amount / maxAmount).clamp(0, 1).toDouble();
+    return _topPadding + chartHeight * (1 - ratio);
+  }
 
-      final double x = items.length > 1
-          ? leftPadding + i * (chartWidth / (items.length - 1))
-          : leftPadding + chartWidth / 2;
-
-      final double yCod = topPadding + chartHeight * (1 - codVal / maxCod);
-      final double yFee = topPadding + chartHeight * (1 - feeVal / maxFee);
-
-      final offsetCod = Offset(x, yCod);
-      final offsetFee = Offset(x, yFee);
-
-      pointsCod.add(offsetCod);
-      pointsFee.add(offsetFee);
-
-      if (i == 0) {
-        pathCod.moveTo(x, yCod);
-        pathFee.moveTo(x, yFee);
-      } else {
-        pathCod.lineTo(x, yCod);
-        pathFee.lineTo(x, yFee);
-      }
-
-      // X Label (Date)
-      String dateText = '';
-      if (item.date != null) {
-        try {
-          final dt = DateTime.parse(item.date!);
-          dateText =
-              '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}';
-        } catch (_) {
-          dateText = item.date!;
-        }
-      }
-      final xTextPainter = TextPainter(
-        text: TextSpan(text: dateText, style: textStyle),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      xTextPainter.paint(
-        canvas,
-        Offset(x - xTextPainter.width / 2, topPadding + chartHeight + 6),
-      );
+  void _extendPath(Path path, Offset point, int index) {
+    if (index == 0) {
+      path.moveTo(point.dx, point.dy);
+      return;
     }
+    path.lineTo(point.dx, point.dy);
+  }
 
-    // Draw the paths
-    if (items.length > 1) {
-      canvas.drawPath(pathCod, paintCodLine);
-      canvas.drawPath(pathFee, paintFeeLine);
+  void _drawXAxisLabel(
+    Canvas canvas,
+    String? rawDate,
+    int index,
+    double chartWidth,
+    double chartHeight,
+  ) {
+    if (!_shouldDrawDateLabel(index, chartWidth)) return;
+
+    final labelPainter = _textPainter(_formatDateLabel(rawDate));
+    final x = _xPosition(index, chartWidth);
+    final left = (x - labelPainter.width / 2).clamp(
+      _leftPadding - AppDimensions.xSmallSpacing,
+      _leftPadding + chartWidth - labelPainter.width,
+    );
+
+    labelPainter.paint(
+      canvas,
+      Offset(
+        left.toDouble(),
+        _topPadding + chartHeight + AppDimensions.xSmallSpacing,
+      ),
+    );
+  }
+
+  bool _shouldDrawDateLabel(int index, double chartWidth) {
+    if (items.length <= 1) return true;
+    if (index == 0 || index == items.length - 1) return true;
+
+    final maxLabelCount = math.max(2, chartWidth ~/ _labelMinSpacing);
+    final interval = math.max(1, (items.length / maxLabelCount).ceil());
+    return index % interval == 0;
+  }
+
+  TextPainter _textPainter(String text) {
+    return TextPainter(
+      text: TextSpan(
+        text: text,
+        style: AppTextStyles.bodyXXSmall.copyWith(
+          color: AppColors.grey500,
+          fontSize: 9,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+  }
+
+  String _formatAmountLabel(double value) {
+    if (value <= 0) return '0';
+    if (value >= 1000000) {
+      final millions = value / 1000000;
+      return '${millions.toStringAsFixed(millions % 1 == 0 ? 0 : 1)}M';
     }
-
-    // Draw the circular dots at each data point
-    for (int i = 0; i < items.length; i++) {
-      // COD dots
-      canvas.drawCircle(pointsCod[i], 4.5, paintDotBorder);
-      canvas.drawCircle(pointsCod[i], 3.0, paintCodDot);
-
-      // Fee dots
-      canvas.drawCircle(pointsFee[i], 4.5, paintDotBorder);
-      canvas.drawCircle(pointsFee[i], 3.0, paintFeeDot);
+    if (value >= 1000) {
+      final thousands = value / 1000;
+      return '${thousands.toStringAsFixed(thousands % 1 == 0 ? 0 : 1)}K';
     }
+    return value.toStringAsFixed(0);
+  }
+
+  String _formatDateLabel(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return '';
+
+    final date = DateTime.tryParse(rawDate);
+    if (date == null) return rawDate;
+
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}';
   }
 
   @override
   bool shouldRepaint(covariant _FinanceChartPainter oldDelegate) {
-    return oldDelegate.items != items;
+    return oldDelegate.items != items || oldDelegate.metric != metric;
   }
 }

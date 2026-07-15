@@ -1,53 +1,73 @@
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/auth/presentation/widgets/forgot_secondary_password_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GeneralProfileMenuPanel extends StatelessWidget {
   const GeneralProfileMenuPanel({super.key});
 
-  List<PrimaryMenuItemData> _items(BuildContext context) {
+  List<PrimaryMenuItemData> _items(
+    BuildContext context, {
+    required bool hasSecondPassword,
+  }) {
     return [
       PrimaryMenuItemData(
         icon: Icons.person_outline_rounded,
         iconColor: AppColors.primary,
-        label: 'Thông tin cá nhân',
+        label: 'profile_menu.profile_info'.tr(),
         onTap: () => context.push(RouteName.profileDetailPage),
       ),
       PrimaryMenuItemData(
         icon: Icons.lock_outline_rounded,
         iconColor: AppColors.info,
-        label: 'Đổi mật khẩu',
+        label: 'profile_menu.change_password'.tr(),
         onTap: () => context.push(RouteName.changePasswordPage),
       ),
-      const PrimaryMenuItemData(
+      PrimaryMenuItemData(
+        icon: Icons.enhanced_encryption_outlined,
+        iconColor: AppColors.investmentPurple,
+        label: hasSecondPassword
+            ? 'profile_menu.change_second_password'.tr()
+            : 'profile_menu.create_second_password'.tr(),
+        onTap: () => context.push(RouteName.changeSecondaryPasswordPage),
+      ),
+      PrimaryMenuItemData(
+        icon: Icons.lock_reset_rounded,
+        iconColor: AppColors.info,
+        label: 'profile_menu.forgot_second_password'.tr(),
+        onTap: () => ForgotSecondaryPasswordDialog.show(context),
+      ),
+      PrimaryMenuItemData(
         icon: Icons.location_on_outlined,
         iconColor: AppColors.green,
-        label: 'Địa chỉ lấy hàng',
+        label: 'profile_menu.pickup_address'.tr(),
       ),
-      const PrimaryMenuItemData(
+      PrimaryMenuItemData(
         icon: Icons.credit_card_rounded,
         iconColor: AppColors.primary,
-        label: 'Phương thức thanh toán',
+        label: 'profile_menu.payment_method'.tr(),
       ),
-      const PrimaryMenuItemData(
+      PrimaryMenuItemData(
         icon: Icons.notifications_none_rounded,
         iconColor: AppColors.error,
-        label: 'Thông báo',
+        label: 'profile_menu.notification'.tr(),
       ),
-      const PrimaryMenuItemData(
+      PrimaryMenuItemData(
         icon: Icons.language_rounded,
         iconColor: AppColors.investmentPurple,
-        label: 'Ngôn ngữ',
-        trailingText: 'Tiếng Việt',
+        label: 'profile_menu.language'.tr(),
+        trailingText: 'profile_menu.language_value'.tr(),
       ),
       PrimaryMenuItemData(
         icon: Icons.support_agent_rounded,
         iconColor: AppColors.info,
-        label: 'Trung tâm hỗ trợ',
+        label: 'profile_menu.support_center'.tr(),
         onTap: () async {
           final uri = Uri(scheme: 'mailto', path: Constants.oneshipGmail);
 
@@ -59,7 +79,7 @@ class GeneralProfileMenuPanel extends StatelessWidget {
       PrimaryMenuItemData(
         icon: Icons.info_outline_rounded,
         iconColor: AppColors.primary,
-        label: 'Giới thiệu về OzoShip',
+        label: 'profile_menu.about'.tr(),
         onTap: () async {
           final uri = Uri.parse(Constants.oneshipWebsite);
           await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
@@ -74,8 +94,8 @@ class GeneralProfileMenuPanel extends StatelessWidget {
             context,
             message: "do_you_want_to_delete_account".tr(),
             onPositiveTapped: () {
-              final AuthBloc _authBloc = getIt.get();
-              _authBloc.deleteAccount();
+              final AuthBloc authBloc = getIt.get();
+              authBloc.deleteAccount();
             },
           );
         },
@@ -85,16 +105,34 @@ class GeneralProfileMenuPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = _items(context);
+    final authBloc = getIt.get<AuthBloc>();
 
-    return PrimaryPanel(
-      width: double.infinity,
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          for (var i = 0; i < items.length; i++)
-            PrimaryMenuItem(data: items[i], showDivider: i != items.length - 1),
-        ],
+    return ForgotSecondaryPasswordListener(
+      child: BlocBuilder<AuthBloc, AuthState>(
+        bloc: authBloc,
+        buildWhen: (previous, current) =>
+            current is AuthFetchedUserProfileState ||
+            current is AuthUpdatedPasswordState,
+        builder: (context, state) {
+          final items = _items(
+            context,
+            hasSecondPassword: authBloc.userProfile.hasSecondPassword ?? false,
+          );
+
+          return PrimaryPanel(
+            width: double.infinity,
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                for (var i = 0; i < items.length; i++)
+                  PrimaryMenuItem(
+                    data: items[i],
+                    showDivider: i != items.length - 1,
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

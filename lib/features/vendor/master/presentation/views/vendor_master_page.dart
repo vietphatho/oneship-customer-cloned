@@ -8,6 +8,7 @@ import 'package:oneship_customer/core/utils/function_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
+import 'package:oneship_customer/features/profile/presentation/widgets/second_password_reminder_dialog.dart';
 import 'package:oneship_customer/features/vendor/master/data/vendor_navigation_item.dart';
 import 'package:oneship_customer/features/vendor/master/presentation/bloc/vendor_master_bloc.dart';
 import 'package:oneship_customer/features/vendor/master/presentation/bloc/vendor_master_state.dart';
@@ -44,6 +45,11 @@ class _VendorMasterPageState extends State<VendorMasterPage> {
     _pageController = PageController(
       initialPage: _tabs.indexOf(_vendorMasterBloc.currentTab),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        SecondPasswordReminderDialog.showIfNeeded(context);
+      }
+    });
   }
 
   @override
