@@ -275,7 +275,7 @@ class _OrdersPageState extends State<OrdersPage>
       case true:
         PrimaryDialog.showSuccessDialog(
           context,
-          message: "shipper_founded".tr(),
+          message: "shipper_founded_desc".tr(),
           onClosed: () {
             _animateToStatus(OrderStatus.batched);
           },
@@ -285,7 +285,7 @@ class _OrdersPageState extends State<OrdersPage>
         PrimaryDialog.showErrorDialog(
           context,
           title: "not_found".tr(),
-          message: "shipper_not_found".tr(),
+          message: "shipper_not_found_desc".tr(),
         );
         break;
       default:

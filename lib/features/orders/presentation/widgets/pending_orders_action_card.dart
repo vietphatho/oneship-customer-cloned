@@ -154,25 +154,25 @@ class PendingOrdersActionCard extends StatelessWidget {
             ),
           ),
           AppSpacing.vertical(AppDimensions.xSmallSpacing),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(
-                Icons.info_outline,
-                size: AppDimensions.xSmallIconSize,
-                color: AppColors.neutral4,
-              ),
-              AppSpacing.horizontal(AppDimensions.xSmallSpacing),
-              Expanded(
-                child: PrimaryText(
-                  'find_shipper_empty_selection_hint'.tr(),
-                  style: AppTextStyles.bodyXXSmall.copyWith(
-                    color: AppColors.neutral4,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     const Icon(
+          //       Icons.info_outline,
+          //       size: AppDimensions.xSmallIconSize,
+          //       color: AppColors.neutral4,
+          //     ),
+          //     AppSpacing.horizontal(AppDimensions.xSmallSpacing),
+          //     Expanded(
+          //       child: PrimaryText(
+          //         'find_shipper_empty_selection_hint'.tr(),
+          //         style: AppTextStyles.bodyXXSmall.copyWith(
+          //           color: AppColors.neutral4,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

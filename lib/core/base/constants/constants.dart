@@ -33,7 +33,7 @@ class Constants {
   static const Duration assignedPkgSwitchTransitionDur = Duration(
     milliseconds: 700,
   );
-  static const Duration assignedPackageNotiTimeOut = Duration(seconds: 6);
+  static const Duration pushNotiTimeOut = Duration(seconds: 30);
 
   static const String currencyUnit = "đ";
   static const String currencyUnitRequest = "vnd";

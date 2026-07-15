@@ -114,8 +114,10 @@
     "shop": "Cửa hàng",
     "more": "Thêm"
   },
-  "shipper_founded": "Đã tìm thấy tài xế cho túi hàng!",
-  "shipper_not_found": "Không tìm thấy tài xế cho túi hàng này!",
+  "shipper_founded": "Đã có tài xế",
+  "shipper_not_found": "Không tìm thấy tài xế",
+  "shipper_founded_desc": "Đã tìm thấy tài xế cho túi hàng!",
+  "shipper_not_found_desc": "Không tìm thấy tài xế cho túi hàng này.\nVui lòng thử lại sau",
   "not_found": "Không tìm thấy",
   "change_password_label": "Đổi mật khẩu",
   "hi": "Xin chào!",

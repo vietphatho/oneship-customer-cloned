@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oneship_customer/core/base/views/one_ship_customer_app.dart';
+import 'package:oneship_customer/core/services/push_notification.dart';
 import 'package:oneship_customer/core/utils/app_logger.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -13,6 +14,8 @@ late final PackageInfo packageInfo;
 Future<void> main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    PushNotification.init();
 
     await Future.wait([
       EasyLocalization.ensureInitialized(),

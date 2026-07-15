@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/core/services/push_notification.dart';
 import 'package:oneship_customer/core/services/socket_service.dart';
 import 'package:oneship_customer/core/utils/app_logger.dart';
 import 'package:oneship_customer/di/injection_container.dart';
@@ -132,6 +134,21 @@ class PackagesBloc extends Bloc<PackagesEvent, PackagesState> {
     Emitter<PackagesState> emit,
   ) {
     emit(state.copyWith(findShipperStatus: event.status));
+
+    if (event.status == true) {
+      PushNotification.show(
+        title: "shipper_founded".tr(),
+        message: "shipper_founded_desc".tr(),
+        autoClose: true,
+      );
+    } else {
+      PushNotification.show(
+        title: "shipper_not_found".tr(),
+        message: "shipper_not_found_desc".tr(),
+        autoClose: true,
+      );
+    }
+
     disconnectSocket();
     emit(state.copyWith(findShipperStatus: null));
   }
