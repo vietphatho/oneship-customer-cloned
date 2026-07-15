@@ -19,6 +19,27 @@ class Utils {
     return formatter.format(value);
   }
 
+  static String formatCompactCurrency(num? value) {
+    if (value == null) return "--";
+
+    if (value >= 1000000) {
+      final formatted = (value / 1000000).toStringAsFixed(1);
+      return '${_trimTrailingDecimalZero(formatted)}M ${Constants.currencyUnit}';
+    }
+    if (value >= 1000) {
+      final formatted = (value / 1000).toStringAsFixed(1);
+      return '${_trimTrailingDecimalZero(formatted)}K ${Constants.currencyUnit}';
+    }
+
+    return '${value.toStringAsFixed(0)}${Constants.currencyUnit}';
+  }
+
+  static String formatPercent(num? value) {
+    if (value == null) return "--";
+    final fractionDigits = value.truncateToDouble() == value ? 0 : 1;
+    return '${value.toStringAsFixed(fractionDigits)}%';
+  }
+
   static String formatCurrencyInput(num? value) {
     if (value == null) return "";
     return NumberFormat.decimalPattern('vi_VN').format(value);
@@ -67,4 +88,8 @@ class Utils {
     return formatted;
   }
 
+  static String _trimTrailingDecimalZero(String value) {
+    if (!value.endsWith('.0')) return value;
+    return value.substring(0, value.length - 2);
+  }
 }

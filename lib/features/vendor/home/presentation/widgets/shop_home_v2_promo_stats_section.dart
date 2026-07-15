@@ -138,19 +138,21 @@ class _StatsPanel extends StatelessWidget {
                   _StatItem(
                     icon: Icons.trending_up_rounded,
                     color: AppColors.shopHomeV2StatsPurple,
-                    value: _formatPercent(stats.successRate),
+                    value: Utils.formatPercent(stats.successRate),
                     label: 'vendor_stats.success_rate'.tr(),
                   ),
                   _StatItem(
                     icon: Icons.local_shipping_rounded,
                     color: AppColors.shopHomeV2StatsGold,
-                    value: _formatCompactCurrency(stats.totalDeliveryFeeAmount),
+                    value: Utils.formatCompactCurrency(
+                      stats.totalDeliveryFeeAmount,
+                    ),
                     label: 'vendor_stats.delivery_fee'.tr(),
                   ),
                   _StatItem(
                     icon: Icons.monetization_on_rounded,
                     color: AppColors.green,
-                    value: _formatCompactCurrency(stats.totalCodAmount),
+                    value: Utils.formatCompactCurrency(stats.totalCodAmount),
                     label: 'vendor_stats.cod_amount'.tr(),
                   ),
                 ],
@@ -160,22 +162,6 @@ class _StatsPanel extends StatelessWidget {
         );
       },
     );
-  }
-
-  String _formatPercent(double value) {
-    return '${value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1)}%';
-  }
-
-  String _formatCompactCurrency(double value) {
-    if (value >= 1000000) {
-      final formatted = (value / 1000000).toStringAsFixed(1);
-      return '${formatted.endsWith('.0') ? formatted.substring(0, formatted.length - 2) : formatted}Mđ';
-    }
-    if (value >= 1000) {
-      final formatted = (value / 1000).toStringAsFixed(1);
-      return '${formatted.endsWith('.0') ? formatted.substring(0, formatted.length - 2) : formatted}Kđ';
-    }
-    return '${value.toStringAsFixed(0)}đ';
   }
 }
 

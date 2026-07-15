@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/vendor/finance/domain/entities/finance_entity.dart';
 import 'package:oneship_customer/features/vendor/finance/domain/use_cases/fetch_vendor_financial_summary_use_case.dart';
 import 'package:oneship_customer/features/vendor/home/domain/entities/vendor_stats_entity.dart';
 import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_event.dart';
@@ -27,6 +28,7 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
   final FetchVendorFinancialSummaryUseCase _fetchVendorFinancialSummaryUseCase;
   final VendorProfileBloc _vendorProfileBloc;
   final Map<String, VendorStats> _statsCache = {};
+  final Map<String, VendorFinanceEntity> _balanceCache = {};
 
   FutureOr<void> _onInitialized(
     VendorStatsInitializedEvent event,
@@ -103,6 +105,7 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
     Emitter<VendorStatsState> emit,
   ) {
     _statsCache.clear();
+    _balanceCache.clear();
     emit(VendorStatsState.initial());
   }
 
@@ -127,6 +130,7 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
       emit(
         state.copyWith(
           statsResource: Resource.error('vendor_profile_not_loaded', 0),
+          balanceResource: Resource.error('vendor_profile_not_loaded', 0),
           hasLoadedInitialRange: true,
         ),
       );
@@ -134,11 +138,15 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
     }
 
     final cacheKey = '$userId|${today.toIso8601String()}';
-    final cachedStats = _statsCache[cacheKey];
-    if (cachedStats != null && !forceRefresh) {
+    final statsCacheKey = cacheKey;
+    final balanceCacheKey = cacheKey;
+    final cachedStats = _statsCache[statsCacheKey];
+    final cachedBalance = _balanceCache[balanceCacheKey];
+    if (cachedStats != null && cachedBalance != null && !forceRefresh) {
       emit(
         state.copyWith(
           statsResource: Resource.success(cachedStats),
+          balanceResource: Resource.success(cachedBalance),
           hasLoadedInitialRange: true,
         ),
       );
@@ -148,23 +156,33 @@ class VendorStatsBloc extends Bloc<VendorStatsEvent, VendorStatsState> {
     emit(
       state.copyWith(
         statsResource: Resource.loading(data: state.statsResource.data),
+        balanceResource: Resource.loading(data: state.balanceResource.data),
       ),
     );
 
-    final response = await _fetchVendorFinancialSummaryUseCase(
+    final summaryResponse = await _fetchVendorFinancialSummaryUseCase(
       userId: userId,
       startDate: today,
       endDate: today,
     );
-    final statsResponse = response.parse(
+
+    final statsResponse = summaryResponse.parse(
       (entity) => VendorStats.fromFinanceSummary(entity, date: today),
     );
     if (statsResponse.state == Result.success && statsResponse.data != null) {
-      _statsCache[cacheKey] = statsResponse.data!;
+      _statsCache[statsCacheKey] = statsResponse.data!;
+    }
+    if (summaryResponse.state == Result.success &&
+        summaryResponse.data != null) {
+      _balanceCache[balanceCacheKey] = summaryResponse.data!;
     }
 
     emit(
-      state.copyWith(statsResource: statsResponse, hasLoadedInitialRange: true),
+      state.copyWith(
+        statsResource: statsResponse,
+        balanceResource: summaryResponse,
+        hasLoadedInitialRange: true,
+      ),
     );
   }
 

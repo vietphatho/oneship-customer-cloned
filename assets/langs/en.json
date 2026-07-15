@@ -112,6 +112,8 @@
     },
     "vendor_home": {
         "greeting": "Hello, {name}!",
+        "available_balance": "Available balance",
+        "withdraw": "Withdraw",
         "orders": {
             "title": "My orders",
             "processing_tab": "Processing",

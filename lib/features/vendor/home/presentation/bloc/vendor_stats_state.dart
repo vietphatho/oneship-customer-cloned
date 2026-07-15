@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/base/constants/error_code.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/vendor/finance/domain/entities/finance_entity.dart';
 import 'package:oneship_customer/features/vendor/home/domain/entities/vendor_stats_entity.dart';
 import 'package:oneship_customer/features/vendor/home/presentation/bloc/vendor_stats_filter.dart';
 
@@ -11,6 +12,7 @@ part 'vendor_stats_state.freezed.dart';
 abstract class VendorStatsState with _$VendorStatsState {
   const factory VendorStatsState({
     required Resource<VendorStats> statsResource,
+    required Resource<VendorFinanceEntity> balanceResource,
     required DateTime startDate,
     required DateTime endDate,
     @Default(VendorStatsFilter.custom) VendorStatsFilter filter,
@@ -23,6 +25,7 @@ abstract class VendorStatsState with _$VendorStatsState {
 
     return VendorStatsState(
       statsResource: Resource.loading(),
+      balanceResource: Resource.loading(),
       startDate: today,
       endDate: today,
     );
@@ -35,6 +38,8 @@ extension VendorStatsStateX on VendorStatsState {
   bool get isLoading => statsResource.state == Result.loading;
 
   bool get isError => statsResource.state == Result.error;
+
+  VendorFinanceEntity? get balance => balanceResource.data;
 
   bool get isSecondPasswordVerificationRequired =>
       statsResource.statusCode == 401 &&

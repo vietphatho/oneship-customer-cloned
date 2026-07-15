@@ -36,6 +36,8 @@
   },
   "vendor_home": {
     "greeting": "Xin chào, {name}!",
+    "available_balance": "Số dư khả dụng",
+    "withdraw": "Rút tiền",
     "orders": {
       "title": "Đơn hàng của tôi",
       "processing_tab": "Đang xử lý",
