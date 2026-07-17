@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/models/base_coordinates.dart';
 import 'package:oneship_customer/core/base/models/base_meta_response.dart';
 import 'package:oneship_customer/features/packages/enum.dart';
@@ -76,5 +77,8 @@ abstract class Shipper with _$Shipper {
 
 extension PackageX on Package {
   PackageStatus get statusEnum =>
-      PackageStatus.values.firstWhere((element) => element.name == status);
+      PackageStatus.values.firstWhereOrNull(
+        (element) => element.name == status,
+      ) ??
+      PackageStatus.unknown;
 }

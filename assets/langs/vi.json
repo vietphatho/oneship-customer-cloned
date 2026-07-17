@@ -1406,5 +1406,7 @@
   "scanned_ord_desc": "Tài xế đã kiểm quét các đơn hàng tại cửa hàng",
   "shipping_desc": "Tài xế đang tiến hành giao hàng",
   "qty_confirm_ord": "Đã xác nhận số lượng đơn hàng",
-  "qty_confirm_ord_desc": "Tài xế đã xác nhận số lượng đơn hàng"
+  "qty_confirm_ord_desc": "Tài xế đã xác nhận số lượng đơn hàng",
+  "contact_to_coopperate": "Liên hệ hợp tác",
+  "merged": "Đã gộp túi"
 }

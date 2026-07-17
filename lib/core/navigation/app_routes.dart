@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:oneship_customer/core/base/views/incoming_feature_page.dart';
 import 'package:oneship_customer/core/navigation/app_navigator.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/navigation/route_observer_page.dart';
@@ -46,12 +47,12 @@ import 'package:oneship_customer/features/splash/presentation/views/splash_page.
 import 'package:oneship_customer/features/support/presentation/models/support_category_data.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_category_page.dart';
 import 'package:oneship_customer/features/support/presentation/views/support_page.dart';
-import 'package:oneship_customer/features/vendor/master/presentation/views/vendor_master_page.dart';
 import 'package:oneship_customer/features/vendor/finance/presentation/views/finance_detail_by_day.dart'
     as vendor_finance;
 import 'package:oneship_customer/features/vendor/finance/presentation/views/finance_period_detail_page.dart'
     as vendor_finance;
 import 'package:oneship_customer/features/vendor/finance/presentation/views/vendor_finance_verify_secondary_password_page.dart';
+import 'package:oneship_customer/features/vendor/master/presentation/views/vendor_master_page.dart';
 import 'package:oneship_customer/features/vendor/orders/presentation/views/vendor_order_detail_page.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/views/vendor_profile_detail_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
@@ -268,6 +269,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.hospitalMedicalRecordScannerPage,
       builder: (context, state) => const HospitalMedicalRecordScannerPage(),
+    ),
+    GoRoute(
+      path: RouteName.incompleteFeaturePage,
+      builder: (context, state) => const IncompleteFeaturePage(),
     ),
   ],
 );

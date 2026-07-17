@@ -22,7 +22,7 @@ extension ShopHomeFeatureExt on ShopHomeFeature {
     ShopHomeFeature.createOrder: RouteName.createOrderPage,
     ShopHomeFeature.package: RouteName.packagesPage,
     ShopHomeFeature.ordersProcessed: RouteName.ordersHistoryPage,
-    ShopHomeFeature.pickupAddress: null,
+    ShopHomeFeature.pickupAddress: RouteName.incompleteFeaturePage,
     ShopHomeFeature.staffManagement: RouteName.staffManagementPage,
     ShopHomeFeature.shopManagement: RouteName.shopManagementPage,
     ShopHomeFeature.supporting: RouteName.supportPage,

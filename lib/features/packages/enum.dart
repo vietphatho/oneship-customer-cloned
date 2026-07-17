@@ -11,6 +11,8 @@ enum PackageStatus {
   inTransit,
   completed,
   dropped,
+  merged,
+  unknown,
 }
 
 extension PackageStatusX on PackageStatus {
@@ -25,6 +27,8 @@ extension PackageStatusX on PackageStatus {
     PackageStatus.inTransit: 'in_transit',
     PackageStatus.completed: 'completed',
     PackageStatus.dropped: 'dropped',
+    PackageStatus.merged: 'merged',
+    PackageStatus.unknown: 'unknown',
   };
 
   String get name => _mapName[this]!;
@@ -39,7 +43,9 @@ extension PackageStatusX on PackageStatus {
     PackageStatus.confirmedPickup: AppColors.secondary,
     PackageStatus.inTransit: AppColors.secondary,
     PackageStatus.completed: AppColors.success,
-    PackageStatus.dropped: AppColors.neutral5,
+    PackageStatus.dropped: AppColors.red500,
+    PackageStatus.merged: AppColors.secondary,
+    PackageStatus.unknown: AppColors.neutral5,
   };
 
   Color get color => _mapColor[this]!;

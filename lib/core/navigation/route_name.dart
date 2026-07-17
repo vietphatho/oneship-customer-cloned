@@ -73,4 +73,6 @@ class RouteName {
   static const String scanTrackingCodePage = '/scan_tracking_code_page';
   static const String hospitalMedicalRecordScannerPage =
       '/hospital_medical_record_scanner_page';
+
+  static const String incompleteFeaturePage = '/incomplete_feature_page';
 }
