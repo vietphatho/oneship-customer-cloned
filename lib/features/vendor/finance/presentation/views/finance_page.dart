@@ -8,7 +8,6 @@ import 'package:oneship_customer/core/navigation/route_name.dart';
 import 'package:oneship_customer/core/utils/date_time_utils.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:oneship_customer/features/auth/presentation/views/verify_secondary_password_page.dart';
 import 'package:oneship_customer/features/vendor/finance/enum.dart';
 import 'package:oneship_customer/features/vendor/finance/presentation/bloc/finance_overview_bloc.dart';
 import 'package:oneship_customer/features/vendor/finance/presentation/bloc/finance_overview_state.dart';
@@ -38,6 +37,7 @@ class _VendorFinancePageState extends State<VendorFinancePage>
   final VendorProfileBloc _vendorProfileBloc = getIt.get();
   final AuthBloc _authBloc = getIt.get();
   bool _isCreateSecondPasswordRouteOpen = false;
+  bool _isVerifySecondPasswordRouteOpen = false;
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _VendorFinancePageState extends State<VendorFinancePage>
 
           if (state.vendorFinancialData.state == Result.error) {
             if (state.isSecondPasswordRequired) {
-              return VerifySecondaryPasswordPage(onCallback: _loadFinance);
+              return const SizedBox.shrink();
             }
 
             return PrimaryEmptyData(
@@ -112,14 +112,14 @@ class _VendorFinancePageState extends State<VendorFinancePage>
           return DefaultTabController(
             length: VendorFinanceSubFeature.values.length,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 VendorFinanceHeaderFilters(
                   startDate: state.startDate,
                   endDate: state.endDate,
                   selectedFilter: state.financeFilter,
-                  onShopTap: () {},
-                  onDateTap: () => _selectDateRange(state),
-                  onFilterTap: (filter) => _selectQuickFilter(state, filter),
+                  onDateFilterTap: () => _openDateFilterSheet(state),
                 ),
                 VendorFinanceTabBar(controller: controller),
                 Expanded(
@@ -161,6 +161,7 @@ class _VendorFinancePageState extends State<VendorFinancePage>
           context.pop();
         }
         if (state.isSecondPasswordRequired) {
+          _openVerifySecondPasswordFlow();
           break;
         }
         PrimaryDialog.showErrorDialog(
@@ -190,6 +191,27 @@ class _VendorFinancePageState extends State<VendorFinancePage>
       userId: _currentUserId,
       requestSource: VendorFinanceRequestSource.page,
     );
+  }
+
+  Future<void> _openDateFilterSheet(VendorFinanceOverviewState state) async {
+    final filter = await showModalBottomSheet<VendorFinanceFilter>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _VendorFinanceDateFilterSheet(
+        selectedFilter: state.financeFilter,
+        startDate: state.startDate,
+        endDate: state.endDate,
+      ),
+    );
+    if (filter == null) return;
+
+    if (filter == VendorFinanceFilter.selectDate) {
+      await _selectDateRange(state);
+      return;
+    }
+
+    _selectQuickFilter(state, filter);
   }
 
   void _selectQuickFilter(
@@ -237,5 +259,162 @@ class _VendorFinancePageState extends State<VendorFinancePage>
     }
 
     setState(() {});
+  }
+
+  Future<void> _openVerifySecondPasswordFlow() async {
+    if (_isVerifySecondPasswordRouteOpen) return;
+    if (!mounted) return;
+
+    _isVerifySecondPasswordRouteOpen = true;
+    final isVerified = await context.push<bool>(
+      RouteName.vendorFinanceVerifySecondaryPasswordPage,
+    );
+    _isVerifySecondPasswordRouteOpen = false;
+
+    if (!mounted) return;
+    if (isVerified == true) {
+      _loadFinance();
+    }
+  }
+}
+
+class _VendorFinanceDateFilterSheet extends StatelessWidget {
+  const _VendorFinanceDateFilterSheet({
+    required this.selectedFilter,
+    required this.startDate,
+    required this.endDate,
+  });
+
+  final VendorFinanceFilter selectedFilter;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  @override
+  Widget build(BuildContext context) {
+    const filters = [
+      VendorFinanceFilter.oneDay,
+      VendorFinanceFilter.sevenDay,
+      VendorFinanceFilter.thirtyDay,
+      VendorFinanceFilter.selectDate,
+    ];
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppDimensions.largeRadius),
+            topRight: Radius.circular(AppDimensions.largeRadius),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.grey200,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: AppDimensions.mediumSpacing),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'select_date'.tr(),
+                    style: AppTextStyles.titleSmall,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    _dateRangeText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    style: AppTextStyles.bodyXXSmall.copyWith(
+                      color: AppColors.grey500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppDimensions.smallSpacing),
+            ...filters.map(
+              (filter) => _DateFilterOptionTile(
+                filter: filter,
+                selected: selectedFilter == filter,
+                onTap: () => Navigator.of(context).pop(filter),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String get _dateRangeText =>
+      '${DateTimeUtils.formatDateFromDT(startDate)} - ${DateTimeUtils.formatDateFromDT(endDate)}';
+}
+
+class _DateFilterOptionTile extends StatelessWidget {
+  const _DateFilterOptionTile({
+    required this.filter,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final VendorFinanceFilter filter;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? AppColors.primary : AppColors.blue950;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppDimensions.mediumRadius),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.smallSpacing,
+        ),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.primary.withAlpha(18) : Colors.white,
+          borderRadius: BorderRadius.circular(AppDimensions.mediumRadius),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                _filterLabel(filter),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.labelXSmall.copyWith(color: color),
+              ),
+            ),
+            if (selected)
+              const Icon(
+                Icons.check_rounded,
+                color: AppColors.primary,
+                size: AppDimensions.smallIconSize,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _filterLabel(VendorFinanceFilter filter) {
+    return switch (filter) {
+      VendorFinanceFilter.oneDay => 'last_24_hours'.tr(),
+      VendorFinanceFilter.sevenDay => 'last_7_days'.tr(),
+      VendorFinanceFilter.thirtyDay => 'last_30_days'.tr(),
+      VendorFinanceFilter.selectDate => 'select_date'.tr(),
+    };
   }
 }

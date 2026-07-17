@@ -21,12 +21,13 @@ class VendorFinanceOverviewBloc
   }
 
   static VendorFinanceOverviewState _initialState() {
+    final initialFilter = VendorFinanceFilter.thirtyDay;
     final now = DateTime.now();
-
-    final startDate = DateTime(now.year, now.month, now.day - 1);
+    final startDate = initialFilter.getStartDate()!;
     final endDate = DateTime(now.year, now.month, now.day);
 
     return VendorFinanceOverviewState(
+      financeFilter: initialFilter,
       startDate: startDate,
       endDate: endDate,
       vendorFinancialData: Resource.success(VendorFinanceEntity()),

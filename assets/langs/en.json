@@ -231,7 +231,9 @@
         "forgot_confirm_message": "Are you sure you want to send a Second Password reset request to {email}?",
         "forgot_send_request": "Send request",
         "forgot_success_message": "Your Second Password reset request has been sent. Please check your email and follow the instructions to reset your password.",
-        "forgot_email_missing": "Could not find your account email to send the Second Password reset request."
+        "forgot_email_missing": "Could not find your account email to send the Second Password reset request.",
+        "vendor_finance_verify_title": "Verify Second Password",
+        "vendor_finance_verify_description": "Enter your Second Password to access financial information."
     },
     "vendor_profile": {
         "title": "Profile",

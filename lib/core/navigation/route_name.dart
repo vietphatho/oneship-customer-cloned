@@ -50,6 +50,8 @@ class RouteName {
       '/vendor_master/finance_detail_by_day';
   static const String vendorFinancePeriodDetailPage =
       '/vendor_master/finance_period_detail_page';
+  static const String vendorFinanceVerifySecondaryPasswordPage =
+      '/vendor_master/finance/verify_secondary_password';
 
   static const String profileDetailPage = '/profile_detail';
   static const String changePasswordPage = '/change_password';

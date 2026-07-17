@@ -5,15 +5,25 @@ import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/base/components/primary_text_button.dart';
 import 'package:oneship_customer/core/base/constants/enum.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
+import 'package:oneship_customer/core/utils/validators.dart';
 import 'package:oneship_customer/di/injection_container.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:oneship_customer/features/auth/presentation/bloc/auth_state.dart';
 import 'package:oneship_customer/features/auth/presentation/widgets/forgot_secondary_password_dialog.dart';
 
 class VerifySecondaryPasswordPage extends StatefulWidget {
-  const VerifySecondaryPasswordPage({super.key, required this.onCallback});
+  const VerifySecondaryPasswordPage({
+    super.key,
+    required this.onCallback,
+    this.titleKey = 'security_verification',
+    this.descriptionKey = 'enter_secondary_password',
+    this.showSecureNote = true,
+  });
 
   final VoidCallback onCallback;
+  final String titleKey;
+  final String descriptionKey;
+  final bool showSecureNote;
 
   @override
   State<VerifySecondaryPasswordPage> createState() =>
@@ -47,19 +57,23 @@ class _VerifySecondaryPasswordPageState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     PrimaryText(
-                      'security_verification'.tr(),
+                      widget.titleKey.tr(),
                       style: AppTextStyles.titleXXXLarge,
+                      textAlign: TextAlign.center,
                     ),
                     AppSpacing.vertical(AppDimensions.smallSpacing),
                     PrimaryText(
-                      'enter_secondary_password'.tr(),
+                      widget.descriptionKey.tr(),
                       style: AppTextStyles.labelLarge,
+                      textAlign: TextAlign.center,
                     ),
                     AppSpacing.vertical(AppDimensions.xxxLargeSpacing),
                     PrimaryTextField(
                       label: 'second_password'.tr(),
                       obscureText: true,
                       controller: _secondPasswordCtrl,
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _submitSecondPassword(context),
                     ),
                     AppSpacing.vertical(AppDimensions.mediumSpacing),
                     BlocListener<AuthBloc, AuthState>(
@@ -67,13 +81,7 @@ class _VerifySecondaryPasswordPageState
                       listener: _handleVerifySecondPasswordListener,
                       child: PrimaryButton.filled(
                         label: 'confirm'.tr(),
-                        onPressed: () {
-                          if (_secondPasswordCtrl.text.isNotEmpty) {
-                            _authBloc.verifySecondaryPassword(
-                              secondPassword: _secondPasswordCtrl.text.trim(),
-                            );
-                          }
-                        },
+                        onPressed: () => _submitSecondPassword(context),
                       ),
                     ),
                     PrimaryTextButton(
@@ -81,10 +89,11 @@ class _VerifySecondaryPasswordPageState
                       onPressed: () =>
                           ForgotSecondaryPasswordDialog.show(context),
                     ),
-                    PrimaryText(
-                      'information_completely_secure'.tr(),
-                      style: AppTextStyles.bodySmall,
-                    ),
+                    if (widget.showSecureNote)
+                      PrimaryText(
+                        'information_completely_secure'.tr(),
+                        style: AppTextStyles.bodySmall,
+                      ),
                   ],
                 );
               }
@@ -146,5 +155,16 @@ class _VerifySecondaryPasswordPageState
           break;
       }
     }
+  }
+
+  void _submitSecondPassword(BuildContext context) {
+    final secondPassword = _secondPasswordCtrl.text.trim();
+    final validationMessage = Validators.validateEmptyField(secondPassword);
+    if (validationMessage != null) {
+      PrimaryDialog.showErrorDialog(context, message: validationMessage);
+      return;
+    }
+
+    _authBloc.verifySecondaryPassword(secondPassword: secondPassword);
   }
 }

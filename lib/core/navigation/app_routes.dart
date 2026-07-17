@@ -51,6 +51,7 @@ import 'package:oneship_customer/features/vendor/finance/presentation/views/fina
     as vendor_finance;
 import 'package:oneship_customer/features/vendor/finance/presentation/views/finance_period_detail_page.dart'
     as vendor_finance;
+import 'package:oneship_customer/features/vendor/finance/presentation/views/vendor_finance_verify_secondary_password_page.dart';
 import 'package:oneship_customer/features/vendor/orders/presentation/views/vendor_order_detail_page.dart';
 import 'package:oneship_customer/features/vendor/profile/presentation/views/vendor_profile_detail_page.dart';
 import 'package:oneship_customer/features/wallet/presentation/views/wallet_page.dart';
@@ -226,6 +227,11 @@ final GoRouter appRouter = GoRouter(
       path: RouteName.vendorFinancePeriodDetailPage,
       builder: (context, state) =>
           const vendor_finance.VendorFinancePeriodDetailPage(),
+    ),
+    GoRoute(
+      path: RouteName.vendorFinanceVerifySecondaryPasswordPage,
+      builder: (context, state) =>
+          const VendorFinanceVerifySecondaryPasswordPage(),
     ),
     GoRoute(
       path: RouteName.productPage,

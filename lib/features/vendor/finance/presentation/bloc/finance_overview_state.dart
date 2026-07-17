@@ -9,7 +9,7 @@ part 'finance_overview_state.freezed.dart';
 @freezed
 abstract class VendorFinanceOverviewState with _$VendorFinanceOverviewState {
   factory VendorFinanceOverviewState({
-    @Default(VendorFinanceFilter.oneDay) VendorFinanceFilter financeFilter,
+    @Default(VendorFinanceFilter.thirtyDay) VendorFinanceFilter financeFilter,
     required DateTime startDate,
     required DateTime endDate,
     @Default(VendorFinanceRequestSource.page)

@@ -36,7 +36,7 @@
   },
   "vendor_home": {
     "greeting": "Xin chào, {name}!",
-    "available_balance": "Số dư khả dụng",
+    "available_balance": "Số dư hôm nay",
     "withdraw": "Rút tiền",
     "orders": {
       "title": "Đơn hàng của tôi",
@@ -1231,7 +1231,9 @@
     "forgot_confirm_message": "Bạn có chắc chắn muốn gửi yêu cầu đặt lại mật khẩu cấp 2 đến email {email}?",
     "forgot_send_request": "Gửi yêu cầu",
     "forgot_success_message": "Yêu cầu đặt lại mật khẩu cấp 2 đã được gửi. Vui lòng kiểm tra email của bạn và làm theo hướng dẫn để đặt lại mật khẩu.",
-    "forgot_email_missing": "Không tìm thấy email tài khoản để gửi yêu cầu đặt lại mật khẩu cấp 2."
+    "forgot_email_missing": "Không tìm thấy email tài khoản để gửi yêu cầu đặt lại mật khẩu cấp 2.",
+    "vendor_finance_verify_title": "Xác thực mật khẩu cấp 2",
+    "vendor_finance_verify_description": "Vui lòng nhập mật khẩu cấp 2 để truy cập thông tin tài chính."
   },
   "password_not_match": "Mật khẩu không khớp",
   "total_cost": "Tổng chi",
