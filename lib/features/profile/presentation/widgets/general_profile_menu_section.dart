@@ -1,5 +1,5 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oneship_customer/core/base/base_import_components.dart';
 import 'package:oneship_customer/core/base/components/primary_dialog.dart';
 import 'package:oneship_customer/core/navigation/route_name.dart';
@@ -43,27 +43,22 @@ class GeneralProfileMenuPanel extends StatelessWidget {
         label: 'profile_menu.forgot_second_password'.tr(),
         onTap: () => ForgotSecondaryPasswordDialog.show(context),
       ),
-      PrimaryMenuItemData(
-        icon: Icons.location_on_outlined,
-        iconColor: AppColors.green,
-        label: 'profile_menu.pickup_address'.tr(),
-      ),
-      PrimaryMenuItemData(
-        icon: Icons.credit_card_rounded,
-        iconColor: AppColors.primary,
-        label: 'profile_menu.payment_method'.tr(),
-      ),
-      PrimaryMenuItemData(
-        icon: Icons.notifications_none_rounded,
-        iconColor: AppColors.error,
-        label: 'profile_menu.notification'.tr(),
-      ),
-      PrimaryMenuItemData(
-        icon: Icons.language_rounded,
-        iconColor: AppColors.investmentPurple,
-        label: 'profile_menu.language'.tr(),
-        trailingText: 'profile_menu.language_value'.tr(),
-      ),
+      // PrimaryMenuItemData(
+      //   icon: Icons.credit_card_rounded,
+      //   iconColor: AppColors.primary,
+      //   label: 'profile_menu.payment_method'.tr(),
+      // ),
+      // PrimaryMenuItemData(
+      //   icon: Icons.notifications_none_rounded,
+      //   iconColor: AppColors.error,
+      //   label: 'profile_menu.notification'.tr(),
+      // ),
+      // PrimaryMenuItemData(
+      //   icon: Icons.language_rounded,
+      //   iconColor: AppColors.investmentPurple,
+      //   label: 'profile_menu.language'.tr(),
+      //   trailingText: 'profile_menu.language_value'.tr(),
+      // ),
       PrimaryMenuItemData(
         icon: Icons.support_agent_rounded,
         iconColor: AppColors.info,

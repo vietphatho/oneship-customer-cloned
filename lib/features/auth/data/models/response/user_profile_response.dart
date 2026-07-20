@@ -4,6 +4,31 @@ import 'package:oneship_customer/core/base/base_import_components.dart';
 part 'user_profile_response.freezed.dart';
 part 'user_profile_response.g.dart';
 
+enum UserStatus { active, inactive, unknown }
+
+extension UserStatusX on UserStatus {
+  static const _mapRawValue = {
+    UserStatus.active: 'active',
+    UserStatus.inactive: 'inactive',
+    UserStatus.unknown: 'unknown',
+  };
+
+  String get rawValue => _mapRawValue[this]!;
+
+  static UserStatus fromString(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return UserStatus.active;
+      case 'inactive':
+        return UserStatus.inactive;
+      default:
+        return UserStatus.unknown;
+    }
+  }
+
+  static String toJson(UserStatus status) => status.rawValue;
+}
+
 @freezed
 abstract class UserProfileResponse with _$UserProfileResponse {
   const factory UserProfileResponse({
@@ -12,7 +37,13 @@ abstract class UserProfileResponse with _$UserProfileResponse {
     @JsonKey(name: "userCode") String? userCode,
     @JsonKey(name: "displayName") String? displayName,
     @JsonKey(name: "userEmail") String? userEmail,
-    @JsonKey(name: "userStatus") String? userStatus,
+    @Default(UserStatus.unknown)
+    @JsonKey(
+      name: "userStatus",
+      fromJson: UserStatusX.fromString,
+      toJson: UserStatusX.toJson,
+    )
+    UserStatus userStatus,
     @JsonKey(name: "userPhone") String? userPhone,
     @JsonKey(name: "avatarUrl") String? avatarUrl,
     @JsonKey(name: "coordinates") dynamic coordinates,

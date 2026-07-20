@@ -79,7 +79,7 @@ class ShopAppBar extends StatelessWidget {
                     ],
                   ),
                 ),
-                _NotificationButton(contentColor: contentColor),
+                // _NotificationButton(contentColor: contentColor),
                 AppSpacing.horizontal(AppDimensions.xSmallSpacing),
                 const ShopSelectionButton(),
               ],

@@ -20,36 +20,12 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
         AppDimensions.smallSpacing,
         AppDimensions.largeSpacing,
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              PrimaryText(
-                'Thông tin cửa hàng',
-                style: AppTextStyles.labelMedium.copyWith(fontSize: 17),
-              ),
-              // const Spacer(),
-              // PrimaryText(
-              //   'Xem chi tiết',
-              //   style: AppTextStyles.labelXSmall.copyWith(fontSize: 13),
-              //   color: AppColors.primary,
-              // ),
-              // const Icon(
-              //   Icons.chevron_right_rounded,
-              //   color: AppColors.primary,
-              //   size: AppDimensions.smallIconSize,
-              // ),
-            ],
-          ),
-          AppSpacing.vertical(AppDimensions.largeSpacing),
-          Row(
-            children: [
-              for (var i = 0; i < items.length; i++) ...[
-                Expanded(child: PrimaryInfoItem(data: items[i])),
-                if (i != items.length - 1) const _InfoDivider(),
-              ],
-            ],
-          ),
+          for (var i = 0; i < items.length; i++) ...[
+            Expanded(child: PrimaryInfoItem(data: items[i])),
+            if (i != items.length - 1) const _InfoDivider(),
+          ],
         ],
       ),
     );
@@ -60,14 +36,14 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
       PrimaryInfoItemData(
         icon: Icons.storefront_outlined,
         iconColor: AppColors.primary,
-        label: 'Tên cửa hàng',
+        label: 'Tên chủ tài khoản',
         value: _textOr(userProfile?.displayName),
       ),
       PrimaryInfoItemData(
         icon: Icons.verified_user_outlined,
         iconColor: AppColors.green,
-        label: 'Mã cửa hàng',
-        value: _textOr(userProfile?.userCode),
+        label: 'Trạng thái tài khoản',
+        value: _formatAccountStatus(userProfile?.userStatus),
       ),
       PrimaryInfoItemData(
         icon: Icons.calendar_month_outlined,
@@ -75,12 +51,12 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
         label: 'Ngày tham gia',
         value: _formatDynamicDate(userProfile?.userRegistered),
       ),
-      const PrimaryInfoItemData(
-        icon: Icons.workspace_premium_outlined,
-        iconColor: AppColors.investmentPurple,
-        label: 'Gói dịch vụ',
-        value: 'Business',
-      ),
+      // const PrimaryInfoItemData(
+      //   icon: Icons.workspace_premium_outlined,
+      //   iconColor: AppColors.investmentPurple,
+      //   label: 'Gói dịch vụ',
+      //   value: 'Business',
+      // ),
     ];
   }
 
@@ -89,6 +65,18 @@ class GeneralProfileShopInfoCard extends StatelessWidget {
     if (text != null && text.isNotEmpty) return text;
 
     return _emptyText;
+  }
+
+  String _formatAccountStatus(UserStatus? status) {
+    switch (status) {
+      case UserStatus.active:
+        return 'Hoạt động';
+      case UserStatus.inactive:
+        return 'Không hoạt động';
+      case UserStatus.unknown:
+      case null:
+        return _emptyText;
+    }
   }
 
   String? _formatDate(DateTime? date) {

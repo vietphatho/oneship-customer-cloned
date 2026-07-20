@@ -16,6 +16,14 @@ class GeneralProfileTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: PrimaryText(
+        'Hồ sơ',
+        style: AppTextStyles.titleLarge.copyWith(fontSize: 24),
+      ),
+    );
+
     return Row(
       children: [
         PrimaryText(
