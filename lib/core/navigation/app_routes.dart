@@ -35,6 +35,8 @@ import 'package:oneship_customer/features/shop_home/domain/entities/surcharge_en
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_from_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/create_shop_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/empty_shop_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/news_page.dart';
+import 'package:oneship_customer/features/shop_home/presentation/views/promotions_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_management_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_pending_approval_page.dart';
 import 'package:oneship_customer/features/shop_home/presentation/views/shop_selection_page.dart';
@@ -126,6 +128,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteName.shopPendingApprovalPage,
       builder: (context, state) => const ShopPendingApprovalPage(),
+    ),
+    GoRoute(
+      path: RouteName.promotionsPage,
+      builder: (context, state) => const PromotionsPage(),
+    ),
+    GoRoute(
+      path: RouteName.newsPage,
+      builder: (context, state) => const NewsPage(),
     ),
     GoRoute(
       path: RouteName.createOrderPage,

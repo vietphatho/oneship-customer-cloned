@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:oneship_customer/core/base/constants/constants.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
+import 'package:oneship_customer/features/shop_home/data/data_sources/promotions_and_news_api.dart';
 import 'package:oneship_customer/features/shop_home/data/data_sources/shop_api.dart';
 import 'package:oneship_customer/features/shop_home/data/models/request/create_shop_request.dart';
 import 'package:oneship_customer/features/shop_home/data/models/response/order_option_response.dart';
@@ -10,6 +13,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/promotion_program_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
@@ -19,8 +23,9 @@ import 'package:oneship_customer/features/shop_home/domain/repositories/shop_rep
 @LazySingleton(as: ShopRepository)
 class ShopRepositoryImpl extends ShopRepository {
   final ShopApi _api;
+  final PromotionsAndNewsApi _promotionsAndNewsApi;
 
-  ShopRepositoryImpl(this._api);
+  ShopRepositoryImpl(this._api, this._promotionsAndNewsApi);
 
   @override
   Future<Resource<GetBriefShopsEntity>> getBriefShops({
@@ -135,5 +140,42 @@ class ShopRepositoryImpl extends ShopRepository {
     return response.parse<List<OrderOptionEntity>>(
       (dto) => dto.map(OrderOptionEntity.fromHandling).toList(),
     );
+  }
+
+  @override
+  Future<Resource<PromotionsPageEntity>> fetchMobilePosts({
+    required MobilePostCategory category,
+    required int page,
+    required int perPage,
+  }) async {
+    try {
+      final response = await _promotionsAndNewsApi.fetchByCategory(
+        category: category,
+        page: page,
+        perPage: perPage,
+      );
+      final totalPages = int.tryParse(
+        response.response.headers.value('x-wp-totalpages') ?? '',
+      );
+      final items = response.data.map(PromotionProgramEntity.from).toList();
+
+      return Resource.success(
+        PromotionsPageEntity(
+          items: items,
+          page: page,
+          hasMore: totalPages != null
+              ? page < totalPages
+              : items.length >= perPage,
+        ),
+      );
+    } on DioException catch (e) {
+      return Resource.error(
+        'error_code.server_error',
+        e.response?.statusCode ?? 0,
+        err: e,
+      );
+    } catch (e) {
+      return Resource.error('error_code.server_error', 0, err: e);
+    }
   }
 }

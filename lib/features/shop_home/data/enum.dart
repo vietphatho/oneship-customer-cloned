@@ -144,3 +144,14 @@ extension SurchargeFeeTypeX on SurchargeFeeType {
     );
   }
 }
+
+enum MobilePostCategory { promotion, news }
+
+extension MobilePostCategoryX on MobilePostCategory {
+  static const _mapValue = {
+    MobilePostCategory.promotion: 7,
+    MobilePostCategory.news: 8,
+  };
+
+  int get value => _mapValue[this]!;
+}

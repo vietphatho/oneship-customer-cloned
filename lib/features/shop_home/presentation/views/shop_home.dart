@@ -8,11 +8,14 @@ import 'package:oneship_customer/features/finance/presentation/bloc/finance_reco
 import 'package:oneship_customer/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:oneship_customer/features/packages/presentation/bloc/packages_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_bloc.dart';
+import 'package:oneship_customer/features/shop_home/presentation/bloc/post_bloc.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_app_bar.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_brief_info.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_content_sections.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_offer_section.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_feature_panel.dart';
+import 'package:oneship_customer/features/shop_home/presentation/widgets/shop_home_news_section.dart';
 import 'package:oneship_customer/features/shop_home/presentation/widgets/tracking_search_input.dart';
 
 class ShopHome extends StatefulWidget {
@@ -34,10 +37,12 @@ class _ShopHomeState extends State<ShopHome> {
   final OrdersBloc _ordersBloc = getIt.get();
   final FinanceOverviewBloc _financeOverviewBloc = getIt.get();
   final FinanceReconciliationBloc _financeReconciliationBloc = getIt.get();
+  final PostBloc _postBloc = getIt.get();
 
   @override
   void initState() {
     super.initState();
+    _postBloc.fetchHomePreview();
     // _shopBloc.init(shopId);
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   if (!mounted) return;

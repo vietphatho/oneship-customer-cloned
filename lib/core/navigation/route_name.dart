@@ -23,6 +23,8 @@ class RouteName {
   static const String addShopToStaffPage = '/shop_master/add_shop_to_staff';
   static const String shopPendingApprovalPage = '/shop_pending_approval';
   static const String shopSelectionPage = '/shop_selection_page';
+  static const String promotionsPage = '/shop_master/promotions';
+  static const String newsPage = '/shop_master/news';
 
   static const String createOrderPage = '/shop_master/create_order';
   static const String commoditySelectionPage =

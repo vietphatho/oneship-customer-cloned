@@ -4,6 +4,7 @@ import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/promotion_program_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
@@ -28,10 +29,14 @@ abstract class ShopState with _$ShopState {
     required Resource<List<OrderOptionEntity>> commodityTypesResource,
     required Resource<List<OrderOptionEntity>> handlingTypesResource,
     required Resource<List<ShopVendorEntity>> shopVendorsResource,
+    required Resource<PromotionsPageEntity> promotionsResource,
+    required Resource<PromotionsPageEntity> newsResource,
     BriefShopEntity? currentShop,
     BriefShopEntity? draftSelectedShop,
     @Default([]) List<BriefShopEntity> listBriefShops,
     @Default([]) List<BriefShopEntity> filteredShops,
+    @Default([]) List<PromotionProgramEntity> listPromotions,
+    @Default([]) List<PromotionProgramEntity> listNews,
   }) = _ShopState;
 }
 
@@ -68,4 +73,11 @@ extension ShopStateX on ShopState {
   bool get hasNext => briefShopsResource.data?.meta?.hasNext == true;
 
   List<ShopEntity> get shopsList => shopsResource.data?.items ?? [];
+
+  List<PromotionProgramEntity> get homePromotions =>
+      listPromotions.take(5).toList();
+
+  List<PromotionProgramEntity> get homeNews => listNews.take(3).toList();
+
+  bool get hasMorePromotions => promotionsResource.data?.hasMore == true;
 }

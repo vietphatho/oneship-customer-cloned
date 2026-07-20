@@ -19,8 +19,8 @@ import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_commo
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_handling_types_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_daily_summary_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shop_vendors_use_case.dart';
-import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_visible_surcharges_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_shops_use_case.dart';
+import 'package:oneship_customer/features/shop_home/domain/use_cases/fetch_visible_surcharges_use_case.dart';
 import 'package:oneship_customer/features/shop_home/domain/use_cases/get_shipping_service_configs_use_case.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_event.dart';
 import 'package:oneship_customer/features/shop_home/presentation/bloc/shop_state.dart';
@@ -48,6 +48,8 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           commodityTypesResource: Resource.loading(data: const []),
           handlingTypesResource: Resource.loading(data: const []),
           shopVendorsResource: Resource.loading(data: const []),
+          promotionsResource: Resource.loading(),
+          newsResource: Resource.loading(),
         ),
       ) {
     on<ShopFetchBriefListEvent>(_onFetchBriefShops);

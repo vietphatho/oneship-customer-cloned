@@ -1,10 +1,12 @@
 import 'package:oneship_customer/core/base/base_repository.dart';
 import 'package:oneship_customer/core/base/models/resource.dart';
+import 'package:oneship_customer/features/shop_home/data/enum.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/create_shop_params.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_brief_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/get_shops_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/order_option_entity.dart';
+import 'package:oneship_customer/features/shop_home/domain/entities/promotion_program_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shipping_service_config_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_daily_summary_entity.dart';
 import 'package:oneship_customer/features/shop_home/domain/entities/shop_vendor_entity.dart';
@@ -46,5 +48,11 @@ abstract class ShopRepository extends BaseRepository {
 
   Future<Resource<List<OrderOptionEntity>>> fetchHandlingTypes({
     required String shopId,
+  });
+
+  Future<Resource<PromotionsPageEntity>> fetchMobilePosts({
+    required MobilePostCategory category,
+    required int page,
+    required int perPage,
   });
 }
